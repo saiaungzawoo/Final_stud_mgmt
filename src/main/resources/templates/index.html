@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkillForge Vocational School</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+      <div class="container-xxl">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="#">
+          <span class="brand-mark"><i class="bi bi-tools"></i></span>
+          SkillForge
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-lg-4 me-lg-3 mb-3 mb-lg-0">
+            <li class="nav-item dropdown">
+              <button class="nav-link dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">
+                Categories
+              </button>
+              <div class="dropdown-menu category-menu p-3">
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <h6 class="dropdown-header px-0">Skilled Trades</h6>
+                    <a class="dropdown-item rounded" href="#">Electrical Installation</a>
+                    <a class="dropdown-item rounded" href="#">Plumbing Systems</a>
+                    <a class="dropdown-item rounded" href="#">Welding and Fabrication</a>
+                  </div>
+                  <div class="col-sm-6">
+                    <h6 class="dropdown-header px-0">Digital Careers</h6>
+                    <a class="dropdown-item rounded" href="#">Programming</a>
+                    <a class="dropdown-item rounded" href="#">IT Support</a>
+                    <a class="dropdown-item rounded" href="#">Design Tools</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
+            <li class="nav-item"><a class="nav-link" href="#categories">Programs</a></li>
+            <li class="nav-item"><a class="nav-link" href="#career-paths">Career Paths</a></li>
+          </ul>
+
+          <form class="search-pill d-flex flex-grow-1 mb-3 mb-lg-0" role="search">
+            <i class="bi bi-search"></i>
+            <input class="form-control" type="search" placeholder="What do you want to learn?" aria-label="Search courses">
+            <button class="btn btn-dark" type="submit">Search</button>
+          </form>
+
+          <div class="auth-actions d-flex gap-2 ms-lg-3">
+            <a class="btn btn-outline-dark" href="#">Sign in</a>
+            <a class="btn btn-primary" href="#">Sign up</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero-section">
+        <div class="container-xxl">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+              <span class="eyebrow">Vocational programming school</span>
+              <h1>Build job-ready skills with practical courses taught by industry mentors.</h1>
+              <p class="lead">Learn coding, IT support, design, electrical systems, and business tools through guided projects, certificates, and career-focused learning paths.</p>
+
+              <form class="hero-search shadow-sm" role="search">
+                <i class="bi bi-search"></i>
+                <input type="search" class="form-control" placeholder="Search Python, web design, networking...">
+                <button class="btn btn-primary" type="submit">Explore</button>
+              </form>
+
+              <div class="trusted-row">
+                <span>Trusted pathways for</span>
+                <strong>beginners</strong>
+                <strong>career switchers</strong>
+                <strong>working learners</strong>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80" alt="Students learning programming in a classroom" class="img-fluid">
+                <div class="floating-card top-card">
+                  <i class="bi bi-mortarboard-fill"></i>
+                  <div>
+                    <strong>12,400+</strong>
+                    <span>Learners enrolled</span>
+                  </div>
+                </div>
+                <div class="floating-card bottom-card">
+                  <i class="bi bi-patch-check-fill"></i>
+                  <div>
+                    <strong>Certificate courses</strong>
+                    <span>Portfolio projects included</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="categories" class="section-pad">
+        <div class="container-xxl">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Browse by category</span>
+              <h2>Explore programs built for real work</h2>
+            </div>
+            <a href="#" class="link-strong">View all categories <i class="bi bi-arrow-right"></i></a>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+                <i class="bi bi-code-slash"></i>
+                <h3>Programming</h3>
+                <p>Web, mobile, Python, databases</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+                <i class="bi bi-router"></i>
+                <h3>IT and Networking</h3>
+                <p>Support, cloud, cybersecurity basics</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+                <i class="bi bi-lightning-charge"></i>
+                <h3>Technical Trades</h3>
+                <p>Electrical, welding, repair skills</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+                <i class="bi bi-palette"></i>
+                <h3>Design and Business</h3>
+                <p>UI design, office tools, freelancing</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="subcategories bg-light">
+        <div class="container-xxl">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">Popular subcategories</span>
+              <h2>Start with a skill employers recognize</h2>
+            </div>
+          </div>
+
+          <div class="subcat-grid">
+            <a href="#">HTML and CSS</a>
+            <a href="#">JavaScript</a>
+            <a href="#">Python</a>
+            <a href="#">Computer Basics</a>
+            <a href="#">Network Setup</a>
+            <a href="#">Cybersecurity</a>
+            <a href="#">AutoCAD</a>
+            <a href="#">Electrical Safety</a>
+            <a href="#">Solar Installation</a>
+            <a href="#">Welding Basics</a>
+            <a href="#">UI Design</a>
+            <a href="#">Excel for Work</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="courses" class="section-pad">
+        <div class="container-xxl">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Featured courses</span>
+              <h2>Courses learners are choosing now</h2>
+            </div>
+            <div class="btn-group course-tabs" role="group" aria-label="Course filters">
+              <button type="button" class="btn btn-dark active">Most popular</button>
+              <button type="button" class="btn btn-outline-dark">New</button>
+              <button type="button" class="btn btn-outline-dark">Beginner</button>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+              <article class="course-card">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80" alt="Laptop with programming code">
+                <div class="course-body">
+                  <span class="badge text-bg-success">Programming</span>
+                  <h3>Full-Stack Web Development Bootcamp</h3>
+                  <p>Build responsive sites, APIs, and database-backed apps.</p>
+                  <div class="rating"><i class="bi bi-star-fill"></i> 4.8 <span>(3,421)</span></div>
+                  <div class="course-meta">
+                    <span>12 weeks</span>
+                    <strong>$69</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <article class="course-card">
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80" alt="Server room networking equipment">
+                <div class="course-body">
+                  <span class="badge text-bg-primary">IT Support</span>
+                  <h3>Computer Networking and Help Desk</h3>
+                  <p>Practice troubleshooting, network setup, and support workflows.</p>
+                  <div class="rating"><i class="bi bi-star-fill"></i> 4.7 <span>(2,186)</span></div>
+                  <div class="course-meta">
+                    <span>8 weeks</span>
+                    <strong>$49</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <article class="course-card">
+                <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=900&q=80" alt="Electrician working on wiring">
+                <div class="course-body">
+                  <span class="badge text-bg-warning">Trade Skills</span>
+                  <h3>Electrical Installation Fundamentals</h3>
+                  <p>Learn safety, tools, wiring plans, and inspection basics.</p>
+                  <div class="rating"><i class="bi bi-star-fill"></i> 4.9 <span>(1,304)</span></div>
+                  <div class="course-meta">
+                    <span>10 weeks</span>
+                    <strong>$59</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+              <article class="course-card">
+                <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=900&q=80" alt="Designer working on digital interface layouts">
+                <div class="course-body">
+                  <span class="badge text-bg-danger">Design</span>
+                  <h3>UI Design and Freelance Portfolio</h3>
+                  <p>Create app screens, design systems, and client-ready case studies.</p>
+                  <div class="rating"><i class="bi bi-star-fill"></i> 4.6 <span>(1,982)</span></div>
+                  <div class="course-meta">
+                    <span>6 weeks</span>
+                    <strong>$39</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="career-paths" class="career-paths">
+        <div class="container-xxl">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+              <span class="eyebrow">Career paths</span>
+              <h2>Follow a guided route from beginner to employable.</h2>
+              <p>Each path combines foundation lessons, applied workshops, instructor review, and a final portfolio project you can show to employers.</p>
+              <a class="btn btn-primary btn-lg" href="#">Find your path</a>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="path-list">
+                <a href="#">
+                  <span><i class="bi bi-laptop"></i> Junior Web Developer</span>
+                  <strong>6 courses</strong>
+                </a>
+                <a href="#">
+                  <span><i class="bi bi-shield-check"></i> IT Support Technician</span>
+                  <strong>5 courses</strong>
+                </a>
+                <a href="#">
+                  <span><i class="bi bi-sun"></i> Solar Installation Assistant</span>
+                  <strong>4 courses</strong>
+                </a>
+                <a href="#">
+                  <span><i class="bi bi-briefcase"></i> Office and Admin Specialist</span>
+                  <strong>5 courses</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container-xxl d-flex flex-column flex-md-row justify-content-between gap-3">
+        <div>
+          <strong>SkillForge Vocational School</strong>
+          <p class="mb-0">Practical online learning for hands-on careers.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#">About</a>
+          <a href="#">Teach</a>
+          <a href="#">Careers</a>
+          <a href="#">Help</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
