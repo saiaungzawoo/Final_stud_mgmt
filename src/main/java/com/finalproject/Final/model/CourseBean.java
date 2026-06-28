@@ -21,6 +21,9 @@ public class CourseBean {
     
     private String subcategoryName;
     private String categoryName;	
+    private String teacherName;
+
+  
 
     
     private int fee;
