@@ -1,70 +1,57 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragment/css :: css}"></head>
 
 <body>
+
 	<div th:replace="~{fragment/header :: header}"></div>
 
 	<main>
 		<section class="section-pad bg-light">
 			<div class="container-xxl">
 				<div class="row justify-content-center">
+
 					<div class="col-xl-10">
+
 						<article class="course-card bg-white">
+
+							<!-- IMAGE -->
 							<img
 								src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
-								alt="Laptop showing programming code">
-  <head th:replace="~{fragment/css :: css}"></head>
-
-  <body>
-    <div th:replace="~{fragment/header :: header}"></div>
-
-    <main>
-      <section class="section-pad bg-light">
-        <div class="container-xxl">
-          <div class="row justify-content-center">
-            <div class="col-xl-10">
-              <article class="course-card bg-white">
-                <img
-                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
-                  alt="Laptop showing programming code"
-                />
-
-                <div class="course-body p-4 p-lg-5">
-                  <div
-                    class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4"
-                  >
-                    <div>
-                      <span class="eyebrow">Course details</span>
-                      <h1 class="mb-3">Full-Stack Web Development Bootcamp</h1>
-                      <p class="lead text-muted mb-0">
-                        Build responsive websites, backend APIs, and
-                        database-backed applications through practical classroom
-                        workshops, guided projects, and mentor review.
-                      </p>
-                    </div>
-                    <div class="text-lg-end">
-                      <span class="badge text-bg-success mb-2">Open</span>
-                      <div class="fs-2 fw-bold">$69</div>
-                      <p class="text-muted mb-0">Course fee</p>
-                    </div>
-                  </div>
+								alt="Course image">
 
 							<div class="course-body p-4 p-lg-5">
+
+								<!-- HEADER -->
 								<div
 									class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4">
-									<h1 class="mb-3" th:text="${course.name}">Course Name</h1>
 
-									<p class="lead text-muted mb-0" th:text="${course.description}">
-										Description</p>
-									<span class="badge text-bg-success mb-2"
-										th:text="${course.status}"> Open </span>
-									
-									<div class="fs-2 fw-bold" th:text="'$' + ${course.fee}">
-										</div>
+									<div>
+										<span class="eyebrow">Course details</span>
+
+										<h1 class="mb-3" th:text="${course.name}">Course Name</h1>
+
+										<p class="lead text-muted mb-0"
+											th:text="${course.description}">Description</p>
+									</div>
+
+									<div class="text-lg-end">
+
+										<span class="badge text-bg-success mb-2"
+											th:text="${course.status}"> Open </span>
+
+										<div class="fs-2 fw-bold" th:text="'$' + ${course.fee}">
+											$69</div>
+
+										<p class="text-muted mb-0">Course fee</p>
+									</div>
+
 								</div>
 
+								<!-- INFO CARDS -->
 								<div class="row g-3 mb-5">
+
 									<div class="col-sm-6 col-lg-3">
 										<div class="category-card">
 											<i class="bi bi-grid"></i>
@@ -72,6 +59,7 @@
 											<p class="mb-0" th:text="${course.categoryName}"></p>
 										</div>
 									</div>
+
 									<div class="col-sm-6 col-lg-3">
 										<div class="category-card">
 											<i class="bi bi-code-slash"></i>
@@ -79,99 +67,40 @@
 											<p class="mb-0" th:text="${course.subcategoryName}"></p>
 										</div>
 									</div>
+
 									<div class="col-sm-6 col-lg-3">
 										<div class="category-card">
 											<i class="bi bi-bar-chart"></i>
 											<h3>Level</h3>
-											
+											<p class="mb-0" th:text="${course.level}"></p>
 										</div>
 									</div>
+
 									<div class="col-sm-6 col-lg-3">
 										<div class="category-card">
 											<i class="bi bi-calendar-week"></i>
 											<h3>Duration</h3>
-											<p class="mb-0">12 weeks</p>
+											<p class="mb-0" th:text="${course.duration}"></p>
 										</div>
 									</div>
+
 								</div>
 
+								<!-- CONTENT ROW -->
 								<div class="row g-4 align-items-start">
-									<div class="col-lg-7">
-										<div class="section-heading compact mb-3">
-											<div>
-												<span class="eyebrow">Class schedule</span>
-												<h2>Weekly classroom sessions</h2>
-											</div>
-										</div>
-                      <div class="table-responsive">
-                        <table
-                          class="table table-hover align-middle bg-white border"
-                        >
-                          <thead>
-                            <tr>
-                              <th>Day</th>
-                              <th>Start Time</th>
-                              <th>End Time</th>
-                              <th>Room</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>Monday</td>
-                              <td>09:00 AM</td>
-                              <td>11:00 AM</td>
-                              <td>Room A-2</td>
-                            </tr>
-                            <tr>
-                              <td>Wednesday</td>
-                              <td>09:00 AM</td>
-                              <td>11:00 AM</td>
-                              <td>Room A-2</td>
-                            </tr>
-                            <tr>
-                              <td>Friday</td>
-                              <td>01:00 PM</td>
-                              <td>03:00 PM</td>
-                              <td>Computer Lab 1</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
 
-                    <div class="col-lg-5">
-                      <div class="category-card">
-                        <i class="bi bi-person-badge"></i>
-                        <h3>Teacher</h3>
-                        <p class="mb-3">Daw May Thandar</p>
-                        <div
-                          class="d-flex justify-content-between border-top pt-3 mb-2"
-                        >
-                          <span class="text-muted">Status</span>
-                          <strong class="text-success"
-                            >Open for enrollment</strong
-                          >
-                        </div>
-                        <div class="d-flex justify-content-between mb-4">
-                          <span class="text-muted">Fee</span>
-                          <strong>$69</strong>
-                        </div>
-                        <a class="btn btn-primary btn-lg w-100" href="#"
-                          >Enroll Now</a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+									<!-- SCHEDULE -->
+									<div class="col-lg-7">
+
+										<div class="section-heading compact mb-3">
+											<span class="eyebrow">Class schedule</span>
+											<h2>Weekly classroom sessions</h2>
+										</div>
 
 										<div class="table-responsive">
+
 											<table class="table table-hover align-middle bg-white border">
+
 												<thead>
 													<tr>
 														<th>Day</th>
@@ -180,165 +109,73 @@
 														<th>Room</th>
 													</tr>
 												</thead>
+
 												<tbody>
-													<tr>
-														<td>Monday</td>
-														<td>09:00 AM</td>
-														<td>11:00 AM</td>
-														<td>Room A-2</td>
+
+													<tr th:each="s : ${schedules}">
+														<td th:text="${s.date}"></td>
+
+														<td th:text="${#temporals.format(s.startTime, 'hh:mm a')}"></td>
+
+														<td th:text="${#temporals.format(s.endTime, 'hh:mm a')}"></td>
+
+														<td th:text="${s.room}"></td>
 													</tr>
-													<tr>
-														<td>Wednesday</td>
-														<td>09:00 AM</td>
-														<td>11:00 AM</td>
-														<td>Room A-2</td>
-													</tr>
-													<tr>
-														<td>Friday</td>
-														<td>01:00 PM</td>
-														<td>03:00 PM</td>
-														<td>Computer Lab 1</td>
-													</tr>
+
 												</tbody>
+
 											</table>
+
 										</div>
+
 									</div>
 
+									<!-- TEACHER BOX -->
 									<div class="col-lg-5">
+
 										<div class="category-card">
+
 											<i class="bi bi-person-badge"></i>
+
 											<h3>Teacher</h3>
-											<p class="mb-3">Daw May Thandar</p>
+
+											<p class="mb-3" th:text="${course.teacherName}">Teacher
+												Name</p>
+
 											<div
 												class="d-flex justify-content-between border-top pt-3 mb-2">
 												<span class="text-muted">Status</span> <strong
-													class="text-success">Open for enrollment</strong>
+													class="text-success" th:text="${course.status}">
+													Open </strong>
 											</div>
+
 											<div class="d-flex justify-content-between mb-4">
-												<span class="text-muted">Fee</span> <strong>$69</strong>
+												<span class="text-muted">Fee</span> <strong
+													th:text="'$' + ${course.fee}"> $69 </strong>
 											</div>
-											<a class="btn btn-primary btn-lg w-100" href="#">Enroll
-												Now</a>
+
+											<a class="btn btn-primary btn-lg w-100" href="#"> Enroll
+												Now </a>
+
 										</div>
+
 									</div>
+
 								</div>
+
 							</div>
+
 						</article>
+
 					</div>
+
 				</div>
 			</div>
 		</section>
 	</main>
 
 	<div th:replace="~{fragment/footer :: footer}"></div>
-
 	<div th:replace="~{fragment/js :: js}"></div>
 
 </body>
-    <div th:replace="~{fragment/js :: js}"></div>
-  </body>
-  <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{fragment/css :: css}"></head>
-
-    <body>
-      <div th:replace="~{fragment/header :: header}"></div>
-
-      <main>
-        <section class="section-pad bg-light">
-          <div class="container-xxl">
-            <div class="row justify-content-center">
-              <div class="col-xl-10">
-                <article class="course-card bg-white">
-                  <img
-                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
-                    alt="Laptop showing programming code"
-                  />
-
-                  <div class="course-body p-4 p-lg-5">
-                    <h1 th:text="${course.name}"></h1>
-
-                    <p th:text="${course.description}"></p>
-
-                    <p>
-                      <strong>Category:</strong>
-                      <span th:text="${course.categoryName}"></span>
-                    </p>
-
-                    <p>
-                      <strong>Subcategory:</strong>
-                      <span th:text="${course.subcategoryName}"></span>
-                    </p>
-
-                    <p>
-                      <strong>Teacher:</strong>
-                      <span th:text="${course.teacherName}"></span>
-                    </p>
-
-                    <p>
-                      <strong>Level:</strong>
-                      <span th:text="${course.level}"></span>
-                    </p>
-
-                    <p>
-                      <strong>Duration:</strong>
-                      <span th:text="${course.duration}"></span>
-                    </p>
-
-                    <p>
-                      <strong>Fee:</strong>
-                      <span th:text="${course.fee}"></span>
-                    </p>
-
-                    <p>
-                      <strong>Status:</strong>
-                      <span th:text="${course.status}"></span>
-                    </p>
-
-                    <div class="row g-4 align-items-start">
-                      <h3>Schedule</h3>
-
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>Day</th>
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Room</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          <tr th:each="schedule : ${schedules}">
-                            <td th:text="${schedule.date}"></td>
-
-                            <td th:text="${schedule.startTime}"></td>
-
-                            <td th:text="${schedule.endTime}"></td>
-
-                            <td th:text="${schedule.room}"></td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <div class="col-lg-5">
-                        <div class="category-card">
-                          <a class="btn btn-primary btn-lg w-100" href="#"
-                            >Enroll Now</a
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <div th:replace="~{fragment/footer :: footer}"></div>
-
-      <div th:replace="~{fragment/js :: js}"></div>
-    </body>
-  </html>
 </html>

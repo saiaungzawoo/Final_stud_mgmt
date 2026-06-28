@@ -29,13 +29,7 @@ public class CourseRepository {
     		        "JOIN course_category cc ON sc.course_category_id = cc.id " +
     		        "JOIN user u ON c.teacher_id = u.id " +
     		        "WHERE u.role_id = 2";
-    	String sql =
-    		    "SELECT c.*, " +
-    		    "sc.name AS subcategory_name, " +
-    		    "cc.name AS category_name " +
-    		    "FROM course c " +
-    		    "JOIN subcategory sc ON c.subcategory_id = sc.id " +
-    		    "JOIN course_category cc ON sc.course_category_id = cc.id";
+    	
 
         return jdbc.query(sql, mapper);
     }
@@ -53,14 +47,7 @@ public class CourseRepository {
     	        "JOIN subcategory sc ON c.subCategory_id = sc.id " +
     	        "JOIN user u ON c.teacher_id = u.id " +
     	        "WHERE c.id = ?";
-        String sql =
-            "SELECT c.*, " +
-            "sc.name AS subcategory_name, " +
-            "cc.name AS category_name " +
-            "FROM course c " +
-            "JOIN subcategory sc ON c.subcategory_id = sc.id " +
-            "JOIN course_category cc ON sc.course_category_id = cc.id " +
-            "WHERE c.id = ?";
+        
 
         return jdbc.queryForObject(sql, mapper, id);
     }
@@ -76,7 +63,7 @@ public class CourseRepository {
         jdbc.update(sql,
             c.getName(),
             c.getDescription(),
-            c.getSubCategoryId()
+            c.getSubcategoryId(),
             c.getSubcategoryId()
         );
     }
@@ -86,12 +73,12 @@ public class CourseRepository {
 
         String sql =
             "UPDATE course SET =?, description=?, subcategory_id=?, updated_at=NOW() WHERE id=?";
-            "UPDATE course SET title=?, description=?, subcategory_id=?, updated_at=NOW() WHERE id=?";
+            
 
         jdbc.update(sql,
         		c.getName(),
             c.getDescription(),
-            c.getSubCategoryId(),
+            c.getSubcategoryId(),
             c.getSubcategoryId(),
             c.getId()
         );
