@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{fragment/css :: css}"></head>
-   
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragment/css :: css}"></head>
+
   <body>
     <div th:replace="~{fragment/header :: header}"></div>
 
@@ -11,14 +11,23 @@
           <div class="row justify-content-center">
             <div class="col-xl-10">
               <article class="course-card bg-white">
-                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80" alt="Laptop showing programming code">
+                <img
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
+                  alt="Laptop showing programming code"
+                />
 
                 <div class="course-body p-4 p-lg-5">
-                  <div class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4">
+                  <div
+                    class="d-flex flex-column flex-lg-row justify-content-between gap-4 mb-4"
+                  >
                     <div>
                       <span class="eyebrow">Course details</span>
                       <h1 class="mb-3">Full-Stack Web Development Bootcamp</h1>
-                      <p class="lead text-muted mb-0">Build responsive websites, backend APIs, and database-backed applications through practical classroom workshops, guided projects, and mentor review.</p>
+                      <p class="lead text-muted mb-0">
+                        Build responsive websites, backend APIs, and
+                        database-backed applications through practical classroom
+                        workshops, guided projects, and mentor review.
+                      </p>
                     </div>
                     <div class="text-lg-end">
                       <span class="badge text-bg-success mb-2">Open</span>
@@ -68,7 +77,9 @@
                       </div>
 
                       <div class="table-responsive">
-                        <table class="table table-hover align-middle bg-white border">
+                        <table
+                          class="table table-hover align-middle bg-white border"
+                        >
                           <thead>
                             <tr>
                               <th>Day</th>
@@ -106,15 +117,21 @@
                         <i class="bi bi-person-badge"></i>
                         <h3>Teacher</h3>
                         <p class="mb-3">Daw May Thandar</p>
-                        <div class="d-flex justify-content-between border-top pt-3 mb-2">
+                        <div
+                          class="d-flex justify-content-between border-top pt-3 mb-2"
+                        >
                           <span class="text-muted">Status</span>
-                          <strong class="text-success">Open for enrollment</strong>
+                          <strong class="text-success"
+                            >Open for enrollment</strong
+                          >
                         </div>
                         <div class="d-flex justify-content-between mb-4">
                           <span class="text-muted">Fee</span>
                           <strong>$69</strong>
                         </div>
-                        <a class="btn btn-primary btn-lg w-100" href="#">Enroll Now</a>
+                        <a class="btn btn-primary btn-lg w-100" href="#"
+                          >Enroll Now</a
+                        >
                       </div>
                     </div>
                   </div>
@@ -128,7 +145,110 @@
 
     <div th:replace="~{fragment/footer :: footer}"></div>
 
-   <div th:replace="~{fragment/js :: js}"></div>
-   
+    <div th:replace="~{fragment/js :: js}"></div>
   </body>
+  <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragment/css :: css}"></head>
+
+    <body>
+      <div th:replace="~{fragment/header :: header}"></div>
+
+      <main>
+        <section class="section-pad bg-light">
+          <div class="container-xxl">
+            <div class="row justify-content-center">
+              <div class="col-xl-10">
+                <article class="course-card bg-white">
+                  <img
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
+                    alt="Laptop showing programming code"
+                  />
+
+                  <div class="course-body p-4 p-lg-5">
+                    <h1 th:text="${course.name}"></h1>
+
+                    <p th:text="${course.description}"></p>
+
+                    <p>
+                      <strong>Category:</strong>
+                      <span th:text="${course.categoryName}"></span>
+                    </p>
+
+                    <p>
+                      <strong>Subcategory:</strong>
+                      <span th:text="${course.subcategoryName}"></span>
+                    </p>
+
+                    <p>
+                      <strong>Teacher:</strong>
+                      <span th:text="${course.teacherName}"></span>
+                    </p>
+
+                    <p>
+                      <strong>Level:</strong>
+                      <span th:text="${course.level}"></span>
+                    </p>
+
+                    <p>
+                      <strong>Duration:</strong>
+                      <span th:text="${course.duration}"></span>
+                    </p>
+
+                    <p>
+                      <strong>Fee:</strong>
+                      <span th:text="${course.fee}"></span>
+                    </p>
+
+                    <p>
+                      <strong>Status:</strong>
+                      <span th:text="${course.status}"></span>
+                    </p>
+
+                    <div class="row g-4 align-items-start">
+                      <h3>Schedule</h3>
+
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Day</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Room</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr th:each="schedule : ${schedules}">
+                            <td th:text="${schedule.date}"></td>
+
+                            <td th:text="${schedule.startTime}"></td>
+
+                            <td th:text="${schedule.endTime}"></td>
+
+                            <td th:text="${schedule.room}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <div class="col-lg-5">
+                        <div class="category-card">
+                          <a class="btn btn-primary btn-lg w-100" href="#"
+                            >Enroll Now</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div th:replace="~{fragment/footer :: footer}"></div>
+
+      <div th:replace="~{fragment/js :: js}"></div>
+    </body>
+  </html>
 </html>
