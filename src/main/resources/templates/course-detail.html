@@ -151,10 +151,10 @@
 
 											<div class="d-flex justify-content-between mb-4">
 												<span class="text-muted">Fee</span> <strong
-													th:text="'$' + ${course.fee}"> $69 </strong>
+													th:text="'MMK ' + ${course.fee}"> $69 </strong>
 											</div>
 
-											<a class="btn btn-primary btn-lg w-100" href="#"> Enroll
+											<a class="btn btn-primary btn-lg w-100" th:href="@{/enrollment/show(courseId=${course.id})}"> Enroll
 												Now </a>
 
 										</div>

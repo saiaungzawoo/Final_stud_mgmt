@@ -24,80 +24,59 @@
 				</div>
 
 				<div class="row g-4">
-					<div class="row g-4">
 
-						<div class="col-md-6 col-xl-4" th:each="course : ${courses}">
+					<!-- new -->
+					<div class="col-md-6 col-xl-4" th:each="course : ${courses}">
 
-							<article class="course-card">
-
-								<img
-									src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80"
-									alt="Course image">
-
-								<div class="container mt-4">
-
-									<h5 th:text="${course.name}"></h5>
-
-									<p th:text="${course.subcategoryName}"></p>
-
-									<p th:text="${course.description}"></p>
-
-									<div class="row g-2 my-2">
-
-										<div class="col-4">
-											<small class="text-muted d-block">Level</small> <strong
-												th:text="${course.level}"></strong>
-										</div>
-
-										<div class="col-4">
-											<small class="text-muted d-block">Duration</small> <strong
-												th:text="${course.duration}"></strong>
-										</div>
-
-										<div class="col-4">
-											<small class="text-muted d-block">Fee</small> <strong
-												th:text="${course.fee} + ' MMK'"></strong>
-										</div>
-
-									</div>
-
-									<div class="course-meta">
-										<a th:href="@{'/courses/' + ${course.id}}"
-											class="btn btn-primary btn-sm" href="#">View Details</a>
-									</div>
-
-
-
-								</div>
-
-							</article>
-
-						</div>
-
-					</div>
-					<div class="col-md-6 col-xl-4">
 						<article class="course-card">
+
 							<img
 								src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80"
-								alt="Networking equipment in a server room">
+								alt="Course Image">
+
 							<div class="course-body">
-								<span class="badge text-bg-primary">IT Support</span>
-								<h3>Computer Networking and Help Desk</h3>
+
+								<!-- Category -->
+								<span class="badge text-bg-primary"
+									th:text="${course.categoryName}"> Category </span>
+
+								<!-- Course Name -->
+								<h3 th:text="${course.name}">Course Name</h3>
+
+								<!-- Subcategory -->
+								<p class="text-muted mb-2" th:text="${course.subcategoryName}">
+									Subcategory</p>
+
+								<!-- Description -->
+								<p class="small text-muted" th:text="${course.description}">
+									Description</p>
+
 								<div class="row g-2 my-3">
+
 									<div class="col-6">
-										<small class="text-muted d-block">Level</small> <strong>Beginner</strong>
+										<small class="text-muted d-block"> Level </small> <strong
+											th:text="${course.level}"> Beginner </strong>
 									</div>
+
 									<div class="col-6">
-										<small class="text-muted d-block">Duration</small> <strong>8
-											weeks</strong>
+										<small class="text-muted d-block"> Duration </small> <strong
+											th:text="${course.duration}"> 8 Weeks </strong>
 									</div>
+
 								</div>
-								<div class="course-meta">
-									<strong>$49</strong> <a class="btn btn-primary btn-sm" href="#">View
-										Details</a>
+
+								<div class="col-6">
+									<small class="text-muted d-block">Fee</small> <strong
+										class="d-block mb-3" th:text="'$' + ${course.fee}">
+										$49 </strong> <a class="btn btn-primary btn-sm"
+										th:href="@{/courses/{id}(id=${course.id})}"> View Details
+									</a>
 								</div>
+
 							</div>
+
 						</article>
+
 					</div>
 
 					<div class="col-md-6 col-xl-4">
