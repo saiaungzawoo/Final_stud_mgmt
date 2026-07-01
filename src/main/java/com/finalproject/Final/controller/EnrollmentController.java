@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finalproject.Final.dto.EnrollmentDTO;
+import com.finalproject.Final.model.CourseBean;
+import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.ScheduleBean;
+import com.finalproject.Final.model.UserBean;
+import com.finalproject.Final.service.CourseService;
 import com.finalproject.Final.service.EnrollmentService;
 
 @Controller
@@ -17,19 +23,58 @@ public class EnrollmentController {
 
     @Autowired
     private EnrollmentService enrollmentService;
+    
+    @Autowired
+    private ScheduleService scheduleService;
+    
+    @Autowired
+    private UserService userService;
+    
+    @GetMapping("/show")
+    public String showEnrollPage(@RequestParam int courseId,
+                                 
+                                 Model model) {
+
+    	//use this when login is complete
+//        UserBean student = (UserBean) session.getAttribute("loginUser");
+    	
+    	//temporary
+    	//to replace with above code
+    	//1 is Aung Aung
+    	UserBean student = userService.findById(5);
+
+    	
+        CourseBean course = courseService.getById(courseId);
+
+        List<ScheduleBean> schedules =
+                scheduleService.getByCourseId(courseId);
+
+        model.addAttribute("student", student);
+        model.addAttribute("course", course);
+        model.addAttribute("schedules", schedules);
+
+        return "enroll-confirm";
+    }
 
     //create enrollment when user clicks Enroll
     @PostMapping("/create")
-    public String createEnrollment(@RequestParam int userId,
-                                   @RequestParam int courseId,
-                                   RedirectAttributes redirectAttributes) {
+    public String createEnrollment(EnrollmentDTO dto, RedirectAttributes ra) {
 
-        int enrollmentId = enrollmentService.createEnrollment(userId, courseId);
+        try {
+            int enrollmentId = enrollmentService.createEnrollment(dto);
+            return "redirect:/payment/page/" + enrollmentId;
 
-        // redirect to payment page
-        //edit
-        return "redirect:/payment/page/" + enrollmentId;
+        } catch (RuntimeException e) {
+
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/courses/" + dto.getCourseId();
+        }
     }
+    
+   
+
+    
+    
 
     // view user enrollments
     @GetMapping("/my")

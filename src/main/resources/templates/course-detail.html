@@ -36,45 +36,12 @@
                     </div>
                   </div>
 
-                  <div class="row g-3 mb-5">
-                    <div class="col-sm-6 col-lg-3">
-                      <div class="category-card">
-                        <i class="bi bi-grid"></i>
-                        <h3>Category</h3>
-                        <p class="mb-0">Programming</p>
-                      </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                      <div class="category-card">
-                        <i class="bi bi-code-slash"></i>
-                        <h3>Subcategory</h3>
-                        <p class="mb-0">Web Development</p>
-                      </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                      <div class="category-card">
-                        <i class="bi bi-bar-chart"></i>
-                        <h3>Level</h3>
-                        <p class="mb-0">Beginner</p>
-                      </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                      <div class="category-card">
-                        <i class="bi bi-calendar-week"></i>
-                        <h3>Duration</h3>
-                        <p class="mb-0">12 weeks</p>
-                      </div>
-                    </div>
-                  </div>
+	<main>
+		<section class="section-pad bg-light">
+			<div class="container-xxl">
 
-                  <div class="row g-4 align-items-start">
-                    <div class="col-lg-7">
-                      <div class="section-heading compact mb-3">
-                        <div>
-                          <span class="eyebrow">Class schedule</span>
-                          <h2>Weekly classroom sessions</h2>
-                        </div>
-                      </div>
+				<div class="row justify-content-center">
+					<div class="col-xl-10">
 
                       <div class="table-responsive">
                         <table
@@ -112,38 +79,16 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-5">
-                      <div class="category-card">
-                        <i class="bi bi-person-badge"></i>
-                        <h3>Teacher</h3>
-                        <p class="mb-3">Daw May Thandar</p>
-                        <div
-                          class="d-flex justify-content-between border-top pt-3 mb-2"
-                        >
-                          <span class="text-muted">Status</span>
-                          <strong class="text-success"
-                            >Open for enrollment</strong
-                          >
-                        </div>
-                        <div class="d-flex justify-content-between mb-4">
-                          <span class="text-muted">Fee</span>
-                          <strong>$69</strong>
-                        </div>
-                        <a class="btn btn-primary btn-lg w-100" href="#"
-                          >Enroll Now</a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+							<!-- IMAGE -->
+							<img
+								src="https://images.unsplash.com/photo-1498050108023-c5249f4df085">
 
-    <div th:replace="~{fragment/footer :: footer}"></div>
+							<div class="course-body p-4 p-lg-5">
+							
+							  <!--  ERROR msg -->
+							<div th:if="${errorMessage}" class="alert alert-danger mt-3">
+   								<span th:text="${errorMessage}"></span>
+							</div>
 
     <div th:replace="~{fragment/js :: js}"></div>
   </body>
@@ -153,36 +98,21 @@
     <body>
       <div th:replace="~{fragment/header :: header}"></div>
 
-      <main>
-        <section class="section-pad bg-light">
-          <div class="container-xxl">
-            <div class="row justify-content-center">
-              <div class="col-xl-10">
-                <article class="course-card bg-white">
-                  <img
-                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
-                    alt="Laptop showing programming code"
-                  />
+										<h1 th:text="${course.name}"></h1>
 
-                  <div class="course-body p-4 p-lg-5">
-                    <h1 th:text="${course.name}"></h1>
+										<p class="lead text-muted" th:text="${course.description}">
+										</p>
+									</div>
 
                     <p th:text="${course.description}"></p>
 
-                    <p>
-                      <strong>Category:</strong>
-                      <span th:text="${course.categoryName}"></span>
-                    </p>
+										<span class="badge text-bg-success" th:text="${course.status}">
+										</span>
 
-                    <p>
-                      <strong>Subcategory:</strong>
-                      <span th:text="${course.subcategoryName}"></span>
-                    </p>
+										<div class="fs-2 fw-bold" th:text="'MMK ' + ${course.fee}">
+										</div>
 
-                    <p>
-                      <strong>Teacher:</strong>
-                      <span th:text="${course.teacherName}"></span>
-                    </p>
+									</div>
 
                     <p>
                       <strong>Level:</strong>
@@ -194,61 +124,135 @@
                       <span th:text="${course.duration}"></span>
                     </p>
 
-                    <p>
-                      <strong>Fee:</strong>
-                      <span th:text="${course.fee}"></span>
-                    </p>
+									<div class="col-sm-6 col-lg-3">
+										<div class="category-card">
+											<i class="bi bi-grid"></i>
+											<h3>Category</h3>
+											<p th:text="${course.categoryName}"></p>
+										</div>
+									</div>
 
-                    <p>
-                      <strong>Status:</strong>
-                      <span th:text="${course.status}"></span>
-                    </p>
+									<div class="col-sm-6 col-lg-3">
+										<div class="category-card">
+											<i class="bi bi-code-slash"></i>
+											<h3>Subcategory</h3>
+											<p th:text="${course.subcategoryName}"></p>
+										</div>
+									</div>
 
-                    <div class="row g-4 align-items-start">
-                      <h3>Schedule</h3>
+									<!-- LEVEL -->
+									<div class="col-sm-6 col-lg-3">
+										<div class="category-card">
+											<i class="bi bi-bar-chart"></i>
+											<h3>Level</h3>
+											<p th:text="${course.level}"></p>
+										</div>
+									</div>
 
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>Day</th>
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Room</th>
-                          </tr>
-                        </thead>
+									<!-- DURATION + SEATS -->
+									<div class="col-sm-6 col-lg-3">
+										<div class="category-card">
+											<i class="bi bi-calendar-week"></i>
+											<h3>Duration</h3>
+
+											<p class="mb-1" th:text="${course.duration}"></p>
+
+											
+											
+
+										</div>
+									</div>
+									
+									
 
                         <tbody>
                           <tr th:each="schedule : ${schedules}">
                             <td th:text="${schedule.date}"></td>
 
-                            <td th:text="${schedule.startTime}"></td>
+								<div class="row g-4 align-items-start">
 
                             <td th:text="${schedule.endTime}"></td>
 
-                            <td th:text="${schedule.room}"></td>
-                          </tr>
-                        </tbody>
-                      </table>
+										<h2 class="mb-3">Class Schedule</h2>
 
-                      <div class="col-lg-5">
-                        <div class="category-card">
-                          <a class="btn btn-primary btn-lg w-100" href="#"
-                            >Enroll Now</a
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
+										<table class="table table-hover border">
+											<thead>
+												<tr>
+													<th>Day</th>
+													<th>Start</th>
+													<th>End</th>
+													<th>Room</th>
+												</tr>
+											</thead>
 
-      <div th:replace="~{fragment/footer :: footer}"></div>
+											<tbody>
+												<tr th:each="s : ${schedules}">
+													<td th:text="${#temporals.format(s.date, 'dd-MM-yyyy')}"></td>
+													<td th:text="${#temporals.format(s.startTime,'hh:mm a')}"></td>
+													<td th:text="${#temporals.format(s.endTime,'hh:mm a')}"></td>
+													<td th:text="${s.room}"></td>
+												</tr>
+											</tbody>
 
-      <div th:replace="~{fragment/js :: js}"></div>
-    </body>
-  </html>
+										</table>
+
+									</div>
+
+									<!-- TEACHER + ENROLL -->
+									<div class="col-lg-5">
+
+										<div class="category-card">
+
+											<i class="bi bi-person-badge"></i>
+
+											<h3>Teacher</h3>
+
+											<p th:text="${course.teacherName}"></p>
+											
+											<div>
+											<small class="text-muted d-block">Seats</small> <strong
+												th:text="${course.seatsAvailable} + ' / ' + ${course.seatsTotal}">
+											</strong>
+											</div>
+
+											<hr>
+
+											<div class="d-flex justify-content-between">
+												<span>Status</span> <strong th:text="${course.status}"></strong>
+											</div>
+
+											<div class="d-flex justify-content-between">
+												<span>Fee</span> <strong th:text="'MMK ' + ${course.fee}"></strong>
+											</div>
+
+											<!-- ENROLL BUTTON -->
+											<a class="btn btn-primary w-100 mt-3"
+												th:if="${course.seatsAvailable > 0}"
+												th:href="@{/enrollment/show(courseId=${course.id})}">
+												Enroll Now </a>
+
+											<button class="btn btn-secondary w-100 mt-3"
+												th:if="${course.seatsAvailable == 0}" disabled>
+												Full</button>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+						</article>
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+	</main>
+
+	<div th:replace="~{fragment/footer :: footer}"></div>
+	<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
 </html>

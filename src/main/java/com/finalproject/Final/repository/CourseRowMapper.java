@@ -33,6 +33,12 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
         c.setSubcategoryName(rs.getString("subcategory_name"));
         c.setCategoryName(rs.getString("category_name"));
         c.setTeacherName(rs.getString("teacher_name"));
+        c.setCourseCategoryId(rs.getInt("course_category_id"));
+        c.setTeacherId(rs.getInt("teacher_id"));
+        
+        //seats
+        c.setSeatsTotal(rs.getInt("seats_total"));
+        c.setSeatsAvailable(rs.getInt("seats_available"));
 
         return c;
     }
