@@ -19,7 +19,7 @@ public class UsersRepository {
 		int i=0;
 		
 		
-		String sql="INSERT INTO `student_mgmt_v6`.`user` (`role_id`, `name`, `email`, `password`, `phone_no`, `address`,`dob`, `gender`,`created_at`,`is_active`,`file_path`)\r\n"
+		String sql="INSERT INTO `user` (`role_id`, `name`, `email`, `password`, `phone_no`, `address`,`dob`, `gender`,`created_at`,`is_active`,`file_path`)\r\n"
 				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 		
 		i=jdbc.update(sql,obj.getRoleId(),obj.getName(),obj.getEmail(),obj.getPassword()
