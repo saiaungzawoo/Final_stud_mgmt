@@ -23,8 +23,6 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
         c.setLevel(rs.getString("level"));
         c.setStatus(rs.getString("status"));
 
-        // MUST match column name in SQL
-        c.setSubCategoryId(rs.getInt("subcategory_id"));
 
         // MUST match column name in SQL
         c.setSubcategoryId(rs.getInt("subcategory_id"));

@@ -1,0 +1,106 @@
+<!DOCTYPE html> <html lang="en" xmlns:th="http://www.thymeleaf.org">
+	 <head
+	 	 th:replace="~{fragment/css :: css}"> 
+	 </head> 
+	 	<body data-spy="scroll" data-offset="80">
+	 		 <div 
+	 		 th:replace="~{fragment/header :: header}">
+	 		 </div> 
+	 		 	<div class="container mt-5 pt-5">
+	 		 		 <div class="row justify-content-center"> 
+	 		 		 <div class="col-md-6"> 
+	 		 		 	<div class="card shadow"> 
+	 		 		 <div class="card-header text-center">
+	 		 		  <h3>Create Teacher Account</h3> 
+	 		 		  
+	 		 		  </div>
+	 		 		  
+	 		 	  <div class="card-body">
+	 		 		    <div
+	 		 		     class="alert alert-success" th:if="${success}" th:text="${success}">
+	 		 		     </div>
+	 		 		      <div 
+	 		 		      class="alert alert-danger" th:if="${error}" th:text="${error}">
+	 		 		       </div>
+	 		 		        <form th:action="@{/users/teacherRegister}" th:object="${userObj}" method="post"  enctype="multipart/form-data"> <!-- Name --> 
+	 		 	 <div class="mb-3"> 		 		        	 		 		        	 		 		        
+	 		 		  <label class="form-label">Name</label>
+	 		 		   <input type="text" class="form-control" th:field="*{name}"> 
+	 		 		   <div class="text-danger"
+	 		 		    	th:if="${#fields.hasErrors('name')}" th:errors="*{name}"> 
+	 		 		    </div>
+	 			 </div> <!-- Email -->
+	 			  <div class="mb-3"> 
+	 		 		    <label class="form-label">Email</label>
+	 		 		     <input type="email" class="form-control" th:field="*{email}">
+	 		 		      <div 
+	 		 		      	class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"> 
+	 		 		      </div> 
+	 		 	 </div> <!-- Password -->
+	 		 	 <div class="mb-3"> 
+	 		 	 	 <label class="form-label">Password</label>
+	 		 	   	<input type="password" class="form-control" th:field="*{password}"> 
+	 		 	   <div 
+	 		 	   		class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+	 		 	    </div> 
+	 		 	 </div> <!-- Phone --> 
+	 		 	 
+	 		 	<div class="mb-3"> 
+	 		 	 	<label class="form-label">Phone Number</label> 
+	 		 		 <input type="text" class="form-control" th:field="*{phoneNo}"> 
+	 		 		<div 
+	 		 			class="text-danger" th:if="${#fields.hasErrors('phoneNo')}" th:errors="*{phoneNo}"> 
+	 		 		</div> 
+	 		 </div> <!-- Address -->
+	 		  <div class="mb-3"> 
+	 		  	<label class="form-label">Address</label>
+	 		 	 	<textarea class="form-control" rows="3" th:field="*{address}"></textarea>
+	 		 	 	 <div 
+	 		 	 	 	class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+	 		 	 	 </div>
+	 		 </div> <!-- DOB -->
+	 		  <div class="mb-3">
+	 		 	 	 		 <label class="form-label">Date of Birth</label>
+	 		 	 	  			 <input type="date" class="form-control" th:field="*{dob}">
+	 		 	 	   <div 
+	 		 	 	    	class="text-danger" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}">
+	 		 	 	   </div> 
+	 		 </div>
+	 		  <!-- Gender -->
+	 		   <div class="mb-3"> 
+	 		   		<label class="form-label">Gender</label> 
+	 		   			<select class="form-select" th:field="*{gender}">
+	 		   				 <option value="">Select Gender</option> <option value="Male">Male</option>
+	 		   				 	 <option value="Female">Female</option> 
+	 		   				 	 	</select>
+	 		   				 	 	 <div
+	 		   				 	 	 	 class="text-danger" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">
+	 		   				 	 	 </div> 
+	 		   	 </div> <!-- File Path --> 
+	 		   	 <div class="mb-3">
+    <label class="form-label">Profile Image</label>
+
+    <input type="file"
+           name="file"
+           accept="image/*"
+           class="form-control">
+
+    <div class="text-danger"
+         th:if="${fileError}"
+         th:text="${fileError}">
+    </div>
+</div>
+	 		  	
+	 		  	 
+	 		  	 <div class="text-center">
+	 		  	 
+	 		  	 	 <button type="submit" class="btn btn-primary"> Create Teacher </button>
+	 		  	 	  </div> 
+	 		  	 	  </form> 
+	 		  	 	</div>
+	 		  	 </div>
+	 		 </div>
+	  </div> 
+	</div>
+ </body>
+  </html>
