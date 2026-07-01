@@ -10,14 +10,45 @@
     <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
         <div class="container-xxl">
 
-            <!-- Brand / Logo -->
-            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" th:href="@{/}">
-                <span class="ace-logo">
-                    <i class="bi bi-mortarboard-fill"></i>
-                </span>
-                <div class="d-flex flex-column lh-1">
-                    <span class="ace-text">ACE</span>
-                    <small class="ace-subtext">Inspiration</small>
+<!-- Brand / Logo -->
+<a class="navbar-brand d-flex align-items-center gap-2 fw-bold" th:href="@{/}">
+    <span class="ace-logo">
+        <i class="bi bi-mortarboard-fill"></i>
+    </span>
+    <div class="d-flex flex-column lh-1">
+        <span class="ace-text">ACE</span>
+        <small class="ace-subtext">Inspiration</small>
+    </div>
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="mainNav">
+  <ul class="navbar-nav ms-lg-4 me-lg-3 mb-3 mb-lg-0">
+    <li class="nav-item dropdown">
+      <button class="nav-link dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">
+        Categories
+      </button>
+      <div class="dropdown-menu category-menu p-3">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <h6 class="dropdown-header px-0">Web Development</h6>
+            <a class="dropdown-item rounded" href="#">Java</a>                    
+            <a class="dropdown-item rounded" href="#">C#</a>
+            <a class="dropdown-item rounded" href="#">JavaScript</a>
+          </div>
+          <div class="col-sm-6">
+            <h6 class="dropdown-header px-0">Mobile Development</h6>
+            <a class="dropdown-item rounded" href="#">React native</a>
+            <a class="dropdown-item rounded" href="#">Kotlin</a>
+          </div>
+           <div class="col-sm-6">
+            <h6 class="dropdown-header px-0">Game Development</h6>
+            <a class="dropdown-item rounded" href="#">Unity</a>
+            <a class="dropdown-item rounded" href="#">Unreal Engine</a>
+          </div>
                 </div>
             </a>
 

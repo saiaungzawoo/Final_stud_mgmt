@@ -21,6 +21,8 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
         c.setDuration(rs.getString("duration"));
         c.setFee(rs.getInt("fee"));
         c.setLevel(rs.getString("level"));
+        c.setStatus(rs.getString("status"));
+
 
         // MUST match column name in SQL
         c.setSubcategoryId(rs.getInt("subcategory_id"));
@@ -28,6 +30,7 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
         // from JOIN (must exist in SQL alias)
         c.setSubcategoryName(rs.getString("subcategory_name"));
         c.setCategoryName(rs.getString("category_name"));
+        c.setTeacherName(rs.getString("teacher_name"));
 
         return c;
     }
