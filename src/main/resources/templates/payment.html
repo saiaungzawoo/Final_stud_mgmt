@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head th:replace="~{fragment/css :: css}"></head>
+  <body>
+    <div th:replace="~{fragment/header :: header}"></div>
+
+    <main>
+      <section class="section-pad bg-light">
+        <div class="container-xxl">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+              <article class="course-card bg-white">
+                <div class="course-body p-4 p-lg-5">
+                  <div class="text-center mb-4">
+                    <span class="brand-mark mx-auto mb-3"><i class="bi bi-credit-card"></i></span>
+                    
+                   <!--  ERROR msg -->
+                    <div th:if="${errorMessage}" class="alert alert-danger mb-3">
+   						 <span th:text="${errorMessage}"></span>
+						</div>
+                    
+                    <span class="eyebrow justify-content-center">Payment</span>
+                    <h1 class="mb-3">Complete Your Payment</h1>
+                    <p class="text-muted mb-0">Your enrollment will be confirmed only after successful payment. Please review the course fee and choose your payment option.</p>
+                  </div>
+
+                  <div class="category-card mb-4">
+                    <div class="row g-4">
+                      <div class="col-sm-7">
+                        <small class="text-muted d-block mb-1">Course Name</small>
+                        <strong class="fs-5" th:text="${course.name}">Full-Stack Web Development Bootcamp</strong>
+                      </div>
+                      <div class="col-sm-5">
+                        <small class="text-muted d-block mb-1">Course Fee</small>
+                        <strong class="fs-5 text-primary">
+                          <span th:text="${course.fee}">250,000</span> MMK
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <form th:action="@{/payment/pay}" method="post">
+                 <!--  hidden fields -->
+                  <input type="hidden" name="enrollmentId" th:value="${enrollment.id}">
+					<input type="hidden" name="userId" th:value="${enrollment.userId}">
+					<input type="hidden" name="courseId" th:value="${course.id}">
+					<input type="hidden" name="amount" th:value="${course.fee}">
+					
+                    <div class="mb-4">
+                      <label class="form-label fw-bold">Payment Type</label>
+                      <div class="row g-2">
+                        <div class="col-sm-6">
+                          <label class="category-card d-flex align-items-center gap-3 mb-0" for="fullPayment">
+                            <input class="form-check-input mt-0" type="radio" name="paymentType" id="fullPayment" value="FULL_PAYMENT" checked>
+                            <span>
+                              <strong class="d-block">Full Payment</strong>
+                              <small class="text-muted">Pay the complete course fee now.</small>
+                            </span>
+                          </label>
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="category-card d-flex align-items-center gap-3 mb-0" for="scholarship">
+                            <input class="form-check-input mt-0" type="radio" name="paymentType" id="scholarship" value="SCHOLARSHIP">
+                            <span>
+                              <strong class="d-block">Scholarship</strong>
+                              <small class="text-muted">Use approved scholarship support.</small>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-4">
+                      <label class="form-label fw-bold">Payment Method</label>
+                      <div class="row g-2">
+                        <div class="col-md-4">
+                          <label class="category-card d-flex align-items-center gap-2 mb-0" for="kbzPay">
+                            <input class="form-check-input mt-0" type="radio" name="paymentMethod" id="kbzPay" value="KBZPAY" checked>
+                            <strong>KBZPay</strong>
+                          </label>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="category-card d-flex align-items-center gap-2 mb-0" for="ayaPay">
+                            <input class="form-check-input mt-0" type="radio" name="paymentMethod" id="ayaPay" value="AYA_PAY">
+                            <strong>AYA Pay</strong>
+                          </label>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="category-card d-flex align-items-center gap-2 mb-0" for="cbPay">
+                            <input class="form-check-input mt-0" type="radio" name="paymentMethod" id="cbPay" value="CB_PAY">
+                            <strong>CB Pay</strong>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="category-card mb-4 bg-light">
+                      <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                        <span class="text-muted fw-semibold">Payment Amount</span>
+                        <strong class="fs-3 text-primary">
+                          <span th:text="${course.fee}">250,000</span> MMK
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" value="" id="confirmInfo">
+                      <label class="form-check-label fw-semibold" for="confirmInfo">
+                        I confirm that the above information is correct.
+                      </label>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                      <a class="btn btn-outline-dark btn-lg" href="enroll-confirm.html" th:href="@{/enroll-confirm(courseId=${course.id})}">
+                        <i class="bi bi-arrow-left me-1"></i> Back
+                      </a>
+                      <button class="btn btn-primary btn-lg" type="submit">
+                        Pay Now <i class="bi bi-arrow-right ms-1"></i>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+		
+		<div th:replace="~{fragment/footer :: footer}"></div>
+	<div th:replace="~{fragment/js :: js}"></div>
+		
+  </body>
+</html>

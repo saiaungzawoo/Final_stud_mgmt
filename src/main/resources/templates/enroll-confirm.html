@@ -1,110 +1,141 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragment/css :: css}"></head>
+  <head th:replace="~{fragment/css :: css}"></head>
 
-<body>
+  <body>
+    <div th:replace="~{fragment/header :: header}"></div>
 
-	<div th:replace="~{fragment/header :: header}"></div>
+    <main>
+      <section class="section-pad bg-light">
+        <div class="container-xxl">
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+              <article class="course-card bg-white">
+                <div class="course-body p-4 p-lg-5">
+                  <!-- HEADER -->
+                  <div class="text-center mb-4">
+                    <span class="brand-mark mx-auto mb-3">
+                      <i class="bi bi-clipboard-check"></i>
+                    </span>
+                    <span class="eyebrow justify-content-center">
+                      Enrollment confirmation
+                    </span>
 
-	<main>
-		<section class="section-pad bg-light">
-			<div class="container-xxl">
-				<div class="row justify-content-center">
-					<div class="col-lg-8 col-xl-7">
+                    <h1 class="mb-3">Review your enrollment details</h1>
 
-						<article class="course-card bg-white">
-							<div class="course-body p-4 p-lg-5">
+                    <p class="text-muted mb-0">
+                      Please confirm the student name, course, fee, and class
+                      schedule before continuing.
+                    </p>
+                  </div>
 
-								<!-- HEADER -->
-								<div class="text-center mb-4">
-									<span class="brand-mark mx-auto mb-3"> <i
-										class="bi bi-clipboard-check"></i>
-									</span> <span class="eyebrow justify-content-center">
-										Enrollment confirmation </span>
+                  <!-- MAIN INFO -->
+                  <div class="category-card mb-4">
+                    <div class="row g-4">
+                      <!-- STUDENT -->
+                      <div class="col-sm-6">
+                        <small class="text-muted d-block mb-1"
+                          >Student Name</small
+                        >
+                        <strong class="fs-5" th:text="${student.name}">
+                          Student Name
+                        </strong>
+                      </div>
 
-									<h1 class="mb-3">Review your enrollment details</h1>
+                      <!-- COURSE -->
+                      <div class="col-sm-6">
+                        <small class="text-muted d-block mb-1"
+                          >Course Name</small
+                        >
+                        <strong class="fs-5" th:text="${course.name}">
+                          Course Name
+                        </strong>
+                      </div>
 
-									<p class="text-muted mb-0">Please confirm the student name,
-										course, fee, and class schedule before continuing.</p>
-								</div>
+                      <!-- FEE -->
+                      <div class="col-sm-6">
+                        <small class="text-muted d-block mb-1">Fee</small>
+                        <strong
+                          class="fs-5 text-primary"
+                          th:text="'MMK ' + ${course.fee}"
+                        >
+                          MMK
+                        </strong>
+                      </div>
 
-								<!-- MAIN INFO -->
-								<div class="category-card mb-4">
-									<div class="row g-4">
+                      <!-- SCHEDULE SUMMARY (simple version) -->
+                      <div class="col-sm-6">
+                        <small class="text-muted d-block mb-1">
+                          Schedule Summary
+                        </small>
+                        <strong class="fs-6">
+                          <span th:if="${schedules != null}">
+                            <span th:each="s : ${schedules}">
+                              <span th:text="${s.date}"></span> (<span
+                                th:text="${s.startTime}"
+                              ></span>
+                              - <span th:text="${s.endTime}"></span>) <br />
+                            </span>
+                          </span>
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
 
-										<!-- STUDENT -->
-										<div class="col-sm-6">
-											<small class="text-muted d-block mb-1">Student Name</small> <strong
-												class="fs-5" th:text="${student.name}"> Student
-												Name </strong>
-										</div>
+                  <!-- INFO ALERT -->
+                  <div
+                    class="alert alert-primary d-flex gap-3 align-items-start"
+                    role="alert"
+                  >
+                    <i class="bi bi-info-circle-fill fs-5"></i>
+                    <div>
+                      Your seat will be reserved after confirming enrollment.
+                      Payment can be completed on the next step.
+                    </div>
+                  </div>
 
-										<!-- COURSE -->
-										<div class="col-sm-6">
-											<small class="text-muted d-block mb-1">Course Name</small> <strong
-												class="fs-5" th:text="${course.name}"> Course Name
-											</strong>
-										</div>
+                  <!-- BUTTONS -->
+                  <div
+                    class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4"
+                  >
+                    <!-- BACK BUTTON -->
+                    <a
+                      class="btn btn-outline-dark btn-lg"
+                      th:href="@{/courses/{id}(id=${course.id})}"
+                    >
+                      <i class="bi bi-arrow-left me-1"></i> Back
+                    </a>
 
-										<!-- FEE -->
-										<div class="col-sm-6">
-											<small class="text-muted d-block mb-1">Fee</small> <strong
-												class="fs-5 text-primary" th:text="'MMK ' + ${course.fee}">
-												MMK </strong>
-										</div>
-
-										<!-- SCHEDULE SUMMARY (simple version) -->
-										<div class="col-sm-6">
-											<small class="text-muted d-block mb-1"> Schedule
-												Summary </small> <strong class="fs-6"> <span
-												th:if="${schedules != null}"> <span
-													th:each="s : ${schedules}"> <span th:text="${s.date}"></span>
-														(<span th:text="${s.startTime}"></span> - <span
-														th:text="${s.endTime}"></span>) <br />
-												</span>
-											</span>
-											</strong>
-										</div>
-
-									</div>
-								</div>
-
-								<!-- INFO ALERT -->
-								<div class="alert alert-primary d-flex gap-3 align-items-start"
-									role="alert">
-									<i class="bi bi-info-circle-fill fs-5"></i>
-									<div>Your seat will be reserved after confirming
-										enrollment. Payment can be completed on the next step.</div>
-								</div>
-
-								<!-- BUTTONS -->
-								<div
-									class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
-
-									<!-- BACK BUTTON -->
-									<a class="btn btn-outline-dark btn-lg"
-										th:href="@{/courses/{id}(id=${course.id})}"> <i
-										class="bi bi-arrow-left me-1"></i> Back
-									</a>
-
-									<!-- CONFIRM BUTTON (placeholder) -->
-									<a class="btn btn-primary btn-lg" href="#"> Confirm
+                    <!-- <a class="btn btn-primary btn-lg" th:href="@{/payment/page/{enrollmentId}(enrollmentId=${enrollment.id})}"> Confirm
 										Enrollment <i class="bi bi-arrow-right ms-1"></i>
-									</a>
+									</a> -->
+                    <form th:action="@{/enrollment/create}" method="post">
+                      <input
+                        type="hidden"
+                        name="userId"
+                        th:value="${student.id}"
+                      />
+                      <input
+                        type="hidden"
+                        name="courseId"
+                        th:value="${course.id}"
+                      />
 
-								</div>
+                      <button class="btn btn-primary btn-lg" type="submit">
+                        Confirm Enrollment
+                        <i class="bi bi-arrow-right ms-1"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
-							</div>
-						</article>
-
-					</div>
-				</div>
-			</div>
-		</section>
-	</main>
-
-	<div th:replace="~{fragment/footer :: footer}"></div>
-	<div th:replace="~{fragment/js :: js}"></div>
-
-</body>
+    <div th:replace="~{fragment/footer :: footer}"></div>
+    <div th:replace="~{fragment/js :: js}"></div>
+  </body>
 </html>

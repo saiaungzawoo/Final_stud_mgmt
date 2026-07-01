@@ -482,6 +482,19 @@ a {
   color: var(--brand);
 }
 
+.success-mark {
+  width: 104px;
+  height: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--success);
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 50%;
+  font-size: 3.75rem;
+}
+
 @media (max-width: 1199.98px) {
   .subcat-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -583,4 +596,9 @@ a {
 
 .accordion-body a:hover{
     color:#246bfe;
-}}
+}
+
+
+
+
+}

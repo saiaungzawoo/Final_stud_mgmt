@@ -21,6 +21,7 @@ public class CourseBean {
     
     private String subcategoryName;
     private String categoryName;	
+    private int teacherId;
     private String teacherName;
 
   
@@ -37,4 +38,7 @@ public class CourseBean {
     private LocalDateTime updatedAt;
 
     private String filePath;
+    
+    private int seatsTotal;
+    private int seatsAvailable;
 }

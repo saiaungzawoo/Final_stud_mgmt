@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragment/css :: css}"></head>
+  
+  
+  <body>
+    <div th:replace="~{fragment/header :: header}"></div>
+
+    <main>
+      <section class="section-pad bg-light">
+        <div class="container-xxl">
+          <div class="row justify-content-center">
+            <div class="col-lg-7 col-xl-6">
+              <article class="course-card bg-white text-center">
+                <div class="course-body p-4 p-lg-5">
+                  <div class="success-mark mx-auto mb-4">
+                    <i class="bi bi-check-lg"></i>
+                  </div>
+
+                  <span class="eyebrow justify-content-center">Enrollment status</span>
+                  <h1 class="mb-3">Enrollment Successful</h1>
+                  <p class="text-muted mb-2">You are now enrolled in</p>
+                  <h2 class="h4 mb-4" th:text="${course.name}">Full-Stack Web Development Bootcamp</h2>
+
+                  <div class="category-card mb-4 text-start">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 align-items-sm-center">
+                      <span class="text-muted fw-semibold">Status</span>
+                      <span class="badge text-bg-success fs-6" th:text="${paymentStatus}">Paid</span>
+                    </div>
+                  </div>
+
+                  <a class="btn btn-primary btn-lg w-100" th:href="@{/enrollment/my(userId=${enrollment.userId})}">
+                    Go to My Enrollments <i class="bi bi-arrow-right ms-1"></i>
+                  </a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    
+	<div th:replace="~{fragment/footer :: footer}"></div>
+	<div th:replace="~{fragment/js :: js}"></div>
+    
+  </body>
+</html>

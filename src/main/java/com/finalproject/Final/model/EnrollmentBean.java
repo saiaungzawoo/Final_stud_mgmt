@@ -13,9 +13,13 @@ public class EnrollmentBean {
 	private int id;
 	private int userId;
 	private int courseId;
-	private LocalDate enrollDate;
+	// JOIN FIELD
+    private String courseTitle;
+
+	private LocalDate enrollmentDate;
 	private int status;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	
 
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalproject.Final.model.EnrollmentBean;
+
 @Repository
 public class EnrollmentRepository {
 
@@ -18,29 +20,29 @@ public class EnrollmentRepository {
 
         String sql = " INSERT INTO enrollment\r\n"
         		+ "            (user_id, course_id, enrollment_date, status, created_at, updated_at)\r\n"
-        		+ "            VALUES (?, ?, ?, ?, NOW(), NOW())";
+        		+ "            VALUES (?, ?, ?, 0, NOW(), NOW())";
 
-        jdbc.update(sql, userId, courseId, date, 0);
+        jdbc.update(sql, userId, courseId, date);
 
         return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
-    public Map<String, Object> findById(int id) {
+    public EnrollmentBean findById(int id) {
 
-        return jdbc.queryForMap(
-            "SELECT * FROM enrollment WHERE id = ?",
-            id
-        );
+        String sql = "SELECT * FROM enrollment WHERE id = ?";
+
+        return jdbc.queryForObject(sql, new EnrollmentRowMapper(), id);
     }
 
-    public List<Map<String, Object>> findByUser(int userId) {
+    public List<EnrollmentBean> findByUser(int userId) {
 
-        String sql = "SELECT e.*, c.title AS course_title\r\n"
-        		+ "            FROM enrollment e\r\n"
-        		+ "            JOIN course c ON e.course_id = c.id\r\n"
-        		+ "            WHERE e.user_id = ?";
+        String sql =
+            "SELECT e.*, c.name AS course_title " +
+            "FROM enrollment e " +
+            "JOIN course c ON e.course_id = c.id " +
+            "WHERE e.user_id = ?";
 
-        return jdbc.queryForList(sql, userId);
+        return jdbc.query(sql, new EnrollmentRowMapper(), userId);
     }
 
     public void updateStatus(int enrollmentId, int status) {
@@ -50,5 +52,16 @@ public class EnrollmentRepository {
             status,
             enrollmentId
         );
+    }
+    
+    
+    public boolean existsByUserIdAndCourseId(int userId, int courseId) {
+
+        String sql = " SELECT COUNT(*) \r\n"
+        		+ "        FROM enrollment \r\n"
+        		+ "        WHERE user_id = ? AND course_id = ?";
+
+        Integer count = jdbc.queryForObject(sql, Integer.class, userId, courseId);
+        return count != null && count > 0;
     }
 }
