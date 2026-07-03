@@ -64,7 +64,7 @@ public class EnrollmentController {
         model.addAttribute("course", course);
         model.addAttribute("schedules", schedules);
 
-        return "enroll-confirm";
+        return "student/enroll-confirm";
     }
 
     //create enrollment when user clicks Enroll
@@ -92,6 +92,6 @@ public class EnrollmentController {
     public String myEnrollments(@RequestParam int userId, Model model) {
         model.addAttribute("enrollments",
                 enrollmentService.getByUser(userId));
-        return "my-enrollments";
+        return "student/my-enrollments";
     }
 }
