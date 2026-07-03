@@ -5,7 +5,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.finalproject.Final.model.UsersBean;
+import com.finalproject.Final.model.UserBean;
+
 
 import jakarta.validation.Valid;
 
@@ -16,7 +17,7 @@ public class UsersRepository {
 	@Autowired
 	JdbcTemplate jdbc;
 	
-	public int insertUser(UsersBean obj) {
+	public int insertUser(UserBean obj) {
 		int i=0;
 		
 		
