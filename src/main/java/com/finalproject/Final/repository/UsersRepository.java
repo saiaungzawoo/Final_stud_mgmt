@@ -37,6 +37,87 @@ public class UsersRepository {
 	    return count != null && count > 0;
 	}
 
+	
+	public UserBean getLatestStudent() {
+
+	    String sql = "SELECT * FROM user WHERE role_id = 3 ORDER BY id DESC LIMIT 1";
+
+	    return jdbc.queryForObject(
+	            sql,
+	            (rs, rowNum) -> new UserBean(
+	            		rs.getInt("id"),
+	                    rs.getInt("role_id"),
+	                    rs.getString("name"),
+	                    rs.getString("email"),
+	                    rs.getString("password"),
+	                    rs.getString("phone_no"),
+	                    rs.getString("address"),
+	                    rs.getDate("dob").toLocalDate(),
+	                    rs.getString("gender"),
+	                    rs.getTimestamp("created_at").toLocalDateTime(),
+	                    rs.getInt("is_active"),
+	                    rs.getString("file_path")
+	            )
+	    );
+	}
+	
+	
+	
+	           
+	public int updateUser(UserBean userObj) {
+		
+		//String sql="update user set"
+			//	+ " name=?,email=?,password=?,"
+			//	+ " phone_no=?,address=?,dob=?,gender=?,file_path=? where id=?";
+		
+		
+		String sql="UPDATE `user` SET `name` = ?, `email` = ?,"
+				+ " `password` = ?, `phone_no` = ?, `address` = ?, `dob` = ?, "
+				+ "`gender` = ?, `file_path` = ? WHERE (`id` = ?)";
+			
+			return	jdbc.update(sql,userObj.getName(),userObj.getEmail(),
+					userObj.getPassword(),userObj.getPhoneNumber(),
+					userObj.getAddress(),userObj.getDob(),userObj.getGender()
+					,userObj.getFilePath(),userObj.getId());
+		
+		
+	}
+	      
+	
+	public UserBean getUserByEmail(String email) {
+
+	    String sql = "SELECT * FROM user WHERE email=?";
+
+	    try {
+	        return jdbc.queryForObject(
+	                sql,
+	                new BeanPropertyRowMapper<>(UserBean.class),
+	                email);
+
+	    } catch (Exception e) {
+	        return null;
+	    }
+	}
+	   
+	
+	public UserBean getUserById(int id) {
+
+	    String sql = "SELECT * FROM user WHERE id = ?";
+
+	    try {
+
+	        return jdbc.queryForObject(
+	                sql,
+	                new BeanPropertyRowMapper<>(UserBean.class),
+	                id);
+
+	    } catch (Exception e) {
+
+	        return null;
+
+	    }
+
+	}
 }
 		
 	

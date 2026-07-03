@@ -65,10 +65,85 @@
             <button class="btn btn-dark" type="submit">Search</button>
           </form>
 
-          <div class="auth-actions d-flex gap-2 ms-lg-3">
-            <a class="btn btn-outline-dark" href="#">Sign in</a>
-            <a class="btn btn-primary" href="#">Sign up</a>
-          </div>
+            <!-- NAVBAR CONTENT -->
+            <div class="collapse navbar-collapse" id="mainNav">
+
+                <!-- LEFT MENU -->
+                <ul class="navbar-nav ms-lg-4 me-lg-3 mb-3 mb-lg-0">
+
+                    <!-- CATEGORY DROPDOWN -->
+                    <li class="nav-item dropdown">
+                        <button class="nav-link dropdown-toggle btn btn-link"
+                                data-bs-toggle="dropdown">
+                            Categories
+                        </button>
+
+                        <div class="dropdown-menu category-menu p-3">
+
+                            <!-- Dynamic Categories -->
+                            <div th:if="${not #lists.isEmpty(allCategories)}"
+                                 class="row row-cols-2 g-2">
+
+                                <div th:each="cat : ${allCategories}" class="col">
+                                    <a class="dropdown-item rounded"
+                                       th:href="@{/courses/by-category/{id}(id=${cat.id})}"
+                                       th:text="${cat.name}">
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <!-- Empty State -->
+                            <div th:if="${#lists.isEmpty(allCategories)}"
+                                 class="text-center text-muted py-2">
+                                No categories available
+                            </div>
+
+                        </div>
+                    </li>
+
+                    <!-- LINKS -->
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/courses/show}">Courses</a>
+                    </li>
+
+                  
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/student/portal}">Student Portal</a>
+                    </li>
+
+                </ul>
+
+                <!-- SEARCH -->
+                <form class="search-pill d-flex flex-grow-1 mb-3 mb-lg-0"
+                      role="search"
+                      th:action="@{/courses/search}"
+                      method="get">
+
+                    <i class="bi bi-search"></i>
+
+                    <input class="form-control"
+                           type="search"
+                           name="keyword"
+                           placeholder="What do you want to learn?">
+
+                    <button class="btn btn-dark" type="submit">
+                        Search
+                    </button>
+                </form>
+
+                <!-- AUTH BUTTONS -->
+                <div class="d-flex gap-2 ms-lg-3">
+                    <a class="btn btn-outline-dark" th:href="@{/login}">
+                        Sign in
+                    </a>
+                    <a class="btn btn-primary" th:href="@{/student/register}">
+                        Sign up
+                    </a>
+                </div>
+
+            </div>
         </div>
       </div>
     </nav>
