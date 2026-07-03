@@ -40,13 +40,13 @@ public class UsersRepository {
 	}
 
 	
-	public UsersBean getLatestStudent() {
+	public UserBean getLatestStudent() {
 
 	    String sql = "SELECT * FROM user WHERE role_id = 3 ORDER BY id DESC LIMIT 1";
 
 	    return jdbc.queryForObject(
 	            sql,
-	            (rs, rowNum) -> new UsersBean(
+	            (rs, rowNum) -> new UserBean(
 	            		rs.getInt("id"),
 	                    rs.getInt("role_id"),
 	                    rs.getString("name"),
@@ -66,7 +66,7 @@ public class UsersRepository {
 	
 	
 	           
-	public int updateUser(UsersBean userObj) {
+	public int updateUser(UserBean userObj) {
 		
 		//String sql="update user set"
 			//	+ " name=?,email=?,password=?,"
@@ -86,14 +86,14 @@ public class UsersRepository {
 	}
 	      
 	
-	public UsersBean getUserByEmail(String email) {
+	public UserBean getUserByEmail(String email) {
 
 	    String sql = "SELECT * FROM user WHERE email=?";
 
 	    try {
 	        return jdbc.queryForObject(
 	                sql,
-	                new BeanPropertyRowMapper<>(UsersBean.class),
+	                new BeanPropertyRowMapper<>(UserBean.class),
 	                email);
 
 	    } catch (Exception e) {
@@ -102,7 +102,7 @@ public class UsersRepository {
 	}
 	   
 	
-	public UsersBean getUserById(int id) {
+	public UserBean getUserById(int id) {
 
 	    String sql = "SELECT * FROM user WHERE id = ?";
 
@@ -110,7 +110,7 @@ public class UsersRepository {
 
 	        return jdbc.queryForObject(
 	                sql,
-	                new BeanPropertyRowMapper<>(UsersBean.class),
+	                new BeanPropertyRowMapper<>(UserBean.class),
 	                id);
 
 	    } catch (Exception e) {

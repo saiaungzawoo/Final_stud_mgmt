@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.finalproject.Final.model.UsersBean;
+import com.finalproject.Final.model.UserBean;
+
 import com.finalproject.Final.repository.UsersRepository;
 
 import jakarta.validation.Valid;
@@ -37,7 +38,7 @@ public class UsersController {
 	
 	@GetMapping("/register")
 	public String registerPage(Model m) {
-		 UsersBean user = new UsersBean();
+		 UserBean user = new UserBean();
 		    user.setGender("Male");   // Default selected
 		    m.addAttribute("userObj", user);
 	   // m.addAttribute("userObj", new UserBean());
@@ -47,7 +48,7 @@ public class UsersController {
 	}
 	@GetMapping("/registers")
 	public String success(Model m) {
-		 UsersBean user = uRepo.getLatestStudent();
+		 UserBean user = uRepo.getLatestStudent();
 	    m.addAttribute("userObj", user);
 	    
 	   // return "success";
@@ -57,7 +58,7 @@ public class UsersController {
 	
 	
 	@PostMapping("/register")
-	public String studentRegistrater(@Valid @ModelAttribute("userObj")UsersBean obj,
+	public String studentRegistrater(@Valid @ModelAttribute("userObj")UserBean obj,
 			BindingResult br,Model m,
 			@RequestParam("photo") MultipartFile photo) throws IOException {
 		
@@ -139,7 +140,7 @@ public class UsersController {
 	
 	@PostMapping("/update")
 	public String updateStudent(
-	        @Valid @ModelAttribute("userObj") UsersBean userObj,
+	        @Valid @ModelAttribute("userObj") UserBean userObj,
 	        BindingResult br,
 	        Model model,
 	        @RequestParam("photo") MultipartFile photo) throws IOException {
@@ -159,7 +160,7 @@ public class UsersController {
 	    }
 
 	    // Get Existing User
-	    UsersBean oldUser = uRepo.getUserById(userObj.getId());
+	    UserBean oldUser = uRepo.getUserById(userObj.getId());
 
 	    if (oldUser == null) {
 	        model.addAttribute("error", "User not found.");
@@ -167,7 +168,7 @@ public class UsersController {
 	    }
 
 	    // Email Duplicate Check
-	    UsersBean emailUser = uRepo.getUserByEmail(userObj.getEmail());
+	    UserBean emailUser = uRepo.getUserByEmail(userObj.getEmail());
 
 	    if (emailUser != null &&
 	            emailUser.getId() != userObj.getId()) {
@@ -260,7 +261,7 @@ return "success";
 	
 	@GetMapping("/update")
 	public String update(Model m) {
-		 UsersBean user = uRepo.getLatestStudent();
+		 UserBean user = uRepo.getLatestStudent();
 	    m.addAttribute("userObj", user);
 	    
 	    
