@@ -7,32 +7,55 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalproject.Final.dto.EnrollmentDTO;
+import com.finalproject.Final.model.CourseBean;
+import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.EnrollmentRepository;
 
 @Service
 public class EnrollmentService {
 
     @Autowired
-    private EnrollmentRepository enrollmentRepository;
+    private EnrollmentRepository repo;
+    
+    @Autowired
+    private CourseRepository courseRepo;
 
-    public int createEnrollment(int userId, int courseId) {
+    public int createEnrollment(EnrollmentDTO dto) {
 
-        return enrollmentRepository.save(
-                userId,
-                courseId,
-                LocalDate.now()
-        );
+        // prevent duplicate enrollment
+        if (repo.existsByUserIdAndCourseId(dto.getUserId(), dto.getCourseId())) {
+            throw new RuntimeException("Already enrolled in this course");
+        }
+
+        return repo.save(dto.getUserId(), dto.getCourseId(), LocalDate.now());
     }
 
-    public Map<String, Object> getById(int id) {
-        return enrollmentRepository.findById(id);
+    public EnrollmentBean getById(int id) {
+        return repo.findById(id);
+    }
+    
+   
+    
+    public List<EnrollmentBean> getByUser(int userId) {
+        return repo.findByUser(userId);
     }
 
-    public List<Map<String, Object>> getByUser(int userId) {
-        return enrollmentRepository.findByUser(userId);
+    public void confirmEnrollment(int enrollmentId) {
+        repo.updateStatus(enrollmentId, 1);
     }
+    
+    public List<CourseBean> getEnrolledCourses(int userId) {
+        return repo.getEnrolledCourses(userId);
+    }
+    
+//    public List<CourseBean> getEnrolledCourses(int userId) {
+//
+//        List<Integer> courseIds = repo.getEnrolledCourseIds(userId);
+//
+//        return courseRepo.getCoursesByIds(courseIds);
+//    }
+    
 
-    public void markAsPaid(int enrollmentId) {
-        enrollmentRepository.updateStatus(enrollmentId, 1);
-    }
 }

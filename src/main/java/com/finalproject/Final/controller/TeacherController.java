@@ -1,4 +1,4 @@
-package com.finalproject.Final.Controller;
+package com.finalproject.Final.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class TeacherController {
 	@GetMapping("/forms")
 	public ModelAndView showForm() {
 		
-		return new ModelAndView("create-teacher","userObj",new TeacherBean());
+		return new ModelAndView("teacher/create-teacher","userObj",new TeacherBean());
 		
 	}
 	@PostMapping("/teacherRegister")
@@ -67,13 +67,13 @@ public class TeacherController {
 		        	
 		    }
 		    if (result.hasErrors() || file.isEmpty()) {
-				  return "create-teacher"; 
+				  return "teacher/create-teacher"; 
 			    }
 		  //long maxSize=5*1024;
 			  long maxSize=2*1024*1024;
 		    if (file.getSize() > maxSize) {
 			    m.addAttribute("fileError", "File size must be less than 2MB");
-			    	return "create-teacher";
+			    	return "teacher/create-teacher";
 			}
 		    
 		    String contentType = file.getContentType();
@@ -81,12 +81,12 @@ public class TeacherController {
 		    if(contentType == null ||
 		       !contentType.startsWith("image/")) {
 		        	m.addAttribute("fileError", "Only image files are allowed");
-		        		return "create-teacher";
+		        		return "teacher/create-teacher";
 		    }
 		    BufferedImage image = ImageIO.read(file.getInputStream());
 		    if (image == null) {
 		        m.addAttribute("fileError", "Invalid image file");
-		        return "create-teacher";
+		        return "teacher/create-teacher";
 		    }
 
 	       String fileName = file.getOriginalFilename();	      			      
@@ -121,7 +121,7 @@ public class TeacherController {
 	  public String showAllTeacher(Model m) {
 		  List<TeacherBean> list=mRepo.getAllTeacher();
 		  	m.addAttribute("teacherList",list);
-		  		return "teachers-list";
+		  		return "teacher/teachers-list";
 	  		}
 	  @GetMapping("/getbyid")
 	  	public ModelAndView getById(@RequestParam ("id") Integer id) {
@@ -132,7 +132,7 @@ public class TeacherController {
 	  @PostMapping("/update")
 	  	public String updateUpload(  @Valid @ModelAttribute("teacherObj") TeacherBean obj,  BindingResult result,	@RequestParam("file") MultipartFile file,Model m) throws IOException {
 		  if (result.hasErrors()) {
-		        return "teacher-edit";
+		        return "teacher/teacher-edit";
 		    }
 
 		  TeacherBean oldObj = mRepo.getByTeacherId(obj.getId());
@@ -143,7 +143,7 @@ public class TeacherController {
 			 // long maxSize=5*1024;
 		  	if (file.getSize() > maxSize) {
 			    m.addAttribute("fileError", "File size must be less than 2MB");
-			    	return "teacher-edit";
+			    	return "teacher/teacher-edit";
 			 }
 		  
 		  String contentType = file.getContentType();			 

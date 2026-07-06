@@ -1,10 +1,12 @@
 package com.finalproject.Final.service;
 
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalproject.Final.dto.PaymentDTO;
+import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.PaymentRepository;
 
 @Service
@@ -16,35 +18,51 @@ public class PaymentService {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    // MAIN FLOW: called when user clicks "Pay"
-    public void processPayment(int enrollmentId,
-                               int userId,
-                               int amount,
-                               String paymentMethod,
-                               String paymentType,
-                               int courseId) {
+    @Autowired
+    private CourseRepository courseRepository;
 
-        // create payment
+    public void processPayment(PaymentDTO dto) {
+
+        // 1. get enrollment 
+        EnrollmentBean enrollment =  enrollmentService.getById(dto.getEnrollmentId());
+               
+
+        int courseId = enrollment.getCourseId();
+        int userId = enrollment.getUserId();
+        
+
+        // 2. prevent double payment
+        if (paymentRepository.existsPaidPayment(dto.getEnrollmentId())) {
+            throw new RuntimeException("Already paid for this enrollment");
+        }
+
+        // 3. check seat availability BEFORE payment
+        int seats = courseRepository.getSeatsAvailable(courseId);
+        if (seats <= 0) {
+            throw new RuntimeException("No seats available");
+        }
+
+        // 4. save payment
         int paymentId = paymentRepository.savePayment(
-                amount,
-                paymentMethod,
-                "PENDING",
-                courseId
+                dto.getAmount(),
+                dto.getPaymentMethod(),
+                "SUCCESS",
+                courseId,
+                dto.getEnrollmentId()
         );
 
-        // create payment record (user link)
+        // 5. save payment record
         paymentRepository.savePaymentRecord(
                 paymentId,
                 userId,
-                paymentType
+                dto.getPaymentType()
         );
 
-        // update enrollment status
-        enrollmentService.markAsPaid(enrollmentId);
+        // 6. confirm enrollment
+        enrollmentService.confirmEnrollment(dto.getEnrollmentId());
+
+        // 7. reduce seat
+        courseRepository.decreaseSeat(courseId);
     }
 
-    // get payment details for UI page
-    public Map<String, Object> getPaymentByEnrollment(int enrollmentId) {
-        return paymentRepository.getPaymentByEnrollment(enrollmentId);
-    }
 }

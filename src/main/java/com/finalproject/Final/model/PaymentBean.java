@@ -14,10 +14,12 @@ public class PaymentBean {
 	private int amount;
 	private LocalDate paymentDate;
 	private String paymentMethod;
+	
 	private String paymentStatus;
+	private int courseId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private int courseId;
+	
 	
 
-}
+}	

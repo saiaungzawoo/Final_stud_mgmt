@@ -1,4 +1,4 @@
-package com.finalproject.Final.Controller;
+package com.finalproject.Final.controller;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class IndexController {
     	    model.addAttribute("allList", allList);
 
 
-        return "index";
+        return "layout/index";
     }
 
 }
