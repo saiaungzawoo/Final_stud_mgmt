@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.finalproject.Final.Bean.TeacherBean;
+import com.finalproject.Final.model.TeacherBean;
 import com.finalproject.Final.repository.TeacherRepository;
 
 
@@ -46,6 +46,11 @@ import jakarta.validation.Valid;
 public class TeacherController {
 	@Autowired
 	private TeacherRepository  mRepo;
+	
+	  @GetMapping("/dashboard")
+	    public String teacherDashboard() {
+	        return "teacher/teacher-page";
+	    }
 	
 	@GetMapping("/forms")
 	public ModelAndView showForm() {

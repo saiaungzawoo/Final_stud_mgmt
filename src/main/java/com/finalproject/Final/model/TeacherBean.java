@@ -1,4 +1,4 @@
-package com.finalproject.Final.Bean;
+package com.finalproject.Final.model;
 
 
 import java.sql.Timestamp;
