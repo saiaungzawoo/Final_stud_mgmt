@@ -28,7 +28,7 @@ public class CourseController {
     @GetMapping("/show")
     public String showCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
-        return "courses";
+        return "student/courses";
     }
 
     // Show course detail page
@@ -37,10 +37,14 @@ public class CourseController {
 
         CourseBean course = courseService.getById(id);
         List<ScheduleBean> schedules = scheduleService.getByCourseId(id);
+        
+        if (course.getSeatsAvailable() == 0) {
+            course.setStatus("FULL");
+        }
 
         model.addAttribute("course", course);
         model.addAttribute("schedules", schedules);
 
-        return "course-detail";
+        return "student/course-detail";
     }
 }
