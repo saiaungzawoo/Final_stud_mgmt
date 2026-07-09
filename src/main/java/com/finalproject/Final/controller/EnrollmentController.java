@@ -41,7 +41,7 @@ public class EnrollmentController {
     private UserService userService;
     
     @GetMapping("/show")
-    public String showEnrollPage(@RequestParam int courseId,
+    public String showEnrollPage(@RequestParam String courseId,
                                  HttpSession session,
                                  Model model) {
 
@@ -70,7 +70,7 @@ public class EnrollmentController {
     public String createEnrollment(EnrollmentDTO dto, RedirectAttributes ra) {
 
         try {
-            int enrollmentId = enrollmentService.createEnrollment(dto);
+            String enrollmentId = enrollmentService.createEnrollment(dto);
             return "redirect:/payment/page/" + enrollmentId;
 
         } catch (RuntimeException e) {
@@ -87,7 +87,7 @@ public class EnrollmentController {
 
     // view user enrollments
     @GetMapping("/my")
-    public String myEnrollments(@RequestParam int userId, Model model) {
+    public String myEnrollments(@RequestParam String userId, Model model) {
         model.addAttribute("enrollments",
                 enrollmentService.getByUser(userId));
         return "student/my-enrollments";

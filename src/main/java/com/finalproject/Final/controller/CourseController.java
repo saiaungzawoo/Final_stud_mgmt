@@ -33,7 +33,7 @@ public class CourseController {
 
     // Show course detail page
     @GetMapping("/{id}")
-    public String showCourseDetail(@PathVariable int id, Model model) {
+    public String showCourseDetail(@PathVariable String id, Model model) {
 
         CourseBean course = courseService.getById(id);
         List<ScheduleBean> schedules = scheduleService.getByCourseId(id);
