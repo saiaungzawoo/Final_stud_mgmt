@@ -10,16 +10,29 @@ import lombok.Setter;
 @Setter
 public class EnrollmentBean {
 
-	private int id;
-	private int userId;
-	private int courseId;
-	// JOIN FIELD
-    private String courseTitle;
-
+	private String enrollmentId;
+	private String userId;
+	private String courseId;
+	private String paymentTypeId;
+	private String installmentRuleId;
+	private String scholarshipApplicationId;
 	private LocalDate enrollmentDate;
-	private int status;
+	private Double originalFee;
+	private Double discountedAmount;
+	private Double finalFee;
+	private String paymentStatus;
+	private String status;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	
+	
+	// JOIN FIELD
+    private String courseTitle;
+    private String username;
+
+	
+
+	
 	
 
 }

@@ -88,7 +88,7 @@
 										<div class="category-card">
 											<i class="bi bi-calendar-week"></i>
 											<h3>Duration</h3>
-											<p th:text="${course.duration}"></p>
+											<p th:text="${course.durationWeeks}"></p>
 										</div>
 									</div>
 
@@ -148,7 +148,7 @@
 									<!-- ENROLL BUTTON -->
 									<a class="btn btn-primary w-100 mt-3"
 										th:if="${course.seatsAvailable > 0}"
-										th:href="@{/enrollment/show(courseId=${course.id})}">
+										th:href="@{/enrollment/show(courseId=${course.CourseId})}">
 										Enroll Now </a>
 
 									<button class="btn btn-secondary w-100 mt-3"
