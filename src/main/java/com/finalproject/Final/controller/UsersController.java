@@ -1,16 +1,17 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import com.finalproject.Final.model.UserBean;
 
 import com.finalproject.Final.repository.UsersRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 
@@ -33,80 +35,88 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/student")
 public class UsersController {
-	
-	@Autowired
-	private UsersRepository uRepo;
-	
-	@GetMapping("/register")
-	public String registerPage(Model m) {
-		 UserBean user = new UserBean();
-		    user.setGender("Male");   // Default selected
-		    m.addAttribute("userObj", user);
-	   // m.addAttribute("userObj", new UserBean());
-	   // return "success";
-	    
-	    return "student/student_register";
-	}
-	@GetMapping("/registers")
-	public String success(Model m) {
-		 UserBean user = uRepo.getLatestStudent();
-	    m.addAttribute("userObj", user);
-	    
-	   // return "success";
-	    return "student/success";
-	}
-	
-	
-	
-	@PostMapping("/register")
-	public String studentRegistrater(@Valid @ModelAttribute("userObj")UserBean obj,
-			BindingResult br,Model m,
-			@RequestParam("photo") MultipartFile photo) throws IOException {
-		
-		//age must be 16 vallidation
-		if (obj.getDob() != null &&
-		        obj.getDob().isAfter(LocalDate.now().minusYears(16))) {
+  
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+  @Autowired
+  
+  private UsersRepository uRepo;
+  
+
+  
+  
+  @GetMapping("/register")
+  public String registerPage(Model m) {
+     UserBean user = new UserBean();
+        user.setGender("Male");   // Default selected
+        m.addAttribute("userObj", user);
+     // m.addAttribute("userObj", new UserBean());
+     // return "success";
+      
+      return "student/student_register";
+  }
+  
+  @GetMapping("/registers")
+  public String success(Model m) {
+
+      UserBean user = uRepo.getLatestUserByRole("Student");
+
+      m.addAttribute("userObj", user);
+
+      return "student/success";
+  }
+  
+  
+  
+  @PostMapping("/register")
+  public String studentRegistrater(@Valid @ModelAttribute("userObj")UserBean obj,
+      BindingResult br,Model m,
+      @RequestParam("photo") MultipartFile photo) throws IOException {
+    
+    //age must be 16 vallidation
+    if (obj.getDob() != null &&
+            obj.getDob().isAfter(LocalDate.now().minusYears(16))) {
            br.rejectValue(
-		                "dob",
-		                "error.dob",
-		                "Age must be at least 16 years old"); }
-		
-		if(br.hasErrors()) {
-			return"student/student_register";
-		}
-		
-		if (photo.isEmpty()) {
-	        m.addAttribute("error", "Please select a photo");
-	        return "student/student_register";
-	    }
-		//photo size 
-		 long maxSize = 2 * 1024 * 1024;
-	     if (photo.getSize() > maxSize) {
-		        m.addAttribute("error",
-		                "Photo size must not exceed 2 MB!");
-		        return"student/student_register";
-	     }
-		        
-		         // Content Type Validation
-			    String contentType = photo.getContentType();
+                    "dob",
+                    "error.dob",
+                    "Age must be at least 16 years old"); }
+    
+    if(br.hasErrors()) {
+      return"student/student_register";
+    }
+    
+    if (photo.isEmpty()) {
+          m.addAttribute("error", "Please select a photo");
+          return "student/student_register";
+      }
+    //photo size 
+     long maxSize = 2 * 1024 * 1024;
+       if (photo.getSize() > maxSize) {
+            m.addAttribute("error",
+                    "Photo size must not exceed 2 MB!");
+            return"student/student_register";
+       }
+            
+             // Content Type Validation
+          String contentType = photo.getContentType();
 
-			    if (contentType == null ||
-			            !(contentType.equals("image/jpeg")
-			                    || contentType.equals("image/png"))) {
+          if (contentType == null ||
+                 !(contentType.equals("image/jpeg")
+                         ||  contentType.equals("image/png"))) {
 
-			        m.addAttribute("error", "Invalid image file");
-			        return "student/student_register";
-			    }
-			    
-			    BufferedImage image = ImageIO.read(photo.getInputStream());
-		    if (image == null) {
-			        m.addAttribute("error",
-			                "Invalid image file");
-			        return "student/student_register";
-			        }
-		    String fileName = photo.getOriginalFilename();
+              m.addAttribute("error", "Invalid image file");
+              return "student/student_register";
+          }
+          
+          BufferedImage image = ImageIO.read(photo.getInputStream());
+        if (image == null) {
+              m.addAttribute("error",
+                      "Invalid image file");
+              return "student/student_register";
+              }
+        String fileName = photo.getOriginalFilename();
 
-	        String path = "D:/upload/";
+          String path = "D:/upload/";
 //file 
 	        File dir = new File(path);
 	        if (!dir.exists()) {
@@ -141,163 +151,125 @@ public class UsersController {
 	
 	@PostMapping("/update")
 	public String updateStudent(
-	         @ModelAttribute("userObj") UserBean userObj,
+	        @Valid @ModelAttribute("userObj") UserBean userObj,
 	        BindingResult br,
 	        Model model,
 	        @RequestParam("photo") MultipartFile photo) throws IOException {
 
-	    // Age Validation
-	    if (userObj.getDob() != null &&
-	            userObj.getDob().isAfter(LocalDate.now().minusYears(16))) {
+      // Age Validation
+      if (userObj.getDob() != null &&
+              userObj.getDob().isAfter(LocalDate.now().minusYears(16))) {
 
 	        br.rejectValue(
 	                "dob",
 	                "error.dob",
 	                "Age must be at least 16 years old.");
 	    }
-	 // Password validation only if user enters a new password
-	      if (userObj.getPassword() != null && !userObj.getPassword().isBlank()) {
-	          String password = userObj.getPassword();
-
-	          if (password.length() < 6) {
-	              br.rejectValue("password", "error.password",
-	                      "Password must be at least 6 characters long.");
-	          }
-
-	          if (!password.matches(".*[A-Za-z].*")) {
-	              br.rejectValue("password", "error.password",
-	                      "Password must contain at least one letter.");
-	          }
-
-	          if (!password.matches(".*\\d.*")) {
-	              br.rejectValue("password", "error.password",
-	                      "Password must contain at least one number.");
-	          }
-	      }
 
 	    if (br.hasErrors()) {
 	        return "student/student_edit";
 	    }
-	 // Password validation only if user enters a new password
-	      if (userObj.getPassword() != null && !userObj.getPassword().isBlank()) {
-	          String password = userObj.getPassword();
 
-	          if (password.length() < 6) {
-	              br.rejectValue("password", "error.password",
-	                      "Password must be at least 6 characters long.");
-	          }
+      // Get Existing User
+      UserBean oldUser = uRepo.getUserById(userObj.getUserId());
 
-	          if (!password.matches(".*[A-Za-z].*")) {
-	              br.rejectValue("password", "error.password",
-	                      "Password must contain at least one letter.");
-	          }
-
-	          if (!password.matches(".*\\d.*")) {
-	              br.rejectValue("password", "error.password",
-	                      "Password must contain at least one number.");
-	          }
-	      }
-
-	    // Get Existing User
-	    UserBean oldUser = uRepo.getUserById(userObj.getId());
-
-	    if (oldUser == null) {
-	        model.addAttribute("error", "User not found.");
-	        return "student/student_edit";
-	    }
-
-	    // Email Duplicate Check
-	    UserBean emailUser = uRepo.getUserByEmail(userObj.getEmail());
-
-	    if (emailUser != null &&
-	            emailUser.getId() != userObj.getId()) {
-
-	        model.addAttribute(
-	                "emailError",
-	                "Email already exists.");
+      if (oldUser == null) {
+          model.addAttribute("error", "User not found.");
           return "student/student_edit";
-	    }
+      }
 
-	    // Photo Upload (Optional)
-	    if (!photo.isEmpty()) {
+      // Email Duplicate Check
+      UserBean emailUser = uRepo.getUserByEmail(userObj.getEmail());
 
-	        // Size Validation
-	        long maxSize = 5 * 1024 * 1024;
+      if(emailUser != null &&
+    		   !emailUser.getUserId().equals(userObj.getUserId())) {
 
-	        if (photo.getSize() > maxSize) {
+    		    model.addAttribute(
+    		        "emailError",
+    		        "Email already exists.");
 
-	            model.addAttribute(
-	                    "error",
-	                    "Photo size must not exceed 5 MB.");
+    		    return "student/student_edit";
+    		}
 
-	            return "student/student_edit";
-	        }
+      // Photo Upload (Optional)
+      if (!photo.isEmpty()) {
 
-	        // Content Type Validation
-	        String contentType = photo.getContentType();
+          // Size Validation
+          long maxSize = 5 * 1024 * 1024;
 
-	        if (contentType == null ||
-	                !(contentType.equals("image/jpeg")
-	                        || contentType.equals("image/png"))) {
+          if (photo.getSize() > maxSize) {
 
-	            model.addAttribute(
-	                    "error",
-	                    "Only JPG and PNG images are allowed.");
+              model.addAttribute(
+                      "error",
+                      "Photo size must not exceed 5 MB.");
 
-	            return "student/student_edit";
-	        }
+              return "student/student_edit";
+          }
 
-	        // Check Image
-	        BufferedImage image =
-	                ImageIO.read(photo.getInputStream());
+          // Content Type Validation
+          String contentType = photo.getContentType();
 
-	        if (image == null) {
+          if (contentType == null ||
+                  !(contentType.equals("image/jpeg")
+                        ||   contentType.equals("image/png"))) {
 
-	            model.addAttribute(
-	                    "error",
-	                    "Invalid image.");
+              model.addAttribute(
+                      "error",
+                      "Only JPG and PNG images are allowed.");
 
-	            return "student/student_edit";
-	        }
+              return "student/student_edit";
+          }
 
-	        // Upload Folder
-	        String uploadPath = "D:/upload/";
+          // Check Image
+          BufferedImage image =
+                  ImageIO.read(photo.getInputStream());
 
-	        File dir = new File(uploadPath);
+          if (image == null) {
 
-	        if (!dir.exists()) {
-	            dir.mkdirs();
-	        }
+              model.addAttribute(
+                      "error",
+                      "Invalid image.");
 
-	        // Unique File Name
-	       // String fileName =
-	             //   UUID.randomUUID() + "_"
-	                      //  + photo.getOriginalFilename();
+              return "student/student_edit";
+          }
 
-	        // Save File
-	    String fileName=photo.getOriginalFilename();//n
-	    		photo.transferTo(new File(dir, fileName));
+          // Upload Folder
+          String uploadPath = "D:/upload/";
+   File dir = new File(uploadPath);
+          if (!dir.exists()) {
+              dir.mkdirs();
+              }
+ // Save File
+          String fileName=photo.getOriginalFilename();//n
+          photo.transferTo(new File(dir, fileName));
 
-	        userObj.setFilePath("/upload/" + fileName);
-	        //System.out.println(userObj.getFilePath());
-	    } else {
+          userObj.setProfileImage("/upload/" + fileName);
+          //System.out.println(userObj.getFilePath());
+      } else {
 
-	        // Keep Old Photo
-	        userObj.setFilePath(oldUser.getFilePath());
+          // Keep Old Photo
+          userObj.setProfileImage(oldUser.getProfileImage());
 
-	    }
+      }
 
-	    // Keep Existing Data
-	    userObj.setRoleId(oldUser.getRoleId());
-	    userObj.setIsActive(oldUser.getIsActive());
-	    userObj.setCreatedAt(oldUser.getCreatedAt());
+      // Keep existing values
+      userObj.setRoleId(oldUser.getRoleId());
+      userObj.setIsActive(oldUser.getIsActive());
+      userObj.setCreatedAt(oldUser.getCreatedAt());
+      userObj.setUpdatedAt(LocalDateTime.now());
+
+   // Password
+      if (userObj.getPassword() == null || userObj.getPassword().isBlank()) {
+          userObj.setPassword(oldUser.getPassword());
+      } else {
+          userObj.setPassword(passwordEncoder.encode(userObj.getPassword()));
+      }
 
 	    // Update User
 	    uRepo.updateUser(userObj);
 	    return "student/success";
 	   // return "redirect:/update";
 	}
-
 	
 	@GetMapping("/update")
 	public String update(Model m) {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
@@ -30,7 +30,7 @@
                           enctype="multipart/form-data">
 
                         <!-- Hidden ID -->
-                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:field="*{userId}">
 
 
                     
@@ -38,7 +38,7 @@
                         <div class="text-center mb-4">
                         
                             
-<img th:src="@{${userObj.filePath}}"
+<img th:src="@{${userObj.profileImage}}"
      class="rounded-circle border"
      width="130"
      height="130">
@@ -76,15 +76,23 @@
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
 
-                            <input type="text"
-                                   th:field="*{password}"
-                                   class="form-control">
 
-                            <small class="text-danger"
-                                   th:errors="*{password}"></small>
-                        </div>
+    <label class="form-label">New Password</label>
+
+    <input type="password"
+           name="password"
+           class="form-control"
+           placeholder="Leave blank to keep current password">
+
+    <small class="text-muted">
+        Leave blank if you don't want to change your password.
+    </small><br>
+
+    <small class="text-danger"
+           th:errors="*{password}"></small>
+</div>
+
                         
                         
 
@@ -115,8 +123,7 @@
                         <!-- DOB -->
                         <div class="mb-3">
                             <label class="form-label">Date of Birth</label>
-
-                            <input type="text"
+ <input type="text"
                                    th:field="*{dob}"
                                    class="form-control">
 
