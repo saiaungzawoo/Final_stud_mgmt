@@ -1,6 +1,7 @@
 package com.finalproject.Final.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ public class LoginController {
 
     @Autowired
     UserRepository uRepo;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -29,9 +33,15 @@ public class LoginController {
 
         UserBean user = uRepo.findByEmail(email);
 
-        if (user != null && password.equals(user.getPassword())) {
+//        if (user != null && password.equals(user.getPassword())) {
+//
+//            session.setAttribute("loginUser", user);
+//            return "redirect:/home";
+//        }
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
 
             session.setAttribute("loginUser", user);
+
             return "redirect:/home";
         }
 

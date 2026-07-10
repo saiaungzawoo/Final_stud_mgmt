@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
@@ -109,8 +109,7 @@ You must be at least 16 years old.
                                type="radio"
                                th:field="*{gender}"
                                value="Female" >
-
-                        <label class="form-check-label">
+ <label class="form-check-label">
                             Female
                         </label>
                     </div>
@@ -122,8 +121,10 @@ You must be at least 16 years old.
              <label class="form-label">Profile Photo</label>
             <input type="file" name="photo" class="form-control" accept="image/*">
            <small class="text-muted">Allowed formats: JPG, JPEG, PNG</small><br>
-            <small class="text-danger" th:errors="*{filePath}"></small>
+            <small class="text-danger" th:errors="*{profileImage}"></small>
+
             <p th:if="${error}" style="color: red;" th:text="${error}"></p>
+
         </div>
         
         <!-- Terms -->

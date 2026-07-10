@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CourseCategoryDTO {
 	
-	private Integer id;
+	private String id;
 	private String name;
 
 }
