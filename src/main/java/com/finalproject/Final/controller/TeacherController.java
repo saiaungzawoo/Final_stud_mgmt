@@ -32,6 +32,8 @@ import jakarta.validation.Valid;
 public class TeacherController {
 	@Autowired
 	private TeacherRepository  mRepo;
+	 @Autowired
+	    private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/forms")
 	public ModelAndView showForm() {
