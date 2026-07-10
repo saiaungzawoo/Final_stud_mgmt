@@ -1,10 +1,13 @@
 package com.finalproject.Final.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.finalproject.Final.model.PaymentBean;
 
 @Repository
 public class PaymentRepository {
@@ -13,14 +16,14 @@ public class PaymentRepository {
     private JdbcTemplate jdbc;
 
     // Save payment (main payment table)
-    public int savePayment(int amount, String method, String status, int courseId, int enrollmentId) {
+    public int savePayment(String transactionReference, int amount, String method, String status, int courseId, int enrollmentId) {
 
         String sql = "INSERT INTO payment\r\n"
-        		+ "        (amount, payment_date, payment_method, payment_status, created_at, updated_at, course_id, enrollment_id)\r\n"
-        		+ "        VALUES (?, ?, ?, ?, NOW(), NOW(), ?, ?)";
+        		+ "        (transaction_reference, amount, payment_date, payment_method, payment_status, created_at, updated_at, course_id, enrollment_id)\r\n"
+        		+ "        VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)";
 
-        jdbc.update(sql, amount, LocalDate.now(), method, status, courseId, enrollmentId);
-
+        jdbc.update(sql, transactionReference,  amount, LocalDate.now(), method, status, courseId, enrollmentId);
+ 
         return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
@@ -45,15 +48,45 @@ public class PaymentRepository {
         Integer count = jdbc.queryForObject(sql, Integer.class, enrollmentId);
         return count != null && count > 0;
     }
+    
+    public PaymentBean getByEnrollmentId(int enrollmentId) {
 
-    // Get payment by enrollment
-//    public Map<String, Object> getPaymentByEnrollment(int enrollmentId) {
-//
-//        String sql = "SELECT p.*\r\n"
-//        		+ "            FROM payment p\r\n"
-//        		+ "            JOIN enrollment e ON p.course_id = e.course_id\r\n"
-//        		+ "            WHERE e.id = ?";
-//
-//        return jdbc.queryForMap(sql, enrollmentId);
-//    }
+        String sql = " SELECT *\r\n"
+        		+ "        FROM payment\r\n"
+        		+ "        WHERE enrollment_id = ?\r\n"
+        		+ "        ORDER BY id DESC\r\n"
+        		+ "        LIMIT 1";
+
+        List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), enrollmentId);
+
+        return list.isEmpty() ? null : list.get(0);
+    }
+    
+    public PaymentBean getById(int id) {
+
+        String sql = """
+                SELECT *
+                FROM payment
+                WHERE id = ?
+                """;
+
+        return jdbc.queryForObject(
+                sql,
+                new PaymentRowMapper(),
+                id);
+    }
+    
+    public void markReceiptDownloaded(int paymentId) {
+
+        String sql = """
+                UPDATE payment
+                SET receipt_downloaded = 1
+                WHERE id = ?
+                """;
+
+        jdbc.update(sql, paymentId);
+
+    }
+
+    
 }

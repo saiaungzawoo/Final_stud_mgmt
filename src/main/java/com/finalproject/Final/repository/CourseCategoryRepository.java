@@ -20,6 +20,7 @@ import com.finalproject.Final.model.CourseCategoryBean;
  *
  */
 
+//fixed sazo
 
 @Repository
 public class CourseCategoryRepository {
@@ -36,31 +37,39 @@ public class CourseCategoryRepository {
 	}
 	
 	
-	/*
-	 * public List<CourseCategoryBean> getAllCourseCategory(){
-	 * 
-	 * 
-	 * 
-	 * String sql = "select * from course_category";
-	 * 
-	 * return jdbc.query(sql, (rs,rowCont) -> new CourseCategoryBean(
-	 * rs.getInt("id"), rs.getString("name") ) );
-	 * 
-	 * }
-	 */
-	
-	public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
+	public List<CourseCategoryBean> getAllCourseCategory(){
 		
-		String sql = "select * from course_category where id=?";
 		
-		return jdbc.queryForObject(sql,
-				(rs,rowCount)-> new CourseCategoryBean(
+		
+		String sql = "select * from course_category";
+		
+		return jdbc.query(sql, 
+				(rs,rowCont) -> new CourseCategoryBean(
 						rs.getInt("id"),
-						rs.getString("name"))
-				,courseCategoryId );
+						rs.getString("name")
+						)
+				);
+		
 	}
 	
-	public int updateCourseCategory(int CourseCatId, String courseCatName) {
+	public CourseCategoryBean getCourseCategoryById(String courseCategoryId) {
+
+	    String sql = "SELECT * FROM course_category WHERE courseCategoryID = ?";
+
+	    return jdbc.queryForObject(sql,
+	            (rs, rowNum) -> new CourseCategoryBean(
+	                    rs.getString("courseCategoryID"),
+	                    rs.getString("name"),
+	                    rs.getString("description"),
+	                    rs.getInt("is_active"),
+	                    rs.getTimestamp("created_at") != null
+	                            ? rs.getTimestamp("created_at").toLocalDateTime()
+	                            : null
+	            ),
+	            courseCategoryId);
+	}
+	
+	public int updateCourseCategory(String CourseCatId, String courseCatName) {
 		
 		String sql = "update course_category set name=? where id=?";
 		
@@ -68,7 +77,7 @@ public class CourseCategoryRepository {
 		
 	}
 	
-	public int deleteCourseCategory(int courseCategoryId) {
+	public int deleteCourseCategory(String courseCategoryId) {
 		
 		String sql = "delete from course_category where id=?";
 		

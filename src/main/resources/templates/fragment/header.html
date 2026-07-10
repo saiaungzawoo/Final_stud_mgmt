@@ -107,7 +107,7 @@
                     <div th:each="cat : ${allCategories}" class="col">
                       <a
                         class="dropdown-item rounded"
-                        th:href="@{/courses/by-category/{id}(id=${cat.id})}"
+                        th:href="@{/courses/by-category/{id}(id=${cat.courseCategoryId})}"
                         th:text="${cat.name}"
                       >
                       </a>
