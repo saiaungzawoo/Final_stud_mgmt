@@ -37,10 +37,6 @@ public class UsersController {
 	@Autowired
 	private UsersRepository uRepo;
 	
-	@Autowired
-	  private PasswordEncoder passwordEncoder;    
-	  
-	  
 	@GetMapping("/register")
 	public String registerPage(Model m) {
 		 UserBean user = new UserBean();
@@ -128,15 +124,14 @@ public class UsersController {
 			            "Email already exists");
 			    return "student/student_register";
 			}
-		   
-		    
-		    obj.setRoleId(3); // Student
-		      obj.setIsActive(1);
-		      obj.setCreatedAt(LocalDateTime.now());
-		      obj.setPassword(passwordEncoder.encode(obj.getPassword()));
-		      uRepo.insertUser(obj);
-		      m.addAttribute("userObj", obj);
-		    
+
+	  obj.setRoleId(3); // Student
+	    obj.setIsActive(1);
+	    obj.setCreatedAt(LocalDateTime.now());
+	 
+	    uRepo.insertUser(obj);
+	    m.addAttribute("userObj", obj);
+
 	   // return "redirect:/login";
 		
 		
@@ -160,6 +155,25 @@ public class UsersController {
 	                "error.dob",
 	                "Age must be at least 16 years old.");
 	    }
+	 // Password validation only if user enters a new password
+	      if (userObj.getPassword() != null && !userObj.getPassword().isBlank()) {
+	          String password = userObj.getPassword();
+
+	          if (password.length() < 6) {
+	              br.rejectValue("password", "error.password",
+	                      "Password must be at least 6 characters long.");
+	          }
+
+	          if (!password.matches(".*[A-Za-z].*")) {
+	              br.rejectValue("password", "error.password",
+	                      "Password must contain at least one letter.");
+	          }
+
+	          if (!password.matches(".*\\d.*")) {
+	              br.rejectValue("password", "error.password",
+	                      "Password must contain at least one number.");
+	          }
+	      }
 
 	    if (br.hasErrors()) {
 	        return "student/student_edit";
@@ -278,22 +292,10 @@ public class UsersController {
 	    userObj.setIsActive(oldUser.getIsActive());
 	    userObj.setCreatedAt(oldUser.getCreatedAt());
 
-	 // Password
-	    
-	      if (userObj.getPassword() == null || userObj.getPassword().isBlank()) {
-	          userObj.setPassword(oldUser.getPassword());
-	      } else {
-	          userObj.setPassword(passwordEncoder.encode(userObj.getPassword()));
-	      }
-
-	      // Update User
-	      uRepo.updateUser(userObj);
-	      return "student/success";
-	    
-	  
-	
-
-	      // Update User
+	    // Update User
+	    uRepo.updateUser(userObj);
+	    return "student/success";
+	   // return "redirect:/update";
 	}
 
 	
