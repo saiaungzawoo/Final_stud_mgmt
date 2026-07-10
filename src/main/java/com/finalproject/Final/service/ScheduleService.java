@@ -14,7 +14,7 @@ public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    public List<ScheduleBean> getByCourseId(int courseId) {
+    public List<ScheduleBean> getByCourseId(String courseId) {
 
         return scheduleRepository.findByCourseId(courseId);
 

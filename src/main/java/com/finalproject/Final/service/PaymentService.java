@@ -1,11 +1,16 @@
 package com.finalproject.Final.service;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalproject.Final.dto.PaymentDTO;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.PaymentBean;
 import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.PaymentRepository;
 
@@ -22,6 +27,12 @@ public class PaymentService {
     private CourseRepository courseRepository;
 
     public void processPayment(PaymentDTO dto) {
+    	
+    	String transactionReference =
+    	        "TXN-" +
+    	        LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+    	        + "-" +
+    	        UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
         // 1. get enrollment 
         EnrollmentBean enrollment =  enrollmentService.getById(dto.getEnrollmentId());
@@ -44,6 +55,7 @@ public class PaymentService {
 
         // 4. save payment
         int paymentId = paymentRepository.savePayment(
+        		transactionReference,
                 dto.getAmount(),
                 dto.getPaymentMethod(),
                 "SUCCESS",
@@ -63,6 +75,18 @@ public class PaymentService {
 
         // 7. reduce seat
         courseRepository.decreaseSeat(courseId);
+    }
+    
+    public PaymentBean getByEnrollmentId(int enrollmentId) {
+        return paymentRepository.getByEnrollmentId(enrollmentId);
+    }
+    
+    public PaymentBean getById(int id) {
+        return paymentRepository.getById(id);
+    }
+    
+    public void markReceiptDownloaded(int paymentId) {
+        paymentRepository.markReceiptDownloaded(paymentId);
     }
 
 }

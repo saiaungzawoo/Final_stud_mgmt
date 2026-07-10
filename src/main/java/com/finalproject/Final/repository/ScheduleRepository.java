@@ -14,10 +14,10 @@ public class ScheduleRepository {
 	@Autowired
 	private JdbcTemplate jdbc;
 	
-	public List<ScheduleBean> findByCourseId(int courseId) {
+	public List<ScheduleBean> findByCourseId(String courseId) {
 
 	    String sql =
-	        "SELECT * FROM schedule WHERE course_id = ?";
+	        "SELECT * FROM schedule WHERE courseID = ?";
 
 	    return jdbc.query(sql, new ScheduleRowMapper(), courseId);
 	}

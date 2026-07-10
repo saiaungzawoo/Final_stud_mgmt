@@ -14,8 +14,9 @@ public class PaymentBean {
 	private int amount;
 	private LocalDate paymentDate;
 	private String paymentMethod;
-	
+	private String transactionReference;
 	private String paymentStatus;
+	private int receiptDownloaded;
 	private int courseId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;

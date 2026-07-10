@@ -1,7 +1,6 @@
 package com.finalproject.Final.controller;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.finalproject.Final.dto.PaymentDTO;
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.PaymentBean;
 import com.finalproject.Final.service.CourseService;
 import com.finalproject.Final.service.EnrollmentService;
 import com.finalproject.Final.service.PaymentService;
@@ -41,13 +41,14 @@ public class PaymentController {
 
             model.addAttribute("enrollment", enrollment);
             model.addAttribute("course", course);
+           
 
-            return "payment";
+            return "student/payment";
 
         } catch (RuntimeException e) {
 
             model.addAttribute("errorMessage", e.getMessage());
-            return "payment";
+            return "student/payment";
         }
     }
 
@@ -65,14 +66,16 @@ public class PaymentController {
                                 Model model) {
 
         EnrollmentBean enrollment = enrollmentService.getById(enrollmentId);
+        CourseBean course = courseService.getById(enrollment.getCourseId());
 
-        CourseBean course =  courseService.getById(enrollment.getCourseId());
-               
+        PaymentBean payment = paymentService.getByEnrollmentId(enrollmentId);
+
         model.addAttribute("enrollment", enrollment);
         model.addAttribute("course", course);
+        model.addAttribute("payment", payment);
         model.addAttribute("paymentStatus", "PAID");
 
-        return "enroll-success";
+        return "student/enroll-success";
     }
     
     @PostMapping("/pay")

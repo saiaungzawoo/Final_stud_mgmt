@@ -28,6 +28,24 @@ public class UserRepository {
         return jdbc.update(sql, newPassword, email);
     }
     private final UserRowMapper mapper = new UserRowMapper();
+    
+    public UserBean findByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        try {
+            return jdbc.queryForObject(
+                    sql,
+                    new BeanPropertyRowMapper<>(UserBean.class),
+                    email);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    
+    public int updatePassword(String email, String newPassword) {
+        String sql = "UPDATE user SET password = ? WHERE email = ?";
+        return jdbc.update(sql, newPassword, email);
+    }
 
     // GET USER BY ID
     public UserBean findById(int id) {
@@ -44,4 +62,7 @@ public class UserRepository {
 
         return jdbc.queryForObject(sql, mapper, id);
     }
+    
+    
+    
 }

@@ -2,7 +2,6 @@ package com.finalproject.Final.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.finalproject.Final.dto.EnrollmentDTO;
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.EnrollmentBean;
-import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.EnrollmentRepository;
 
 @Service
@@ -18,44 +16,61 @@ public class EnrollmentService {
 
     @Autowired
     private EnrollmentRepository repo;
-    
-    @Autowired
-    private CourseRepository courseRepo;
 
-    public int createEnrollment(EnrollmentDTO dto) {
+
+    // CREATE ENROLLMENT
+    public String createEnrollment(EnrollmentDTO dto) {
 
         // prevent duplicate enrollment
-        if (repo.existsByUserIdAndCourseId(dto.getUserId(), dto.getCourseId())) {
-            throw new RuntimeException("Already enrolled in this course");
+        if (repo.existsByUserIdAndCourseId(
+                dto.getUserId(),
+                dto.getCourseId())) {
+
+            throw new RuntimeException(
+                "Already enrolled in this course"
+            );
         }
 
-        return repo.save(dto.getUserId(), dto.getCourseId(), LocalDate.now());
+
+        return repo.save(
+                dto.getUserId(),
+                dto.getCourseId(),
+                LocalDate.now()
+        );
     }
 
-    public EnrollmentBean getById(int id) {
-        return repo.findById(id);
+
+    // GET BY ENROLLMENT ID
+    public EnrollmentBean getById(String enrollmentId) {
+
+        return repo.findById(enrollmentId);
     }
-    
-   
-    
-    public List<EnrollmentBean> getByUser(int userId) {
+
+
+
+    // GET USER ENROLLMENTS
+    public List<EnrollmentBean> getByUser(String userId) {
+
         return repo.findByUser(userId);
     }
 
-    public void confirmEnrollment(int enrollmentId) {
-        repo.updateStatus(enrollmentId, 1);
+
+
+    // CONFIRM PAYMENT -> ACTIVE ENROLLMENT
+    public void confirmEnrollment(String enrollmentId) {
+
+        repo.updateStatus(
+                enrollmentId,
+                "Active"
+        );
     }
-    
-    public List<CourseBean> getEnrolledCourses(int userId) {
+
+
+
+    // GET COURSES USER ENROLLED IN
+    public List<CourseBean> getEnrolledCourses(String userId) {
+
         return repo.getEnrolledCourses(userId);
     }
-    
-//    public List<CourseBean> getEnrolledCourses(int userId) {
-//
-//        List<Integer> courseIds = repo.getEnrolledCourseIds(userId);
-//
-//        return courseRepo.getCoursesByIds(courseIds);
-//    }
-    
 
 }

@@ -26,37 +26,34 @@ public class CourseRepository {
     // 🔹 GET ALL COURSES
     public List<CourseBean> findAll() {
 
-    	 String sql =
-    		        "SELECT c.*, " +
-    		        "sc.name AS subcategory_name, " +
-    		        "cc.name AS category_name, " +
-    		        "u.name AS teacher_name " +
-    		        "FROM course c " +
-    		        "JOIN subcategory sc ON c.subCategory_id = sc.id " +
-    		        "JOIN course_category cc ON sc.course_category_id = cc.id " +
-    		        "JOIN user u ON c.teacher_id = u.id " +
-    		        "WHERE u.role_id = 2";
-    	
+        String sql =
+            "SELECT c.*, " +
+            "sc.name AS subcategory_name, " +
+            "cc.name AS category_name, " +
+            "u.name AS teacher_name " +
+            "FROM course c " +
+            "JOIN subcategory sc ON c.subcategoryID = sc.subcategoryID " +
+            "JOIN course_category cc ON c.courseCategoryID = cc.courseCategoryID " +
+            "JOIN user u ON c.teacherID = u.userID";
 
         return jdbc.query(sql, mapper);
     }
 
     // 🔹 GET BY ID
-    public CourseBean findById(int id) {
+    public CourseBean findById(String courseId) {
 
-    	String sql =
-    	        "SELECT c.*, " +
-    	        "cc.name AS category_name, " +
-    	        "sc.name AS subcategory_name, " +
-    	        "u.name AS teacher_name " +
-    	        "FROM course c " +
-    	        "JOIN course_category cc ON c.course_category_id = cc.id " +
-    	        "JOIN subcategory sc ON c.subCategory_id = sc.id " +
-    	        "JOIN user u ON c.teacher_id = u.id " +
-    	        "WHERE c.id = ?";
-      
+        String sql =
+            "SELECT c.*, " +
+            "sc.name AS subcategory_name, " +
+            "cc.name AS category_name, " +
+            "u.name AS teacher_name " +
+            "FROM course c " +
+            "JOIN subcategory sc ON c.subcategoryID = sc.subcategoryID " +
+            "JOIN course_category cc ON c.courseCategoryID = cc.courseCategoryID " +
+            "JOIN user u ON c.teacherID = u.userID " +
+            "WHERE c.courseID = ?";
 
-        return jdbc.queryForObject(sql, mapper, id);
+        return jdbc.queryForObject(sql, mapper, courseId);
     }
 
     // 🔹 SAVE
@@ -64,28 +61,50 @@ public class CourseRepository {
 
         String sql =
             "INSERT INTO course (" +
-            "course_category_id, teacher_id, name, description, duration, " +
-            "fee, level, status, subcategory_id, " +
-            "seats_total, seats_available, created_at, updated_at" +
-            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+            "courseID," +
+            "courseCategoryID," +
+            "subcategoryID," +
+            "teacherID," +
+            "createdByID," +
+            "name," +
+            "description," +
+            "duration_weeks," +
+            "fee," +
+            "level," +
+            "status," +
+            "seats_total," +
+            "seats_available," +
+            "thumbnail_path," +
+            "allow_installment," +
+            "allow_scholarship," +
+            "created_at," +
+            "updated_at" +
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
         jdbc.update(sql,
 
+            c.getCourseId(),
             c.getCourseCategoryId(),
+            c.getSubcategoryId(),
             c.getTeacherId(),
+            c.getCreatedBy(),
+
             c.getName(),
             c.getDescription(),
-            c.getDuration(),
+            c.getDurationWeeks(),
+
             c.getFee(),
+
             c.getLevel(),
             c.getStatus(),
-            c.getSubcategoryId(),
 
             c.getSeatsTotal(),
+            c.getSeatsTotal(),
 
-            // New course starts with all seats available
-            //admin only hv to enter seats total
-            c.getSeatsTotal()
+            c.getThumbnailPath(),
+
+            c.getAllowedInstallment(),
+            c.getAllowedScholarship()
         );
     }
 
@@ -94,72 +113,95 @@ public class CourseRepository {
 
         String sql =
             "UPDATE course SET " +
-            "course_category_id=?, " +
-            "teacher_id=?, " +
-            "name=?, " +
-            "description=?, " +
-            "duration=?, " +
-            "fee=?, " +
-            "level=?, " +
-            "status=?, " +
-            "subcategory_id=?, " +
-            "seats_total=?, " +
-            "seats_available=?, " +
+            "courseCategoryID=?," +
+            "subcategoryID=?," +
+            "teacherID=?," +
+            "createdByID=?," +
+            "name=?," +
+            "description=?," +
+            "duration_weeks=?," +
+            "fee=?," +
+            "level=?," +
+            "status=?," +
+            "seats_total=?," +
+            "seats_available=?," +
+            "thumbnail_path=?," +
+            "allow_installment=?," +
+            "allow_scholarship=?," +
             "updated_at=NOW() " +
-            "WHERE id=?";
+            "WHERE courseID=?";
 
         jdbc.update(sql,
 
             c.getCourseCategoryId(),
+            c.getSubcategoryId(),
             c.getTeacherId(),
+            c.getCreatedBy(),
+
             c.getName(),
             c.getDescription(),
-            c.getDuration(),
+            c.getDurationWeeks(),
+
             c.getFee(),
+
             c.getLevel(),
             c.getStatus(),
-            c.getSubcategoryId(),
 
             c.getSeatsTotal(),
             c.getSeatsAvailable(),
 
-            c.getId()
+            c.getThumbnailPath(),
+
+            c.getAllowedInstallment(),
+            c.getAllowedScholarship(),
+
+            c.getCourseId()
         );
     }
     
-    public int getSeatsAvailable(int courseId) {
+    public int getSeatsAvailable(String courseId) {
 
-        String sql = "SELECT seats_available FROM course WHERE id = ?";
+        String sql =
+            "SELECT seats_available FROM course WHERE courseID = ?";
+
         return jdbc.queryForObject(sql, Integer.class, courseId);
     }
     
-    public void decreaseSeat(int courseId) {
-        jdbc.update(
-            "UPDATE course SET seats_available = seats_available - 1 WHERE id = ? AND seats_available > 0",
-            courseId
-        );
+    public void decreaseSeat(String courseId) {
+
+        String sql =
+            "UPDATE course " +
+            "SET seats_available = seats_available - 1 " +
+            "WHERE courseID = ? " +
+            "AND seats_available > 0";
+
+        jdbc.update(sql, courseId);
     }
 
     // 🔹 DELETE
-    public void delete(int id) {
-        jdbc.update("DELETE FROM course WHERE id=?", id);
+    public void delete(String courseId) {
+
+        jdbc.update(
+            "DELETE FROM course WHERE courseID = ?",
+            courseId
+        );
     }
     
     
-    public List<CourseBean> getCoursesByIds(List<Integer> ids) {
+    public List<CourseBean> getCoursesByIds(List<String> ids) {
 
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
 
-        String sql = "SELECT *\r\n"
-        		+ "        FROM course\r\n"
-        		+ "        WHERE id IN (:ids)";
-            
+        String sql =
+            "SELECT * " +
+            "FROM course " +
+            "WHERE courseID IN (:ids)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
 
-        return namedParameterJdbcTemplate.query(sql, params, new CourseRowMapper());
+        return namedParameterJdbcTemplate.query(sql, params, mapper);
     }
 }
