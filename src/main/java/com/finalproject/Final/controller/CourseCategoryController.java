@@ -33,13 +33,14 @@ public class CourseCategoryController {
 	@Autowired
 	CourseCategoryService courseCategoryService;
 	
-	@GetMapping("/list")
-	public String showAllCourseCategory(Model m) {
-		List<CourseCategoryBean> courseCategoryList = courseCategoryService.getAllCourseCategory();
-		m.addAttribute("courseCategoryList",courseCategoryList);
-		m.addAttribute("courseCategory", new CourseCategoryDTO());
-		return "admin/course-category";
-	}
+	/*
+	 * @GetMapping("/list") public String showAllCourseCategory(Model m) {
+	 * List<CourseCategoryBean> courseCategoryList =
+	 * courseCategoryService.getAllCourseCategory();
+	 * m.addAttribute("courseCategoryList",courseCategoryList);
+	 * m.addAttribute("courseCategory", new CourseCategoryDTO()); return
+	 * "admin/course-category"; }
+	 */
 	
 	@PostMapping("/create")
 	public String createCourseCategory(@ModelAttribute("courseCategory") CourseCategoryDTO courseCatDTO) {
