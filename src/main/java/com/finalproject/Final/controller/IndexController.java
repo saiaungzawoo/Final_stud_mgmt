@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.finalproject.Final.model.SubCategoryBean;
 import com.finalproject.Final.repository.SubCategoryRepository;
 
+
 @Controller
 public class IndexController {
 

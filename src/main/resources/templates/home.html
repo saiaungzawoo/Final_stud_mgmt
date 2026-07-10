@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<div class="container mt-5">
+    <h2>Welcome, <span th:text="${user.email}"></span>!</h2>
+    <a th:href="@{/logout}">Logout</a>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+</body>
+</html>
