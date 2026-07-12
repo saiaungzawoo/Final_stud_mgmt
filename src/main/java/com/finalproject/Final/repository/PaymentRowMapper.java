@@ -1,12 +1,11 @@
 package com.finalproject.Final.repository;
 
-import com.finalproject.Final.model.PaymentBean;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.springframework.jdbc.core.RowMapper;
 
-
+import com.finalproject.Final.model.PaymentBean;
 
 public class PaymentRowMapper implements RowMapper<PaymentBean> {
 
@@ -15,25 +14,35 @@ public class PaymentRowMapper implements RowMapper<PaymentBean> {
 
         PaymentBean p = new PaymentBean();
 
-        p.setId(rs.getInt("id"));
-        p.setAmount(rs.getInt("amount"));
+        p.setPaymentId(rs.getString("paymentID"));
+        p.setEnrollmentId(rs.getString("enrollmentID"));
+        p.setInstallmentPlanId(rs.getString("installmentPlanID"));
+        p.setPaymentMethodId(rs.getString("paymentMethodID"));
+        p.setPaymentMethodName(
+        	    rs.getString("paymentMethodName")
+        	);
+        p.setPaymentTypeName(rs.getString("paymentTypeName"));
+        
+        p.setStudentName(rs.getString("studentName"));
+
+        p.setAmount(rs.getDouble("amount"));
 
         if (rs.getDate("payment_date") != null) {
             p.setPaymentDate(rs.getDate("payment_date").toLocalDate());
         }
 
-        p.setPaymentMethod(rs.getString("payment_method"));
-        p.setPaymentStatus(rs.getString("payment_status"));
-        p.setCourseId(rs.getInt("course_id"));
         p.setTransactionReference(rs.getString("transaction_reference"));
-        p.setReceiptDownloaded(rs.getInt("receipt_downloaded"));
-        p.setCreatedAt(rs.getTimestamp("created_at") != null
-                ? rs.getTimestamp("created_at").toLocalDateTime()
-                : null);
+        p.setStatus(rs.getString("status"));
+        p.setNotes(rs.getString("notes"));
+        p.setProcessedById(rs.getString("processedByID"));
 
-        p.setUpdatedAt(rs.getTimestamp("updated_at") != null
-                ? rs.getTimestamp("updated_at").toLocalDateTime()
-                : null);
+        if (rs.getTimestamp("created_at") != null) {
+            p.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        }
+
+        if (rs.getTimestamp("updated_at") != null) {
+            p.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        }
 
         return p;
     }
