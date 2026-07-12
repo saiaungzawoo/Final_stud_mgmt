@@ -9,4 +9,6 @@ public class EnrollmentDTO {
 
     private String userId;
     private String courseId;
+    private String paymentTypeId;
+    private String installmentRuleId;
 }

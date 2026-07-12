@@ -11,6 +11,7 @@ import com.finalproject.Final.repository.UserRepository;
 @Controller
 public class ForgotPasswordController {
 
+	//test
     @Autowired
     private UserRepository uRepo;
     @GetMapping("/forgot-password")

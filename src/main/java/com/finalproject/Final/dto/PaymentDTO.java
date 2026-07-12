@@ -8,11 +8,16 @@ import lombok.Setter;
 @Setter
 public class PaymentDTO {
 
-    private int enrollmentId;
-    private int userId;
-    private int courseId;
 
-    private int amount;
-    private String paymentMethod;  // KBZ, AYA, CB, Card
-    private String paymentType;    // FULL, SCHOLARSHIP
+private String enrollmentId;
+
+private String paymentTypeId;
+
+private String paymentMethodId;
+
+private Double amount;
+
+private String installmentRuleId;
+
+
 }
