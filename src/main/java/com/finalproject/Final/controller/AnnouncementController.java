@@ -65,12 +65,7 @@ public class AnnouncementController {
         this.announcementRepository = announcementRepository;
     }
   
-    
-   
-
-  
-
-
+ 
     @GetMapping
     public String index(Model model) {
         String teacherId = getLoginTeacherId();
@@ -144,5 +139,6 @@ public class AnnouncementController {
 
         return "teacher/announcement-detail";
     }
+    
 }
 

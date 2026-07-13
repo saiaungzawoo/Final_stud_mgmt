@@ -22,10 +22,10 @@ public class SubCategoryRepository {
 
 		        SubCategoryBean obj = new SubCategoryBean();
 
-		        obj.setId(rs.getInt("id"));
-		        obj.setName(rs.getString("name"));
-		        obj.setCourseCategoryId(rs.getInt("course_category_id"));
-
+				/*
+				 * obj.setId(rs.getInt("id")); obj.setName(rs.getString("name"));
+				 * obj.setCourseCategoryId(rs.getInt("course_category_id"));
+				 */
 		        return obj;
 		    });
 		}

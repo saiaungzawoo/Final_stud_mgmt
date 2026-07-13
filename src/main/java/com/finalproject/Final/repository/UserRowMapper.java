@@ -14,8 +14,8 @@ public class UserRowMapper implements RowMapper<UserBean> {
 
         UserBean u = new UserBean();
 
-        u.setId(rs.getInt("id"));
-        u.setRoleId(rs.getInt("role_id"));
+      //  u.setId(rs.getInt("id"));
+       // u.setRoleId(rs.getInt("role_id"));
 
         u.setName(rs.getString("name"));
         u.setEmail(rs.getString("email"));
@@ -32,7 +32,7 @@ public class UserRowMapper implements RowMapper<UserBean> {
                 : null);
 
         u.setIsActive(rs.getInt("is_active"));
-        u.setFilePath(rs.getString("file_path"));
+       // u.setFilePath(rs.getString("file_path"));
 
         return u;
     }

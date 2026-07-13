@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Calendar</title>
+
+    <head th:replace="~{fragment/css :: css}"></head>
+
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.css" rel="stylesheet">
+
+    <style>
+        #calendar{
+            width:900px;
+            max-width:100%;
+            margin:auto;
+            background:#fff;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+            <h2 class="fw-bold mb-4">Attendance Calendar</h2>
+
+            <div id="calendar"></div>
+
+        </main>
+
+    </div>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js"></script>
+
+<!-- Thymeleaf Variable -->
+<script th:inline="javascript">
+
+
+const schedules = /*[[${scheduleList}]]*/ [];
+
+
+
+let events = schedules.map(function(schedule){
+
+	return {
+
+	    title:schedule.topic,
+
+	    start:schedule.scheduleDate,
+
+
+	    backgroundColor:
+	        schedule.attendanceMarked
+	        ? "#28a745"
+	        : "#2f80ed",
+
+
+	    borderColor:
+	        schedule.attendanceMarked
+	        ? "#28a745"
+	        : "#2f80ed",
+
+
+	    extendedProps:{
+
+	        startTime:schedule.startTime,
+
+	        endTime:schedule.endTime,
+
+	        room:schedule.room
+
+	    },
+
+
+	    url:
+	    "/attendance/mark/"
+	    + schedule.courseId
+	    + "/"
+	    + schedule.scheduleId
+
+	};
+
+});
+
+
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+let calendar =
+new FullCalendar.Calendar(
+
+document.getElementById("calendar"),
+
+
+{
+
+
+initialView:"dayGridMonth",
+
+
+height:650,
+
+
+events:events,
+
+
+
+eventContent:function(arg){
+
+
+let time =
+arg.event.extendedProps.startTime
++
+" - "
++
+arg.event.extendedProps.endTime;
+
+
+
+let room =
+arg.event.extendedProps.room;
+
+
+
+return {
+
+
+html:
+
+`
+<div class="schedule-box">
+
+<div class="schedule-time">
+
+<i class="bi bi-clock"></i>
+${time}
+
+</div>
+
+
+<div class="schedule-topic">
+
+${arg.event.title}
+
+</div>
+
+
+<div class="schedule-room">
+
+${room ? "Room "+room : ""}
+
+</div>
+
+
+</div>
+`
+
+};
+
+
+
+},
+
+
+
+
+eventClick:function(info){
+
+
+info.jsEvent.preventDefault();
+
+
+window.location.href =
+info.event.url;
+
+
+}
+
+
+
+}
+
+);
+
+
+
+calendar.render();
+
+
+
+});
+
+
+</script>
+</body>
+</html>

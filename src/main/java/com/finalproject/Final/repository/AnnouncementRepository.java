@@ -46,12 +46,18 @@ public class AnnouncementRepository {
 	        return announcement;
 	    };
 
-	    public List<AnnouncementBean> findByTeacherId(String teacherId ){
+	    public List<AnnouncementBean> findByTeacherId(String teacherId) {
+
 	        String sql = """
 	                SELECT *
 	                FROM announcement
-	               WHERE createdByID = ?
-	                ORDER BY publish_date DESC,announcementID DESC
+	                WHERE
+	                    createdByID = ?
+	                    OR (
+	                        target_type IN ('ALL','ALL_TEACHERS')
+	                        AND is_published = 1
+	                    )
+	                ORDER BY publish_date DESC, announcementID DESC
 	                """;
 
 	        return jdbcTemplate.query(sql, rowMapper, teacherId);
