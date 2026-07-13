@@ -28,9 +28,10 @@ public class PaymentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    // show payment page
+ 
     @Autowired
     private CourseService courseService;
+
 
     @GetMapping("/page/{enrollmentId}")
     public String paymentPage(@PathVariable int enrollmentId, Model model) {
@@ -85,5 +86,62 @@ public class PaymentController {
 
         return "redirect:/payment/success/" + dto.getEnrollmentId();
     }
+
+    @Autowired
+    private CourseService courseService;
+
+  //  @GetMapping("/page/{enrollmentId}")
+ //   public String paymentPage(@PathVariable int enrollmentId, Model model) {
+
+		/*
+		 * try { // EnrollmentBean enrollment = enrollmentService.getById(enrollmentId);
+		 * CourseBean course = courseService.getById(enrollment.getCourseId());
+		 * 
+		 * model.addAttribute("enrollment", enrollment); model.addAttribute("course",
+		 * course);
+		 * 
+		 * 
+		 * return "student/payment";
+		 * 
+		 * } catch (RuntimeException e) {
+		 * 
+		 * model.addAttribute("errorMessage", e.getMessage()); return "student/payment";
+		 * }
+		 */
+  //  }
+
+    // process payment
+//    @PostMapping("/pay")
+//    public String pay(PaymentDTO dto) {
+//
+//        paymentService.processPayment(dto);
+//
+//        return "redirect:/enrollment/my?userId=" + dto.getUserId();
+//    }
+    
+	/*
+	 * @GetMapping("/success/{enrollmentId}") public String
+	 * enrollSuccess(@PathVariable int enrollmentId, Model model) {
+	 * 
+	 * EnrollmentBean enrollment = enrollmentService.getById(enrollmentId);
+	 * CourseBean course = courseService.getById(enrollment.getCourseId());
+	 * 
+	 * PaymentBean payment = paymentService.getByEnrollmentId(enrollmentId);
+	 * 
+	 * model.addAttribute("enrollment", enrollment); model.addAttribute("course",
+	 * course); model.addAttribute("payment", payment);
+	 * model.addAttribute("paymentStatus", "PAID");
+	 * 
+	 * return "student/enroll-success"; }
+	 */
+    
+	/*
+	 * @PostMapping("/pay") public String pay(PaymentDTO dto) {
+	 * 
+	 * paymentService.processPayment(dto);
+	 * 
+	 * return "redirect:/payment/success/" + dto.getEnrollmentId(); }
+	 */
+
 }
 

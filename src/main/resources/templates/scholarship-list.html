@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Scholarships</title>
+<head th:replace="~{fragment/css :: css}"></head>
+
+
+</head>
+
+<body>
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold display-5 text-primary">
+            🎓 Available Scholarships
+        </h1>
+        <p class="text-muted">
+            Explore scholarships and apply for your future today.
+        </p>
+    </div>
+    
+
+
+<div class="row">
+
+<div class="col-md-4 mb-4"
+th:each="sch : ${scholarshipList}">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4 th:text="${sch.scholarshipName}"></h4>
+
+<p>
+Course :
+<span th:text="${sch.courseName}"></span>
+</p>
+
+<p th:text="${sch.description}"></p>
+
+<p>
+Deadline :
+<span th:text="${sch.applicationDeadline}"></span>
+</p>
+
+<a class="btn btn-primary"
+   th:href="@{/scholarship/{id}(id=${sch.scholarshipID})}">
+    View Detail
+</a>
+
+
+<a th:href="@{/home}"
+   class="btn btn-secondary">
+    Back
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div> 
+
+
+
+ <div th:replace="~{fragment/footer :: footer}"></div>
+
+   <div th:replace="~{fragment/js :: js}"></div>
+   
+</body>
+
+</html>

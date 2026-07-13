@@ -9,26 +9,47 @@ import com.finalproject.Final.model.UserBean;
 
 
 
+<<<<<<< Updated upstream
+import jakarta.validation.Valid;
 
 
 
+=======
+>>>>>>> Stashed changes
 @Repository
 public class UsersRepository {
-  @Autowired
-  JdbcTemplate jdbc;
-  
-  public int insertUser(UserBean obj) {
-    int i=0;
-    
-    
-    String sql = " INSERT INTO user\r\n"
-    		+ "                (userID, roleID, name, email, password,\r\n"
-    		+ "                 phone_no, address, dob, gender, profile_image, is_active, created_at, updated_at)\r\n"
-    		+ "                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	@Autowired
+	JdbcTemplate jdbc;
+	
+<<<<<<< Updated upstream
+	public int insertUser(UsersBean obj) {
+		int i=0;
+		
+		
+		String sql="INSERT INTO `student_mgmt_v6`.`user` (`role_id`, `name`, `email`, `password`, `phone_no`, `address`,`dob`, `gender`,`created_at`,`is_active`,`file_path`)\r\n"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		
+		i=jdbc.update(sql,obj.getRoleId(),obj.getName(),obj.getEmail(),obj.getPassword()
+				,obj.getPhoneNumber(),obj.getAddress(),obj.getDob(),
+				obj.getGender(),obj.getCreatedAt(),obj.getIsActive(),obj.getFilePath());
+	
+		return i;
+	}
+=======
+	public int insertUser(UserBean obj) {
+		int i=0;
+		
+		
+		String sql = """
+                INSERT INTO user
+                (userID, roleID, name, email, password,
+                 phone_no, address, dob, gender, profile_image)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
 i= jdbc.update(
                 sql,
-                obj.getUserId(),
-                obj.getRoleId(),
+                obj.getUserID(),
+                obj.getRoleID(),
                 obj.getName(),
                 obj.getEmail(),
                obj.getPassword(),
@@ -36,200 +57,295 @@ i= jdbc.update(
                 obj.getAddress(),
                 obj.getDob(),
                 obj.getGender(),
-                obj.getProfileImage(), 
-                obj.getIsActive(), 
-                obj.getCreatedAt(), 
-                obj.getUpdatedAt()
+                obj.getProfileImage()
         );
    
-  return i;
+	return i;
 }
-  
-  public String getRoleIdByName(String roleName) {
+	
+>>>>>>> Stashed changes
+	
+	public boolean existsByEmail(String email) {
 
-	    String sql = "SELECT roleID FROM role WHERE name = ?";
+	    String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
+	    Integer count = jdbc.queryForObject(sql, Integer.class,email);
+<<<<<<< Updated upstream
+
+	    return count != null && count > 0;
+	}
+
+	
+	public UserBean getLatestStudent() {
+
+	    String sql = "SELECT * FROM user WHERE role_id = 3 ORDER BY id DESC LIMIT 1";
 
 	    return jdbc.queryForObject(
 	            sql,
-	            String.class,
-	            roleName
+	            (rs, rowNum) -> new UserBean(
+	            		rs.getInt("id"),
+	                    rs.getInt("role_id"),
+	                    rs.getString("name"),
+	                    rs.getString("email"),
+	                    rs.getString("password"),
+	                    rs.getString("phone_no"),
+	                    rs.getString("address"),
+	                    rs.getDate("dob").toLocalDate(),
+	                    rs.getString("gender"),
+	                    rs.getTimestamp("created_at").toLocalDateTime(),
+	                    rs.getInt("is_active"),
+	                    rs.getString("file_path")
+	            )
 	    );
 	}
-  
-  public boolean existsByEmail(String email) {
+	
+	
+	
+	           
+	public int updateUser(UserBean userObj) {
+		
+		//String sql="update user set"
+			//	+ " name=?,email=?,password=?,"
+			//	+ " phone_no=?,address=?,dob=?,gender=?,file_path=? where id=?";
+		
+		
+		String sql="UPDATE `user` SET `name` = ?, `email` = ?,"
+				+ " `password` = ?, `phone_no` = ?, `address` = ?, `dob` = ?, "
+				+ "`gender` = ?, `file_path` = ? WHERE (`id` = ?)";
+			
+			return	jdbc.update(sql,userObj.getName(),userObj.getEmail(),
+					userObj.getPassword(),userObj.getPhoneNumber(),
+					userObj.getAddress(),userObj.getDob(),userObj.getGender()
+					,userObj.getFilePath(),userObj.getId());
+		
+		
+	}
+	      
+	
+	public UserBean getUserByEmail(String email) {
 
-      String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
-      Integer count = jdbc.queryForObject(sql, Integer.class,email);
+	    String sql = "SELECT * FROM user WHERE email=?";
 
-      return count != null && count > 0;
-  }
+	    try {
+	        return jdbc.queryForObject(
+	                sql,
+	                new BeanPropertyRowMapper<>(UserBean.class),
+	                email);
 
-  
-  @SuppressWarnings("deprecation")
-  public UserBean getLatestUserByRole(String roleName) {
+	    } catch (Exception e) {
+	        return null;
+	    }
+	}
+	   
+	
+	public UserBean getUserById(int id) {
 
-	    String roleId = getRoleIdByName(roleName);
+	    String sql = "SELECT * FROM user WHERE id = ?";
 
-	    String sql = "  SELECT *\r\n"
-	    		+ "	            FROM user\r\n"
-	    		+ "	            WHERE roleID = ?\r\n"
-	    		+ "	            ORDER BY created_at DESC\r\n"
-	    		+ "	            LIMIT 1";
-	          
-	            
+	    try {
+
+	        return jdbc.queryForObject(
+	                sql,
+	                new BeanPropertyRowMapper<>(UserBean.class),
+	                id);
+
+	    } catch (Exception e) {
+
+	        return null;
+
+	    }
+
+	}
+}
+		
+	
+	
 
 
-	    return jdbc.queryForObject(
-	            sql,
+
+=======
+
+	    return count != null && count > 0;
+	}
+
+	
+	public UserBean getLatestStudent() {
+		String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
+	   
+	    
+	    String sql = """
+	            SELECT *
+	            FROM user
+	            WHERE roleID = ?
+	            ORDER BY created_at DESC
+	            LIMIT 1
+	            """;
+
+	    return jdbc.queryForObject(sql,
+	            new Object[] { studentRoleId },
 	            (rs, rowNum) -> {
 
 	                UserBean userObj = new UserBean();
 
-	                userObj.setUserId(rs.getString("userID"));
-	                userObj.setRoleId(rs.getString("roleID"));
+	                userObj.setUserID(rs.getString("userID"));
+	                userObj.setRoleID(rs.getString("roleID"));
 	                userObj.setName(rs.getString("name"));
 	                userObj.setEmail(rs.getString("email"));
 	                userObj.setPassword(rs.getString("password"));
 	                userObj.setPhoneNumber(rs.getString("phone_no"));
 	                userObj.setAddress(rs.getString("address"));
-
-	                if(rs.getDate("dob") != null) {
-	                    userObj.setDob(
-	                        rs.getDate("dob").toLocalDate()
-	                    );
-	                }
-
+	                userObj.setDob(rs.getDate("dob").toLocalDate());
 	                userObj.setGender(rs.getString("gender"));
 	                userObj.setProfileImage(rs.getString("profile_image"));
 	                userObj.setIsActive(rs.getInt("is_active"));
-
-	                if(rs.getTimestamp("created_at") != null) {
-	                    userObj.setCreatedAt(
-	                        rs.getTimestamp("created_at").toLocalDateTime()
-	                    );
-	                }
-
-	                if(rs.getTimestamp("updated_at") != null) {
-	                    userObj.setUpdatedAt(
-	                        rs.getTimestamp("updated_at").toLocalDateTime()
-	                    );
-	                }
-
+	                userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+	                userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
 
 	                return userObj;
-	            },
-	            roleId
-	    );
+	            }
+	          
+	    		);
 	}
-  
-  public int updateUser(UserBean userObj) {
-	    
-	    
-      
-	     String sql = " UPDATE user SET name = ?,email = ?,password = ?,"
-	         + "phone_no = ?,address = ?, dob = ?,gender = ?,profile_image = ?"
-	         + " WHERE userID = ?";
-	                
-	     return jdbc.update(
-	                sql,
-	                userObj.getName(),
-	                userObj.getEmail(),
-	                userObj.getPassword(),
-	                userObj.getPhoneNumber(),
-	                userObj.getAddress(),
-	                userObj.getDob(),
-	                userObj.getGender(),
-	                userObj.getProfileImage(),
-	                userObj.getUserId()
-	        );
-	        
-	  }
-  
-  @SuppressWarnings("deprecation")
-public UserBean getUserByEmail(String email) {
+	   
+	
+	
+	
+	           
+	public int updateUser(UserBean userObj) {
+		
+		
+			
+		 String sql = " UPDATE user SET name = ?,email = ?,password = ?,"
+		 		+ "phone_no = ?,address = ?, dob = ?,gender = ?,profile_image = ?"
+		 		+ " WHERE userID = ?";
+		            
+		 return jdbc.update(
+		            sql,
+		            userObj.getName(),
+		            userObj.getEmail(),
+		            userObj.getPassword(),
+		            userObj.getPhoneNumber(),
+		            userObj.getAddress(),
+		            userObj.getDob(),
+		            userObj.getGender(),
+		            userObj.getProfileImage(),
+		            userObj.getUserID()
+		    );
+	      
+	}
+	
+	
+	public UserBean getUserByEmail(String email) {
 
-      String sql = "SELECT * FROM user WHERE email=?";
+	    String sql = "SELECT * FROM user WHERE email=?";
   try {
 
-                return jdbc.queryForObject(sql, new Object[] { email }, (rs, rowNum) -> {
+	    	        return jdbc.queryForObject(sql, new Object[] { email }, (rs, rowNum) -> {
 
-                    UserBean userObj = new UserBean();
-                    userObj.setUserId(rs.getString("userID"));
-                    userObj.setRoleId(rs.getString("roleID"));
-                    userObj.setName(rs.getString("name"));
-                    userObj.setEmail(rs.getString("email"));
-                    userObj.setPassword(rs.getString("password"));
-                    userObj.setPhoneNumber(rs.getString("phone_no"));
-                    userObj.setAddress(rs.getString("address"));
+	    	            UserBean userObj = new UserBean();
 
-                    if (rs.getDate("dob") != null) {
-                        userObj.setDob(rs.getDate("dob").toLocalDate());
-                    }
+	    	            userObj.setUserID(rs.getString("userID"));
+	    	            userObj.setRoleID(rs.getString("roleID"));
+	    	            userObj.setName(rs.getString("name"));
+	    	            userObj.setEmail(rs.getString("email"));
+	    	            userObj.setPassword(rs.getString("password"));
+	    	            userObj.setPhoneNumber(rs.getString("phone_no"));
+	    	            userObj.setAddress(rs.getString("address"));
 
-                    userObj.setGender(rs.getString("gender"));
+	    	            if (rs.getDate("dob") != null) {
+	    	                userObj.setDob(rs.getDate("dob").toLocalDate());
+	    	            }
 
-                    if (rs.getTimestamp("created_at") != null) {
-                        userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                    }
+	    	            userObj.setGender(rs.getString("gender"));
 
-                    if (rs.getTimestamp("updated_at") != null) {
-                        userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-                    }
+	    	            if (rs.getTimestamp("created_at") != null) {
+	    	                userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+	    	            }
 
-                    userObj.setIsActive(rs.getInt("is_active"));
-                    userObj.setProfileImage(rs.getString("profile_image"));
+	    	            if (rs.getTimestamp("updated_at") != null) {
+	    	                userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+	    	            }
 
-                    return userObj;
+	    	            userObj.setIsActive(rs.getInt("is_active"));
+	    	            userObj.setProfileImage(rs.getString("profile_image"));
 
-                });
+	    	            return userObj;
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-  
-  @SuppressWarnings("deprecation")
-public UserBean getUserById(String userID) {
+	    	        });
 
-      String sql = "SELECT * FROM user WHERE userID = ?";
+	    	    } catch (Exception e) {
+	    	        e.printStackTrace();
+	    	        return null;
+	    	    }
+	    	}
+	   
+	
+	public UserBean getUserById(String userID) {
 
-      try {
+	    String sql = "SELECT * FROM user WHERE userID = ?";
 
-          return jdbc.queryForObject(sql, new Object[]{userID}, (rs, rowNum) -> {
+	    try {
 
-              UserBean userObj = new UserBean();
+	        return jdbc.queryForObject(sql, new Object[]{userID}, (rs, rowNum) -> {
 
-              userObj.setUserId(rs.getString("userID"));
-              userObj.setRoleId(rs.getString("roleID"));
-              userObj.setName(rs.getString("name"));
-              userObj.setEmail(rs.getString("email"));
-              userObj.setPassword(rs.getString("password"));
-              userObj.setPhoneNumber(rs.getString("phone_no"));
-              userObj.setAddress(rs.getString("address"));
-              userObj.setDob(rs.getDate("dob").toLocalDate());
-              userObj.setGender(rs.getString("gender"));
-              userObj.setProfileImage(rs.getString("profile_image"));
-              userObj.setIsActive(rs.getInt("is_active"));
-              userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+	            UserBean userObj = new UserBean();
 
-              if (rs.getTimestamp("updated_at") != null) {
-                userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-              }
+	            userObj.setUserID(rs.getString("userID"));
+	            userObj.setRoleID(rs.getString("roleID"));
+	            userObj.setName(rs.getString("name"));
+	            userObj.setEmail(rs.getString("email"));
+	            userObj.setPassword(rs.getString("password"));
+	            userObj.setPhoneNumber(rs.getString("phone_no"));
+	            userObj.setAddress(rs.getString("address"));
+	            userObj.setDob(rs.getDate("dob").toLocalDate());
+	            userObj.setGender(rs.getString("gender"));
+	            userObj.setProfileImage(rs.getString("profile_image"));
+	            userObj.setIsActive(rs.getInt("is_active"));
+	            userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 
-              return userObj;
-          });
+	            if (rs.getTimestamp("updated_at") != null) {
+	            	userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+	            }
 
-      } catch (Exception e) {
-          return null;
-      }
-  }
+	            return userObj;
+	        });
 
-  
-  }
+	    } catch (Exception e) {
+	        return null;
+	    }
+	}
+
+	
+	
+	public boolean existsByEmailAndNotUserId(String email, String userId) {
+
+	    String sql = """
+	            SELECT COUNT(*)
+	            FROM user
+	            WHERE email = ?
+	            AND userID <> ?
+	            """;
+
+	    Integer count = jdbc.queryForObject(
+	            sql,
+	            Integer.class,
+	            email,
+	            userId
+	    );
+
+	    return count != null && count > 0;
+	}
+	}
+
+		
+	
+	
+
+
+
 
     
   
   
 
      
+>>>>>>> Stashed changes
