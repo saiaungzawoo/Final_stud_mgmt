@@ -5,102 +5,246 @@
 
 <body>
 
-<div th:replace="~{fragment/header :: header}"></div>
+	<div th:replace="~{fragment/header :: header}"></div>
 
-<main>
+	<main>
 
-    <section class="section-pad bg-light">
-        <div class="container py-5">
+		<section class="section-pad bg-light">
+			<div class="container py-5">
 
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
+				<div class="row justify-content-center">
+					<div class="col-lg-6">
 
-                    <div class="card shadow-lg border-0">
+						<div class="card shadow-lg border-0">
 
-                        <!-- Header -->
-                        <div class="card-header text-center bg-primary text-white">
-                            <h4 class="mb-0">Payment Receipt</h4>
-                        </div>
+							<!-- Header -->
+							<div class="card-header text-center bg-primary text-white">
+								<h4 class="mb-0">Payment Receipt</h4>
+							</div>
 
-                        <!-- Body -->
-                        <div class="card-body p-4">
+							<!-- Body -->
+							<div class="card-body p-4">
 
-                            <div class="text-center mb-4">
-                                <h5 class="fw-bold">Ace Inspiration</h5>
-                                <small class="text-muted">Official Enrollment Receipt</small>
-                            </div>
+								<div class="text-center mb-4">
+									<h5 class="fw-bold">Ace Inspiration</h5>
+									<small class="text-muted">Official Enrollment Receipt</small>
+								</div>
 
-                            <hr>
+								<hr>
 
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th>Transaction ID</th>
-                                    <td th:text="${payment.transactionReference}"></td>
-                                </tr>
-                                
-                                 <tr>
-                                    <th>Student</th>
-                                    <td th:text="${payment.studentName}"></td>
-                                </tr>
+								<table class="table table-borderless">
+									<tr>
+										<th>Transaction ID</th>
+										<td th:text="${payment.transactionReference}"></td>
+									</tr>
 
-                                <tr>
-                                    <th>Course</th>
-                                    <td th:text="${course.name}"></td>
-                                </tr>
-                                
-                                <tr>
-                                    <th>Payment Type</th>
-                                    <td th:text="${payment.paymentTypeName}"></td>
-                                </tr>
+									<tr>
+										<th>Student</th>
+										<td th:text="${payment.studentName}"></td>
+									</tr>
 
-                                <tr>
+									<tr>
+										<th>Course</th>
+										<td th:text="${course.name}"></td>
+									</tr>
+
+									<tr>
+										<th>Payment Type</th>
+										<td th:text="${payment.paymentTypeName}"></td>
+									</tr>
+
+									<!-- <tr>
                                     <th>Amount</th>
                                     <td>
                                         <span th:text="${payment.amount}"></span> MMK
                                     </td>
-                                </tr>
+                                </tr> -->
+									<tr th:if="${payment.paymentTypeName == 'FULL_PAYMENT'}">
 
-                                <tr>
-                                    <th>Method</th>
-                                    <td th:text="${payment.paymentMethodName}"></td>
-                                </tr>
+										<th>Total Paid</th>
 
-                                <tr>
-                                    <th>Date</th>
-                                    <td th:text="${payment.paymentDate}"></td>
-                                </tr>
+										<td>MMK <span
+											th:text="${#numbers.formatDecimal(payment.amount,0,'COMMA',0,'POINT')}">
+										</span>
 
-                                <tr>
-                                    <th>Status</th>
-                                    <td>
-                                        <span class="badge bg-success"
-                                              th:text="${payment.status}">
-                                        </span>
-                                    </td>
-                                </tr>
+										</td>
 
-                            </table>
+									</tr>
 
-                            <hr>
+									<tr th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
 
-                            <div class="text-center text-muted small">
-                                Thank you for your payment. This serves as your official receipt.
-                            </div>
+										<th>Installment</th>
 
-                        </div>
+										<td><span th:text="${payment.installmentNumber}"></span>
 
-                    </div>
+											/ <span th:text="${payment.installmentCount}"></span></td>
 
-                </div>
-            </div>
+									</tr>
 
-        </div>
-    </section>
+									<tr th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
 
-</main>
+										<th>Amount Paid</th>
 
-<div th:replace="~{fragment/footer :: footer}"></div>
-<div th:replace="~{fragment/js :: js}"></div>
+										<td>MMK <span
+											th:text="${#numbers.formatDecimal(payment.paidAmount,0,'COMMA',0,'POINT')}">
+										</span>
+
+										</td>
+
+									</tr>
+
+									<tr th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
+
+										<th>Due Date</th>
+
+										<td th:text="${payment.dueDate}"></td>
+
+									</tr>
+
+									<tr>
+										<th>Method</th>
+										<td th:text="${payment.paymentMethodName}"></td>
+									</tr>
+
+									<tr>
+										<th>Date</th>
+										<td th:text="${payment.paymentDate}"></td>
+									</tr>
+
+									<tr>
+										<th>Status</th>
+										<td><span class="badge bg-success"
+											th:text="${payment.status}"> </span></td>
+									</tr>
+
+								</table>
+
+								<hr>
+
+								<hr>
+
+<div th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
+
+    <h5 class="mb-3">Payment Progress</h5>
+
+    <table class="table table-borderless">
+
+        <tr>
+            <th>Course Fee</th>
+            <td>
+                MMK
+                <span th:text="${#numbers.formatDecimal(payment.courseFee,0,'COMMA',0,'POINT')}"></span>
+            </td>
+        </tr>
+
+        <tr>
+            <th>Paid So Far</th>
+            <td>
+                MMK
+                <span th:text="${#numbers.formatDecimal(payment.totalPaid,0,'COMMA',0,'POINT')}"></span>
+            </td>
+        </tr>
+
+        <tr>
+            <th>Remaining Balance</th>
+            <td>
+                MMK
+                <span th:text="${#numbers.formatDecimal(payment.remainingBalance,0,'COMMA',0,'POINT')}"></span>
+            </td>
+        </tr>
+
+        <tr>
+            <th>Completed</th>
+            <td>
+
+                <span th:text="${payment.completedInstallments}"></span>
+
+                /
+
+                <span th:text="${payment.totalInstallments}"></span>
+
+                Installments
+
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+<div th:if="${payment.nextInstallmentNumber != null}">
+
+    <hr>
+
+    <h5 class="mb-3">
+        Next Installment
+    </h5>
+
+    <table class="table table-borderless">
+
+        <tr>
+            <th>Installment</th>
+            <td>
+
+                #
+                <span th:text="${payment.nextInstallmentNumber}"></span>
+
+            </td>
+        </tr>
+
+        <tr>
+            <th>Amount</th>
+            <td>
+
+                MMK
+
+                <span th:text="${#numbers.formatDecimal(payment.nextInstallmentAmount,0,'COMMA',0,'POINT')}"></span>
+
+            </td>
+        </tr>
+
+        <tr>
+            <th>Due Date</th>
+            <td th:text="${payment.nextDueDate}">
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+<div class="text-center text-muted small mt-4">
+
+    <span
+    th:if="${payment.paymentTypeName == 'FULL_PAYMENT'}">
+
+        Thank you for your payment.
+        This course has been fully paid.
+
+    </span>
+
+    <span
+    th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
+
+        Thank you for your installment payment.
+        Please complete the remaining installments before their due dates.
+
+    </span>
+
+</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+	</main>
+
+	<div th:replace="~{fragment/footer :: footer}"></div>
+	<div th:replace="~{fragment/js :: js}"></div>
 
 
 

@@ -13,8 +13,7 @@ import com.finalproject.Final.repository.SubCategoryRepository;
 @Controller
 public class IndexController {
 
-    @Autowired
-    private SubCategoryRepository subRepo;
+   
     
     @GetMapping("/")
     public String home(Model m) {

@@ -68,4 +68,28 @@ public class InstallmentPlanService {
 	        );
 
 	    }
+	    
+	    public Double getTotalPaid(
+	            String enrollmentId
+	    ) {
+
+	        return repo.getTotalPaid(enrollmentId);
+
+	    }
+	    
+	    public Integer getCompletedCount(
+	            String enrollmentId
+	    ) {
+
+	        return repo.getCompletedCount(enrollmentId);
+
+	    }
+	    
+	    public InstallmentPlanBean getNextPending(
+	            String enrollmentId
+	    ) {
+
+	        return repo.getNextPending(enrollmentId);
+
+	    }
 }
