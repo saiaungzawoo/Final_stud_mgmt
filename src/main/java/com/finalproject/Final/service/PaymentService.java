@@ -16,43 +16,41 @@ import com.finalproject.Final.repository.PaymentRepository;
 
 @Service
 public class PaymentService {
-
-    @Autowired
-    private PaymentRepository paymentRepository;
-
-    @Autowired
-    private EnrollmentService enrollmentService;
-
-    // MAIN FLOW: called when user clicks "Pay"
-    public void processPayment(int enrollmentId,
-                               int userId,
-                               int amount,
-                               String paymentMethod,
-                               String paymentType,
-                               int courseId) {
-
-<<<<<<< Updated upstream
-        // create payment
-        int paymentId = paymentRepository.savePayment(
-        		transactionReference,
-                dto.getAmount(),
-                dto.getPaymentMethod(),
-                "SUCCESS",
-                courseId,
-                dto.getEnrollmentId()
-        );
-
-        // 5. save payment record
-        paymentRepository.savePaymentRecord(
-                paymentId,
-                userId,
-                dto.getPaymentType()
-        );
+//
+//    @Autowired
+//    private PaymentRepository paymentRepository;
+//
+//    @Autowired
+//    private EnrollmentService enrollmentService;
+//
+//    // MAIN FLOW: called when user clicks "Pay"
+//    public void processPayment(int enrollmentId,
+//                               int userId,
+//                               int amount,
+//                               String paymentMethod,
+//                               String paymentType,
+//                               int courseId) {
+//
+//
+//        // create payment
+//        int paymentId = paymentRepository.savePayment(
+//        		transactionReference,
+//                dto.getAmount(),
+//                dto.getPaymentMethod(),
+//                "SUCCESS",
+//                courseId,
+//                dto.getEnrollmentId()
+//        );
+//
+//        // 5. save payment record
+//        paymentRepository.savePaymentRecord(
+//                paymentId,
+//                userId,
+//                dto.getPaymentType()
+//        );
 
         // update enrollment status
-        enrollmentService.markAsPaid(enrollmentId);
-=======
-	/*
+       	/*
 	 * public void processPayment(PaymentDTO dto) {
 	 * 
 	 * String transactionReference = "TXN-" +
@@ -88,22 +86,22 @@ public class PaymentService {
 		 * 
 		 * // 7. reduce seat courseRepository.decreaseSeat(courseId); }
 		 */
-    public PaymentBean getByEnrollmentId(int enrollmentId) {
-        return paymentRepository.getByEnrollmentId(enrollmentId);
-    }
-    
-    public PaymentBean getById(int id) {
-        return paymentRepository.getById(id);
-    }
-    
-    public void markReceiptDownloaded(int paymentId) {
-        paymentRepository.markReceiptDownloaded(paymentId);
->>>>>>> Stashed changes
-    }
-
-    // get payment details for UI page
-    public Map<String, Object> getPaymentByEnrollment(int enrollmentId) {
-        return paymentRepository.getPaymentByEnrollment(enrollmentId);
-    }
+//    public PaymentBean getByEnrollmentId(int enrollmentId) {
+//        return paymentRepository.getByEnrollmentId(enrollmentId);
+//    }
+//    
+//    public PaymentBean getById(int id) {
+//        return paymentRepository.getById(id);
+//    }
+//    
+//    public void markReceiptDownloaded(int paymentId) {
+//        paymentRepository.markReceiptDownloaded(paymentId);
+//>>>>>>> Stashed changes
+//    }
+//
+//    // get payment details for UI page
+//    public Map<String, Object> getPaymentByEnrollment(int enrollmentId) {
+//        return paymentRepository.getPaymentByEnrollment(enrollmentId);
+//    }
 
 }
