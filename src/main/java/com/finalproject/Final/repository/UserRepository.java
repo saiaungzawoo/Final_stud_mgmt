@@ -12,41 +12,28 @@ public class UserRepository {
 
     @Autowired
     private JdbcTemplate jdbc;
+    // Email ဖြင့် အကောင့် ရှိ၊ မရှိ ရှာဖွေရန်
     public UserBean findByEmail(String email) {
         String sql = "SELECT * FROM user WHERE email = ?";
         try {
             return jdbc.queryForObject(
                     sql,
                     new BeanPropertyRowMapper<>(UserBean.class),
-                    email);
+                    email
+            );
         } catch (Exception e) {
-            return null;
+            return null; // User မတွေ့ပါက null ပြန်မည်
         }
     }
+
+    // စကားဝှက်အသစ်ကို Update လုပ်ရန်
     public int updatePassword(String email, String newPassword) {
         String sql = "UPDATE user SET password = ? WHERE email = ?";
         return jdbc.update(sql, newPassword, email);
     }
     private final UserRowMapper mapper = new UserRowMapper();
     
-    public UserBean findByEmail(String email) {
-        String sql = "SELECT * FROM user WHERE email = ?";
-        try {
-            return jdbc.queryForObject(
-                    sql,
-                    new BeanPropertyRowMapper<>(UserBean.class),
-                    email);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-    
-    
-    public int updatePassword(String email, String newPassword) {
-        String sql = "UPDATE user SET password = ? WHERE email = ?";
-        return jdbc.update(sql, newPassword, email);
-    }
-
+  
     // GET USER BY ID
     public UserBean findById(int id) {
 

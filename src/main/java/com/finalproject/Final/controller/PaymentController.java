@@ -18,7 +18,7 @@ import com.finalproject.Final.service.CourseService;
 import com.finalproject.Final.service.EnrollmentService;
 import com.finalproject.Final.service.PaymentService;
 
-@Controller
+/*@Controller
 @RequestMapping("/payment")
 public class PaymentController {
 
@@ -85,5 +85,5 @@ public class PaymentController {
 
         return "redirect:/payment/success/" + dto.getEnrollmentId();
     }
-}
+}*/
 

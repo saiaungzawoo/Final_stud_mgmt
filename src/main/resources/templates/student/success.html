@@ -24,16 +24,16 @@
             <!-- Profile Photo -->
             <div class="text-center mb-4">
              
-             <img th:src="${userObj.filePath}"
+             <img th:src="${userObj.profileImage}"
 
      class="rounded-circle border"
      width="130"
      height="130">
-            </div>
            
-   
+          
 
             <h4 class="text-center mb-4">Photo</h4>
+            </div>
 
             <table class="table table-bordered">
 
@@ -47,10 +47,13 @@
                     <td th:text="${userObj.email}"></td>
                 </tr>
 
-                <tr>
-                    <th>Password</th>
-                    <td th:text="${userObj.password}"></td>
-                </tr>
+
+                   
+                    <tr>
+    <th>Password</th>
+    <td th:text="'********'"></td>
+</tr>
+
 
                 <tr>
                     <th>Phone Number</th>
@@ -81,9 +84,7 @@
 
                 
                 
-                <a th:href="@{/student/update}" class="btn btn-secondary">
-                  Edit Profile
-                </a>
+               
             </div>
 
         </div>

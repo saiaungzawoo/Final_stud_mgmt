@@ -1,6 +1,7 @@
 package com.finalproject.Final.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,10 @@ import jakarta.servlet.http.HttpSession;
 public class LoginController {
 
     @Autowired
-    UserRepository uRepo;
+    private UserRepository uRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -22,21 +26,22 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("email") String email,
-                        @RequestParam("password") String password,
-                        HttpSession session,
-                        Model m) {
+    public String processLogin(@RequestParam String email,
+                               @RequestParam String password,
+                               HttpSession session,
+                               Model m) {
 
         UserBean user = uRepo.findByEmail(email);
 
-        if (user != null && password.equals(user.getPassword())) {
-
-            session.setAttribute("loginUser", user);
-            return "redirect:/home";
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+            m.addAttribute("error", "Invalid email or password.");
+            return "login";
         }
 
-        m.addAttribute("error", "Invalid email or password");
-        return "login";
+        session.setAttribute("loginUser", user);
+        session.setAttribute("userID", user.getUserID());
+
+        return "redirect:/home";
     }
 
     @GetMapping("/logout")

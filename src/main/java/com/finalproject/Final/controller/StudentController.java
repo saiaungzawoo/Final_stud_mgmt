@@ -17,18 +17,18 @@ import com.finalproject.Final.util.UserCodeUtil;
 
 import jakarta.servlet.http.HttpSession;
 
-@Controller
-@RequestMapping("/student")
-public class StudentController {
+//@Controller
+//@RequestMapping("/student")
+//public class StudentController {
 	
-	@Autowired
-	private UserService userService;
+	//@Autowired
+	//private UserService userService;
 	
-	@Autowired
-	private EnrollmentService enrollmentService;
+	//@Autowired
+	//private EnrollmentService enrollmentService;
 	
 	
-	@GetMapping("/portal")
+	/*@GetMapping("/portal")
 	public String showStudentHome(Model model, HttpSession session) {
 
 //	    UserBean student = userService.findById(5); // temporary hardcoded
@@ -51,3 +51,4 @@ public class StudentController {
 	
 
 }
+*/

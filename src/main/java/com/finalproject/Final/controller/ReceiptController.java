@@ -16,7 +16,7 @@ import com.finalproject.Final.service.CourseService;
 import com.finalproject.Final.service.PaymentService;
 import com.finalproject.Final.util.PdfReceiptGenerator;
 
-@RestController
+/*@RestController
 @RequestMapping("/receipt")
 public class ReceiptController {
 
@@ -69,4 +69,4 @@ public class ReceiptController {
                 .body(new InputStreamResource(pdf));
     }
 
-}
+}*/

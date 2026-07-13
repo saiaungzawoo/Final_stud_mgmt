@@ -17,33 +17,30 @@
                 </div>
                 <div class="card-body">
 
-                    <form th:action="@{/login}" method="post">
+                    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+                    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
 
+                    <form th:action="@{/login}" method="post">
                         <div class="mb-3">
-                            <label>Email</label>
-                            <input type="email" name="email" class="form-control" required>
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" required placeholder="Enter your email">
                         </div>
 
                         <div class="mb-3">
-                            <label>Password</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required placeholder="Enter your password">
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">Sign in</button>
-
                     </form>
 
-                    <p class="text-danger mt-3" th:if="${error}" th:text="${error}"></p>
-
-                    <a th:href="@{/forgot-password}">Forgot Password?</a>
+                    <hr>
+                    <div class="text-center">
+                        <a th:href="@{/forgot-password}" class="text-decoration-none">Forgot Password?</a>
+                    </div>
 
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<div th:replace="~{fragment/footer :: footer}"></div>
-
-</body>
-</html>
