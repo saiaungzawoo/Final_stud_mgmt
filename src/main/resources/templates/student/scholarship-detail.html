@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+<head>
+
+<title>Scholarship Detail</title>
+
+</head>
+
+<body>
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<!-- <div class="container mt-5">
+
+
+
+<div class="card shadow">
+
+
+
+<div class="card-body">
+
+
+
+<h2 th:text="${scholarship.scholarshipName}">
+</h2>
+
+
+<p>
+
+Description:
+
+<span th:text="${scholarship.description}">
+</span>
+
+</p>
+
+<p>
+
+Discount Type:
+
+<span th:text="${scholarship.discountType}">
+</span>
+
+</p>
+
+
+
+
+<p>
+
+Discount Value:
+
+<span th:text="${scholarship.discountValue}">
+</span>
+
+</p>
+
+
+<p>
+
+Maximum Recipients:
+
+<span th:text="${scholarship.maxRecipients}">
+</span>
+
+</p>
+
+
+<p>
+
+Deadline:
+
+<span th:text="${scholarship.applicationDeadline}">
+</span>
+
+</p>
+
+Login မဝင်ထားရင်
+<div th:if="${session.loginUser == null}">
+    <a th:href="@{/login}" class="btn btn-warning">
+        Login to Apply
+    </a>
+</div>
+
+
+
+Login ဝင်ထားရင်
+<div th:if="${session.loginUser != null}">
+    <a th:href="@{'/scholarship/apply/' + ${scholarship.scholarshipID}}"
+       class="btn btn-primary">
+        Apply Now
+    </a>
+</div>
+
+<a th:href="@{/scholarship/scholarships}"
+   class="btn btn-secondary">
+    Back
+</a>
+
+
+</div>
+
+
+</div>
+
+
+</div> -->
+
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0 fw-bold"
+                        th:text="${scholarship.scholarshipName}">
+                        Scholarship Name
+                    </h2>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4">
+
+                    <table class="table table-borderless">
+
+                        <tr>
+                            <th width="35%">📖 Description</th>
+                            <td th:text="${scholarship.description}"></td>
+                        </tr>
+
+                        <tr>
+                            <th>💰 Discount Type</th>
+                            <td>
+                                <span class="badge bg-info text-dark"
+                                      th:text="${scholarship.discountType}">
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>🎁 Discount Value</th>
+                            <td>
+                                <span class="fw-bold text-success"
+                                      th:text="${scholarship.discountValue}">
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>👨‍🎓 Maximum Recipients</th>
+                            <td th:text="${scholarship.maxRecipients}"></td>
+                        </tr>
+
+                        <tr>
+                            <th>📅 Application Deadline</th>
+                            <td class="text-danger fw-semibold"
+                                th:text="${scholarship.applicationDeadline}">
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer bg-light">
+
+                    <div class="d-flex justify-content-between">
+
+                        <a th:href="@{/scholarship/scholarships}"
+                           class="btn btn-outline-secondary">
+                            ← Back
+                        </a>
+
+                        <!-- Not Login -->
+                        <a th:if="${session.loginUser == null}"
+                           th:href="@{/login}"
+                           class="btn btn-warning">
+                            🔐 Login to Apply
+                        </a>
+
+                        <!-- Login -->
+                        <a th:if="${session.loginUser != null}"
+                           th:href="@{'/scholarship/apply/' + ${scholarship.scholarshipID}}"
+                           class="btn btn-success">
+                            ✅ Apply Now
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+   <div th:replace="~{fragment/js :: js}"></div>
+</body>
+
+</html>

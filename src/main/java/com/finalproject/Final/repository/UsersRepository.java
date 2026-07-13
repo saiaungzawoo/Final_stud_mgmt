@@ -34,8 +34,8 @@ public class UsersRepository {
                 """;
 i= jdbc.update(
                 sql,
-                obj.getUserId(),
-                obj.getRoleId(),
+                obj.getUserID(),
+                obj.getRoleID(),
                 obj.getName(),
                 obj.getEmail(),
                obj.getPassword(),
@@ -78,8 +78,8 @@ i= jdbc.update(
 
 	                UserBean userObj = new UserBean();
 
-	                userObj.setUserId(rs.getString("userID"));
-	                userObj.setRoleId(rs.getString("roleID"));
+	                userObj.setUserID(rs.getString("userID"));
+	                userObj.setRoleID(rs.getString("roleID"));
 	                userObj.setName(rs.getString("name"));
 	                userObj.setEmail(rs.getString("email"));
 	                userObj.setPassword(rs.getString("password"));

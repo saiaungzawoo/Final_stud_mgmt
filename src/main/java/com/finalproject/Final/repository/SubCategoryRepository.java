@@ -16,16 +16,16 @@ public class SubCategoryRepository {
 
 	 public List<SubCategoryBean> getAllSubCategory() {
 
-		    String sql = "SELECT sc.subcategoryID, sc.name, sc.courseCategoryID FROM subcategory sc";
+		    String sql = "SELECT sc.id, sc.name, sc.course_category_id FROM subcategory sc";
 
 		    return jdbc.query(sql, (rs, rowNum) -> {
 
 		        SubCategoryBean obj = new SubCategoryBean();
 
-		        obj.setSubCategoryId(rs.getString("subcategoryID"));
-		        obj.setName(rs.getString("name"));
-		        obj.setCourseCategoryId(rs.getString("courseCategoryID"));
-
+				/*
+				 * obj.setId(rs.getInt("id")); obj.setName(rs.getString("name"));
+				 * obj.setCourseCategoryId(rs.getInt("course_category_id"));
+				 */
 		        return obj;
 		    });
 		}
