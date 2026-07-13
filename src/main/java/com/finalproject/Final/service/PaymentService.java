@@ -1,10 +1,17 @@
 package com.finalproject.Final.service;
 
-import java.util.Map;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalproject.Final.dto.PaymentDTO;
+import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.PaymentBean;
+import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.PaymentRepository;
 
 @Service
@@ -27,17 +34,19 @@ public class PaymentService {
 <<<<<<< Updated upstream
         // create payment
         int paymentId = paymentRepository.savePayment(
-                amount,
-                paymentMethod,
-                "PENDING",
-                courseId
+        		transactionReference,
+                dto.getAmount(),
+                dto.getPaymentMethod(),
+                "SUCCESS",
+                courseId,
+                dto.getEnrollmentId()
         );
 
-        // create payment record (user link)
+        // 5. save payment record
         paymentRepository.savePaymentRecord(
                 paymentId,
                 userId,
-                paymentType
+                dto.getPaymentType()
         );
 
         // update enrollment status
@@ -96,4 +105,5 @@ public class PaymentService {
     public Map<String, Object> getPaymentByEnrollment(int enrollmentId) {
         return paymentRepository.getPaymentByEnrollment(enrollmentId);
     }
+
 }

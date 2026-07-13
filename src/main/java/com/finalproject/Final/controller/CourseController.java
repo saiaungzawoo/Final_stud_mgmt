@@ -1,4 +1,4 @@
-package com.finalproject.Final.Controller;
+package com.finalproject.Final.controller;
 
 import java.util.List;
 
@@ -28,19 +28,23 @@ public class CourseController {
     @GetMapping("/show")
     public String showCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
-        return "courses";
+        return "student/courses";
     }
 
     // Show course detail page
     @GetMapping("/{id}")
-    public String showCourseDetail(@PathVariable int id, Model model) {
+    public String showCourseDetail(@PathVariable String id, Model model) {
 
         CourseBean course = courseService.getById(id);
         List<ScheduleBean> schedules = scheduleService.getByCourseId(id);
+        
+        if (course.getSeatsAvailable() == 0) {
+            course.setStatus("FULL");
+        }
 
         model.addAttribute("course", course);
         model.addAttribute("schedules", schedules);
 
-        return "course-detail";
+        return "student/course-detail";
     }
 }

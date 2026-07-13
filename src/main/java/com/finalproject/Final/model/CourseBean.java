@@ -9,32 +9,40 @@ import lombok.Setter;
 @Setter
 public class CourseBean {
 
-    private int id;
+    private String CourseId;
 
-    private int courseCategoryId;
-    private int subcategoryId;
+    private String courseCategoryId;
+    private String subcategoryId;
 
     private String name;
     private String description;
     
-    private String duration;
+    private int durationWeeks;
     
     private String subcategoryName;
     private String categoryName;	
+    private String teacherId;
     private String teacherName;
 
   
 
     
-    private int fee;
+    private double fee;
 
     private String level;
     private String status;
 
-    private int createdBy;
+    private String createdBy;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private String filePath;
+    private String thumbnailPath;
+    
+    private int allowedInstallment;
+    
+    private int allowedScholarship;
+    
+    private int seatsTotal;
+    private int seatsAvailable;
 }

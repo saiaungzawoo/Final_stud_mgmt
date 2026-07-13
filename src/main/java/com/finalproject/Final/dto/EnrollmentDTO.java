@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class EnrollmentDTO {
 
-    private int userId;
-    private int courseId;
+    private String userId;
+    private String courseId;
+    private String paymentTypeId;
+    private String installmentRuleId;
 }

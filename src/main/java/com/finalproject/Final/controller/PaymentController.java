@@ -1,6 +1,5 @@
-package com.finalproject.Final.Controller;
+package com.finalproject.Final.controller;
 
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+
+import com.finalproject.Final.dto.PaymentDTO;
+import com.finalproject.Final.model.CourseBean;
+import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.PaymentBean;
+import com.finalproject.Final.service.CourseService;
 import com.finalproject.Final.service.EnrollmentService;
 import com.finalproject.Final.service.PaymentService;
 
@@ -24,31 +28,65 @@ public class PaymentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    // show payment page
-<<<<<<< Updated upstream
+ 
+    @Autowired
+    private CourseService courseService;
+
+
     @GetMapping("/page/{enrollmentId}")
     public String paymentPage(@PathVariable int enrollmentId, Model model) {
 
-        Map<String, Object> enrollment = enrollmentService.getById(enrollmentId);
+        try {
+            EnrollmentBean enrollment = enrollmentService.getById(enrollmentId);
+            CourseBean course = courseService.getById(enrollment.getCourseId());
 
-        model.addAttribute("enrollment", enrollment);
-        return "payment-page";
+            model.addAttribute("enrollment", enrollment);
+            model.addAttribute("course", course);
+           
+
+            return "student/payment";
+
+        } catch (RuntimeException e) {
+
+            model.addAttribute("errorMessage", e.getMessage());
+            return "student/payment";
+        }
     }
 
     // process payment
-    @PostMapping("/pay")
-    public String processPayment(@RequestParam int enrollmentId,
-                                 @RequestParam int userId,
-                                 @RequestParam int amount,
-                                 @RequestParam String paymentMethod,
-                                 @RequestParam String paymentType,
-                                 @RequestParam int courseId) {
+//    @PostMapping("/pay")
+//    public String pay(PaymentDTO dto) {
+//
+//        paymentService.processPayment(dto);
+//
+//        return "redirect:/enrollment/my?userId=" + dto.getUserId();
+//    }
+    
+    @GetMapping("/success/{enrollmentId}")
+    public String enrollSuccess(@PathVariable int enrollmentId,
+                                Model model) {
 
-        paymentService.processPayment(enrollmentId, userId, amount, paymentMethod, paymentType, courseId);
+        EnrollmentBean enrollment = enrollmentService.getById(enrollmentId);
+        CourseBean course = courseService.getById(enrollment.getCourseId());
 
-        return "redirect:/enrollment/my?userId=" + userId;
+        PaymentBean payment = paymentService.getByEnrollmentId(enrollmentId);
+
+        model.addAttribute("enrollment", enrollment);
+        model.addAttribute("course", course);
+        model.addAttribute("payment", payment);
+        model.addAttribute("paymentStatus", "PAID");
+
+        return "student/enroll-success";
     }
-=======
+    
+    @PostMapping("/pay")
+    public String pay(PaymentDTO dto) {
+
+        paymentService.processPayment(dto);
+
+        return "redirect:/payment/success/" + dto.getEnrollmentId();
+    }
+
     @Autowired
     private CourseService courseService;
 
@@ -104,5 +142,6 @@ public class PaymentController {
 	 * 
 	 * return "redirect:/payment/success/" + dto.getEnrollmentId(); }
 	 */
->>>>>>> Stashed changes
+
 }
+

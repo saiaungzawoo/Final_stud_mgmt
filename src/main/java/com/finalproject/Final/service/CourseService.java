@@ -18,7 +18,7 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public CourseBean getById(int id) {
+    public CourseBean getById(String id) {
         return courseRepository.findById(id);
     }
 
@@ -30,7 +30,7 @@ public class CourseService {
         courseRepository.update(c);
     }
 
-    public void deleteCourse(int id) {
+    public void deleteCourse(String id) {
         courseRepository.delete(id);
     }
 }

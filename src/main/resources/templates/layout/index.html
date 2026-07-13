@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+  <head th:replace="~{fragment/css :: css}"></head>
+  
+  
+  <body>
+    <div th:replace="~{fragment/header :: header}"></div>
+
+    <main>
+      <section class="hero-section">
+        <div class="container-xxl">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+              <span class="eyebrow">Vocational programming school</span>
+              <h1>Build job-ready skills with practical courses taught by industry mentors.</h1>
+              <p class="lead">Learn coding, IT support, design, electrical systems, and business tools through guided projects, certificates, and career-focused learning paths.</p>
+
+              <form class="hero-search shadow-sm" role="search">
+                <i class="bi bi-search"></i>
+                <input type="search" class="form-control" placeholder="Search Python, web design, networking...">
+                <button class="btn btn-primary" type="submit">Explore</button>
+              </form>
+
+              <div class="trusted-row">
+                <span>Trusted pathways for</span>
+                <strong>beginners</strong>
+                <strong>career switchers</strong>
+                <strong>working learners</strong>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80" alt="Students learning programming in a classroom" class="img-fluid">
+                <div class="floating-card top-card">
+                  <i class="bi bi-mortarboard-fill"></i>
+                  <div>
+                    <strong>12,400+</strong>
+                    <span>Learners enrolled</span>
+                  </div>
+                </div>
+                <div class="floating-card bottom-card">
+                  <i class="bi bi-patch-check-fill"></i>
+                  <div>
+                    <strong>Certificate courses</strong>
+                    <span>Portfolio projects included</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="categories" class="section-pad">
+        <div class="container-xxl">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Browse by category</span>
+              <h2>Explore programs built for real work</h2>
+            </div>
+            <a href="#" class="link-strong">View all categories <i class="bi bi-arrow-right"></i></a>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6 col-xl-4">
+              <a class="category-card" href="#">
+                <i class="bi bi-browser-chrome"></i>
+                <h3>Web Development</h3>
+                <p> Java, C#,Javascript</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+              <a class="category-card" href="#">
+              <i class="bi bi-phone-fill"></i>
+                <h3>Mobile Development</h3>
+                <p> React native, Kotlin</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+              <a class="category-card" href="#">
+               <i class="bi bi-joystick"></i>
+                <h3>Game Development</h3>
+                <p> Unity, UnrealEngine</p>
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
+      <section class="subcategories bg-light">
+        <div class="container-xxl">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">Popular subcategories</span>
+              <h2>Start with a skill employers recognize</h2>
+            </div>
+          </div>
+
+        <div class="subcat-grid">
+ <a href="#">HTML and CSS</a>
+            <a href="#">Java</a>
+            <a href="#">C#</a>
+            <a href="#">JavaScript</a>
+            <a href="#">React native</a>
+            <a href="#"> Kotlin</a>
+
+</div>
+        </div>
+      </section>
+
+      <section id="courses" class="section-pad">
+        <div class="container-xxl">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Featured courses</span>
+              <h2>Courses learners are choosing now</h2>
+            </div>
+            <div class="btn-group course-tabs" role="group" aria-label="Course filters">
+              <button type="button" class="btn btn-dark active">Most popular</button>
+              <button type="button" class="btn btn-outline-dark">New</button>
+              <button type="button" class="btn btn-outline-dark">Beginner</button>
+            </div>
+          </div>
+
+          <div class="row g-4">
+             <div class="col-md-6 col-xl-4">
+    <article class="course-card">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80"
+             alt="Development">
+
+        <div class="course-body">
+
+            <span class="badge text-bg-success"> Web Development</span>
+
+           <div class="course-body">
+
+		   <div th:each="sub : ${allList}">
+		    <div th:if="${sub.courseCategoryId == 1}">
+		        <a th:href="@{/#(id=${sub.id})}"
+		           th:text="${sub.name}"></a>
+		    </div>
+		</div>
+			</div>
+        </div>
+    </article>
+</div>
+
+ <div class="col-md-6 col-xl-4">
+    <article class="course-card">
+<img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=80"
+     alt="Mobile Development">
+
+        <div class="course-body">
+
+            <span class="badge text-bg-success"> Mobile Development</span>
+
+           <div class="course-body">
+
+   <div th:each="sub : ${allList}">
+    <div th:if="${sub.courseCategoryId == 2}">
+        <a th:href="@{/#(id=${sub.id})}"
+           th:text="${sub.name}"></a>
+    </div>
+</div>
+</div>
+        </div>
+    </article>
+</div>
+
+ <div class="col-md-6 col-xl-4">
+    <article class="course-card">
+<img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=900&q=80"
+     alt="Game Development">
+            
+
+        <div class="course-body">
+
+            <span class="badge text-bg-success"> Game Development</span>
+
+           <div class="course-body">
+
+  <div th:each="sub : ${allList}">
+    <div th:if="${sub.courseCategoryId == 3}">
+        <a th:href="@{/#(id=${sub.id})}"
+           th:text="${sub.name}"></a>
+    </div>
+</div>
+
+</div>
+        </div>
+    </article>
+</div>
+
+
+
+            
+
+        
+
+
+         
+          </div>
+        </div>
+      </section>
+
+      <section id="career-paths" class="career-paths">
+        <div class="container-xxl">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+              <span class="eyebrow">Career paths</span>
+              <h2>Follow a guided route from beginner to employable.</h2>
+              <p>Each path combines foundation lessons, applied workshops, instructor review, and a final portfolio project you can show to employers.</p>
+              <a class="btn btn-primary btn-lg" href="#">Find your path</a>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="path-list">
+                <a href="#">
+                  <span><i class="bi bi-laptop"></i> Web Development</span>
+                  <strong> courses</strong>
+                </a>
+                <a href="#">
+                  <span><i class="bi bi-shield-check"></i> Mobile Development</span>
+                  <strong> courses</strong>
+                </a>
+               
+                <a href="#">
+                  <span><i class="bi bi-briefcase"></i> Game Development</span>
+                  <strong> courses</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+   <div th:replace="~{fragment/footer :: footer}"></div>
+
+   <div th:replace="~{fragment/js :: js}"></div>
+   
+   
+  </body>
+</html>

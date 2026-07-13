@@ -1,15 +1,22 @@
 package com.finalproject.Final.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class SubCategoryBean {
 
-    private int id;
+    private String SubCategoryId;
     private String name;
     private String description;
+    private int isActive;
 
-    private int courseCategoryId;
+    private String courseCategoryId;
+    private LocalDateTime createdAt;
 }

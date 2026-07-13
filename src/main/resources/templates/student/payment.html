@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+
+<body>
+
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+
+<main>
+
+
+<section class="section-pad bg-light">
+
+
+<div class="container-xxl">
+
+
+<div class="row justify-content-center">
+
+
+<div class="col-lg-8 col-xl-7">
+
+
+<article class="course-card bg-white">
+
+
+<div class="course-body p-4 p-lg-5">
+
+
+
+<!-- Header -->
+
+<div class="text-center mb-4">
+
+
+<span class="brand-mark mx-auto mb-3">
+
+<i class="bi bi-credit-card"></i>
+
+</span>
+
+
+
+<div th:if="${errorMessage}" class="alert alert-danger">
+
+<span th:text="${errorMessage}"></span>
+
+</div>
+
+
+
+<span class="eyebrow justify-content-center">
+
+Payment
+
+</span>
+
+
+
+<h1 class="mb-3">
+
+Complete Your Payment
+
+</h1>
+
+
+
+<p class="text-muted mb-0">
+
+Your enrollment will be confirmed after successful payment.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<!-- Course Summary -->
+
+
+<div class="category-card mb-4">
+
+
+<div class="row g-4">
+
+
+
+<div class="col-sm-7">
+
+
+<small class="text-muted d-block mb-1">
+
+Course Name
+
+</small>
+
+
+<strong class="fs-5"
+        th:text="${course.name}">
+
+Course Name
+
+</strong>
+
+
+</div>
+
+
+
+
+
+<div class="col-sm-5">
+
+
+<small class="text-muted d-block mb-1">
+
+Course Fee
+
+</small>
+
+
+<strong class="fs-5 text-primary">
+
+MMK
+
+<span th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')}">
+
+0
+
+</span>
+
+
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<form th:action="@{/payment/pay}" method="post">
+
+
+
+
+
+<!-- Hidden fields -->
+
+
+<input type="hidden"
+       name="enrollmentId"
+       th:value="${enrollment.enrollmentId}">
+
+
+
+<input type="hidden"
+       id="paymentAmount"
+       name="amount"
+       th:value="${course.fee}">
+       
+<input
+    type="hidden"
+    name="installmentRuleId"
+    th:value="${installmentRule.installmentRuleId}">       
+
+
+
+
+
+
+
+<!-- Payment Type -->
+
+
+<div class="mb-4">
+
+
+<label class="form-label fw-bold">
+
+Payment Type
+
+</label>
+
+
+
+
+<div class="row g-2">
+
+
+
+
+
+<div class="col-sm-6"
+     th:each="type,stat : ${paymentTypes}">
+
+
+
+
+
+<label class="category-card d-flex align-items-center gap-3 mb-0">
+
+
+
+
+
+<input class="form-check-input mt-0"
+       type="radio"
+       name="paymentTypeId"
+       th:value="${type.paymentTypeId}"
+       th:data-type="${type.name}"
+       th:checked="${stat.first}"
+       onclick="changePayment(this)"
+       required>
+
+
+
+
+
+<span>
+
+
+<strong class="d-block"
+        th:text="${type.name}">
+
+Payment Type
+
+</strong>
+
+
+<small class="text-muted"
+       th:text="${type.description}">
+
+Description
+
+</small>
+
+
+</span>
+
+
+
+</label>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Payment Method -->
+
+
+
+<div class="mb-4">
+
+
+<label class="form-label fw-bold">
+
+Payment Method
+
+</label>
+
+
+
+
+
+<div class="row g-2">
+
+
+
+
+
+<div class="col-md-4"
+     th:each="method,stat : ${paymentMethods}">
+
+
+
+
+
+
+<label class="category-card d-flex align-items-center gap-2 mb-0">
+
+
+
+
+
+
+<input class="form-check-input mt-0"
+       type="radio"
+       name="paymentMethodId"
+       th:value="${method.paymentMethodId}"
+       th:checked="${stat.first}"
+       required>
+
+
+
+
+<strong th:text="${method.name}">
+
+Payment Method
+
+</strong>
+
+
+
+
+
+</label>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+<!-- Amount -->
+
+
+<div class="category-card mb-4 bg-light">
+
+
+<div class="d-flex justify-content-between">
+
+
+<span class="text-muted fw-semibold">
+
+Payment Amount
+
+</span>
+
+
+
+
+<strong class="fs-3 text-primary">
+
+MMK
+
+<span id="displayAmount" th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')}"
+      >
+
+0
+
+</span>
+
+
+</strong>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Installment Schedule -->
+
+
+<div class="category-card mb-4"
+     id="installmentSchedule"
+     th:if="${installmentRule != null}"
+     style="display:none;">
+
+
+
+
+
+<h5 class="mb-3">
+
+<span th:text="${installmentRule.name}">
+
+Installment Plan
+
+</span>
+
+
+Schedule
+
+</h5>
+
+
+
+
+
+<div class="border-bottom py-2"
+     th:each="item : ${installmentItems}">
+
+
+
+
+
+<div class="d-flex justify-content-between">
+
+
+
+
+
+<span>
+
+
+<span th:text="${item.installmentNumber}">
+
+1
+
+</span>.
+
+
+Due
+
+
+<span th:text="${#temporals.format(item.dueDate,'dd MMM yyyy')}">
+
+11 Jul 2026
+
+</span>
+
+
+</span>
+
+
+
+
+
+<strong>
+
+
+MMK
+
+<span th:text="${#numbers.formatDecimal(item.amount, 0, 'COMMA', 0, 'POINT')}">
+
+0
+
+</span>
+
+
+</strong>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Confirmation -->
+
+
+<div class="form-check mb-4">
+
+
+
+
+
+<input class="form-check-input"
+       type="checkbox"
+       required>
+
+
+
+
+
+<label class="form-check-label fw-semibold">
+
+
+I confirm that the above information is correct.
+
+
+</label>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Buttons -->
+
+
+
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+
+
+
+
+
+<a class="btn btn-outline-dark btn-lg"
+   th:href="@{/enrollment/show(courseId=${course.courseId})}">
+
+
+<i class="bi bi-arrow-left me-1"></i>
+
+Back
+
+
+</a>
+
+
+
+
+
+
+<button class="btn btn-primary btn-lg"
+        type="submit">
+
+
+Pay Now
+
+<i class="bi bi-arrow-right ms-1"></i>
+
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+
+</div>
+
+
+
+</article>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+
+
+
+
+
+<script>
+
+
+function changePayment(element){
+
+
+    let type =
+        element.getAttribute("data-type");
+
+
+
+    let amountInput =
+        document.getElementById("paymentAmount");
+
+
+
+    let displayAmount =
+        document.getElementById("displayAmount");
+
+
+
+    let schedule =
+        document.getElementById("installmentSchedule");
+
+
+
+
+
+    if(type === "INSTALLMENT"){
+
+
+
+        let firstInstallment =
+            [[${installmentItems[0].amount}]];
+
+
+
+        amountInput.value =
+            firstInstallment;
+
+
+
+        displayAmount.innerHTML =
+            Number(firstInstallment).toLocaleString();
+
+
+
+        if(schedule != null){
+
+            schedule.style.display =
+                "block";
+
+        }
+
+
+
+
+    }else{
+
+
+
+        let fullAmount =
+            [[${course.fee}]];
+
+
+
+        amountInput.value =
+            fullAmount;
+
+
+
+        displayAmount.innerHTML =
+            fullAmount;
+
+
+
+
+        if(schedule != null){
+
+            schedule.style.display =
+                "none";
+
+        }
+
+
+
+    }
+
+
+
+}
+
+
+
+</script>
+
+
+
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+
+        </div>
+
+
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+
+            <div class="mb-4">
+
+                <h2 class="fw-bold">
+                    Generate Course Schedule
+                </h2>
+
+                <p class="text-muted">
+                    Create class schedules based on course duration.
+                </p>
+
+            </div>
+
+
+
+            <div class="card shadow-sm border-0">
+
+
+                <div class="card-body">
+
+
+                    <form th:action="@{/schedule/generate}"
+                          th:object="${schedule}"
+                          method="post">
+
+
+                        <!-- Course ID -->
+
+                        <input type="hidden"
+                               th:field="*{courseId}">
+
+
+
+                        <!-- Start Date -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Start Date
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   th:field="*{startDate}"
+                                   required>
+
+                        </div>
+
+
+
+
+                        <!-- Time -->
+
+                        <div class="row">
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Start Time
+                                </label>
+
+                                <input type="time"
+                                       class="form-control"
+                                       th:field="*{startTime}"
+                                       required>
+
+                            </div>
+
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    End Time
+                                </label>
+
+                                <input type="time"
+                                       class="form-control"
+                                       th:field="*{endTime}"
+                                       required>
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        <!-- Room -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Room
+                            </label>
+
+
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{room}"
+                                   placeholder="Room Number">
+
+                        </div>
+
+
+
+
+
+                        <!-- Repeat Days -->
+
+
+                        <div class="mb-3">
+
+
+                            <label class="form-label fw-bold">
+                                Repeat Days
+                            </label>
+
+
+
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="MONDAY">
+
+                                    <label>
+                                        Monday
+                                    </label>
+
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="TUESDAY">
+
+                                    <label>
+                                        Tuesday
+                                    </label>
+
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="WEDNESDAY">
+
+                                    <label>
+                                        Wednesday
+                                    </label>
+
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="THURSDAY">
+
+                                    <label>
+                                        Thursday
+                                    </label>
+
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="FRIDAY">
+
+                                    <label>
+                                        Friday
+                                    </label>
+
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="SATURDAY">
+
+                                    <label>
+                                        Saturday
+                                    </label>
+
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="repeatDays"
+                                           value="SUNDAY">
+
+                                    <label>
+                                        Sunday
+                                    </label>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+                        <!-- Topic -->
+
+
+                        <div class="mb-3">
+
+
+                            <label class="form-label">
+                                Topic Prefix (Optional)
+                            </label>
+
+
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{topicPrefix}"
+                                   placeholder="Lesson">
+
+
+                        </div>
+
+
+
+
+
+
+                        <div class="text-end">
+
+
+                            <button type="submit"
+                                    class="btn btn-primary px-4">
+
+
+                                <i class="bi bi-calendar-plus"></i>
+
+                                Generate Schedule
+
+
+                            </button>
+
+
+                        </div>
+
+
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </main>
+
+
+    </div>
+
+
+</div>
+
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>

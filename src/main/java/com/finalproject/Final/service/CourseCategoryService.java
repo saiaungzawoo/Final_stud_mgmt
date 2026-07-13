@@ -50,7 +50,9 @@ public class CourseCategoryService {
 	 * public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
 	 * 
 	 * return courseCategoryReop.getCourseCategoryById(courseCategoryId); }
-	 * 
+	 */
+
+	/*
 	 * public boolean updateCoureCategory(int courseCatId, String courseCatName) {
 	 * 
 	 * int result = 0;
@@ -64,7 +66,9 @@ public class CourseCategoryService {
 	 * 
 	 * return true; } else { System.out.println( "Fail to Update Course Category ::"
 	 * + courseCatId + "::" + courseCatName); return false; } }
-	 * 
+	 */
+
+	/*
 	 * public boolean deleteCourseCategory(int courseCategoryId) {
 	 * 
 	 * int result = 0;

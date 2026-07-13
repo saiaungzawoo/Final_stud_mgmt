@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<main>
+
+    <section class="section-pad bg-light">
+        <div class="container py-5">
+
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+
+                    <div class="card shadow-lg border-0">
+
+                        <!-- Header -->
+                        <div class="card-header text-center bg-primary text-white">
+                            <h4 class="mb-0">Payment Receipt</h4>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body p-4">
+
+                            <div class="text-center mb-4">
+                                <h5 class="fw-bold">Ace Inspiration</h5>
+                                <small class="text-muted">Official Enrollment Receipt</small>
+                            </div>
+
+                            <hr>
+
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <td th:text="${payment.transactionReference}"></td>
+                                </tr>
+                                
+                                 <tr>
+                                    <th>Student</th>
+                                    <td th:text="${payment.studentName}"></td>
+                                </tr>
+
+                                <tr>
+                                    <th>Course</th>
+                                    <td th:text="${course.name}"></td>
+                                </tr>
+                                
+                                <tr>
+                                    <th>Payment Type</th>
+                                    <td th:text="${payment.paymentTypeName}"></td>
+                                </tr>
+
+                                <tr>
+                                    <th>Amount</th>
+                                    <td>
+                                        <span th:text="${payment.amount}"></span> MMK
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Method</th>
+                                    <td th:text="${payment.paymentMethodName}"></td>
+                                </tr>
+
+                                <tr>
+                                    <th>Date</th>
+                                    <td th:text="${payment.paymentDate}"></td>
+                                </tr>
+
+                                <tr>
+                                    <th>Status</th>
+                                    <td>
+                                        <span class="badge bg-success"
+                                              th:text="${payment.status}">
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <hr>
+
+                            <div class="text-center text-muted small">
+                                Thank you for your payment. This serves as your official receipt.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+
+</body>
+</html>
