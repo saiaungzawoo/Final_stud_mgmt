@@ -1,112 +1,91 @@
 package com.finalproject.Final.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.finalproject.Final.model.UserBean;
 
-
-
 @Repository
 public class UsersRepository {
-  @Autowired
-  JdbcTemplate jdbc;
-  
-  public int insertUser(UserBean obj) {
 
-      String sql = """
-          INSERT INTO user
-          (userID, roleID, name, email, password,
-           phone_no, address, dob, gender,
-           profile_image, created_at, updated_at, is_active)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          """;
+    @Autowired
+    JdbcTemplate jdbc;
 
-      return jdbc.update(
-              sql,
-              obj.getUserID(),
-              obj.getRoleID(),
-              obj.getName(),
-              obj.getEmail(),
-              obj.getPassword(),
-              obj.getPhoneNumber(),
-              obj.getAddress(),
-              obj.getDob(),
-              obj.getGender(),
-              obj.getProfileImage(),
-              obj.getCreatedAt(),
-              obj.getUpdatedAt(),
-              obj.getIsActive()
-      );
-  }
-  
-  public boolean existsByEmail(String email) {
+    public int insertUser(UserBean obj) {
+        String sql = """
+                INSERT INTO user
+                (userID, roleID, name, email, password,
+                 phone_no, address, dob, gender,
+                 profile_image, created_at, updated_at, is_active)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
 
-      String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
-      Integer count = jdbc.queryForObject(sql, Integer.class,email);
-      String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
-      Integer count = jdbc.queryForObject(sql, Integer.class,email);
+        return jdbc.update(
+                sql,
+                obj.getUserID(),
+                obj.getRoleID(),
+                obj.getName(),
+                obj.getEmail(),
+                obj.getPassword(),
+                obj.getPhoneNumber(),
+                obj.getAddress(),
+                obj.getDob(),
+                obj.getGender(),
+                obj.getProfileImage(),
+                obj.getCreatedAt(),
+                obj.getUpdatedAt(),
+                obj.getIsActive()
+        );
+    }
 
-      return count != null && count > 0;
-  }
-      return count != null && count > 0;
-  }
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
+        Integer count = jdbc.queryForObject(sql, Integer.class, email);
+        return count != null && count > 0;
+    }
 
-  
-  public UserBean getLatestStudent() {
-    String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
-     
-      
-      String sql = """
-              SELECT *
-              FROM user
-              WHERE roleID = ?
-              ORDER BY created_at DESC
-              LIMIT 1
-              """;
+    public UserBean getLatestStudent() {
+        String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
 
-      return jdbc.queryForObject(sql,
-              new Object[] { studentRoleId },
-              (rs, rowNum) -> {
+        String sql = """
+                SELECT *
+                FROM user
+                WHERE roleID = ?
+                ORDER BY created_at DESC
+                LIMIT 1
+                """;
 
-                  UserBean userObj = new UserBean();
+        return jdbc.queryForObject(sql,
+                new Object[]{studentRoleId},
+                (rs, rowNum) -> {
+                    UserBean userObj = new UserBean();
+                    userObj.setUserID(rs.getString("userID"));
+                    userObj.setRoleID(rs.getString("roleID"));
+                    userObj.setName(rs.getString("name"));
+                    userObj.setEmail(rs.getString("email"));
+                    userObj.setPassword(rs.getString("password"));
+                    userObj.setPhoneNumber(rs.getString("phone_no"));
+                    userObj.setAddress(rs.getString("address"));
+                    userObj.setDob(rs.getDate("dob").toLocalDate());
+                    userObj.setGender(rs.getString("gender"));
+                    userObj.setProfileImage(rs.getString("profile_image"));
+                    userObj.setIsActive(rs.getInt("is_active"));
+                    userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                    userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                    return userObj;
+                }
+        );
+    }
 
-                  userObj.setUserID(rs.getString("userID"));
-                  userObj.setRoleID(rs.getString("roleID"));
-                  userObj.setName(rs.getString("name"));
-                  userObj.setEmail(rs.getString("email"));
-                  userObj.setPassword(rs.getString("password"));
-                  userObj.setPhoneNumber(rs.getString("phone_no"));
-                  userObj.setAddress(rs.getString("address"));
-                  userObj.setDob(rs.getDate("dob").toLocalDate());
-                  userObj.setGender(rs.getString("gender"));
-                  userObj.setProfileImage(rs.getString("profile_image"));
-                  userObj.setIsActive(rs.getInt("is_active"));
-                  userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                  userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+    public int updateUser(UserBean userObj) {
+        String sql = """
+                UPDATE user SET name = ?, email = ?, password = ?,
+                phone_no = ?, address = ?, dob = ?, gender = ?, profile_image = ?
+                WHERE userID = ?
+                """;
 
-                  return userObj;
-              }
-            
-          );
-  }
-     
-  
-  
-  
-             
-  public int updateUser(UserBean userObj) {
-    
-    
-      
-     String sql = " UPDATE user SET name = ?,email = ?,password = ?,"
-         + "phone_no = ?,address = ?, dob = ?,gender = ?,profile_image = ?"
-         + " WHERE userID = ?";
-                
-     return jdbc.update(
+        return jdbc.update(
                 sql,
                 userObj.getName(),
                 userObj.getEmail(),
@@ -118,107 +97,90 @@ public class UsersRepository {
                 userObj.getProfileImage(),
                 userObj.getUserID()
         );
-        
-  }
-  
-  
-  public UserBean getUserByEmail(String email) {
+    }
 
-      String sql = "SELECT * FROM user WHERE email=?";
-  try {
+    public UserBean getUserByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email=?";
+        try {
+            return jdbc.queryForObject(sql, new Object[]{email}, (rs, rowNum) -> {
+                UserBean userObj = new UserBean();
+                userObj.setUserID(rs.getString("userID"));
+                userObj.setRoleID(rs.getString("roleID"));
+                userObj.setName(rs.getString("name"));
+                userObj.setEmail(rs.getString("email"));
+                userObj.setPassword(rs.getString("password"));
+                userObj.setPhoneNumber(rs.getString("phone_no"));
+                userObj.setAddress(rs.getString("address"));
 
-                return jdbc.queryForObject(sql, new Object[] { email }, (rs, rowNum) -> {
+                if (rs.getDate("dob") != null) {
+                    userObj.setDob(rs.getDate("dob").toLocalDate());
+                }
 
-                    UserBean userObj = new UserBean();
-userObj.setUserID(rs.getString("userID"));
-                    userObj.setRoleID(rs.getString("roleID"));
-                    userObj.setName(rs.getString("name"));
-                    userObj.setEmail(rs.getString("email"));
-                    userObj.setPassword(rs.getString("password"));
-                    userObj.setPhoneNumber(rs.getString("phone_no"));
-                    userObj.setAddress(rs.getString("address"));
+                userObj.setGender(rs.getString("gender"));
 
-                    if (rs.getDate("dob") != null) {
-                        userObj.setDob(rs.getDate("dob").toLocalDate());
-                    }
+                if (rs.getTimestamp("created_at") != null) {
+                    userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                }
 
-                    userObj.setGender(rs.getString("gender"));
+                if (rs.getTimestamp("updated_at") != null) {
+                    userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                }
 
-                    if (rs.getTimestamp("created_at") != null) {
-                        userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                    }
-
-                    if (rs.getTimestamp("updated_at") != null) {
-                        userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-                    }
-
-                    userObj.setIsActive(rs.getInt("is_active"));
-                    userObj.setProfileImage(rs.getString("profile_image"));
-
-                    return userObj;
-
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+                userObj.setIsActive(rs.getInt("is_active"));
+                userObj.setProfileImage(rs.getString("profile_image"));
+                return userObj;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-     
-  
-  public UserBean getUserById(String userID) {
+    }
 
-      String sql = "SELECT * FROM user WHERE userID = ?";
+    public UserBean getUserById(String userID) {
+        String sql = "SELECT * FROM user WHERE userID = ?";
 
-      try {
+        try {
+            return jdbc.queryForObject(sql, new Object[]{userID}, (rs, rowNum) -> {
+                UserBean userObj = new UserBean();
+                userObj.setUserID(rs.getString("userID"));
+                userObj.setRoleID(rs.getString("roleID"));
+                userObj.setName(rs.getString("name"));
+                userObj.setEmail(rs.getString("email"));
+                userObj.setPassword(rs.getString("password"));
+                userObj.setPhoneNumber(rs.getString("phone_no"));
+                userObj.setAddress(rs.getString("address"));
+                userObj.setDob(rs.getDate("dob").toLocalDate());
+                userObj.setGender(rs.getString("gender"));
+                userObj.setProfileImage(rs.getString("profile_image"));
+                userObj.setIsActive(rs.getInt("is_active"));
+                userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 
-          return jdbc.queryForObject(sql, new Object[]{userID}, (rs, rowNum) -> {
+                if (rs.getTimestamp("updated_at") != null) {
+                    userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                }
 
-              UserBean userObj = new UserBean();
+                return userObj;
+            });
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-              userObj.setUserID(rs.getString("userID"));
-              userObj.setRoleID(rs.getString("roleID"));
-              userObj.setName(rs.getString("name"));
-              userObj.setEmail(rs.getString("email"));
-              userObj.setPassword(rs.getString("password"));
-              userObj.setPhoneNumber(rs.getString("phone_no"));
-              userObj.setAddress(rs.getString("address"));
-              userObj.setDob(rs.getDate("dob").toLocalDate());
-              userObj.setGender(rs.getString("gender"));
-              userObj.setProfileImage(rs.getString("profile_image"));
-              userObj.setIsActive(rs.getInt("is_active"));
-              userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+    public boolean existsByEmailAndNotUserId(String email, String userId) {
+        String sql = """
+                SELECT COUNT(*)
+                FROM user
+                WHERE email = ?
+                AND userID <> ?
+                """;
 
-              if (rs.getTimestamp("updated_at") != null) {
-                userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-              }
+        Integer count = jdbc.queryForObject(
+                sql,
+                Integer.class,
+                email,
+                userId
+        );
 
-              return userObj;
-          });
-
-      } catch (Exception e) {
-          return null;
-      }
-  }
-
-  
-  
-  public boolean existsByEmailAndNotUserId(String email, String userId) {
-
-      String sql = """
-              SELECT COUNT(*)
-              FROM user
-              WHERE email = ?
-              AND userID <> ?
-              """;
-
-      Integer count = jdbc.queryForObject(
-              sql,
-              Integer.class,
-              email,
-              userId
-      );
-
-      return count != null && count > 0;
-  }
-  }
+        return count != null && count > 0;
+    }
+}
