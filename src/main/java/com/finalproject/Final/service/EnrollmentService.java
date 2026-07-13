@@ -9,68 +9,61 @@ import org.springframework.stereotype.Service;
 import com.finalproject.Final.dto.EnrollmentDTO;
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.EnrollmentRepository;
 
 @Service
 public class EnrollmentService {
 
-    @Autowired
-    private EnrollmentRepository repo;
+	@Autowired
+	private EnrollmentRepository repo;
 
+	@Autowired
+	private CourseRepository cRepo;
 
-    // CREATE ENROLLMENT
-    public String createEnrollment(EnrollmentDTO dto) {
+	public String createEnrollment(String userId, String courseId) {
 
-        // prevent duplicate enrollment
-        if (repo.existsByUserIdAndCourseId(
-                dto.getUserId(),
-                dto.getCourseId())) {
+	    EnrollmentBean existing =
+	            repo.findByUserAndCourse(userId, courseId);
 
-            throw new RuntimeException(
-                "Already enrolled in this course"
-            );
-        }
+	    if (existing != null) {
+	    	  throw new RuntimeException("You are already enrolled in this course.");
+	    }
 
+	    CourseBean course = cRepo.findById(courseId);
 
-        return repo.save(
-                dto.getUserId(),
-                dto.getCourseId(),
-                LocalDate.now()
-        );
-    }
+	    Double fee = course.getFee();
 
+	    return repo.save(
+	            userId,
+	            courseId,
+	            LocalDate.now(),
+	            fee,
+	            fee
+	    );
+	}
 
-    // GET BY ENROLLMENT ID
-    public EnrollmentBean getById(String enrollmentId) {
+	public EnrollmentBean getById(String id) {
 
-        return repo.findById(enrollmentId);
-    }
+		return repo.findById(id);
+	}
 
+	public void confirmEnrollment(String id) {
 
+		repo.updateStatus(id, "Active");
 
-    // GET USER ENROLLMENTS
-    public List<EnrollmentBean> getByUser(String userId) {
+	}
+	
+	public void updateInstallmentRule(
+	        String enrollmentId,
+	        String installmentRuleId
+	){
 
-        return repo.findByUser(userId);
-    }
+	    repo.updateInstallmentRule(
+	            enrollmentId,
+	            installmentRuleId
+	    );
 
-
-
-    // CONFIRM PAYMENT -> ACTIVE ENROLLMENT
-    public void confirmEnrollment(String enrollmentId) {
-
-        repo.updateStatus(
-                enrollmentId,
-                "Active"
-        );
-    }
-
-
-
-    // GET COURSES USER ENROLLED IN
-    public List<CourseBean> getEnrolledCourses(String userId) {
-
-        return repo.getEnrolledCourses(userId);
-    }
+	}
 
 }
