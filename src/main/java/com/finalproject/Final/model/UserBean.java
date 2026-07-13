@@ -21,23 +21,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserBean {
-<<<<<<< Updated upstream
 
-    private int id;
-=======
+
+    private String ID;
+
   
   private String userID;
 
   private String roleID;
-@NotBlank(message="Name is required")
-@Pattern(
-      regexp = "^[A-Z][a-zA-Z ]*$",
-      message = "Name must start with a capital letter"
-  )
-  private String name;
->>>>>>> Stashed changes
 
-  private String roleId;
+
+
 @NotBlank(message="Name is required")
 @Pattern(
       regexp = "^[A-Z][a-zA-Z ]*$",
