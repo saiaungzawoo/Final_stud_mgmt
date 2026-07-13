@@ -13,17 +13,23 @@ import com.finalproject.Final.repository.SubCategoryRepository;
 @Controller
 public class IndexController {
 
-   
+    @Autowired
+    private SubCategoryRepository subRepo;
     
     @GetMapping("/")
-    public String showHomePage(Model model) {
-
-    	 List<SubCategoryBean> allList = subRepo.getAllSubCategory();
-
-    	    model.addAttribute("allList", allList);
-
-
-        return "layout/index";
+    public String home(Model m) {
+    	return "layout/index";
     }
+
+	/*
+	 * @GetMapping("/") public String showHomePage(Model model) {
+	 * 
+	 * List<SubCategoryBean> allList = subRepo.getAllSubCategory();
+	 * 
+	 * model.addAttribute("allList", allList);
+	 * 
+	 * 
+	 * return "layout/index"; }
+	 */
 
 }

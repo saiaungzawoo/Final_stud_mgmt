@@ -21,10 +21,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserBean {
-  
-  private String userId;
 
-  private String roleId;
+
+    private String ID;
+
+  
+  private String userID;
+
+  private String roleID;
+
+
+
 @NotBlank(message="Name is required")
 @Pattern(
       regexp = "^[A-Z][a-zA-Z ]*$",
