@@ -110,7 +110,7 @@
 
 										<tbody>
 											<tr th:each="s : ${schedules}">
-												<td th:text="${#temporals.format(s.date, 'dd-MM-yyyy')}"></td>
+												<td th:text="${#temporals.format(s.scheduleDate, 'dd-MM-yyyy')}"></td>
 												<td th:text="${#temporals.format(s.startTime,'hh:mm a')}"></td>
 												<td th:text="${#temporals.format(s.endTime,'hh:mm a')}"></td>
 												<td th:text="${s.room}"></td>

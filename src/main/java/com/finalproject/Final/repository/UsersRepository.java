@@ -2,6 +2,7 @@ package com.finalproject.Final.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -46,7 +47,11 @@ public class UsersRepository {
 
       String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
       Integer count = jdbc.queryForObject(sql, Integer.class,email);
+      String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
+      Integer count = jdbc.queryForObject(sql, Integer.class,email);
 
+      return count != null && count > 0;
+  }
       return count != null && count > 0;
   }
 

@@ -1,7 +1,7 @@
 package com.finalproject.Final.repository;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,78 +15,164 @@ public class PaymentRepository {
     @Autowired
     private JdbcTemplate jdbc;
 
-    // Save payment (main payment table)
-    public int savePayment(String transactionReference, int amount, String method, String status, int courseId, int enrollmentId) {
+    // Save Payment
+    public String savePayment(
+            String enrollmentId,
+            String paymentMethodId,
+            Double amount
+    ){
 
-        String sql = "INSERT INTO payment\r\n"
-        		+ "        (transaction_reference, amount, payment_date, payment_method, payment_status, created_at, updated_at, course_id, enrollment_id)\r\n"
-        		+ "        VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)";
+    String paymentId =
+    UUID.randomUUID().toString();
 
-        jdbc.update(sql, transactionReference,  amount, LocalDate.now(), method, status, courseId, enrollmentId);
- 
-        return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
-    }
 
-    //  Save payment record (link user ↔ payment)
-    public void savePaymentRecord(int paymentId,
-                                  int userId,
-                                  String paymentType) {
+    String reference =
+    "TXN-"+UUID.randomUUID()
+    .toString()
+    .substring(0,8)
+    .toUpperCase();
 
-        String sql = "INSERT INTO payment_record\r\n"
-        		+ "            (payment_id, user_id, payment_type)\r\n"
-        		+ "            VALUES (?, ?, ?)";
 
-        jdbc.update(sql, paymentId, userId, paymentType);
+
+    String sql ="INSERT INTO payment\r\n"
+    		+ "    (\r\n"
+    		+ "    paymentID,\r\n"
+    		+ "    enrollmentID,\r\n"
+    		+ "    paymentMethodID,\r\n"
+    		+ "    amount,\r\n"
+    		+ "    payment_date,\r\n"
+    		+ "    transaction_reference,\r\n"
+    		+ "    status,\r\n"
+    		+ "    created_at,\r\n"
+    		+ "    updated_at\r\n"
+    		+ "    )\r\n"
+    		+ "    VALUES\r\n"
+    		+ "    (?,?,?,?,CURRENT_DATE,?,'Success',NOW(),NOW())";
+   
+
+
+    jdbc.update(
+    sql,
+    paymentId,
+    enrollmentId,
+    paymentMethodId,
+    amount,
+    reference
+    );
+
+
+    return paymentId;
+
     }
     
-    public boolean existsPaidPayment(int enrollmentId) {
+    //overload
+    public String savePayment(
+            String enrollmentId,
+            String installmentPlanId,
+            String paymentMethodId,
+            Double amount
+    ){
 
-        String sql = " SELECT COUNT(*) \r\n"
-        		+ "        FROM payment \r\n"
-        		+ "        WHERE enrollment_id = ? AND payment_status = 'PAID'";
+        String paymentId =
+                UUID.randomUUID().toString();
 
-        Integer count = jdbc.queryForObject(sql, Integer.class, enrollmentId);
-        return count != null && count > 0;
+        String reference =
+                "TXN-"
+                + UUID.randomUUID()
+                        .toString()
+                        .substring(0,8)
+                        .toUpperCase();
+
+        String sql = """
+            INSERT INTO payment
+            (
+                paymentID,
+                enrollmentID,
+                installmentPlanID,
+                paymentMethodID,
+                amount,
+                payment_date,
+                transaction_reference,
+                status,
+                created_at,
+                updated_at
+            )
+            VALUES
+            (
+                ?,?,?,?,?,CURRENT_DATE,
+                ?,
+                'Success',
+                NOW(),
+                NOW()
+            )
+            """;
+
+        jdbc.update(
+                sql,
+                paymentId,
+                enrollmentId,
+                installmentPlanId,
+                paymentMethodId,
+                amount,
+                reference
+        );
+
+        return paymentId;
+
     }
-    
-    public PaymentBean getByEnrollmentId(int enrollmentId) {
 
-        String sql = " SELECT *\r\n"
-        		+ "        FROM payment\r\n"
-        		+ "        WHERE enrollment_id = ?\r\n"
-        		+ "        ORDER BY id DESC\r\n"
+    // Find latest payment by enrollment
+    public PaymentBean getByEnrollmentId(String enrollmentID) {
+
+        String sql = "SELECT\r\n"
+        		+ "            p.*,\r\n"
+        		+ "            pm.name AS paymentMethodName,\r\n"
+        		+ "            pt.name AS paymentTypeName,\r\n"
+        		+ "            u.name AS studentName\r\n"
+        		+ "        FROM payment p\r\n"
+        		+ "       LEFT JOIN payment_method pm\r\n"
+        		+ "            ON p.paymentMethodID = pm.paymentMethodID\r\n"
+        		+ "       LEFT JOIN enrollment e\r\n"
+        		+ "            ON p.enrollmentID = e.enrollmentID\r\n"
+        		+ "       LEFT JOIN payment_type pt\r\n"
+        		+ "            ON e.paymentTypeID = pt.paymentTypeID\r\n"
+        		+ "       LEFT JOIN user u\r\n"
+        		+ "            ON e.userID = u.userID\r\n"
+        		+ "        WHERE p.enrollmentID = ?\r\n"
+        		+ "        ORDER BY p.created_at DESC\r\n"
         		+ "        LIMIT 1";
+            
+           
 
-        List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), enrollmentId);
+        List<PaymentBean> list =
+                jdbc.query(sql, new PaymentRowMapper(), enrollmentID);
 
         return list.isEmpty() ? null : list.get(0);
     }
-    
-    public PaymentBean getById(int id) {
 
-        String sql = """
-                SELECT *
-                FROM payment
-                WHERE id = ?
-                """;
+    // Find payment by UUID
+    public PaymentBean getById(String paymentID) {
 
-        return jdbc.queryForObject(
-                sql,
-                new PaymentRowMapper(),
-                id);
+        String sql = "SELECT\r\n"
+        		+ "            p.*,\r\n"
+        		+ "            pm.name AS paymentMethodName,\r\n"
+        		+ "            pt.name AS paymentTypeName,\r\n"
+        		+ "            u.name AS studentName\r\n"
+        		+ "        FROM payment p\r\n"
+        		+ "        LEFT JOIN payment_method pm\r\n"
+        		+ "            ON p.paymentMethodID = pm.paymentMethodID\r\n"
+        		+ "        LEFT JOIN enrollment e\r\n"
+        		+ "            ON p.enrollmentID = e.enrollmentID\r\n"
+        		+ "        LEFT JOIN payment_type pt\r\n"
+        		+ "            ON e.paymentTypeID = pt.paymentTypeID\r\n"
+        		+ "       LEFT JOIN user u\r\n"
+        		+ "            ON e.userID = u.userID\r\n"
+        		+ "        WHERE p.paymentID = ?";
+
+        List<PaymentBean> list =
+                jdbc.query(sql, new PaymentRowMapper(), paymentID);
+
+        return list.isEmpty() ? null : list.get(0);
     }
-    
-    public void markReceiptDownloaded(int paymentId) {
 
-        String sql = """
-                UPDATE payment
-                SET receipt_downloaded = 1
-                WHERE id = ?
-                """;
-
-        jdbc.update(sql, paymentId);
-
-    }
-
-    
 }

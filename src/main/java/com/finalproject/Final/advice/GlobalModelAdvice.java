@@ -14,8 +14,8 @@ public class GlobalModelAdvice {
     @Autowired
     private CourseCategoryService categoryService;
 
-    @ModelAttribute("allCategories")
-    public List<CourseCategoryBean> getAllCategories() {
-        return categoryService.getAllCourseCategory();
-    }
+	/*
+	 * @ModelAttribute("allCategories") public List<CourseCategoryBean>
+	 * getAllCategories() { return categoryService.getAllCourseCategory(); }
+	 */
 }

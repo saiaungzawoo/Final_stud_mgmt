@@ -1,14 +1,16 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.UsersRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -122,6 +125,7 @@ public class UsersController {
         String fileName = photo.getOriginalFilename();
 
           String path = "D:/upload/";
+          String path = "D:/upload/";
 //file 
           File dir = new File(path);
           if (!dir.exists()) {
@@ -169,6 +173,9 @@ public class UsersController {
           Model model,
           @RequestParam("photo") MultipartFile photo) throws IOException {
 
+      // Age Validation
+      if (userObj.getDob() != null &&
+              userObj.getDob().isAfter(LocalDate.now().minusYears(16))) {
       // Age Validation
       if (userObj.getDob() != null &&
               userObj.getDob().isAfter(LocalDate.now().minusYears(16))) {
@@ -222,12 +229,20 @@ public class UsersController {
 
       // Photo Upload (Optional)
       if (!photo.isEmpty()) {
+      // Photo Upload (Optional)
+      if (!photo.isEmpty()) {
 
+          // Size Validation
+          long maxSize = 5 * 1024 * 1024;
           // Size Validation
           long maxSize = 5 * 1024 * 1024;
 
           if (photo.getSize() > maxSize) {
+          if (photo.getSize() > maxSize) {
 
+              model.addAttribute(
+                      "error",
+                      "Photo size must not exceed 5 MB.");
               model.addAttribute(
                       "error",
                       "Photo size must not exceed 5 MB.");
@@ -238,11 +253,16 @@ public class UsersController {
 
           // Content Type Validation
           String contentType = photo.getContentType();
+          // Content Type Validation
+          String contentType = photo.getContentType();
 
           if (contentType == null  || 
                   !(contentType.equals("image/jpeg")
                 		  ||   contentType.equals("image/png"))) {
 
+              model.addAttribute(
+                      "error",
+                      "Only JPG and PNG images are allowed.");
               model.addAttribute(
                       "error",
                       "Only JPG and PNG images are allowed.");
@@ -254,9 +274,16 @@ public class UsersController {
           // Check Image
           BufferedImage image =
                   ImageIO.read(photo.getInputStream());
+          // Check Image
+          BufferedImage image =
+                  ImageIO.read(photo.getInputStream());
 
           if (image == null) {
+          if (image == null) {
 
+              model.addAttribute(
+                      "error",
+                      "Invalid image.");
               model.addAttribute(
                       "error",
                       "Invalid image.");
@@ -277,10 +304,16 @@ public class UsersController {
           userObj.setProfileImage("/upload/" + fileName);
           //System.out.println(userObj.getFilePath());
       } else {
+          userObj.setProfileImage("/upload/" + fileName);
+          //System.out.println(userObj.getFilePath());
+      } else {
 
           // Keep Old Photo
           userObj.setProfileImage(oldUser.getProfileImage());
+          // Keep Old Photo
+          userObj.setProfileImage(oldUser.getProfileImage());
 
+      }
       }
 
       // Keep existing values

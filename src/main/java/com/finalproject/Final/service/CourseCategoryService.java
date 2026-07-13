@@ -40,10 +40,11 @@ public class CourseCategoryService {
 
 	}
 
-	public List<CourseCategoryBean> getAllCourseCategory() {
-
-		return courseCategoryReop.getAllCourseCategory();
-	}
+	/*
+	 * public List<CourseCategoryBean> getAllCourseCategory() {
+	 * 
+	 * return courseCategoryReop.getAllCourseCategory(); }
+	 */
 
 	public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
 

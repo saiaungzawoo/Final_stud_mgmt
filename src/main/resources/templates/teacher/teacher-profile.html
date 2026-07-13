@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+<body>
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+<div class="container-fluid mt-5">
+
+    <div class="row">
+<div class="container mt-5">
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10">
+
+            <a th:href="@{/dashboard/dashboard-teacher}" 
+               class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        Edit Teacher
+                    </h3>
+                </div>
+
+
+                 <div class="card-body">
+
+
+            <form th:action="@{/dashboard/update}"   method="post" enctype="multipart/form-data" th:object="${teacherObj}">
+            
+                <!-- UUID -->
+                <input type="hidden" th:field="*{userID}">
+                
+                <!-- Keep old image -->
+                <input type="hidden" th:field="*{profileImage}">
+
+                <!-- Role UUID -->
+                <input type="hidden" th:field="*{roleID}">
+
+                <div class="row">
+
+                    <!-- Photo -->
+                    <div class="col-md-4 text-center">
+
+
+          <img th:if="*{profileImage != null}" th:src="@{'/' + *{profileImage}}" width="180" height="180" class="rounded-circle border mb-3">
+                             
+                        <input type="file"
+                               class="form-control"
+                               name="file"
+                               accept="image/*">
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div class="mb-3">
+
+                            <label>Name</label>
+
+                            <input type="text" class="form-control" th:field="*{name}">
+                                                                
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>Email</label>
+
+                            <input type="email" class="form-control" th:field="*{email}">
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>
+                                New Password
+                            </label>
+
+
+                            <input type="password" th:field="*{password}" class="form-control"  placeholder="Leave blank to keep current password">
+                            <small class="text-muted">
+                                Leave blank if you don't want to change password.
+                            </small>
+
+                            <div class="text-danger"
+                                 th:errors="*{password}">
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>
+                                Phone Number
+                            </label>
+
+                            <input type="text" class="form-control" th:field="*{phoneNo}">
+                                                                
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>
+                                Address
+                            </label>
+
+                            <textarea class="form-control" rows="3"                                    
+                                      th:field="*{address}">
+                            </textarea>
+
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>
+                                Date of Birth
+                            </label>
+
+                            <input type="date" class="form-control" th:field="*{dob}">
+                                                                     
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>
+                                Gender
+                            </label>
+
+                            <select class="form-control"
+                                    th:field="*{gender}">
+
+                                <option value="Male">
+                                    Male
+                                </option>
+
+                                <option value="Female">
+                                    Female
+                                </option>
+
+                                <option value="Other">
+                                    Other
+                                </option>
+
+
+                            </select>
+
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label>
+                                Status
+                            </label>
+
+                            <select class="form-control"
+                                    th:field="*{isActive}">
+
+                                <option value="1">
+                                    Active
+                                </option>
+
+
+                                <option value="0">
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">                               
+                            Update Teacher
+                        </button>
+
+                        <a th:href="@{/dashboard/dashboard-teacher}"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+       </div>
+      </main>      
+   		 </div>
+			</div>
+ 				</div>
+
+
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+
+</html>

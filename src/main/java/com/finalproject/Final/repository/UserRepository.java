@@ -10,6 +10,7 @@ import com.finalproject.Final.model.UserBean;
 @Repository
 public class UserRepository {
 
+	//test
     @Autowired
     private JdbcTemplate jdbc;
     // Email ဖြင့် အကောင့် ရှိ၊ မရှိ ရှာဖွေရန်

@@ -37,10 +37,20 @@
                                     <th>Transaction ID</th>
                                     <td th:text="${payment.transactionReference}"></td>
                                 </tr>
+                                
+                                 <tr>
+                                    <th>Student</th>
+                                    <td th:text="${payment.studentName}"></td>
+                                </tr>
 
                                 <tr>
                                     <th>Course</th>
                                     <td th:text="${course.name}"></td>
+                                </tr>
+                                
+                                <tr>
+                                    <th>Payment Type</th>
+                                    <td th:text="${payment.paymentTypeName}"></td>
                                 </tr>
 
                                 <tr>
@@ -52,7 +62,7 @@
 
                                 <tr>
                                     <th>Method</th>
-                                    <td th:text="${payment.paymentMethod}"></td>
+                                    <td th:text="${payment.paymentMethodName}"></td>
                                 </tr>
 
                                 <tr>
@@ -64,7 +74,7 @@
                                     <th>Status</th>
                                     <td>
                                         <span class="badge bg-success"
-                                              th:text="${payment.paymentStatus}">
+                                              th:text="${payment.status}">
                                         </span>
                                     </td>
                                 </tr>
@@ -92,18 +102,7 @@
 <div th:replace="~{fragment/footer :: footer}"></div>
 <div th:replace="~{fragment/js :: js}"></div>
 
-<script th:inline="javascript">
-document.addEventListener("DOMContentLoaded", function () {
 
-    const paymentId = /*[[${payment.id}]]*/ 0;
-
-    if (paymentId) {
-        // triggers direct download
-        window.location.href = "/receipt/download/" + paymentId;
-    }
-
-});
-</script>
 
 </body>
 </html>

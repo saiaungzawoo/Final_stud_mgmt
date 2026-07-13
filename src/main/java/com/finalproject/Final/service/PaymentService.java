@@ -1,17 +1,15 @@
 package com.finalproject.Final.service;
 
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalproject.Final.dto.PaymentDTO;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.InstallmentPlanBean;
+import com.finalproject.Final.model.InstallmentRuleItemBean;
 import com.finalproject.Final.model.PaymentBean;
-import com.finalproject.Final.repository.CourseRepository;
+import com.finalproject.Final.model.PaymentTypeBean;
+import com.finalproject.Final.repository.EnrollmentRepository;
 import com.finalproject.Final.repository.PaymentRepository;
 
 @Service
@@ -21,72 +19,129 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
 
     @Autowired
-    private EnrollmentService enrollmentService;
+    private EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    private CourseRepository courseRepository;
+    private InstallmentPlanService installmentPlanService;
 
-    public void processPayment(PaymentDTO dto) {
-    	
-    	String transactionReference =
-    	        "TXN-" +
-    	        LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
-    	        + "-" +
-    	        UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    @Autowired
+    private PaymentTypeService paymentTypeService;
 
-        // 1. get enrollment 
-        EnrollmentBean enrollment =  enrollmentService.getById(dto.getEnrollmentId());
-               
+    @Autowired
+    private InstallmentRuleItemService installmentRuleItemService;
 
-        int courseId = enrollment.getCourseId();
-        int userId = enrollment.getUserId();
+    public String processPayment(PaymentDTO dto) {
+
+        // Save payment type into enrollment
+        enrollmentRepository.updatePaymentType(
+                dto.getEnrollmentId(),
+                dto.getPaymentTypeId()
+        );
+        
+        if(dto.getInstallmentRuleId() != null) {
+
+            enrollmentRepository.updateInstallmentRule(
+                    dto.getEnrollmentId(),
+                    dto.getInstallmentRuleId()
+            );
+
+        }
         
 
-        // 2. prevent double payment
-        if (paymentRepository.existsPaidPayment(dto.getEnrollmentId())) {
-            throw new RuntimeException("Already paid for this enrollment");
+        PaymentTypeBean paymentType =
+                paymentTypeService.getById(
+                        dto.getPaymentTypeId()
+                );
+
+        // ===========================
+        // INSTALLMENT PAYMENT
+        // ===========================
+        if (paymentType != null &&
+                "INSTALLMENT".equals(paymentType.getName())) {
+
+            EnrollmentBean enrollment =
+                    enrollmentRepository.findById(
+                            dto.getEnrollmentId()
+                    );
+
+            // Create installment plan only once
+            if (installmentPlanService
+                    .getByEnrollmentId(dto.getEnrollmentId())
+                    .isEmpty()) {
+
+                for (InstallmentRuleItemBean item :
+                        installmentRuleItemService.getByRuleId(
+                                enrollment.getInstallmentRuleId())) {
+
+                    installmentPlanService.createPlan(
+                            dto.getEnrollmentId(),
+                            item
+                    );
+                }
+            }
+
+            InstallmentPlanBean plan =
+                    installmentPlanService.getFirstPending(
+                            dto.getEnrollmentId()
+                    );
+
+            if (plan == null) {
+                throw new RuntimeException(
+                        "All installments have already been paid."
+                );
+            }
+
+            String paymentId =
+                    paymentRepository.savePayment(
+                            dto.getEnrollmentId(),
+                            plan.getInstallmentPlanId(),
+                            dto.getPaymentMethodId(),
+                            plan.getAmountDue()
+                    );
+
+            installmentPlanService.markPaid(
+                    plan.getInstallmentPlanId()
+            );
+
+            if (installmentPlanService
+                    .getFirstPending(dto.getEnrollmentId()) == null) {
+
+                enrollmentRepository.updatePaymentStatus(
+                        dto.getEnrollmentId()
+                );
+
+            } else {
+
+                enrollmentRepository.updatePartialPaymentStatus(
+                        dto.getEnrollmentId()
+                );
+            }
+
+            return paymentId;
         }
 
-        // 3. check seat availability BEFORE payment
-        int seats = courseRepository.getSeatsAvailable(courseId);
-        if (seats <= 0) {
-            throw new RuntimeException("No seats available");
-        }
+        // ===========================
+        // FULL PAYMENT
+        // ===========================
 
-        // 4. save payment
-        int paymentId = paymentRepository.savePayment(
-        		transactionReference,
-                dto.getAmount(),
-                dto.getPaymentMethod(),
-                "SUCCESS",
-                courseId,
+        String paymentId =
+                paymentRepository.savePayment(
+                        dto.getEnrollmentId(),
+                        dto.getPaymentMethodId(),
+                        dto.getAmount()
+                );
+
+        enrollmentRepository.updatePaymentStatus(
                 dto.getEnrollmentId()
         );
 
-        // 5. save payment record
-        paymentRepository.savePaymentRecord(
-                paymentId,
-                userId,
-                dto.getPaymentType()
-        );
+        return paymentId;
+    }
 
-        // 6. confirm enrollment
-        enrollmentService.confirmEnrollment(dto.getEnrollmentId());
+    public PaymentBean getById(String paymentId) {
 
-        // 7. reduce seat
-        courseRepository.decreaseSeat(courseId);
-    }
-    
-    public PaymentBean getByEnrollmentId(int enrollmentId) {
-        return paymentRepository.getByEnrollmentId(enrollmentId);
-    }
-    
-    public PaymentBean getById(int id) {
-        return paymentRepository.getById(id);
-    }
-    
-    public void markReceiptDownloaded(int paymentId) {
-        paymentRepository.markReceiptDownloaded(paymentId);
+        return paymentRepository.getById(paymentId);
+
     }
 
 }

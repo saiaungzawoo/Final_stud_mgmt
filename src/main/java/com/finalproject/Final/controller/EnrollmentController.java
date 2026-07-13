@@ -64,21 +64,58 @@ public class EnrollmentController {
 
         return "student/enroll-confirm";
     }
-
-    //create enrollment when user clicks Enroll
+    
+    
+    
     @PostMapping("/create")
-    public String createEnrollment(EnrollmentDTO dto, RedirectAttributes ra) {
+    public String createEnrollment(
+            @RequestParam String userId,
+            @RequestParam String courseId,
+            Model model,
+            HttpSession session
+    ) {
 
         try {
-            String enrollmentId = enrollmentService.createEnrollment(dto);
+
+            String enrollmentId =
+                    enrollmentService.createEnrollment(userId, courseId);
+
             return "redirect:/payment/page/" + enrollmentId;
 
-        } catch (RuntimeException e) {
+        } catch (RuntimeException ex) {
 
-            ra.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/courses/" + dto.getCourseId();
+            CourseBean course = courseService.getById(courseId);
+
+            List<ScheduleBean> schedules =
+                    scheduleService.getByCourseId(courseId);
+
+            UserBean student =
+                    (UserBean) session.getAttribute("loginUser");
+
+            model.addAttribute("student", student);
+            model.addAttribute("course", course);
+            model.addAttribute("schedules", schedules);
+
+            model.addAttribute("errorMessage", ex.getMessage());
+
+            return "student/enroll-confirm";
         }
     }
+
+    //create enrollment when user clicks Enroll
+//    @PostMapping("/create")
+//    public String createEnrollment(EnrollmentDTO dto, RedirectAttributes ra) {
+//
+//        try {
+//            String enrollmentId = enrollmentService.createEnrollment(dto);
+//            return "redirect:/payment/page/" + enrollmentId;
+//
+//        } catch (RuntimeException e) {
+//
+//            ra.addFlashAttribute("errorMessage", e.getMessage());
+//            return "redirect:/courses/" + dto.getCourseId();
+//        }
+//    }
     
    
 
@@ -86,10 +123,10 @@ public class EnrollmentController {
     
 
     // view user enrollments
-    @GetMapping("/my")
-    public String myEnrollments(@RequestParam String userId, Model model) {
-        model.addAttribute("enrollments",
-                enrollmentService.getByUser(userId));
-        return "student/my-enrollments";
-    }
+//    @GetMapping("/my")
+//    public String myEnrollments(@RequestParam String userId, Model model) {
+//        model.addAttribute("enrollments",
+//                enrollmentService.getByUser(userId));
+//        return "student/my-enrollments";
+//    }
 }

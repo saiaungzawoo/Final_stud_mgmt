@@ -11,6 +11,7 @@ import com.finalproject.Final.service.ForgotPasswordService;
 @Controller
 public class ForgotPasswordController {
 
+	//test
     @Autowired
     private ForgotPasswordService forgotPasswordService;
 

@@ -37,20 +37,19 @@ public class CourseCategoryRepository {
 	}
 	
 	
-	public List<CourseCategoryBean> getAllCourseCategory() {
-
-	    String sql = "SELECT * FROM course_category";
-
-	    return jdbc.query(sql,
-	            (rs, rowNum) -> new CourseCategoryBean(
-	                    rs.getString("courseCategoryID"),
-	                    rs.getString("name"),
-	                    rs.getString("description"),
-	                    rs.getInt("is_active"),
-	                    rs.getTimestamp("created_at") != null
-	                            ? rs.getTimestamp("created_at").toLocalDateTime()
-	                            : null
-	            ));
+	public List<CourseCategoryBean> getAllCourseCategory(){
+		
+		
+		
+		String sql = "select * from course_category";
+		
+		return jdbc.query(sql, 
+				(rs,rowCont) -> new CourseCategoryBean(
+						rs.getInt("id"),
+						rs.getString("name")
+						)
+				);
+		
 	}
 	
 	public CourseCategoryBean getCourseCategoryById(String courseCategoryId) {

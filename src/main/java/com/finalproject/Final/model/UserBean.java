@@ -31,6 +31,10 @@ public class UserBean {
       message = "Name must start with a capital letter"
   )
   private String name;
+      regexp = "^[A-Z][a-zA-Z ]*$",
+      message = "Name must start with a capital letter"
+  )
+  private String name;
 
 
   @NotBlank(message="Email is required")
@@ -42,7 +46,20 @@ public class UserBean {
         min = 6,
         message = "Password must be at least 6 characters long."
     )
+  @NotBlank(message="Email is required")
+  @Email(message = "Invalid email format")
+  private String email;
+  
+  
+  @Size(
+        min = 6,
+        message = "Password must be at least 6 characters long."
+    )
 
+    @Pattern(
+        regexp = ".*[A-Za-z].*",
+        message = "Password must contain at least one letter."
+    )
     @Pattern(
         regexp = ".*[A-Za-z].*",
         message = "Password must contain at least one letter."

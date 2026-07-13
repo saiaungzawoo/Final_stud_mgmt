@@ -35,12 +35,12 @@ import jakarta.servlet.http.HttpSession;
 		
 		 UserBean student = (UserBean)session.getAttribute("loginUser");
 
-	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getId());
+	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getUserId());
 //	           
 
 	    model.addAttribute("student", student);
 	    model.addAttribute("studentCode", 
-	    		UserCodeUtil.formatUserCode(student.getRoleId(), student.getId()));
+	    		UserCodeUtil.formatUserCode(student.getRoleId(), student.getUserId()));
 	           
 	    model.addAttribute("courses", courses);
 	    model.addAttribute("enrolledCoursesCount", courses.size());
