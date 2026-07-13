@@ -48,13 +48,14 @@ public class CourseCategoryController {
 		return "redirect:/course-category/list";
 	}
 	
-	@GetMapping("/list/{courseCategoryId}")
-	public String showCourseCategoryById(@PathVariable("courseCategoryId") int courseCatId,RedirectAttributes ra) {
-		CourseCategoryBean courseCategory = courseCategoryService.getCourseCategoryById(courseCatId);
-		ra.addFlashAttribute("courseCategory",courseCategory);
-		return "redirect:/list";
-	}
-	
+	/*
+	 * @GetMapping("/list/{courseCategoryId}") public String
+	 * showCourseCategoryById(@PathVariable("courseCategoryId") int
+	 * courseCatId,RedirectAttributes ra) { CourseCategoryBean courseCategory =
+	 * courseCategoryService.getCourseCategoryById(courseCatId);
+	 * ra.addFlashAttribute("courseCategory",courseCategory); return
+	 * "redirect:/list"; }
+	 */
 	/*
 	 * @GetMapping("/update/{courseCategoryId}") public String
 	 * updateCourseCategory(@PathVariable("courseCategoryId") int courseCatId ) {
@@ -62,20 +63,22 @@ public class CourseCategoryController {
 	 * "redirect:/list"; }
 	 */
 	
-	@PostMapping("/update/{courseCategoryId}")
-    public String updateCourseCategory(@PathVariable("courseCategoryId") int courseCatId,
-                                       @RequestParam("name") String name,
-                                       RedirectAttributes ra) {
-        courseCategoryService.updateCoureCategory(courseCatId, name);
-        ra.addFlashAttribute("flashMessage", "Category updated successfully!");
-        return "redirect:/course-category/list";
-    }
+	/*
+	 * @PostMapping("/update/{courseCategoryId}") public String
+	 * updateCourseCategory(@PathVariable("courseCategoryId") int courseCatId,
+	 * 
+	 * @RequestParam("name") String name, RedirectAttributes ra) {
+	 * courseCategoryService.updateCoureCategory(courseCatId, name);
+	 * ra.addFlashAttribute("flashMessage", "Category updated successfully!");
+	 * return "redirect:/course-category/list"; }
+	 */
 	
-	@GetMapping("/delete/{courseCategoryId}")
-	public String deleteCourseCategory(@PathVariable("courseCategoryId") int courseCatId) {
-		courseCategoryService.deleteCourseCategory(courseCatId);
-		return "redirect:/course-category/list";
-	}
+	/*
+	 * @GetMapping("/delete/{courseCategoryId}") public String
+	 * deleteCourseCategory(@PathVariable("courseCategoryId") int courseCatId) {
+	 * courseCategoryService.deleteCourseCategory(courseCatId); return
+	 * "redirect:/course-category/list"; }
+	 */
 	
 	
 	

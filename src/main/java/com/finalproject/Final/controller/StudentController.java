@@ -28,25 +28,25 @@ public class StudentController {
 	private EnrollmentService enrollmentService;
 	
 	
-	@GetMapping("/portal")
-	public String showStudentHome(Model model, HttpSession session) {
-
-//	    UserBean student = userService.findById(5); // temporary hardcoded
-		
-		 UserBean student = (UserBean)session.getAttribute("loginUser");
-
-	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getId());
-//	           
-
-	    model.addAttribute("student", student);
-	    model.addAttribute("studentCode", 
-	    		UserCodeUtil.formatUserCode(student.getRoleId(), student.getId()));
-	           
-	    model.addAttribute("courses", courses);
-	    model.addAttribute("enrolledCoursesCount", courses.size());
-
-	    return "student/student-home";
-	}
+	/*
+	 * @GetMapping("/portal") public String showStudentHome(Model model, HttpSession
+	 * session) {
+	 * 
+	 * // UserBean student = userService.findById(5); // temporary hardcoded
+	 * 
+	 * UserBean student = (UserBean)session.getAttribute("loginUser");
+	 * 
+	 * List<CourseBean> courses =
+	 * enrollmentService.getEnrolledCourses(student.getId()); //
+	 * 
+	 * model.addAttribute("student", student); model.addAttribute("studentCode",
+	 * UserCodeUtil.formatUserCode(student.getRoleId(), student.getId()));
+	 * 
+	 * model.addAttribute("courses", courses);
+	 * model.addAttribute("enrolledCoursesCount", courses.size());
+	 * 
+	 * return "student/student-home"; }
+	 */
 	
 	
 

@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -126,7 +127,7 @@ public class UsersController {
 	        photo.transferTo(new File(path + fileName));
 
 	        //save file path
-	        obj.setFilePath("/upload/" + fileName);
+	      //  obj.setFilePath("/upload/" + fileName);
 			    
 			   
 		    if(uRepo.existsByEmail(obj.getEmail())) {
@@ -135,7 +136,7 @@ public class UsersController {
 			    return "student/student_register";
 			}
 
-	  obj.setRoleId(3); // Student
+	 // obj.setRoleId(3); // Student
 	    obj.setIsActive(1);
 	    obj.setCreatedAt(LocalDateTime.now());
 	 
@@ -273,8 +274,8 @@ public class UsersController {
 	
 	@GetMapping("/update")
 	public String update(Model m) {
-		 UserBean user = uRepo.getLatestStudent();
-	    m.addAttribute("userObj", user);
+	//	 UserBean user = uRepo.getLatestStudent();
+	    //m.addAttribute("userObj", user);
 	    
 	    
 	   // return "success";

@@ -99,3 +99,78 @@ body {
     padding: 16px;
   }
 }
+.card{
+    border-radius:15px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.card{
+    border-radius:15px;
+}
+
+.table td,
+.table th{
+    vertical-align:middle;
+}
+
+.btn{
+    border-radius:10px;
+}
+
+.badge{
+    font-size:.85rem;
+    padding:8px 12px;
+}
+.card{
+    border-radius:15px;
+}
+
+.table td,
+.table th{
+    vertical-align:middle;
+}
+
+.form-control,
+.form-select{
+    border-radius:10px;
+}
+
+.btn{
+    border-radius:10px;
+}
+
+.card-header{
+    font-weight:600;
+}
+
+.table tbody tr:hover{
+    background:#f8f9fa;
+}
+.attendance-card{
+    border-radius:15px;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+
+.attendance-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.15) !important;
+}
+
+.attendance-card .btn{
+    transition: .3s;
+}
+
+.attendance-card:hover .btn{
+    transform: scale(1.03);
+}
+#calendar{
+    min-height:700px;
+    padding:30px;
+    max-width:1200px;
+}

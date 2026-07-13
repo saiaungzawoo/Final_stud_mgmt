@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+            <!-- Title -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h2 class="fw-bold mb-1">Schedule List</h2>
+                    <p class="text-muted mb-0">
+                        Select a schedule to take attendance.
+                    </p>
+                </div>
+
+                <a th:href="@{/attendance/list}"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Back
+
+                </a>
+
+            </div>
+
+            <!-- Schedule Table -->
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="mb-0">
+                        Class Schedule
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-light">
+
+                            <tr>
+
+                                <th>No</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Room</th>
+                                <th>Topic</th>
+                                <th>Status</th>
+                                <th class="text-center">Action</th>
+
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr th:each="schedule, stat : ${scheduleList}">
+
+                                <td th:text="${stat.count}"></td>
+
+                                <td th:text="${schedule.scheduleDate}"></td>
+
+                                <td>
+
+                                    <span th:text="${schedule.startTime}"></span>
+                                    -
+                                    <span th:text="${schedule.endTime}"></span>
+
+                                </td>
+
+                                <td th:text="${schedule.room}"></td>
+
+                                <td th:text="${schedule.topic}"></td>
+
+                                <td>
+
+                                    <span class="badge bg-success"
+                                          th:text="${schedule.status}">
+                                    </span>
+
+                                </td>
+
+                                <td class="text-center">
+
+                                   <a class="btn btn-primary"
+      th:href="@{/attendance/mark/{courseID}/{scheduleID}
+   (courseID=${courseID}, scheduleID=${schedule.scheduleId})}">
+ 
+        <i class="bi bi-calendar-event"></i>
+        Take Attendance
+
+    </a>
+                                </td>
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(scheduleList)}">
+
+                                <td colspan="7" class="text-center text-muted py-5">
+
+                                    No schedule found.
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+
+</html>
