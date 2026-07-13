@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<title>My Scholarship Applications</title>
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+</head>
+
+<body>
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<!-- <div class="container mt-5">
+
+<h2>My Scholarship Applications</h2>
+
+<table class="table table-bordered table-hover">
+
+<thead>
+
+<tr>
+
+<th>No</th>
+
+<th>Scholarship</th>
+
+<th>Apply Date</th>
+
+<th>Status</th>
+
+<th>Reason</th>
+
+<th>Document</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr th:each="app,stat:${applications}">
+
+<td th:text="${stat.count}"></td>
+
+<td th:text="${app.scholarshipName}"></td>
+
+<td th:text="${app.applicationDate}"></td>
+
+<td>
+
+<span class="badge bg-warning"
+      th:if="${app.status=='Pending'}">
+
+Pending
+
+</span>
+
+<span class="badge bg-success"
+      th:if="${app.status=='Approved'}">
+
+Approved
+
+</span>
+
+<span class="badge bg-danger"
+      th:if="${app.status=='Rejected'}">
+
+Rejected
+
+</span>
+
+</td>
+
+<td th:text="${app.reason}"></td>
+
+<td th:text="${app.supportingDocuments}"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+ -->
+
+
+<div class="container py-5">
+
+    <!-- Title -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-primary">
+            My Scholarship Applications
+        </h2>
+        <p class="text-muted">
+            Track your scholarship applications.
+        </p>
+    </div>
+
+    <!-- No Application -->
+    <div th:if="${#lists.isEmpty(applications)}"
+         class="text-center">
+
+        <div class="card shadow border-0 p-5">
+            <h4 class="text-secondary">
+                No Applications Yet
+            </h4>
+
+            <p class="text-muted">
+                You haven't applied for any scholarship.
+            </p>
+
+            <a th:href="@{/scholarship/scholarships}"
+               class="btn btn-primary">
+                Browse Scholarships
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Applications -->
+    <div class="row g-4">
+
+        <div class="col-lg-6"
+             th:each="app : ${applications}">
+
+            <div class="card shadow border-0 h-100 application-card">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h4 class="text-primary fw-bold"
+                            th:text="${app.scholarshipName}">
+                        </h4>
+
+                        <span class="badge bg-warning"
+                              th:if="${app.status=='Pending'}">
+                            Pending
+                        </span>
+
+                        <span class="badge bg-success"
+                              th:if="${app.status=='Approved'}">
+                            Approved
+                        </span>
+
+                        <span class="badge bg-danger"
+                              th:if="${app.status=='Rejected'}">
+                            Rejected
+                        </span>
+
+                    </div>
+
+                    <hr>
+
+                    <p>
+                        <strong>Applied Date</strong><br>
+                        <span th:text="${app.applicationDate}"></span>
+                    </p>
+
+                    <p>
+                        <strong>Reason</strong><br>
+                        <span th:text="${app.reason}"></span>
+                    </p>
+
+                    <p>
+                        <strong>Supporting Document</strong><br>
+
+                        <a th:if="${app.supportingDocuments!=null}"
+                           th:href="@{${app.supportingDocuments}}"
+                           target="_blank"
+                           class="btn btn-outline-primary btn-sm mt-2">
+                            View Document
+                        </a>
+
+                        <span th:if="${app.supportingDocuments==null}"
+                              class="text-muted">
+                            No Document
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+   <div th:replace="~{fragment/js :: js}"></div>
+</body>
+
+</html>

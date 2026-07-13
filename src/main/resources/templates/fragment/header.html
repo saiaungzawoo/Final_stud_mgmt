@@ -65,6 +65,7 @@
             <button class="btn btn-dark" type="submit">Search</button>
           </form>
 
+<<<<<<< Updated upstream
             <!-- NAVBAR CONTENT -->
             <div class="collapse navbar-collapse" id="mainNav">
 
@@ -113,6 +114,93 @@
                         <a class="nav-link" th:href="@{/student/portal}">Student Portal</a>
                     </li>
 
+=======
+
+<!-- view all scholarships -->
+<li class="nav-item">
+    <a class="nav-link"
+       th:href="@{/scholarship/scholarships}">
+        Scholarships
+    </a>
+</li>
+
+
+              <!-- <li class="nav-item">
+                        <a class="nav-link" th:href="@{/student/portal}">Student Portal</a>
+                    </li> -->
+            </ul>
+            
+            
+
+            <!-- SEARCH -->
+            <form
+              class="search-pill d-flex flex-grow-1 mb-3 mb-lg-0"
+              role="search"
+              th:action="@{/courses/search}"
+              method="get"
+            >
+              <i class="bi bi-search"></i>
+
+              <input
+                class="form-control"
+                type="search"
+                name="keyword"
+                placeholder="What do you want to learn?"
+              />
+
+              <button class="btn btn-dark" type="submit">Search</button>
+            </form>
+
+            <!-- AUTH BUTTONS -->
+            <!-- AUTH BUTTONS -->
+            <div class="d-flex gap-2 ms-lg-3">
+              <!-- IF NOT LOGGED IN -->
+              <div th:if="${session.loginUser == null}">
+                <a class="btn btn-outline-dark" th:href="@{/login}">
+                  Sign in
+                </a>
+                <a class="btn btn-primary" th:href="@{/student/register}">
+                  Sign up
+                </a>
+              </div>
+
+              <!-- IF LOGGED IN -->
+              <div th:if="${session.loginUser != null}" class="dropdown">
+                <!-- profile button -->
+                <a
+                  class="btn btn-outline-dark dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="bi bi-person-circle"></i>
+                  <span th:text="${session.loginUser?.name}">User</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <a class="dropdown-item" th:href="@{/student/portal}">
+                      Student Portal
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a class="dropdown-item" th:href="@{/scholarship/my-applications}">
+                     My Scholarship Application
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a class="dropdown-item" th:href="@{/student/profile}">
+                      Profile
+                    </a>
+                  </li>
+                  
+                  
+                  <li>
+                    <a class="dropdown-item text-danger" th:href="@{/logout}">
+                      Logout
+                    </a>
+                  </li>
+>>>>>>> Stashed changes
                 </ul>
 
                 <!-- SEARCH -->

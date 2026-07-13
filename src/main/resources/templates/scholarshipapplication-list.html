@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+<meta charset="UTF-8">
+
+<title>Scholarship Applications</title>
+
+</head>
+
+<body class="bg-light">
+
+
+
+<div class="container mt-5">
+
+<h2 class="text-primary fw-bold mb-4">
+    Scholarship Applications
+</h2>
+
+<div class="card shadow">
+
+<div class="card-body">
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover align-middle">
+<thead class="table-primary text-center">
+
+
+<tr>
+
+<th>No</th>
+<th>User Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Scholarship</th>
+<th>Apply Date</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+
+</thead>
+
+<tbody>
+
+
+
+<tr th:each="a,stat : ${applications}">
+
+<td th:text="${stat.count}">
+</td>
+
+<td th:text="${a.userName}">
+</td>
+
+<td th:text="${a.email}">
+</td>
+
+<td th:text="${a.phoneNo}">
+</td>
+
+<td th:text="${a.scholarshipName}">
+</td>
+
+<td th:text="${a.applicationDate}">
+</td>
+
+<td class="text-center">
+<span th:if="${a.status == 'PENDING'}"
+      class="badge bg-warning">
+ Pending
+
+</span>
+
+<span th:if="${a.status == 'APPROVED'}"
+      class="badge bg-success">
+
+    Approved
+
+</span>
+
+<span th:if="${a.status == 'REJECTED'}"
+      class="badge bg-danger">
+
+    Rejected
+
+</span>
+
+</td>
+
+<td class="text-center">
+
+
+<a th:href="@{/admin/application/detail/{id}
+(id=${a.scholarshipApplicationID})}"
+
+class="btn btn-primary btn-sm">
+
+View
+
+</a>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>

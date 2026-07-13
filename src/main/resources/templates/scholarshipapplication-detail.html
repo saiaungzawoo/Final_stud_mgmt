@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+<meta charset="UTF-8">
+
+<title>Application Detail</title>
+
+</head>
+<body class="bg-light">
+
+
+<div class="container mt-5">
+
+
+<div class="card shadow">
+<div class="card-header bg-primary text-white">
+
+<h3>
+Scholarship Application Detail
+</h3>
+
+</div>
+<div class="card-body">
+
+<h5 class="text-primary">
+User Information
+</h5>
+<table class="table table-bordered">
+<tr>
+
+<th>Name</th>
+
+<td th:text="${application.userName}"></td>
+
+</tr>
+
+<tr>
+<th>Email</th>
+<td th:text="${application.email}"></td>
+
+</tr>
+
+<tr>
+<th>Phone</th>
+<td th:text="${application.phoneNo}"></td>
+</tr>
+
+
+
+<tr>
+<th>Address</th>
+
+<td th:text="${application.address}"></td>
+</tr>
+
+
+</table>
+
+<hr>
+
+
+<h5 class="text-primary">
+Scholarship Information
+</h5>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Scholarship</th>
+
+<td th:text="${application.scholarshipName}"></td>
+
+</tr>
+
+<tr>
+
+<th>Reason</th>
+
+<td th:text="${application.reason}"></td>
+
+</tr>
+
+<tr>
+
+<th>Document</th>
+
+<td>
+
+
+<a th:href="@{${application.supportingDocuments}}"
+target="_blank"
+class="btn btn-outline-primary btn-sm">
+
+View Document
+
+</a>
+
+
+</td>
+
+
+</tr>
+
+</table>
+
+<hr>
+
+<h5 class="text-primary">
+Review Application
+</h5>
+
+<form th:action="@{/admin/application/status}"
+method="post">
+
+
+
+<input type="hidden"
+name="applicationID"
+th:value="${application.scholarshipApplicationID}">
+
+<div class="mb-3">
+
+<label class="form-label">
+Status
+</label>
+
+<select name="status"
+class="form-select">
+
+<option value="PENDING"
+th:selected="${application.status=='PENDING'}">
+
+Pending
+
+</option>
+
+
+<option value="APPROVED"
+th:selected="${application.status=='APPROVED'}">
+
+Approve
+
+</option>
+
+
+<option value="REJECTED"
+th:selected="${application.status=='REJECTED'}">
+
+Reject
+
+</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+
+<label class="form-label">
+Review Notes
+</label>
+
+
+<textarea name="reviewNotes"
+class="form-control"
+rows="3"
+th:text="${application.reviewNotes}">
+</textarea>
+
+
+</div>
+
+<button class="btn btn-primary">
+
+Save Decision
+
+</button>
+
+<a th:href="@{/admin/applications}"
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+
+</body>
+
+</html>
