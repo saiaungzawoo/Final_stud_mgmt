@@ -1,0 +1,176 @@
+body {
+  background: #f5f7fb;
+}
+
+.teacher-shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.teacher-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #111827;
+  color: #fff;
+  position: sticky;
+  top: 0;
+}
+
+.teacher-brand {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.teacher-menu {
+  padding: 16px 12px;
+}
+
+.teacher-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 11px 14px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.teacher-menu a:hover,
+.teacher-menu a.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.teacher-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.teacher-topbar {
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+
+.teacher-content {
+  padding: 28px;
+}
+
+.teacher-footer {
+  padding: 18px 28px;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .teacher-shell {
+    flex-direction: column;
+  }
+
+  .teacher-sidebar {
+    width: 100%;
+    min-height: auto;
+    position: static;
+  }
+
+  .teacher-menu {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .teacher-menu a {
+    white-space: nowrap;
+  }
+
+  .teacher-topbar {
+    padding: 0 16px;
+  }
+
+  .teacher-content {
+    padding: 16px;
+  }
+}
+.card{
+    border-radius:15px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.card{
+    border-radius:15px;
+}
+
+.table td,
+.table th{
+    vertical-align:middle;
+}
+
+.btn{
+    border-radius:10px;
+}
+
+.badge{
+    font-size:.85rem;
+    padding:8px 12px;
+}
+.card{
+    border-radius:15px;
+}
+
+.table td,
+.table th{
+    vertical-align:middle;
+}
+
+.form-control,
+.form-select{
+    border-radius:10px;
+}
+
+.btn{
+    border-radius:10px;
+}
+
+.card-header{
+    font-weight:600;
+}
+
+.table tbody tr:hover{
+    background:#f8f9fa;
+}
+.attendance-card{
+    border-radius:15px;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+
+.attendance-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.15) !important;
+}
+
+.attendance-card .btn{
+    transition: .3s;
+}
+
+.attendance-card:hover .btn{
+    transform: scale(1.03);
+}
+#calendar{
+    min-height:700px;
+    padding:30px;
+    max-width:1200px;
+}

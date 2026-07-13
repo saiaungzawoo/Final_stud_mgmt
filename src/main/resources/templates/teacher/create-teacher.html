@@ -70,8 +70,10 @@
 	 		   <div class="mb-3"> 
 	 		   		<label class="form-label">Gender</label> 
 	 		   			<select class="form-select" th:field="*{gender}">
-	 		   				 <option value="">Select Gender</option> <option value="Male">Male</option>
-	 		   				 	 <option value="Female">Female</option> 
+	 		   				 <option value="">Select Gender</option> 
+	 		   				<option value="Male">Male</option>
+							<option value="Female">Female</option>
+							<option value="Other">Other</option>
 	 		   				 	 	</select>
 	 		   				 	 	 <div
 	 		   				 	 	 	 class="text-danger" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">

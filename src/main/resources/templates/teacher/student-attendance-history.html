@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+
+<body>
+
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+<div class="container-fluid">
+
+<div class="row">
+
+
+<!-- Sidebar -->
+<div class="col-md-3 col-lg-2 p-0">
+
+    <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+
+</div>
+
+
+
+<!-- Main -->
+
+<main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+
+<div class="d-flex justify-content-between mb-4">
+
+
+<div>
+
+<h2 class="fw-bold">
+Student Attendance History
+</h2>
+
+<p class="text-muted">
+Attendance record
+</p>
+
+</div>
+
+
+<a th:href="@{/attendance/list}"
+   class="btn btn-outline-secondary">
+
+<i class="bi bi-arrow-left"></i>
+Back
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="card shadow-sm border-0">
+
+
+<div class="card-body">
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover">
+
+
+<thead class="table-light">
+
+<tr>
+
+<th>No</th>
+
+<th>Date</th>
+
+<th>Time</th>
+
+<th>Topic</th>
+
+<th>Status</th>
+
+<th>Remark</th>
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+<tr th:each="attendance,stat:${attendanceList}">
+
+
+<td th:text="${stat.count}">
+</td>
+
+
+<td th:text="${attendance.scheduleDate}">
+</td>
+
+
+<td>
+
+<span th:text="${attendance.startTime}">
+</span>
+
+-
+
+<span th:text="${attendance.endTime}">
+</span>
+
+
+</td>
+
+
+
+<td th:text="${attendance.topic}">
+</td>
+
+
+
+<td>
+
+<span class="badge bg-success"
+      th:text="${attendance.status}">
+</span>
+
+
+</td>
+
+
+
+<td th:text="${attendance.remarks}">
+</td>
+
+
+</tr>
+
+
+
+<tr th:if="${#lists.isEmpty(attendanceList)}">
+
+<td colspan="6"
+    class="text-center text-muted py-5">
+
+No attendance record found.
+
+</td>
+
+</tr>
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</main>
+
+
+</div>
+
+</div>
+
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>

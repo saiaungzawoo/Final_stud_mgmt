@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+<title>Scholarship Apply</title>
+
+<head th:replace="~{fragment/css :: css}"></head>
+</head>
+
+
+<body>
+<div th:replace="~{fragment/header :: header}"></div>
+
+<div class="container mt-5">
+
+
+<h2>
+Scholarship Application Form
+</h2>
+
+
+
+<form th:action="@{/scholarship/save}"
+      th:object="${application}"
+      method="post"
+       enctype="multipart/form-data">
+
+
+
+<input type="hidden"
+       th:field="*{scholarshipID}">
+
+<div class="mb-3">
+
+    <label class="form-label">
+        Reason for Applying
+    </label>
+
+    <textarea 
+        class="form-control"
+        th:field="*{reason}"
+        rows="5"
+        placeholder="Explain why you are applying for this scholarship...">
+    </textarea>
+
+</div>
+
+
+
+
+
+
+
+
+<!-- <div class="mb-3">
+
+<label>
+Supporting Document
+</label>
+
+
+<input type="file"
+class="form-control"
+th:field="*{supportingDocuments}">
+
+
+</div> -->
+
+<div class="mb-3">
+
+    <label class="form-label">
+        Supporting Document
+    </label>
+
+    <input type="file"
+           class="form-control"
+           th:field="*{file}">
+
+</div>
+
+
+<button class="btn btn-success">
+
+Submit Application
+
+</button>
+
+
+<a th:href="@{/scholarship//apply/{id}}"
+   class="btn btn-secondary">
+    Back
+</a>
+
+</form>
+
+
+
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+   <div th:replace="~{fragment/js :: js}"></div>
+</body>
+
+</html>

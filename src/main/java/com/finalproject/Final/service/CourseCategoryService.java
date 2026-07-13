@@ -40,48 +40,46 @@ public class CourseCategoryService {
 
 	}
 
-	public List<CourseCategoryBean> getAllCourseCategory() {
+	/*
+	 * public List<CourseCategoryBean> getAllCourseCategory() {
+	 * 
+	 * return courseCategoryReop.getAllCourseCategory(); }
+	 */
 
-		return courseCategoryReop.getAllCourseCategory();
-	}
+	/*
+	 * public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
+	 * 
+	 * return courseCategoryReop.getCourseCategoryById(courseCategoryId); }
+	 */
 
-	public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
+	/*
+	 * public boolean updateCoureCategory(int courseCatId, String courseCatName) {
+	 * 
+	 * int result = 0;
+	 * 
+	 * result = courseCategoryReop.updateCourseCategory(courseCatId,courseCatName);
+	 * 
+	 * if (result > 0) {
+	 * 
+	 * System.out.println("Successfully Updated Course Category ::" + courseCatId
+	 * +"::" + courseCatName);
+	 * 
+	 * return true; } else { System.out.println( "Fail to Update Course Category ::"
+	 * + courseCatId + "::" + courseCatName); return false; } }
+	 */
 
-		return courseCategoryReop.getCourseCategoryById(courseCategoryId);
-	}
-
-	public boolean updateCoureCategory(int courseCatId, String courseCatName) {
-
-		int result = 0;
-
-		result = courseCategoryReop.updateCourseCategory(courseCatId,courseCatName);
-
-		if (result > 0) {
-
-			System.out.println("Successfully Updated Course Category ::" + courseCatId +"::"
-					+ courseCatName);
-
-			return true;
-		} else {
-			System.out.println(
-					"Fail to Update Course Category ::" + courseCatId + "::" + courseCatName);
-			return false;
-		}
-	}
-
-	public boolean deleteCourseCategory(int courseCategoryId) {
-
-		int result = 0;
-
-		result = courseCategoryReop.deleteCourseCategory(courseCategoryId);
-
-		if (result > 0) {
-			System.out.println("Successfully Deleted Course Category ::" + courseCategoryId);
-			return true;
-		} else {
-			System.out.println("Fail to Delete Course Category ::" + courseCategoryId);
-			return false;
-		}
-	}
+	/*
+	 * public boolean deleteCourseCategory(int courseCategoryId) {
+	 * 
+	 * int result = 0;
+	 * 
+	 * result = courseCategoryReop.deleteCourseCategory(courseCategoryId);
+	 * 
+	 * if (result > 0) {
+	 * System.out.println("Successfully Deleted Course Category ::" +
+	 * courseCategoryId); return true; } else {
+	 * System.out.println("Fail to Delete Course Category ::" + courseCategoryId);
+	 * return false; } }
+	 */
 
 }

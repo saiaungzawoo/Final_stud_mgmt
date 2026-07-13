@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class LoginController {
 
-	//test
     @Autowired
     UserRepository uRepo;
     
@@ -42,11 +41,12 @@ public class LoginController {
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
 
             session.setAttribute("loginUser", user);
-
+            
+            session.setAttribute("userID", user.getUserID());//use for scholarship
             return "redirect:/home";
         }
-
-        m.addAttribute("error", "Invalid email or password");
+       
+  m.addAttribute("error", "Invalid email or password");
         return "auth/login";
     }
 
