@@ -24,6 +24,33 @@ public class PaymentRowMapper implements RowMapper<PaymentBean> {
         p.setPaymentTypeName(rs.getString("paymentTypeName"));
         
         p.setStudentName(rs.getString("studentName"));
+        
+        try {
+            p.setInstallmentNumber(
+                    (Integer) rs.getObject("installment_number"));
+        } catch (SQLException ignored) {}
+
+        try {
+            p.setInstallmentCount(
+                    (Integer) rs.getObject("installment_count"));
+        } catch (SQLException ignored) {}
+
+        try {
+            p.setAmountDue(
+                    rs.getDouble("amount_due"));
+        } catch (SQLException ignored) {}
+
+        try {
+            p.setPaidAmount(
+                    rs.getDouble("paid_amount"));
+        } catch (SQLException ignored) {}
+
+        try {
+            if (rs.getDate("due_date") != null) {
+                p.setDueDate(
+                        rs.getDate("due_date").toLocalDate());
+            }
+        } catch (SQLException ignored) {}
 
         p.setAmount(rs.getDouble("amount"));
 

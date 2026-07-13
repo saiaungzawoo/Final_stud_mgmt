@@ -12,15 +12,12 @@ import com.finalproject.Final.model.InstallmentRuleItemBean;
 
 @Repository
 public class InstallmentPlanRepository {
-	
-	  @Autowired
-	    private JdbcTemplate jdbc;
-	  
-	  public void createPlan(
-		        String enrollmentId,
-		        InstallmentRuleItemBean item
-		) {
-		  
+
+	@Autowired
+	private JdbcTemplate jdbc;
+
+	public void createPlan(String enrollmentId, InstallmentRuleItemBean item) {
+
 //		  System.out.println("INSERTING...");
 //		  System.out.println(enrollmentId);
 //		  System.out.println(item.getInstallmentRuleItemId());
@@ -28,146 +25,169 @@ public class InstallmentPlanRepository {
 //		  System.out.println(item.getAmount());
 //		  System.out.println(item.getDueDate());
 
-		    String sql = """
-		        INSERT INTO installment_plan
-		        (
-		            installmentPlanID,
-		            enrollmentID,
-		            installmentRuleItemID,
-		            installment_number,
-		            amount_due,
-		            due_date,
-		            paid_amount,
-		            status,
-		            created_at,
-		            updated_at
-		        )
-		        VALUES
-		        (
-		            ?,?,?,?,?,?,
-		            0,
-		            'Pending',
-		            NOW(),
-		            NOW()
-		        )
-		        """;
+		String sql = """
+				INSERT INTO installment_plan
+				(
+				    installmentPlanID,
+				    enrollmentID,
+				    installmentRuleItemID,
+				    installment_number,
+				    amount_due,
+				    due_date,
+				    paid_amount,
+				    status,
+				    created_at,
+				    updated_at
+				)
+				VALUES
+				(
+				    ?,?,?,?,?,?,
+				    0,
+				    'Pending',
+				    NOW(),
+				    NOW()
+				)
+				""";
 
-		    jdbc.update(
-		            sql,
-		            UUID.randomUUID().toString(),
-		            enrollmentId,
-		            item.getInstallmentRuleItemId(),
-		            item.getInstallmentNumber(),
-		            item.getAmount(),
-		            item.getDueDate()
-		    );
+		jdbc.update(sql, UUID.randomUUID().toString(), enrollmentId, item.getInstallmentRuleItemId(),
+				item.getInstallmentNumber(), item.getAmount(), item.getDueDate());
 
-		}
-	  
-	  public void markAsPaid(
-		        String installmentPlanId
-		) {
+	}
 
-		    String sql = """
-		        UPDATE installment_plan
-		        SET
-		            paid_amount = amount_due,
-		            status = 'Paid',
-		            paid_at = NOW(),
-		            updated_at = NOW()
-		        WHERE installmentPlanID = ?
-		        """;
+	public void markAsPaid(String installmentPlanId) {
 
-		    jdbc.update(sql, installmentPlanId);
+		String sql = """
+				UPDATE installment_plan
+				SET
+				    paid_amount = amount_due,
+				    status = 'Paid',
+				    paid_at = NOW(),
+				    updated_at = NOW()
+				WHERE installmentPlanID = ?
+				""";
 
-		}
-	  
-	  public InstallmentPlanBean getFirstPending(
-		        String enrollmentId
-		) {
+		jdbc.update(sql, installmentPlanId);
 
-		    String sql = """
-		        SELECT *
-		        FROM installment_plan
-		        WHERE enrollmentID = ?
-		        AND status='Pending'
-		        ORDER BY installment_number
-		        LIMIT 1
-		        """;
+	}
 
-		    List<InstallmentPlanBean> list =
-		            jdbc.query(
-		                    sql,
-		                    new InstallmentPlanRowMapper(),
-		                    enrollmentId
-		            );
+	public InstallmentPlanBean getFirstPending(String enrollmentId) {
 
-		    return list.isEmpty()
-		            ? null
-		            : list.get(0);
+		String sql = """
+				SELECT *
+				FROM installment_plan
+				WHERE enrollmentID = ?
+				AND status='Pending'
+				ORDER BY installment_number
+				LIMIT 1
+				""";
 
-		}
-	  
-	  public InstallmentPlanBean findById(
-		        String installmentPlanId
-		) {
+		List<InstallmentPlanBean> list = jdbc.query(sql, new InstallmentPlanRowMapper(), enrollmentId);
 
-		    String sql = """
-		        SELECT *
-		        FROM installment_plan
-		        WHERE installmentPlanID = ?
-		        """;
+		return list.isEmpty() ? null : list.get(0);
 
-		    List<InstallmentPlanBean> list =
-		            jdbc.query(
-		                    sql,
-		                    new InstallmentPlanRowMapper(),
-		                    installmentPlanId
-		            );
+	}
 
-		    return list.isEmpty()
-		            ? null
-		            : list.get(0);
+	public InstallmentPlanBean findById(String installmentPlanId) {
 
-		}
-	  
-	  public List<InstallmentPlanBean> findByEnrollmentId(
-		        String enrollmentId
-		) {
+		String sql = """
+				SELECT *
+				FROM installment_plan
+				WHERE installmentPlanID = ?
+				""";
 
-		    String sql = """
-		        SELECT *
-		        FROM installment_plan
-		        WHERE enrollmentID = ?
-		        ORDER BY installment_number
-		        """;
+		List<InstallmentPlanBean> list = jdbc.query(sql, new InstallmentPlanRowMapper(), installmentPlanId);
 
-		    return jdbc.query(
-		            sql,
-		            new InstallmentPlanRowMapper(),
-		            enrollmentId
-		    );
+		return list.isEmpty() ? null : list.get(0);
 
-		}
+	}
 
-	  public boolean existsByEnrollmentId(
-		        String enrollmentId
-		){
+	public List<InstallmentPlanBean> findByEnrollmentId(String enrollmentId) {
 
-		    String sql = """
-		        SELECT COUNT(*)
-		        FROM installment_plan
-		        WHERE enrollmentID = ?
-		        """;
+		String sql = """
+				SELECT *
+				FROM installment_plan
+				WHERE enrollmentID = ?
+				ORDER BY installment_number
+				""";
 
-		    Integer count =
-		            jdbc.queryForObject(
-		                    sql,
-		                    Integer.class,
-		                    enrollmentId
-		            );
+		return jdbc.query(sql, new InstallmentPlanRowMapper(), enrollmentId);
 
-		    return count != null && count > 0;
+	}
 
-		}
+	public boolean existsByEnrollmentId(String enrollmentId) {
+
+		String sql = """
+				SELECT COUNT(*)
+				FROM installment_plan
+				WHERE enrollmentID = ?
+				""";
+
+		Integer count = jdbc.queryForObject(sql, Integer.class, enrollmentId);
+
+		return count != null && count > 0;
+
+	}
+
+	public Double getTotalPaid(String enrollmentId) {
+
+	    String sql = """
+	        SELECT COALESCE(SUM(paid_amount),0)
+	        FROM installment_plan
+	        WHERE enrollmentID = ?
+	        """;
+
+	    Double total =
+	            jdbc.queryForObject(
+	                    sql,
+	                    Double.class,
+	                    enrollmentId
+	            );
+
+	    return total == null ? 0.0 : total;
+	}
+	
+	public Integer getCompletedCount(String enrollmentId) {
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM installment_plan
+	        WHERE enrollmentID = ?
+	        AND status='Paid'
+	        """;
+
+	    Integer count =
+	            jdbc.queryForObject(
+	                    sql,
+	                    Integer.class,
+	                    enrollmentId
+	            );
+
+	    return count == null ? 0 : count;
+	}
+	
+	public InstallmentPlanBean getNextPending(
+	        String enrollmentId
+	) {
+
+	    String sql = """
+	        SELECT *
+	        FROM installment_plan
+	        WHERE enrollmentID = ?
+	        AND status='Pending'
+	        ORDER BY installment_number
+	        LIMIT 1
+	        """;
+
+	    List<InstallmentPlanBean> list =
+	            jdbc.query(
+	                    sql,
+	                    new InstallmentPlanRowMapper(),
+	                    enrollmentId
+	            );
+
+	    return list.isEmpty()
+	            ? null
+	            : list.get(0);
+
+	}
 }

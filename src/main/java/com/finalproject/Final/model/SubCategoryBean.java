@@ -15,7 +15,7 @@ public class SubCategoryBean {
     private String SubCategoryId;
     private String name;
     private String description;
-    private int isActive;
+    private Integer isActive;
 
     private String courseCategoryId;
     private LocalDateTime createdAt;

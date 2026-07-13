@@ -137,11 +137,80 @@ public class PaymentService {
 
         return paymentId;
     }
-
+    
     public PaymentBean getById(String paymentId) {
 
-        return paymentRepository.getById(paymentId);
+        PaymentBean payment =
+                paymentRepository.getById(paymentId);
+
+        if (payment == null) {
+            return null;
+        }
+
+        if ("INSTALLMENT".equals(payment.getPaymentTypeName())) {
+
+            EnrollmentBean enrollment =
+                    enrollmentRepository.findById(
+                            payment.getEnrollmentId()
+                    );
+
+            payment.setCourseFee(
+                    enrollment.getFinalFee()
+            );
+
+            Double totalPaid =
+                    installmentPlanService.getTotalPaid(
+                            payment.getEnrollmentId()
+                    );
+
+            payment.setTotalPaid(totalPaid);
+
+            payment.setRemainingBalance(
+                    enrollment.getFinalFee() - totalPaid
+            );
+
+            Integer completed =
+                    installmentPlanService.getCompletedCount(
+                            payment.getEnrollmentId()
+                    );
+
+            payment.setCompletedInstallments(
+                    completed
+            );
+
+            payment.setTotalInstallments(
+                    payment.getInstallmentCount()
+            );
+
+            InstallmentPlanBean next =
+                    installmentPlanService.getNextPending(
+                            payment.getEnrollmentId()
+                    );
+
+            if (next != null) {
+
+                payment.setNextInstallmentNumber(
+                        next.getInstallmentNumber()
+                );
+
+                payment.setNextInstallmentAmount(
+                        next.getAmountDue()
+                );
+
+                payment.setNextDueDate(
+                        next.getDueDate()
+                );
+            }
+        }
+
+        return payment;
 
     }
+
+//    public PaymentBean getById(String paymentId) {
+//
+//        return paymentRepository.getById(paymentId);
+//
+//    }
 
 }
