@@ -59,6 +59,7 @@ i= jdbc.update(
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public UserBean getLatestStudent() {
 		String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
 	   
@@ -125,6 +126,7 @@ i= jdbc.update(
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public UserBean getUserByEmail(String email) {
 
 	    String sql = "SELECT * FROM user WHERE email=?";
@@ -170,6 +172,7 @@ i= jdbc.update(
 	    	}
 	   
 	
+	@SuppressWarnings("deprecation")
 	public UserBean getUserById(String userID) {
 
 	    String sql = "SELECT * FROM user WHERE userID = ?";
@@ -240,4 +243,3 @@ i= jdbc.update(
 
 
      
-

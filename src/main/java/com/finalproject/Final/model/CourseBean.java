@@ -10,6 +10,7 @@ import lombok.Setter;
 public class CourseBean {
 
     private String CourseId;
+    private String userId;
 
     private String courseCategoryId;
     private String subcategoryId;
