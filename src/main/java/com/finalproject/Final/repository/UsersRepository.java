@@ -120,7 +120,7 @@ i= jdbc.update(
 		            userObj.getDob(),
 		            userObj.getGender(),
 		            userObj.getProfileImage(),
-		            userObj.getUserId()
+		            userObj.getUserID()
 		    );
 	      
 	}
@@ -136,8 +136,8 @@ i= jdbc.update(
 
 	    	            UserBean userObj = new UserBean();
 
-	    	            userObj.setUserId(rs.getString("userID"));
-	    	            userObj.setRoleId(rs.getString("roleID"));
+	    	            userObj.setUserID(rs.getString("userID"));
+	    	            userObj.setRoleID(rs.getString("roleID"));
 	    	            userObj.setName(rs.getString("name"));
 	    	            userObj.setEmail(rs.getString("email"));
 	    	            userObj.setPassword(rs.getString("password"));
@@ -183,8 +183,8 @@ i= jdbc.update(
 
 	            UserBean userObj = new UserBean();
 
-	            userObj.setUserId(rs.getString("userID"));
-	            userObj.setRoleId(rs.getString("roleID"));
+	            userObj.setUserID(rs.getString("userID"));
+	            userObj.setRoleID(rs.getString("roleID"));
 	            userObj.setName(rs.getString("name"));
 	            userObj.setEmail(rs.getString("email"));
 	            userObj.setPassword(rs.getString("password"));
