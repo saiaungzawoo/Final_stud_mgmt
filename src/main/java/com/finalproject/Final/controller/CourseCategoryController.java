@@ -33,6 +33,7 @@ public class CourseCategoryController {
 	@Autowired
 	CourseCategoryService courseCategoryService;
 	
+	
 	/*
 	 * @GetMapping("/list") public String showAllCourseCategory(Model m) {
 	 * List<CourseCategoryBean> courseCategoryList =

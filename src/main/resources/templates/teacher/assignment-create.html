@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+            <div class="mb-4">
+              <h5 class="mb-0">
+
+<i class="bi bi-journal-text me-2"></i>
+
+<span th:if="${isUpdate}">
+    Update Assignment
+</span>
+
+<span th:unless="${isUpdate}">
+    Create Assignment
+</span>
+
+</h5>
+
+                <p class="text-muted">
+                    Create assignments for your courses.
+                </p>
+            </div>
+<div class="card shadow-sm border-0">
+
+    <!-- Card Header -->
+    <div class="card-header bg-primary text-white py-3">
+
+        <h5 class="mb-0">
+            <i class="bi bi-journal-text me-2"></i>
+            Create Assignment
+        </h5>
+
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body">
+
+        <form th:action="@{/assignment/save}"
+              th:object="${assignment}"
+              method="post">
+
+ <input type="hidden"
+           th:field="*{assignmentID}">
+            <!-- Course -->
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Course
+                </label>
+
+              <select class="form-select"
+        th:field="*{courseID}">
+
+    <option value="">
+        -- Select Course --
+    </option>
+
+    <option th:each="course : ${courseList}"
+            th:value="${course.courseId}"
+            th:text="${course.name}">
+    </option>
+
+</select>
+<div class="text-danger"
+     th:errors="*{courseID}">
+</div>
+            </div>
+
+            <!-- Title -->
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Assignment Title
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       th:field="*{title}"
+                       placeholder="Enter assignment title"
+                       >
+<div class="text-danger"
+     th:errors="*{title}">
+</div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Description
+                </label>
+
+                <textarea class="form-control"
+                          rows="5"
+                          th:field="*{description}"
+                          placeholder="Enter assignment description">
+                </textarea>
+                <div class="text-danger"
+     th:errors="*{description}">
+</div>
+
+            </div>
+
+            <!-- Score -->
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Maximum Score
+                    </label>
+
+                    <input type="number"
+                           class="form-control"
+                           step="0.01"
+                           th:field="*{maxScore}">
+                           <div class="text-danger"
+     th:errors="*{maxScore}">
+</div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Weight (%)
+                    </label>
+
+                    <input type="number"
+                           class="form-control"
+                           step="0.01"
+                           th:field="*{weightPercent}">
+                           <div class="text-danger"
+     th:errors="*{weightPercent}">
+</div>
+
+                </div>
+
+            </div>
+
+            <!-- Due Date -->
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Due Date
+                </label>
+
+               <input type="datetime-local"
+       class="form-control"
+       name="dueDate"
+       th:value="${#temporals.format(assignment.dueDate,'yyyy-MM-dd''T''HH:mm')}">
+            </div>
+
+            <!-- Status -->
+            <div class="mb-4">
+
+                <label class="form-label fw-semibold">
+                    Status
+                </label>
+
+                <div class="d-flex gap-2 flex-wrap">
+
+                    <input type="radio"
+                           class="btn-check"
+                           th:field="*{status}"
+                           value="Draft"
+                           id="draft">
+                           <div class="text-danger"
+     th:errors="*{status}">
+</div>
+
+                    <label class="btn btn-outline-secondary"
+                           for="draft">
+
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Draft
+
+                    </label>
+
+                    <input type="radio"
+                           class="btn-check"
+                           th:field="*{status}"
+                           value="Published"
+                           id="published">
+
+                    <label class="btn btn-outline-success"
+                           for="published">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Published
+
+                    </label>
+
+                    <input type="radio"
+                           class="btn-check"
+                           th:field="*{status}"
+                           value="Closed"
+                           id="closed">
+
+                    <label class="btn btn-outline-danger"
+                           for="closed">
+
+                        <i class="bi bi-lock me-1"></i>
+                        Closed
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- Buttons -->
+           <div class="text-end">
+
+    <a th:href="@{/assignment/list}"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-list-ul"></i>
+        Assignment List
+
+    </a>
+
+
+    <button type="submit"
+            class="btn btn-primary">
+
+        <span th:if="${isUpdate}">
+
+            <i class="bi bi-pencil-square"></i>
+            Update Assignment
+
+        </span>
+
+
+        <span th:unless="${isUpdate}">
+
+            <i class="bi bi-save"></i>
+            Save Assignment
+
+        </span>
+
+    </button>
+
+</div>
+        </form>
+
+    </div>
+
+</div>
+        </main>
+
+    </div>
+
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+
+</html>

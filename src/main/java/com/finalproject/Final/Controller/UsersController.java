@@ -1,4 +1,4 @@
- package com.finalproject.Final.controller;
+package com.finalproject.Final.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.finalproject.Final.model.UserBean;
-
 import com.finalproject.Final.repository.UsersRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -52,19 +52,18 @@ public class UsersController {
         user.setGender("Male");   // Default selected
         m.addAttribute("userObj", user);
      // m.addAttribute("userObj", new UserBean());
-     // return "success";
       
+     // return "student_register";
       return "student/student_register";
   }
   
   @GetMapping("/registers")
   public String success(Model m) {
-
-      UserBean user = uRepo.getLatestUserByRole("Student");
-
-      m.addAttribute("userObj", user);
-
-      return "student/success";
+     UserBean user = uRepo.getLatestStudent();
+      m.addAttribute("userObj",user);
+      
+     //return "success";
+     return "student/success";
   }
   
   
@@ -83,11 +82,13 @@ public class UsersController {
                     "Age must be at least 16 years old"); }
     
     if(br.hasErrors()) {
+      //return"student/student_register";
       return"student/student_register";
     }
     
     if (photo.isEmpty()) {
           m.addAttribute("error", "Please select a photo");
+          //return "student/student_register";
           return "student/student_register";
       }
     //photo size 
@@ -96,17 +97,19 @@ public class UsersController {
             m.addAttribute("error",
                     "Photo size must not exceed 2 MB!");
             return"student/student_register";
+           // return "student_register";
        }
             
              // Content Type Validation
           String contentType = photo.getContentType();
 
           if (contentType == null ||
-                 !(contentType.equals("image/jpeg")
-                         ||  contentType.equals("image/png"))) {
+                  !(contentType.equals("image/jpeg") ||
+                           contentType.equals("image/png"))) {
 
               m.addAttribute("error", "Invalid image file");
               return "student/student_register";
+              //return "student_register";
           }
           
           BufferedImage image = ImageIO.read(photo.getInputStream());
@@ -114,83 +117,120 @@ public class UsersController {
               m.addAttribute("error",
                       "Invalid image file");
               return "student/student_register";
+             // return "student_register";
               }
         String fileName = photo.getOriginalFilename();
 
           String path = "D:/upload/";
 //file 
-	        File dir = new File(path);
-	        if (!dir.exists()) {
-	            dir.mkdirs();
-	        }
-	        //save file
-	        photo.transferTo(new File(path + fileName));
+          File dir = new File(path);
+          if (!dir.exists()) {
+              dir.mkdirs();
+          }
+          //save file
+          photo.transferTo(new File(path + fileName));
+ //save file path
+          obj.setProfileImage("/upload/" + fileName);
+          
+         
+        if(uRepo.existsByEmail(obj.getEmail())) {
+          m.addAttribute("emailError",
+                  "Email already exists");
+          return "student/student_register";
+          //return "student_register";
+      }
+        
+     // Generate UUID for user
+        obj.setUserID(UUID.randomUUID().toString());
 
-	        //save file path
-	      //  obj.setFilePath("/upload/" + fileName);
-			    
-			   
-		    if(uRepo.existsByEmail(obj.getEmail())) {
-			    m.addAttribute("emailError",
-			            "Email already exists");
-			    return "student/student_register";
-			}
+        // Student Role UUID (Replace with your actual Student role UUID)
+        obj.setRoleID("19dac244-7acd-11f1-898e-e4b97a5cf834");
 
-	 // obj.setRoleId(3); // Student
-	    obj.setIsActive(1);
-	    obj.setCreatedAt(LocalDateTime.now());
-	 
-	    uRepo.insertUser(obj);
-	    m.addAttribute("userObj", obj);
+        obj.setIsActive(1);
 
-	   // return "redirect:/login";
-		
-		
-	return "student/success";
-	}
-	
-	
-	@PostMapping("/update")
-	public String updateStudent(
-	        @Valid @ModelAttribute("userObj") UserBean userObj,
-	        BindingResult br,
-	        Model model,
-	        @RequestParam("photo") MultipartFile photo) throws IOException {
+        obj.setCreatedAt(LocalDateTime.now());
+
+        obj.setUpdatedAt(LocalDateTime.now());
+
+        obj.setPassword(passwordEncoder.encode(obj.getPassword()));
+       
+        uRepo.insertUser(obj);
+
+        m.addAttribute("userObj", obj);
+
+        return "student/success";
+        //return"success";
+    }
+    
+  @PostMapping("/update")
+  public String updateStudent(
+           @ModelAttribute("userObj") UserBean userObj,
+          BindingResult br,
+          Model model,
+          @RequestParam("photo") MultipartFile photo) throws IOException {
 
       // Age Validation
       if (userObj.getDob() != null &&
               userObj.getDob().isAfter(LocalDate.now().minusYears(16))) {
 
-	        br.rejectValue(
-	                "dob",
-	                "error.dob",
-	                "Age must be at least 16 years old.");
-	    }
+          br.rejectValue(
+                  "dob",
+                  "error.dob",
+                  "Age must be at least 16 years old.");
+      }
+      // Password validation only if user enters a new password
+      if (userObj.getPassword() != null && !userObj.getPassword().isBlank()) {
+          String password = userObj.getPassword();
 
-	    if (br.hasErrors()) {
-	        return "student/student_edit";
-	    }
+          if (password.length() < 6) {
+              br.rejectValue("password", "error.password",
+                      "Password must be at least 6 characters long.");
+          }
+
+          if (!password.matches(".*[A-Za-z].*")) {
+              br.rejectValue("password", "error.password",
+                      "Password must contain at least one letter.");
+          }
+
+          if (!password.matches(".*\\d.*")) {
+              br.rejectValue("password", "error.password",
+                      "Password must contain at least one number.");
+          }
+      }
+
+      if (br.hasErrors()) {
+         return "student/student_edit";
+        // return "student_edit";
+      }
 
       // Get Existing User
-      UserBean oldUser = uRepo.getUserById(userObj.getUserId());
+      UserBean oldUser = uRepo.getUserById(userObj.getUserID());
 
       if (oldUser == null) {
           model.addAttribute("error", "User not found.");
-          return "student/student_edit";
+         return "student/student_edit";
+          //return "student_edit";
       }
 
       // Email Duplicate Check
       UserBean emailUser = uRepo.getUserByEmail(userObj.getEmail());
 
-      if(emailUser != null &&
-    		   !emailUser.getUserId().equals(userObj.getUserId())) {
+      if (uRepo.existsByEmailAndNotUserId(
+              userObj.getEmail(),
+              userObj.getUserID())) {
 
-    		    model.addAttribute(
-    		        "emailError",
-    		        "Email already exists.");
+          model.addAttribute("emailError", "Email already exists.");
+          return "student/student_edit";
+      }
+     // if (emailUser != null &&
+         //     emailUser.getUserId() != userObj.getUserId()) {
 
-    		    return "student/student_edit";
-    		}
+       //   model.addAttribute(
+          //        "emailError",
+            //      "Email already exists.");
+         // return "student/student_edit";
+       //   return "student_edit";
+    //  }
 
       // Photo Upload (Optional)
       if (!photo.isEmpty()) {
@@ -205,23 +245,23 @@ public class UsersController {
                       "Photo size must not exceed 5 MB.");
 
               return "student/student_edit";
+             // return "student_edit";
           }
 
           // Content Type Validation
           String contentType = photo.getContentType();
 
           if (contentType == null ||
-                  !(contentType.equals("image/jpeg")
-                        ||   contentType.equals("image/png"))) {
+                  !(contentType.equals("image/jpeg") ||
+                           contentType.equals("image/png"))) {
 
               model.addAttribute(
                       "error",
                       "Only JPG and PNG images are allowed.");
 
-              return "student/student_edit";
-          }
-
-          // Check Image
+             return "student/student_edit";
+             // return "student_edit";
+          } // Check Image
           BufferedImage image =
                   ImageIO.read(photo.getInputStream());
 
@@ -232,6 +272,7 @@ public class UsersController {
                       "Invalid image.");
 
               return "student/student_edit";
+             // return "student_edit";
           }
 
           // Upload Folder
@@ -240,7 +281,8 @@ public class UsersController {
           if (!dir.exists()) {
               dir.mkdirs();
               }
- // Save File
+
+         // Save File
           String fileName=photo.getOriginalFilename();//n
           photo.transferTo(new File(dir, fileName));
 
@@ -254,7 +296,7 @@ public class UsersController {
       }
 
       // Keep existing values
-      userObj.setRoleId(oldUser.getRoleId());
+      userObj.setRoleID(oldUser.getRoleID());
       userObj.setIsActive(oldUser.getIsActive());
       userObj.setCreatedAt(oldUser.getCreatedAt());
       userObj.setUpdatedAt(LocalDateTime.now());
@@ -266,19 +308,43 @@ public class UsersController {
           userObj.setPassword(passwordEncoder.encode(userObj.getPassword()));
       }
 
-	    // Update User
-	    uRepo.updateUser(userObj);
-	    return "student/success";
-	   // return "redirect:/update";
-	}
-	
-	@GetMapping("/update")
-	public String update(Model m) {
-	//	 UserBean user = uRepo.getLatestStudent();
-	    //m.addAttribute("userObj", user);
-	    
-	    
-	   // return "success";
-	    return "student/student_edit";
-	}
+      // Update User
+      uRepo.updateUser(userObj);
+      return "student/student-profile";
+      //return "student-profile";
+    
+  }
+  
+  @GetMapping("/update")
+  public String update(Model m) {
+     UserBean user = uRepo.getLatestStudent();
+      m.addAttribute("userObj", user);
+      
+      
+     // return "success";
+      return "student/student_edit";
+    //  return "student_edit";
+  }
+  
+  
+
+
+  @GetMapping("/profile")
+  public String profile(HttpSession session, Model model) {
+
+      UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+      if (loginUser == null) {
+          return "redirect:/login";
+      }
+
+      // Database ထဲက latest data ပြန်ယူချင်ရင်
+      UserBean userObj = uRepo.getUserByEmail(loginUser.getEmail());
+      
+      
+      model.addAttribute("userObj", userObj);
+
+     return "student/student-profile";
+      //return "student-profile";
+  }
 }

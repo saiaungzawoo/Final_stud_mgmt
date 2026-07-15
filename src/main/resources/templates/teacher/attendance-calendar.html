@@ -35,14 +35,33 @@
         </div>
 
         <!-- Main -->
-        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+     <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
 
-            <h2 class="fw-bold mb-4">Attendance Calendar</h2>
+    <div class="container-fluid">
 
-            <div id="calendar"></div>
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="fw-bold">Attendance Calendar</h2>
+            </div>
+        </div>
 
-        </main>
+        <div class="row justify-content-center">
+            <div class="col-12">
 
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+
+                        <div id="calendar"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</main>
     </div>
 </div>
 
@@ -189,14 +208,20 @@ ${room ? "Room "+room : ""}
 
 eventClick:function(info){
 
+    info.jsEvent.preventDefault();
 
-info.jsEvent.preventDefault();
+    let today = new Date();
+    today.setHours(0,0,0,0);
 
+    let eventDate = new Date(info.event.start);
+    eventDate.setHours(0,0,0,0);
 
-window.location.href =
-info.event.url;
+    if(eventDate.getTime() !== today.getTime()){
+        alert("Attendance can only be taken for today's class.");
+        return;
+    }
 
-
+    window.location.href = info.event.url;
 }
 
 
