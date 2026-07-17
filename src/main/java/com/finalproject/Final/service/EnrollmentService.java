@@ -222,10 +222,10 @@ public class EnrollmentService {
 
 	}
 	
-//	public List<EnrollmentBean> getMyEnrollments(String userId){
-//
-//	    return repo.findByUser(userId);
-//
-//	}
+	public List<CourseBean> getEnrolledCourses(String userId){
+
+	    return repo.getEnrolledCourses(userId);
+
+	}
 
 }

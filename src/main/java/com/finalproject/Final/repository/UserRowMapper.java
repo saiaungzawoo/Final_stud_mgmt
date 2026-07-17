@@ -67,6 +67,7 @@ public class UserRowMapper implements RowMapper<UserBean> {
                 : null);
 
         u.setIsActive(rs.getInt("is_active"));
+        u.setUserCode(rs.getString("userCode"));
        // u.setFilePath(rs.getString("file_path"));
 
         return u;

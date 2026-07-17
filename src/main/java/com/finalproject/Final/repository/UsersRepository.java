@@ -28,14 +28,16 @@ public class UsersRepository {
 		
 		String sql = """
                 INSERT INTO user
-                (userID, roleID, name, email, password,
+                (userID, roleID, userCode, name, email, password,
                  phone_no, address, dob, gender, profile_image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 i= jdbc.update(
                 sql,
                 obj.getUserID(),
                 obj.getRoleID(),
+                //SAI
+                obj.getUserCode(),
                 obj.getName(),
                 obj.getEmail(),
                obj.getPassword(),
@@ -80,6 +82,8 @@ i= jdbc.update(
 
 	                userObj.setUserID(rs.getString("userID"));
 	                userObj.setRoleID(rs.getString("roleID"));
+	                //SAI
+		            userObj.setUserCode(rs.getString("userCode"));
 	                userObj.setName(rs.getString("name"));
 	                userObj.setEmail(rs.getString("email"));
 	                userObj.setPassword(rs.getString("password"));
@@ -138,6 +142,8 @@ i= jdbc.update(
 
 	    	            userObj.setUserID(rs.getString("userID"));
 	    	            userObj.setRoleID(rs.getString("roleID"));
+	    	            //SAI
+	    	            userObj.setUserCode(rs.getString("userCode"));
 	    	            userObj.setName(rs.getString("name"));
 	    	            userObj.setEmail(rs.getString("email"));
 	    	            userObj.setPassword(rs.getString("password"));
@@ -185,6 +191,8 @@ i= jdbc.update(
 
 	            userObj.setUserID(rs.getString("userID"));
 	            userObj.setRoleID(rs.getString("roleID"));
+	            //SAI
+	            userObj.setUserCode(rs.getString("userCode"));
 	            userObj.setName(rs.getString("name"));
 	            userObj.setEmail(rs.getString("email"));
 	            userObj.setPassword(rs.getString("password"));
@@ -226,6 +234,54 @@ i= jdbc.update(
 	    );
 
 	    return count != null && count > 0;
+	}
+	
+	//SAI
+	//student ID (ST0001, ST0002 instead of UUID for user display only)
+	public String getNextUserCode(String roleId) {
+
+	    String prefix;
+
+	    if (roleId.equals("3c2f4396-7a84-11f1-bfcb-b4b686e7f920")) {
+	        prefix = "ST";
+	    }
+	    else if (roleId.equals("3c2f3f12-7a84-11f1-bfcb-b4b686e7f920")) {
+	        prefix = "T";
+	    }
+	    else {
+	        prefix = "AD";
+	    }
+
+	    String sql = """
+	        SELECT userCode
+	        FROM user
+	        WHERE userCode LIKE ?
+	        ORDER BY userCode DESC
+	        LIMIT 1
+	        """;
+
+	    try {
+
+	        String latest =
+	                jdbc.queryForObject(
+	                        sql,
+	                        String.class,
+	                        prefix + "%"
+	                );
+
+	        int number =
+	                Integer.parseInt(
+	                        latest.substring(prefix.length())
+	                );
+
+	        return prefix + String.format("%04d", number + 1);
+
+	    } catch (Exception e) {
+
+	        return prefix + "0001";
+
+	    }
+
 	}
 	}
 
