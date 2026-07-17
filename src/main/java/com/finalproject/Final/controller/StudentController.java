@@ -36,12 +36,13 @@ public class StudentController {
 		
 		 UserBean student = (UserBean)session.getAttribute("loginUser");
 
-	    List<CourseBean> courses =  enrollmentService.getMyEnrollments(student.getUserID());
+	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getUserID());
 //	           
 
 	    model.addAttribute("student", student);
-	    model.addAttribute("studentCode", 
-	    		UserCodeUtil.formatUserCode(student.getRoleID(), student.getUserID()));
+	    model.addAttribute("studentCode", student.getUserCode());
+//	    model.addAttribute("studentCode", 
+//	    		UserCodeUtil.formatUserCode(student.getRoleID(), student.getUserID()));
 	           
 	    model.addAttribute("courses", courses);
 	    model.addAttribute("enrolledCoursesCount", courses.size());

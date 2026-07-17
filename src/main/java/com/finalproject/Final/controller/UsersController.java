@@ -146,6 +146,12 @@ public class UsersController {
 
 		    // Student Role UUID (Replace with your actual Student role UUID)
 		    obj.setRoleID("3c2f4396-7a84-11f1-bfcb-b4b686e7f920");
+		    
+		    //SAI
+		    obj.setUserCode(
+		            uRepo.getNextUserCode(obj.getRoleID())
+		    );
+
 
 		    obj.setIsActive(1);
 
