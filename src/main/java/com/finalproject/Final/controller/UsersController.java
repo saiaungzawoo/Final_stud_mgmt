@@ -145,7 +145,7 @@ public class UsersController {
 		    obj.setUserID(UUID.randomUUID().toString());
 
 		    // Student Role UUID (Replace with your actual Student role UUID)
-		    obj.setRoleID("19dac244-7acd-11f1-898e-e4b97a5cf834");
+		    obj.setRoleID("3c2f4396-7a84-11f1-bfcb-b4b686e7f920");
 
 		    obj.setIsActive(1);
 

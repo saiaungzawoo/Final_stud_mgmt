@@ -2,6 +2,7 @@ package com.finalproject.Final.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,21 @@ public class EnrollmentBean {
 	// JOIN FIELD
     private String courseTitle;
     private String username;
+    
+    
+    private String teacherName;
 
+    
+
+    private Double remainingBalance;
+
+    private Double totalPaid;
+
+    private Integer totalInstallments;
+
+    private Integer completedInstallments;
+
+    private List<InstallmentPlanBean> installmentPlans;
 	
 
 	
