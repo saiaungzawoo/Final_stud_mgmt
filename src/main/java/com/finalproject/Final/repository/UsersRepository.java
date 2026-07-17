@@ -61,7 +61,7 @@ i= jdbc.update(
 	
 	@SuppressWarnings("deprecation")
 	public UserBean getLatestStudent() {
-		String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
+		String studentRoleId = "3c2f4396-7a84-11f1-bfcb-b4b686e7f920";
 	   
 	    
 	    String sql = """

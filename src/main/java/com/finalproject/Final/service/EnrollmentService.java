@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.finalproject.Final.dto.EnrollmentDTO;
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.InstallmentPlanBean;
+import com.finalproject.Final.model.PaymentTypeBean;
 import com.finalproject.Final.repository.CourseRepository;
 import com.finalproject.Final.repository.EnrollmentRepository;
 
@@ -20,6 +22,12 @@ public class EnrollmentService {
 
 	@Autowired
 	private CourseRepository cRepo;
+	
+	@Autowired
+	private InstallmentPlanService installmentPlanService;
+
+	@Autowired
+	private PaymentTypeService paymentTypeService;
 
 	public String createEnrollment(String userId, String courseId) {
 
@@ -65,5 +73,159 @@ public class EnrollmentService {
 	    );
 
 	}
+	
+	public List<EnrollmentBean> getByUser(String userId){
+
+	    return repo.findByUser(userId);
+
+	}
+	
+	public List<EnrollmentBean> getMyEnrollments(String userId) {
+
+	    List<EnrollmentBean> enrollments =
+	            repo.findByUser(userId);
+
+	    for (EnrollmentBean enrollment : enrollments) {
+
+	        PaymentTypeBean paymentType = null;
+
+	        if (enrollment.getPaymentTypeId() != null) {
+
+	            paymentType =
+	                    paymentTypeService.getById(
+	                            enrollment.getPaymentTypeId());
+
+	        }
+
+	        // ============================
+	        // FULL PAYMENT
+	        // ============================
+
+	        if (paymentType != null &&
+	                "FULL_PAYMENT".equals(paymentType.getName())) {
+
+	            if ("Fully Paid".equals(enrollment.getPaymentStatus())) {
+
+	                enrollment.setTotalPaid(
+	                        enrollment.getFinalFee());
+
+	                enrollment.setRemainingBalance(0.0);
+
+	            } else {
+
+	                enrollment.setTotalPaid(0.0);
+
+	                enrollment.setRemainingBalance(
+	                        enrollment.getFinalFee());
+
+	            }
+
+	            enrollment.setCompletedInstallments(0);
+	            enrollment.setTotalInstallments(0);
+	            enrollment.setInstallmentPlans(null);
+
+	        }
+
+	        // ============================
+	        // INSTALLMENT
+	        // ============================
+
+	        else if (paymentType != null &&
+	                "INSTALLMENT".equals(paymentType.getName())) {
+
+
+	            List<InstallmentPlanBean> plans =
+	                    installmentPlanService.getByEnrollmentId(
+	                            enrollment.getEnrollmentId()
+	                    );
+
+
+	            enrollment.setInstallmentPlans(plans);
+
+
+	            Double paid =
+	                    installmentPlanService.getTotalPaid(
+	                            enrollment.getEnrollmentId()
+	                    );
+
+
+	            Integer completed =
+	                    installmentPlanService.getCompletedCount(
+	                            enrollment.getEnrollmentId()
+	                    );
+
+
+	            enrollment.setTotalPaid(paid);
+
+
+	            double remaining =
+	                    enrollment.getFinalFee() - paid;
+
+
+	            if(remaining < 0){
+	                remaining = 0;
+	            }
+
+	         // If all installments are completed
+	            if (completed.equals(plans.size())) {
+
+	                enrollment.setPaymentStatus("Fully Paid");
+
+	                enrollment.setRemainingBalance(0.0);
+
+	            } else {
+
+	                enrollment.setRemainingBalance(remaining);
+
+	            }
+
+//	            enrollment.setRemainingBalance(
+//	                    remaining
+//	            );
+
+
+	            enrollment.setCompletedInstallments(
+	                    completed
+	            );
+
+
+	            enrollment.setTotalInstallments(
+	                    plans.size()
+	            );
+
+	        
+	            
+//	            enrollment.setInstallmentPlans(plans);
+
+	        }
+
+	        // ============================
+	        // Not chosen payment type yet
+	        // ============================
+
+	        else {
+
+	            enrollment.setTotalPaid(0.0);
+
+	            enrollment.setRemainingBalance(
+	                    enrollment.getFinalFee());
+
+	            enrollment.setCompletedInstallments(0);
+
+	            enrollment.setTotalInstallments(0);
+
+	        }
+
+	    }
+
+	    return enrollments;
+
+	}
+	
+//	public List<EnrollmentBean> getMyEnrollments(String userId){
+//
+//	    return repo.findByUser(userId);
+//
+//	}
 
 }

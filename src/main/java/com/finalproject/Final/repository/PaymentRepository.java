@@ -16,6 +16,7 @@ public class PaymentRepository {
 	private JdbcTemplate jdbc;
 
 	// Save Payment
+	//for full payment
 	public String savePayment(String enrollmentId, String paymentMethodId, Double amount) {
 
 		String paymentId = UUID.randomUUID().toString();
@@ -33,7 +34,7 @@ public class PaymentRepository {
 
 	}
 
-	// overload
+	// for installment payment
 	public String savePayment(String enrollmentId, String installmentPlanId, String paymentMethodId, Double amount) {
 
 		String paymentId = UUID.randomUUID().toString();

@@ -174,13 +174,159 @@ public class EnrollmentRepository {
 		return jdbc.queryForObject(sql, new EnrollmentRowMapper(), enrollmentId);
 	}
 
+	//dont delete
 	// FIND ENROLLMENTS BY USER
+//	public List<EnrollmentBean> findByUser(String userId) {
+//
+//		String sql = "SELECT e.*, " + "c.name AS course_title " + "FROM enrollment e "
+//				+ "JOIN course c ON e.courseID = c.courseID " + "WHERE e.userID = ?";
+//
+//		return jdbc.query(sql, new EnrollmentRowMapper(), userId);
+//	}
+//	public List<EnrollmentBean> findByUser(String userId) {
+//
+//	    String sql = """
+//	        SELECT e.*, c.name AS course_title, u.name AS teacher_name, COALESCE(SUM(ip.paid_amount),0) AS total_paid,  e.final_fee - COALESCE(SUM(ip.paid_amount),0)
+//	                AS remaining_balance, COUNT(DISTINCT iritem.installmentRuleItemID)
+//	                AS total_installments, 
+//                    COUNT(DISTINCT CASE
+//    WHEN ip.status = 'Paid'
+//    THEN ip.installmentPlanID
+//END) AS completed_installments
+//                FROM enrollment e 
+//                JOIN course c
+//	        ON e.courseID = c.courseID
+//
+//	        LEFT JOIN user u
+//	        ON c.teacherID = u.userID
+//
+//	        LEFT JOIN installment_plan ip
+//	        ON e.enrollmentID = ip.enrollmentID
+//
+//	        LEFT JOIN installment_rule_item iritem
+//	        ON ip.installmentRuleItemID =
+//	           iritem.installmentRuleItemID
+//
+//	        WHERE e.userID=?
+//
+//	        GROUP BY e.enrollmentID
+//
+//	        ORDER BY e.created_at DESC
+//	        """;
+//
+//	    return jdbc.query(
+//	            sql,
+//	            new EnrollmentRowMapper(),
+//	            userId);
+//	}
+	
+//	public List<EnrollmentBean> findByUser(String userId) {
+//
+//		String sql = """
+//
+//		SELECT 
+//
+//		e.*,
+//
+//		c.name AS course_title,
+//
+//		u.name AS teacher_name,
+//
+//
+//		COALESCE(SUM(DISTINCT ip.paid_amount),0)
+//		AS total_paid,
+//
+//
+//		e.final_fee -
+//		(
+//		 COALESCE(SUM(DISTINCT ip.paid_amount),0)
+//		 +
+//		 COALESCE(SUM(DISTINCT p.amount),0)
+//		)
+//		AS remaining_balance,
+//
+//
+//		COUNT(DISTINCT iri.installmentRuleItemID)
+//		AS total_installments,
+//
+//
+//		COUNT(DISTINCT CASE
+//		 WHEN ip.status='Paid'
+//		 THEN ip.installmentPlanID
+//		END)
+//		AS completed_installments
+//
+//
+//		FROM enrollment e
+//
+//
+//		JOIN course c
+//		ON e.courseID=c.courseID
+//
+//
+//		LEFT JOIN user u
+//		ON c.teacherID=u.userID
+//
+//
+//		LEFT JOIN installment_rule_item iri
+//		ON e.installmentRuleID=
+//		iri.installmentRuleID
+//
+//
+//		LEFT JOIN installment_plan ip
+//		ON e.enrollmentID=
+//		ip.enrollmentID
+//
+//
+//		LEFT JOIN payment p
+//		ON e.enrollmentID=
+//		p.enrollmentID
+//
+//
+//		WHERE e.userID=?
+//
+//
+//		GROUP BY e.enrollmentID
+//
+//
+//		ORDER BY e.created_at DESC
+//
+//		""";
+//
+//
+//		return jdbc.query(
+//		        sql,
+//		        new EnrollmentRowMapper(),
+//		        userId
+//		);
+//
+//		}
+	
 	public List<EnrollmentBean> findByUser(String userId) {
 
-		String sql = "SELECT e.*, " + "c.name AS course_title " + "FROM enrollment e "
-				+ "JOIN course c ON e.courseID = c.courseID " + "WHERE e.userID = ?";
+	    String sql = """
+	        SELECT
+	            e.*,
+	            c.name AS course_title,
+	            u.name AS teacher_name
+	        FROM enrollment e
 
-		return jdbc.query(sql, new EnrollmentRowMapper(), userId);
+	        JOIN course c
+	            ON e.courseID = c.courseID
+
+	        LEFT JOIN user u
+	            ON c.teacherID = u.userID
+
+	        WHERE e.userID = ?
+
+	        ORDER BY e.created_at DESC
+	        """;
+
+	    return jdbc.query(
+	            sql,
+	            new EnrollmentRowMapper(),
+	            userId);
+
 	}
 
 	// UPDATE STATUS

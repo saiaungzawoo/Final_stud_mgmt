@@ -36,7 +36,7 @@ public class StudentController {
 		
 		 UserBean student = (UserBean)session.getAttribute("loginUser");
 
-	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getUserID());
+	    List<CourseBean> courses =  enrollmentService.getMyEnrollments(student.getUserID());
 //	           
 
 	    model.addAttribute("student", student);

@@ -1,20 +1,19 @@
 package com.finalproject.Final.service;
 
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalproject.Final.dto.InstallmentPaymentDTO;
 import com.finalproject.Final.dto.PaymentDTO;
 import com.finalproject.Final.model.EnrollmentBean;
 import com.finalproject.Final.model.InstallmentPlanBean;
 import com.finalproject.Final.model.InstallmentRuleItemBean;
 import com.finalproject.Final.model.PaymentBean;
 import com.finalproject.Final.model.PaymentTypeBean;
-import com.finalproject.Final.repository.CourseRepository;
+
 import com.finalproject.Final.repository.EnrollmentRepository;
 import com.finalproject.Final.repository.PaymentRepository;
 
@@ -214,13 +213,73 @@ public class PaymentService {
 
     }
 
-//    public PaymentBean getById(String paymentId) {
-//
-//        return paymentRepository.getById(paymentId);
-//
-//    }
+    public String processInstallmentPayment(
+            InstallmentPaymentDTO dto
+    ){
 
-//
+        InstallmentPlanBean plan =
+                installmentPlanService.getById(
+                        dto.getInstallmentPlanId()
+                );
+
+
+        if(plan == null){
+            throw new RuntimeException(
+                    "Installment plan not found."
+            );
+        }
+
+
+        if("Paid".equals(plan.getStatus())){
+            throw new RuntimeException(
+                    "This installment is already paid."
+            );
+        }
+
+
+
+        String paymentId =
+                paymentRepository.savePayment(
+                        plan.getEnrollmentId(),
+                        plan.getInstallmentPlanId(),
+                        dto.getPaymentMethodId(),
+                        plan.getAmountDue()
+                );
+
+
+
+        installmentPlanService.markPaid(
+                plan.getInstallmentPlanId()
+        );
+
+
+
+        if(
+            installmentPlanService
+            .getFirstPending(
+                    plan.getEnrollmentId()
+            ) == null
+        ){
+
+            enrollmentRepository.updatePaymentStatus(
+                    plan.getEnrollmentId()
+            );
+
+        }
+        else{
+
+            enrollmentRepository.updatePartialPaymentStatus(
+                    plan.getEnrollmentId()
+            );
+
+        }
+
+
+
+        return paymentId;
+
+    }
+
    
 
 }

@@ -32,6 +32,8 @@ public class LoginController {
                         Model m) {
 
         UserBean user = uRepo.findByEmail(email);
+        
+       
 
 //        if (user != null && password.equals(user.getPassword())) {
 //
