@@ -47,4 +47,18 @@ public class CourseController {
 
         return "student/course-detail";
     }
+    
+    //filter courses by category
+    @GetMapping("/by-category/{id}")
+    public String showCoursesByCategory(
+            @PathVariable String id,
+            Model model){
+
+        model.addAttribute(
+                "courses",
+                courseService.getByCategory(id)
+        );
+
+        return "student/courses";
+    }
 }

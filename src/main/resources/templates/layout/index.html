@@ -60,33 +60,32 @@
               <span class="eyebrow">Browse by category</span>
               <h2>Explore programs built for real work</h2>
             </div>
-            <a href="#" class="link-strong">View all categories <i class="bi bi-arrow-right"></i></a>
+           <!--  <a href="#" class="link-strong">View all categories <i class="bi bi-arrow-right"></i></a> -->
           </div>
 
           <div class="row g-3">
-            <div class="col-md-6 col-xl-4">
-              <a class="category-card" href="#">
-                <i class="bi bi-browser-chrome"></i>
-                <h3>Web Development</h3>
-                <p> Java, C#,Javascript</p>
-              </a>
-            </div>
-            <div class="col-md-6 col-xl-4">
-              <a class="category-card" href="#">
-              <i class="bi bi-phone-fill"></i>
-                <h3>Mobile Development</h3>
-                <p> React native, Kotlin</p>
-              </a>
-            </div>
-            <div class="col-md-6 col-xl-4">
-              <a class="category-card" href="#">
-               <i class="bi bi-joystick"></i>
-                <h3>Game Development</h3>
-                <p> Unity, UnrealEngine</p>
-              </a>
-            </div>
-            
-          </div>
+
+    <div class="col-md-6 col-xl-4"
+         th:each="cat : ${allCategories}">
+
+        <a class="category-card"
+           th:href="@{/courses/by-category/{id}(id=${cat.courseCategoryId})}">
+
+            <i class="bi bi-grid"></i>
+
+            <h3 th:text="${cat.name}">
+                Category Name
+            </h3>
+
+            <p th:text="${cat.description}">
+                Category Description
+            </p>
+
+        </a>
+
+    </div>
+
+</div>
         </div>
       </section>
 
@@ -100,12 +99,12 @@
           </div>
 
         <div class="subcat-grid">
- <a href="#">HTML and CSS</a>
-            <a href="#">Java</a>
-            <a href="#">C#</a>
-            <a href="#">JavaScript</a>
-            <a href="#">React native</a>
-            <a href="#"> Kotlin</a>
+
+    <a href="#"
+       th:each="sub : ${allSubcategories}"
+       th:text="${sub.name}">
+        HTML and CSS
+    </a>
 
 </div>
         </div>
@@ -118,91 +117,52 @@
               <span class="eyebrow">Featured courses</span>
               <h2>Courses learners are choosing now</h2>
             </div>
-            <div class="btn-group course-tabs" role="group" aria-label="Course filters">
+            <!-- <div class="btn-group course-tabs" role="group" aria-label="Course filters">
               <button type="button" class="btn btn-dark active">Most popular</button>
               <button type="button" class="btn btn-outline-dark">New</button>
               <button type="button" class="btn btn-outline-dark">Beginner</button>
-            </div>
+            </div> -->
           </div>
 
           <div class="row g-4">
-             <div class="col-md-6 col-xl-4">
-    <article class="course-card">
-        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80"
-             alt="Development">
 
-        <div class="course-body">
+    <div class="col-md-6 col-xl-4"
+         th:each="cat : ${allCategories}">
 
-            <span class="badge text-bg-success"> Web Development</span>
+        <article class="course-card">
 
-           <div class="course-body">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80">
 
-		   <div th:each="sub : ${allList}">
-		    <div th:if="${sub.courseCategoryId == 1}">
-		        <a th:href="@{/#(id=${sub.id})}"
-		           th:text="${sub.name}"></a>
-		    </div>
-		</div>
-			</div>
-        </div>
-    </article>
-</div>
+            <div class="course-body">
 
- <div class="col-md-6 col-xl-4">
-    <article class="course-card">
-<img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=900&q=80"
-     alt="Mobile Development">
+                <span class="badge text-bg-success"
+                      th:text="${cat.name}">
+                </span>
 
-        <div class="course-body">
+                <div class="mt-3">
 
-            <span class="badge text-bg-success"> Mobile Development</span>
+                    <div th:each="course : ${courses}">
 
-           <div class="course-body">
+                        <div th:if="${course.courseCategoryId == cat.courseCategoryId}">
 
-   <div th:each="sub : ${allList}">
-    <div th:if="${sub.courseCategoryId == 2}">
-        <a th:href="@{/#(id=${sub.id})}"
-           th:text="${sub.name}"></a>
+                            <a class="d-block mb-2"
+                               th:href="@{/courses/{id}(id=${course.courseId})}"
+                               th:text="${course.name}">
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
     </div>
-</div>
-</div>
-        </div>
-    </article>
-</div>
-
- <div class="col-md-6 col-xl-4">
-    <article class="course-card">
-<img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=900&q=80"
-     alt="Game Development">
-            
-
-        <div class="course-body">
-
-            <span class="badge text-bg-success"> Game Development</span>
-
-           <div class="course-body">
-
-  <div th:each="sub : ${allList}">
-    <div th:if="${sub.courseCategoryId == 3}">
-        <a th:href="@{/#(id=${sub.id})}"
-           th:text="${sub.name}"></a>
-    </div>
-</div>
 
 </div>
-        </div>
-    </article>
-</div>
-
-
-
-            
-
-        
-
-
-         
-          </div>
         </div>
       </section>
 
@@ -210,29 +170,41 @@
         <div class="container-xxl">
           <div class="row align-items-center g-5">
             <div class="col-lg-5">
-              <span class="eyebrow">Career paths</span>
+             
               <h2>Follow a guided route from beginner to employable.</h2>
               <p>Each path combines foundation lessons, applied workshops, instructor review, and a final portfolio project you can show to employers.</p>
-              <a class="btn btn-primary btn-lg" href="#">Find your path</a>
+             
             </div>
+			<div class="col-lg-7">
+    <div class="path-list">
 
-            <div class="col-lg-7">
-              <div class="path-list">
-                <a href="#">
-                  <span><i class="bi bi-laptop"></i> Web Development</span>
-                  <strong> courses</strong>
-                </a>
-                <a href="#">
-                  <span><i class="bi bi-shield-check"></i> Mobile Development</span>
-                  <strong> courses</strong>
-                </a>
-               
-                <a href="#">
-                  <span><i class="bi bi-briefcase"></i> Game Development</span>
-                  <strong> courses</strong>
-                </a>
-              </div>
-            </div>
+        <a href="#" th:each="cat : ${allCategories}">
+
+            <span>
+
+                <i class="bi bi-browser-chrome"
+                   th:if="${cat.name == 'Programming'}"></i>
+
+                <i class="bi bi-palette"
+                   th:if="${cat.name == 'Design'}"></i>
+
+                <i class="bi bi-briefcase"
+                   th:if="${cat.name == 'Business'}"></i>
+
+                <span th:text="${cat.name}"></span>
+
+            </span>
+
+            <strong>
+                <span th:text="${cat.courseCount}"></span>
+                <span> courses</span>
+            </strong>
+
+        </a>
+
+    </div>
+</div>
+            
           </div>
         </div>
       </section>

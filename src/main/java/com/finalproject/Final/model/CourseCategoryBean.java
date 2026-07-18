@@ -16,6 +16,7 @@ public class CourseCategoryBean {
     private String CourseCategoryId;
     private String name;
     private String description;
-    private int isActive;
+    private Integer isActive;
     private LocalDateTime createdAt; 
+    private Integer courseCount;
 }
