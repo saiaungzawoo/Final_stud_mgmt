@@ -28,27 +28,47 @@ public class EnrollmentService {
 
 	@Autowired
 	private PaymentTypeService paymentTypeService;
+	
+	@Autowired
+	private CourseService courseService;
 
 	public String createEnrollment(String userId, String courseId) {
 
+		   // Prevent duplicate enrollment
 	    EnrollmentBean existing =
 	            repo.findByUserAndCourse(userId, courseId);
 
 	    if (existing != null) {
 	    	  throw new RuntimeException("You are already enrolled in this course.");
 	    }
+	    
+	    // Check if the course is already full
+	    if (courseService.getSeatsAvailable(courseId) <= 0) {
+	        throw new RuntimeException("Course is full.");
+	    }
 
 	    CourseBean course = cRepo.findById(courseId);
 
 	    Double fee = course.getFee();
-
-	    return repo.save(
+	    String enrollmentId = repo.save(
 	            userId,
 	            courseId,
 	            LocalDate.now(),
 	            fee,
 	            fee
 	    );
+
+	    courseService.decreaseSeat(courseId);
+
+	    return enrollmentId;
+
+//	    return repo.save(
+//	            userId,
+//	            courseId,
+//	            LocalDate.now(),
+//	            fee,
+//	            fee
+	    
 	}
 
 	public EnrollmentBean getById(String id) {
