@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragment/css :: css}">
+</head>
+
+
+<body class="bg-light">
+
+
+<div th:fragment="layout(content)">
+
+
+<div th:replace="~{fragment/admin-header :: adminHeader}">
+</div>
+
+
+<div class="teacher-layout">
+
+
+<div th:replace="~{fragment/admin-sidebar :: adminSidebar}">
+</div>
+
+
+<main class="teacher-main">
+
+<div th:replace="${content}">
+</div>
+
+</main>
+
+
+</div>
+
+
+<div th:replace="~{fragment/footer :: footer}">
+</div>
+
+
+</div>
+
+
+<div th:replace="~{fragment/js :: js}">
+</div>
+
+
+</body>
+</html>
