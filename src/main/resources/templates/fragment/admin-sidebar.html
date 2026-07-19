@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ace Inspiration</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        .ace-logo {
+            font-size: 1.5rem;
+            color: #0d6efd;
+        }
+
+        .ace-text {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .ace-subtext {
+            font-size: 0.75rem;
+            color: gray;
+        }
+
+        .search-pill {
+            position: relative;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-pill input {
+            padding-left: 2rem;
+        }
+
+        .search-pill i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: gray;
+        }
+
+        .category-menu {
+            width: 350px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex" th:fragment="adminSidebar">
+<aside  class="teacher-sidebar offcanvas-lg offcanvas-start bg-dark text-white"
+       tabindex="-1" id="teacherSidebar">
+  <div class="offcanvas-header border-bottom border-secondary">
+    <h5 class="offcanvas-title">Admin Panel</h5>
+    <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas"></button>
+  </div>
+ <div class="offcanvas-body p-0">
+    <nav class="nav flex-column py-3">
+      <a class="nav-link text-white" th:href="@{/}">
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      </a>
+      <a class="nav-link text-white" th:href="@{/student/admin/students}">
+        <i class="bi bi-journal-bookmark me-2"></i> Students
+      </a>
+      <a class="nav-link text-white" th:href="@{/users/teacherLists}">
+        <i class="bi bi-calendar-check me-2"></i> Teachers
+      </a>
+      <a class="nav-link text-white" th:href="@{/announce/announcement}">
+        <i class="bi bi-megaphone me-2"></i> Courses
+      </a>
+      <a class="nav-link text-white" th:href="@{/assignment/create}">
+        <i class="bi bi-clipboard-check me-2"></i> Enrollment
+      </a>
+      <a class="nav-link text-white" th:href="@{/teacher/submissions}">
+        <i class="bi bi-inbox me-2"></i> Schedule
+      </a>
+     <!-- <a class="nav-link text-white" th:href="@{/attendance/students}">
+    <i class="bi bi-people me-2"></i> Attendance
+</a> -->
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Payment
+      </a>
+      <a class="nav-link text-white" th:href="@{/admin/list}">
+        <i class="bi bi-calendar-event me-2"></i> Scholarship
+      </a>
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Announcement
+      </a>
+      <!-- <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Reports
+      </a> -->
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Settings
+      </a>
+    </nav>
+  </div>
+</aside>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
