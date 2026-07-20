@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 	
-	@Autowired
-	private RoleInterceptor roleInterceptor;
+	
+//	private RoleInterceptor roleInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -20,19 +20,21 @@ public class WebConfig implements WebMvcConfigurer {
     
     //sai
     //for role validation
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-
-
-        registry.addInterceptor(roleInterceptor)
-                .addPathPatterns(
-                    "/admin/**",
-                    "/dashboard/**",
-                    "/attendance/**",
-                    "/announce/**",
-                    "/student/**"
-                );
-
-    }
+    //dont delete this
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//
+//
+//        registry.addInterceptor(roleInterceptor)
+//                .addPathPatterns(
+//                    "/admin/**",
+//                    "/dashboard/**",
+//                    "/attendance/**",
+//                    "/announce/**",
+//                    "/student/**",
+//                    "/forgot-password"
+//                );
+//
+//    }
 
 }
