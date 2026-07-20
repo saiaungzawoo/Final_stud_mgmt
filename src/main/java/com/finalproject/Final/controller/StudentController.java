@@ -35,9 +35,18 @@ public class StudentController {
 //	    UserBean student = userService.findById(5); // temporary hardcoded
 		
 		 UserBean student = (UserBean)session.getAttribute("loginUser");
+		 
+		 //test
+		 System.out.println("LOGIN USER:");
+		    System.out.println(student);
+		    
+		    System.out.println("USER ID:");
+		    System.out.println(student.getUserID());
 
 	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getUserID());
 //	           
+	    //test
+	    System.out.println("COURSE COUNT: " + courses.size());
 
 	    model.addAttribute("student", student);
 	    model.addAttribute("studentCode", student.getUserCode());

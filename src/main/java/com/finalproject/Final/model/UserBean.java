@@ -29,7 +29,8 @@ public class UserBean {
   private String userID;
 
   private String roleID;
-  
+  //sai
+  private String roleName;
   private String userCode;
 
 
