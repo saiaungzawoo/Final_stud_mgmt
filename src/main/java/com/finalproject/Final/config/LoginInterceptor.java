@@ -53,7 +53,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 	            || uri.startsWith("/upload")
 	            || uri.startsWith("/courses/show")
 	            || uri.startsWith("/courses/")
-	            || uri.startsWith("/scholarship/")) {
+	            || uri.startsWith("/scholarship/")
+	            || uri.startsWith("/forgot-password")) {
 
 	        return true;
 
