@@ -23,26 +23,13 @@ public class AdminController {
 
 
  
-//    @GetMapping("/dashboard")
-//    public String dashboard(Model model) {
-//
-//
-//        AdminDashboardDTO dashboard =
-//                adminDashboardService.getDashboardData();
-//
-//
-//
-//        model.addAttribute("dashboard", dashboard);
-//
-//
-//
-//        return "admin/admin-dashboard";
-//
-//  }
+
 	
 	
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {
+		
+		 System.out.println("ADMIN CONTROLLER RUNNING");
 
 
 	    AdminDashboardDTO dashboard =

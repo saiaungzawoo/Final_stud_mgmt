@@ -41,15 +41,6 @@ public class IndexController {
     	return "layout/index";
     }
 
-	/*
-	 * @GetMapping("/") public String showHomePage(Model model) {
-	 * 
-	 * List<SubCategoryBean> allList = subRepo.getAllSubCategory();
-	 * 
-	 * model.addAttribute("allList", allList);
-	 * 
-	 * 
-	 * return "layout/index"; }
-	 */
+	
 
 }
