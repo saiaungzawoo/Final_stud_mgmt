@@ -17,30 +17,22 @@ import com.finalproject.Final.service.SubCategoryService;
 public class IndexController {
 
     @Autowired
-    private CourseCategoryService courseCatService;
-    
-    @Autowired
-    private CourseService courseService;
-    
-    @Autowired
-    private SubCategoryService subCatService;
+    private SubCategoryRepository subRepo;
     
     @GetMapping("/")
-    public String home(Model model) {
-    	
-    	model.addAttribute("allCategories",
-    			courseCatService.getAllCategories());
-
-    	model.addAttribute("courses",
-    	        courseService.getAllCourses());
-    	
-    	model.addAttribute(
-    	        "allSubcategories",
-    	        subCatService.getAll()
-    	);
+    public String home(Model m) {
     	return "layout/index";
     }
 
 	
+	  @GetMapping("/") public String showHomePage(Model model) {
+	 
+	  List<SubCategoryBean> allList = subRepo.getAllSubCategory();
+	  
+	 model.addAttribute("allList", allList);
+	 
+	 
+	  return "layout/index"; }
+	 
 
 }

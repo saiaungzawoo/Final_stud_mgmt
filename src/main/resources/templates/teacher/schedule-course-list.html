@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h2 class="fw-bold">Schedule</h2>
+                    <p class="text-muted mb-0">
+                        Select a course to generate or update its schedule.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-xl-3"
+                     th:each="course : ${courseList}">
+
+                    <a class="category-card"
+                       th:href="@{/schedule/generate/{courseID}(courseID=${course.courseId})}">
+
+                        <i class="bi bi-calendar-event text-primary"></i>
+
+                        <h3 th:text="${course.name}"></h3>
+
+                        <p th:text="${course.description}"></p>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+
+</html>

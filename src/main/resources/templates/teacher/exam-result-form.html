@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body class="bg-light">
+
+
+<!-- Header -->
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+            </div>
+        </div>
+
+
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+
+
+            <div class="container mt-4">
+
+
+                <div class="card shadow">
+
+
+                    <div class="card-header bg-primary text-white">
+
+                        <h4 class="mb-0">
+                            <i class="bi bi-clipboard-check me-2"></i>
+                            Exam Result Entry
+                        </h4>
+
+                    </div>
+
+             <div class="card-body">
+
+<div class="alert alert-danger"
+     th:if="${error}"
+     th:text="${error}">
+</div>
+       
+                    <form th:action="@{/exam/result/save}"
+      method="post"
+      th:object="${form}">
+
+
+    <input type="hidden"
+           th:field="*{examID}">
+
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+                <th>No</th>
+                <th>Student Name</th>
+                <th>Score</th>
+                <th>Remarks</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr th:each="student, stat : *{results}">
+
+
+                <td th:text="${stat.count}">
+                </td>
+
+
+               <td>
+
+    <span th:text="${student.studentName}">
+    </span>
+   <input type="hidden"
+       th:field="*{results[__${stat.index}__].studentName}">
+
+    <input type="hidden"
+           th:field="*{results[__${stat.index}__].examID}">
+
+
+    <input type="hidden"
+           th:field="*{results[__${stat.index}__].userID}">
+
+</td>
+
+
+                <td>
+
+                    <input type="number"
+                           class="form-control"
+                           step="0.01"
+                           placeholder="Enter score"
+                           th:field="*{results[__${stat.index}__].score}">
+                          <div class="text-danger"
+     th:if="${#fields.hasErrors('results['+stat.index+'].score')}"
+     th:errors="*{results[__${stat.index}__].score}">
+</div>
+
+                </td>
+
+
+                <td>
+
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Remark"
+                           th:field="*{results[__${stat.index}__].remarks}">
+
+                </td>
+
+
+            </tr>
+
+
+        </tbody>
+
+
+    </table>
+
+
+
+    <div class="text-end">
+
+        <button type="submit"
+                class="btn btn-success">
+
+            <i class="bi bi-save me-1"></i>
+            Submit Result
+
+        </button>
+
+    </div>
+
+
+</form>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- Footer -->
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+
+<!-- JS -->
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>

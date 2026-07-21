@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body class="bg-light">
+
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <div class="col-md-3 col-lg-2 p-0">
+
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+
+        </div>
+
+
+
+        <div class="col-md-9 col-lg-10 p-4">
+
+
+            <h3 class="fw-bold mb-4">
+
+                <i class="bi bi-megaphone me-2"></i>
+                Select Course
+
+            </h3>
+
+
+
+            <div class="row">
+
+
+                <div class="col-md-4 mb-3"
+                     th:each="c : ${courseList}">
+
+
+                    <div class="card shadow-sm">
+
+
+                        <div class="card-body">
+
+
+                            <h5 class="card-title"
+                                th:text="${c.name}">
+                                Course Name
+                            </h5>
+
+
+                            <p class="text-muted"
+                               th:text="${c.description}">
+                                Description
+                            </p>
+
+
+
+                            <a th:href="@{/announcement/list/{id}(id=${c.courseId})}"
+                               class="btn btn-primary">
+
+                                View Announcement
+
+                            </a>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

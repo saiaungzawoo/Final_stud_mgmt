@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body class="bg-light">
+
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}">
+</div>
+
+
+<div class="container-fluid">
+
+<div class="row">
+
+
+<div class="col-md-3 col-lg-2 p-0">
+
+<div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+</div>
+
+</div>
+
+
+
+<div class="col-md-9 col-lg-10">
+
+
+<div class="container mt-4">
+
+
+<div class="card shadow">
+
+
+<div class="card-header bg-primary text-white">
+
+<h4 class="mb-0">
+<i class="bi bi-book me-2"></i>
+Select Course For Exam Result
+</h4>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="row">
+
+
+<div class="col-md-4 mb-3"
+     th:each="course : ${courses}">
+
+
+<div class="card h-100 shadow-sm">
+
+
+<div class="card-body">
+
+
+<h5 th:text="${course.name}">
+</h5>
+
+
+
+<a th:href="@{/exam/result/exam/{id}(id=${course.courseId})}"
+   class="btn btn-success">
+
+Select
+
+</a>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<div th:replace="~{fragment/footer :: footer}">
+</div>
+
+
+<div th:replace="~{fragment/js :: js}">
+</div>
+
+
+</body>
+
+</html>

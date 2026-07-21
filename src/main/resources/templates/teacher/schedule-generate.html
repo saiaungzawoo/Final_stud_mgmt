@@ -46,272 +46,163 @@
 
                 <div class="card-body">
 
-
-                    <form th:action="@{/schedule/generate}"
-                          th:object="${schedule}"
-                          method="post">
-
-
-                        <!-- Course ID -->
-
-                        <input type="hidden"
-                               th:field="*{courseId}">
-
-
-
-                        <!-- Start Date -->
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-                                Start Date
-                            </label>
-
-                            <input type="date"
-                                   class="form-control"
-                                   th:field="*{startDate}"
-                                   required>
-
-                        </div>
-
-
-
-
-                        <!-- Time -->
-
-                        <div class="row">
-
-
-                            <div class="col-md-6 mb-3">
-
-                                <label class="form-label">
-                                    Start Time
-                                </label>
-
-                                <input type="time"
-                                       class="form-control"
-                                       th:field="*{startTime}"
-                                       required>
-
-                            </div>
-
-
-
-                            <div class="col-md-6 mb-3">
-
-                                <label class="form-label">
-                                    End Time
-                                </label>
-
-                                <input type="time"
-                                       class="form-control"
-                                       th:field="*{endTime}"
-                                       required>
-
-                            </div>
-
-
-                        </div>
-
-
-
-
-                        <!-- Room -->
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-                                Room
-                            </label>
-
-
-                            <input type="text"
-                                   class="form-control"
-                                   th:field="*{room}"
-                                   placeholder="Room Number">
-
-                        </div>
-
-
-
-
-
-                        <!-- Repeat Days -->
-
-
-                        <div class="mb-3">
-
-
-                            <label class="form-label fw-bold">
-                                Repeat Days
-                            </label>
-
-
-
-                            <div class="row">
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="MONDAY">
-
-                                    <label>
-                                        Monday
-                                    </label>
-
-                                </div>
-
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="TUESDAY">
-
-                                    <label>
-                                        Tuesday
-                                    </label>
-
-                                </div>
-
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="WEDNESDAY">
-
-                                    <label>
-                                        Wednesday
-                                    </label>
-
-                                </div>
-
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="THURSDAY">
-
-                                    <label>
-                                        Thursday
-                                    </label>
-
-                                </div>
-
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="FRIDAY">
-
-                                    <label>
-                                        Friday
-                                    </label>
-
-                                </div>
-
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="SATURDAY">
-
-                                    <label>
-                                        Saturday
-                                    </label>
-
-                                </div>
-
-
-
-                                <div class="col-md-3">
-
-                                    <input class="form-check-input"
-                                           type="checkbox"
-                                           name="repeatDays"
-                                           value="SUNDAY">
-
-                                    <label>
-                                        Sunday
-                                    </label>
-
-                                </div>
-
-
-                            </div>
-
-
-                        </div>
-
-
-
-
-
-
-                        <!-- Topic -->
-
-
-                        <div class="mb-3">
-
-
-                            <label class="form-label">
-                                Topic Prefix (Optional)
-                            </label>
-
-
-                            <input type="text"
-                                   class="form-control"
-                                   th:field="*{topicPrefix}"
-                                   placeholder="Lesson">
-
-
-                        </div>
-
-
-
-
-
-
-                        <div class="text-end">
-
-
-                            <button type="submit"
-                                    class="btn btn-primary px-4">
-
-
-                                <i class="bi bi-calendar-plus"></i>
-
-                                Generate Schedule
-
-
-                            </button>
-
-
-                        </div>
-
-
-
-
-                    </form>
-
-
+<form method="post"
+      th:object="${schedule}"
+      th:action="${isUpdate} ? @{/schedule/update} : @{/schedule/generate}">
+
+<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span th:text="${error}"></span>
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"></button>
+</div>
+    <!-- Course ID -->
+    <input type="hidden" th:field="*{courseId}">
+
+    <!-- Start Date -->
+    <div class="mb-3">
+        <label class="form-label">Start Date</label>
+       <input type="date"
+       class="form-control"
+       th:value="${schedule.startDate}"
+       name="startDate">
+    </div>
+
+    <!-- Time -->
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Start Time</label>
+            <input type="time"
+       class="form-control"
+       th:value="${#temporals.format(schedule.startTime,'HH:mm')}"
+       name="startTime">
+                  
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">End Time</label>
+           <input type="time"
+       class="form-control"
+       th:value="${#temporals.format(schedule.endTime,'HH:mm')}"
+       name="endTime">
+                 
+
+        </div>
+
+    </div>
+
+    <!-- Room -->
+    <div class="mb-3">
+        <label class="form-label">Room</label>
+        <input type="text"
+               class="form-control"
+               th:field="*{room}"
+               placeholder="Room Number">
+    </div>
+
+    <!-- Repeat Days -->
+    <div class="mb-3">
+
+        <label class="form-label fw-bold">Repeat Days</label>
+
+        <div class="row g-2">
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="MONDAY">
+                <label class="ms-1">Monday</label>
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="TUESDAY">
+                <label class="ms-1">Tuesday</label>
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="WEDNESDAY">
+                <label class="ms-1">Wednesday</label>
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="THURSDAY">
+                <label class="ms-1">Thursday</label>
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="FRIDAY">
+                <label class="ms-1">Friday</label>
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="SATURDAY">
+                <label class="ms-1">Saturday</label>
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{repeatDays}"
+                       value="SUNDAY">
+                <label class="ms-1">Sunday</label>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Topic -->
+    <div class="mb-3">
+        <label class="form-label">Topic Prefix</label>
+        <input type="text"
+               class="form-control"
+               th:field="*{topicPrefix}"
+               placeholder="Lesson">
+    </div>
+
+    <div class="text-end">
+
+        <a th:href="@{/schedule/list}"
+           class="btn btn-outline-primary">
+            <i class="bi bi-list-ul"></i>
+            View Schedule List
+        </a>
+
+        <button type="submit" class="btn btn-primary">
+
+            <span th:if="${isUpdate}">
+                Update Schedule
+            </span>
+
+            <span th:unless="${isUpdate}">
+                Generate Schedule
+            </span>
+
+        </button>
+
+    </div>
+
+</form>
                 </div>
 
 

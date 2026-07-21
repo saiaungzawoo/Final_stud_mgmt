@@ -90,5 +90,101 @@ public class ScheduleRepository {
 	    );
 
 	}
+	public boolean scheduleExists(String courseID){
 
+	    String sql = """
+	            SELECT COUNT(*)
+	            FROM schedule
+	            WHERE courseID=?
+	            """;
+
+	    Integer count = jdbc.queryForObject(
+	            sql,
+	            Integer.class,
+	            courseID);
+
+	    return count != null && count > 0;
+
+	}
+	public boolean attendanceExistsByCourse(String courseID){
+
+	    String sql = """
+	            SELECT COUNT(*)
+	            FROM attendance a
+	            JOIN schedule s
+	            ON a.scheduleID=s.scheduleID
+	            WHERE s.courseID=?
+	            """;
+
+	    Integer count = jdbc.queryForObject(
+	            sql,
+	            Integer.class,
+	            courseID);
+
+	    return count != null && count > 0;
+
+	}
+	public int deleteScheduleByCourse(String courseID){
+
+	    String sql = """
+	            DELETE
+	            FROM schedule
+	            WHERE courseID=?
+	            """;
+
+	    return jdbc.update(sql, courseID);
+
+	}
+	public ScheduleBean getFirstSchedule(String courseId){
+
+	    String sql = """
+	            SELECT *
+	            FROM schedule
+	            WHERE courseID=?
+	            ORDER BY schedule_date
+	            LIMIT 1
+	            """;
+
+	    return jdbc.queryForObject(
+	            sql,
+	            new ScheduleRowMapper(),
+	            courseId
+	    );
+	}
+	public List<String> getRepeatDays(String courseID){
+
+	    String sql = """
+	        SELECT DISTINCT DAYNAME(schedule_date) AS dayName
+	        FROM schedule
+	        WHERE courseID=?
+	        """;
+
+	    return jdbc.query(
+	            sql,
+	            (rs,rowNum)->rs.getString("dayName").toUpperCase(),
+	            courseID
+	    );
+	}
+	public String getTopicPrefix(String courseId){
+
+	    String sql = """
+	            SELECT topic
+	            FROM schedule
+	            WHERE courseID=?
+	            ORDER BY schedule_date
+	            LIMIT 1
+	            """;
+
+	    String topic = jdbc.queryForObject(
+	            sql,
+	            String.class,
+	            courseId
+	    );
+
+	    if(topic==null){
+	        return "";
+	    }
+
+	    return topic.replaceAll("\\s+\\d+$","");
+	}
 }

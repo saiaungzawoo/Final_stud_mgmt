@@ -131,16 +131,16 @@ Back
 
 
 <td>
-
-<span class="badge bg-success"
-      th:text="${attendance.status}">
-</span>
-
-
+    <span class="badge"
+          th:text="${attendance.status}"
+          th:classappend="
+            ${attendance.status.name() == 'Present'} ? ' bg-success' :
+            (${attendance.status.name() == 'Absent'} ? ' bg-danger' :
+            (${attendance.status.name() == 'Late'} ? ' bg-warning text-dark' :
+            (${attendance.status.name() == 'Excused'} ? ' bg-info text-dark' :
+            ' bg-secondary')))">
+    </span>
 </td>
-
-
-
 <td th:text="${attendance.remarks}">
 </td>
 

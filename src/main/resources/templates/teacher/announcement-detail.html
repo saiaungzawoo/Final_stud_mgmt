@@ -1,64 +1,115 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+xmlns:th="http://www.thymeleaf.org">
+
 
 <head th:replace="~{fragment/css :: css}"></head>
 
+
 <body>
 
-<!-- Header -->
+
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
 
 
-<div class="container-fluid">
 
-    <div class="row">
-
-        <!-- Sidebar -->
-        <aside class="col-md-3 col-lg-2 p-0 bg-light">
-            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
-            </div>
-        </aside>
+<div class="container mt-4">
 
 
-        <!-- Main Content -->
-        <main class="col-md-9 col-lg-10 px-4 py-4">
- <a th:href="@{/announce/announcement}" 
-       class="btn btn-outline-secondary mb-3">
-        <i class="bi bi-arrow-left"></i> Back
-    </a>
+<div class="card">
 
-            <div class="card shadow-sm">
 
-                <div class="card-body">
+<div class="card-header bg-primary text-white">
 
-                    <h2 class="card-title"
-                        th:text="${announcement.title}">
-                        Announcement Title
-                    </h2>
-
-                    <hr>
-
-                    <div class="card-text"
-                         th:text="${announcement.content}">
-                        Announcement Content
-                    </div>
-
-                </div>
-
-            </div>
-
-        </main>
-
-    </div>
+<h4>
+<i class="bi bi-megaphone"></i>
+Announcement Detail
+</h4>
 
 </div>
 
 
-<!-- Footer -->
-<div th:replace="~{fragment/footer :: footer}"></div>
+
+<div class="card-body">
 
 
-<div th:replace="~{fragment/js :: js}"></div>
+<h3 th:text="${announcement.title}">
+Title
+</h3>
+
+
+<hr>
+
+
+<p>
+<strong>Content:</strong>
+</p>
+
+<p th:text="${announcement.content}">
+Content
+</p>
+
+
+
+<p>
+<strong>Target:</strong>
+
+<span th:text="${announcement.targetType}">
+</span>
+
+</p>
+
+
+
+<p>
+<strong>Priority:</strong>
+
+<span th:text="${announcement.priority}">
+</span>
+
+</p>
+
+
+
+<p>
+<strong>Publish Date:</strong>
+
+<span th:text="${announcement.publishDate}">
+</span>
+
+</p>
+
+
+
+<div th:if="${announcement.createdByID == teacherID}">
+
+<a th:href="@{/announcement/edit/{id}
+(id=${announcement.announcementID})}"
+class="btn btn-warning">
+
+Edit
+
+</a>
+
+</div>
+
+
+
+<a th:href="@{/announcement/list}"
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+</div>
 
 
 </body>
