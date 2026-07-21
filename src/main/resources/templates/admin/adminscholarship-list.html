@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<head th:replace="~{fragment/css :: css}">
+<meta charset="UTF-8">
+
+<title>Scholarship Management</title>
+
+
+</head>
+
+
+<body class="bg-light">
+
+
+
+<div class="container mt-5">
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<h2>
+    Scholarship Management
+</h2>
+
+
+<a th:href="@{/admin/scholarship-create}"
+   class="btn btn-success">
+    + Add Scholarship
+</a>
+
+</div>
+
+
+
+<div class="card shadow">
+
+<div class="card-body">
+
+
+<table class="table table-bordered table-striped">
+
+
+<thead class="table-primary">
+
+<tr>
+
+<th>Name</th>
+
+<th>Description</th>
+
+<th>Discount Type</th>
+
+<th>Discount Value</th>
+
+<th>Max Recipients</th>
+
+<th>Deadline</th>
+
+<th>Status</th>
+
+<th>Created Date</th>
+
+<th>Updated Date</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+<tr th:each="s : ${scholarships}">
+
+
+<td th:text="${s.scholarshipName}">
+</td>
+
+
+<td th:text="${s.description}">
+</td>
+
+
+<td th:text="${s.discountType}">
+</td>
+
+
+<td th:text="${s.discountValue}">
+</td>
+
+
+<td th:text="${s.maxRecipients}">
+</td>
+
+
+<td>
+    <span th:text="${s.applicationDeadline != null ? s.applicationDeadline : 'No Deadline'}"></span>
+</td>
+
+
+
+<td>
+
+<span th:if="${s.isActive == 1}"
+      class="badge bg-success">
+    Active
+</span>
+
+
+<span th:if="${s.isActive == 0}"
+      class="badge bg-danger">
+    Inactive
+</span>
+
+
+</td>
+
+
+
+<td th:text="${s.createdAt}">
+</td>
+
+
+<td th:text="${s.updatedAt}">
+</td>
+
+
+
+
+<td>
+
+
+<a th:href="@{/admin/edit/{id}(id=${s.scholarshipID})}"
+    class="btn btn-primary btn-sm">
+    Edit
+</a>
+
+
+
+<!-- <a th:href="@{/admin/delete/{id}(id=${s.scholarshipID})}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Are you sure to delete?')">
+    Delete
+</a> -->
+
+
+</td>
+
+
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+    <!-- JavaScript -->
+    <div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+
+</html>

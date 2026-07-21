@@ -38,6 +38,32 @@ public class PaymentBean {
 
     private LocalDateTime updatedAt;
     
+    private Integer installmentNumber;
+
+    private Integer installmentCount;
+    
+    private Double amountDue;
+    private Double paidAmount;
+    private LocalDate dueDate;
+
+    
+    
+    private Double courseFee;
+
+    private Double totalPaid;
+
+    private Double remainingBalance;
+
+    private Integer completedInstallments;
+
+    private Integer totalInstallments;
+
+    private Integer nextInstallmentNumber;
+
+    private Double nextInstallmentAmount;
+
+    private LocalDate nextDueDate;
+    
 	    
 
 }

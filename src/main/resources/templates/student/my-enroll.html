@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+	<div th:replace="~{fragment/header :: header}"></div>
+
+
+	<main>
+
+		<section class="section-pad bg-light">
+
+			<div class="container-xxl">
+
+
+				<div class="section-heading">
+
+					<div>
+						<!-- <span class="eyebrow">Student portal</span> -->
+						<h1 class="mb-0">My Enrollments</h1>
+					</div>
+
+
+					<!-- <a class="btn btn-outline-dark" href="@{/courses/show}"> <i
+						class="bi bi-plus-lg me-1"></i> Browse More Courses
+					</a> -->
+
+
+				</div>
+
+
+
+				<div class="row g-4">
+
+
+					<!-- LOOP ENROLLMENTS -->
+
+					<div class="col-xl-6" th:each="enrollment : ${enrollments}">
+
+
+						<article class="course-card bg-white h-100">
+
+
+							<div class="course-body p-4">
+
+
+
+								<!-- COURSE HEADER -->
+
+								<div
+									class="d-flex flex-column flex-md-row justify-content-between gap-3 border-bottom pb-4 mb-4">
+
+
+									<div>
+
+
+										<span class="badge text-bg-primary mb-2"
+											th:if="${enrollment.totalInstallments != null 
+              and enrollment.totalInstallments > 0}">
+											Installment </span> <span class="badge text-bg-success mb-2"
+											th:if="${enrollment.totalInstallments == null 
+              or enrollment.totalInstallments == 0}">
+											Full Payment </span>
+
+
+
+										<h2 class="h4 fw-bold mb-2"
+											th:text="${enrollment.courseTitle}">Course Name</h2>
+
+
+
+										<p class="text-muted mb-0">
+
+											Enrolled <span th:text="${enrollment.enrollmentDate}">
+												Date </span>
+
+										</p>
+
+
+									</div>
+
+
+
+									<div class="text-md-end">
+									
+									<strong class="fs-4 text-primary d-block">
+
+    <span th:if="${enrollment.paymentStatus == 'Fully Paid'}">
+        Fully Paid
+    </span>
+
+
+    <span th:if="${enrollment.paymentStatus != 'Fully Paid'}">
+
+        <span th:text="${#numbers.formatDecimal(
+            enrollment.remainingBalance,
+            0,
+            'COMMA',
+            2,
+            'POINT')}">
+            0
+        </span>
+
+        MMK remaining
+
+    </span>
+
+</strong>
+
+
+<span class="text-muted">
+
+
+    <!-- INSTALLMENT ONLY -->
+
+    <span th:if="${enrollment.totalInstallments > 0}">
+
+        <span th:text="${enrollment.completedInstallments}">
+            0
+        </span>
+
+        /
+
+        <span th:text="${enrollment.totalInstallments}">
+            0
+        </span>
+
+        payments completed
+
+    </span>
+
+
+</span>
+
+
+										<!-- <strong class="fs-4 text-primary d-block"> <span
+											th:text="${#numbers.formatDecimal(enrollment.remainingBalance,0,'COMMA',2,'POINT')}">
+												0 </span> MMK remaining
+
+
+										</strong> <span class="text-muted"> <span
+											th:text="${enrollment.completedInstallments}"> 0 </span> / <span
+											th:text="${enrollment.totalInstallments}"> 0 </span> payments
+											completed
+
+
+										</span> -->
+
+
+
+									</div>
+
+
+
+								</div>
+
+
+
+
+								<!-- INSTALLMENT LIST -->
+
+
+								<div class="d-grid gap-3"
+									th:if="${enrollment.installmentPlans != null 
+             and !enrollment.installmentPlans.isEmpty()}">
+
+
+
+									<div
+										class="category-card d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3"
+										th:each="plan : ${enrollment.installmentPlans}">
+
+
+
+										<div class="d-flex align-items-center gap-3">
+
+
+
+											<i class="bi"
+												th:classappend="${plan.status == 'Paid'} 
+   ? ' bi-check-circle-fill text-success bg-success-subtle'
+   : ' bi-clock text-primary'">
+											</i>
+
+
+
+											<div>
+
+
+												<h3>
+
+
+													Installment <span th:text="${plan.installmentNumber}">
+														1 </span> of <span th:text="${enrollment.totalInstallments}">
+														3 </span>
+
+
+												</h3>
+
+
+
+												<p class="mb-0" th:if="${plan.status == 'Paid'}">
+
+
+													Paid <span th:text="${plan.paidAt}"> Date </span>
+
+
+												</p>
+
+
+
+												<p class="mb-0" th:if="${plan.status != 'Paid'}">
+
+
+													Due <span th:text="${plan.dueDate}"> Date </span>
+
+
+												</p>
+
+
+
+											</div>
+
+
+										</div>
+
+
+
+
+										<div class="d-flex align-items-center gap-3">
+
+
+											<strong class="fs-5"
+												th:text="${#numbers.formatDecimal(plan.amountDue,0,'COMMA',2,'POINT')}">
+
+												500 </strong>
+
+
+											<!-- PAY BUTTON LATER PHASE -->
+
+											<a class="btn btn-primary btn-sm"
+												th:if="${plan.status != 'Paid'}" th:href="@{/payment/installment/{id}(id=${plan.installmentPlanId})}"> Pay Now </a>
+
+
+										</div>
+
+
+
+									</div>
+
+
+
+								</div>
+
+
+
+
+
+
+								<!-- FULL PAYMENT DISPLAY -->
+
+
+								<div
+									th:if="${enrollment.installmentPlans == null 
+             or enrollment.installmentPlans.isEmpty()}">
+
+
+
+									<div
+										class="category-card d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+
+
+
+										<div class="d-flex align-items-center gap-3">
+
+
+											<i
+												class="bi bi-check-circle-fill text-success bg-success-subtle"></i>
+
+
+											<div>
+
+
+												<h3>Full Payment</h3>
+
+
+												<p class="mb-0">Paid successfully</p>
+
+
+											</div>
+
+
+										</div>
+
+
+
+
+										<strong class="fs-5"
+											th:text="${#numbers.formatDecimal(enrollment.totalPaid,0,'COMMA',2,'POINT')}">
+
+											800 </strong>
+
+
+
+									</div>
+
+
+								</div>
+
+
+
+
+
+							</div>
+
+						</article>
+
+
+					</div>
+
+
+
+
+					<!-- IF NO ENROLLMENT -->
+
+					<div class="col-12" th:if="${#lists.isEmpty(enrollments)}">
+
+
+						<div class="text-center p-5 bg-white rounded">
+
+
+							<h3>No enrolled courses yet</h3>
+
+
+							<a href="/courses" class="btn btn-primary mt-3"> Browse
+								Courses </a>
+
+
+						</div>
+
+
+					</div>
+
+
+
+
+				</div>
+
+
+			</div>
+
+		</section>
+
+	</main>
+
+
+
+	<div th:replace="~{fragment/footer :: footer}"></div>
+
+	<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>

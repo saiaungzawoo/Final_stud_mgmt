@@ -9,28 +9,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.finalproject.Final.model.SubCategoryBean;
 import com.finalproject.Final.repository.SubCategoryRepository;
+import com.finalproject.Final.service.CourseCategoryService;
+import com.finalproject.Final.service.CourseService;
+import com.finalproject.Final.service.SubCategoryService;
 
 @Controller
 public class IndexController {
 
-	@Autowired
-	private SubCategoryRepository subRepo;
-
-	@GetMapping("/")
-	public String home(Model m) {
-		return "layout/index";
-	}
+    @Autowired
+    private SubCategoryRepository subRepo;
+    
+    @GetMapping("/")
+    public String home(Model m) {
+    	return "layout/index";
+    }
 
 	
-	/*
-	 * @GetMapping("/") public String showHomePage(Model model) {
-	 * 
-	 * List<SubCategoryBean> allList = subRepo.getAllSubCategory();
-	 * 
-	 * model.addAttribute("allList", allList);
-	 * 
-	 * 
-	 * return "layout/index"; }
-	 */
+	  @GetMapping("/") public String showHomePage(Model model) {
 	 
+	  List<SubCategoryBean> allList = subRepo.getAllSubCategory();
+	  
+	 model.addAttribute("allList", allList);
+	 
+	 
+	  return "layout/index"; }
+	 
+
 }

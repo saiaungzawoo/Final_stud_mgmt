@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<<<<<<< HEAD
 <head th:replace="~{fragment/css :: css}"></head>
 <body class="bg-light">
 
@@ -208,4 +209,329 @@
 <div th:replace="~{fragment/footer :: footer}"></div>
 <div th:replace="~{fragment/js :: js}"></div>
 </body>
+=======
+
+
+<head th:replace="~{fragment/css :: css}">
+</head>
+
+
+<body>
+
+
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+
+		<section th:fragment="section">
+
+
+
+			<div th:fragment="content">
+
+
+				<div class="container-fluid py-4">
+
+
+					<div class="d-flex justify-content-between align-items-center mb-4">
+
+						<div>
+							<h3 class="fw-bold mb-1">Admin Dashboard</h3>
+
+							<p class="text-muted mb-0">Manage courses, payments, students
+								and system activities.</p>
+						</div>
+
+
+						<a href="#" class="btn btn-primary"> <i
+							class="bi bi-plus-circle me-1"></i> New Course
+
+						</a>
+
+
+					</div>
+
+
+
+					<!-- Dashboard Cards -->
+
+					<!-- Dashboard Cards -->
+
+					<div class="row g-4">
+
+
+						<!-- Total Courses -->
+
+						<div class="col-md-6 col-xl-3">
+
+							<div class="category-card">
+
+								<i class="bi bi-book text-primary"></i>
+
+								<h3>Courses</h3>
+
+
+								<p class="fs-3 fw-bold mb-1" th:text="${dashboard.totalCourses}">
+									0</p>
+
+
+								<small class="text-muted"> Total courses </small>
+
+
+							</div>
+
+						</div>
+
+
+
+
+
+						<!-- Total Students -->
+
+						<div class="col-md-6 col-xl-3">
+
+							<div class="category-card">
+
+								<i class="bi bi-people text-success"></i>
+
+
+								<h3>Students</h3>
+
+
+								<p class="fs-3 fw-bold mb-1"
+									th:text="${dashboard.totalStudents}">0</p>
+
+
+								<small class="text-muted"> Registered students </small>
+
+
+							</div>
+
+						</div>
+
+
+
+
+
+
+						<!-- Collected Payment -->
+
+						<div class="col-md-6 col-xl-3">
+
+							<div class="category-card">
+
+
+								<i class="bi bi-cash-stack text-warning"></i>
+
+
+								<h3>Collected</h3>
+
+
+								<p class="fs-3 fw-bold mb-1"
+									th:text="${'MMK ' + #numbers.formatDecimal(dashboard.totalPayments, 1, 'COMMA', 2, 'POINT')}">
+								</p>
+
+
+								<small class="text-muted"> Successful payments </small>
+
+
+							</div>
+
+						</div>
+
+
+
+
+
+
+						<!-- Pending Payments -->
+
+						<div class="col-md-6 col-xl-3">
+
+							<div class="category-card">
+
+
+								<i class="bi bi-hourglass-split text-danger"></i>
+
+
+								<h3>Pending</h3>
+
+
+								<p class="fs-3 fw-bold mb-1"
+									th:text="${dashboard.pendingPayments}">0</p>
+
+
+								<small class="text-muted"> Waiting payments </small>
+
+
+							</div>
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+					<!-- Recent Activity -->
+
+					<div class="row g-4 mt-3">
+
+
+						<div class="col-lg-8">
+
+
+							<div class="content-panel">
+
+
+								<h5 class="fw-bold mb-3">Recent Payments</h5>
+
+
+
+								<div class="table-responsive">
+
+
+									<table class="table align-middle">
+
+
+										<thead>
+
+											<tr>
+
+												<th>Student</th>
+
+												<th>Course</th>
+
+												<th>Payment Type</th>
+
+												<th>Amount</th>
+
+												<th>Status</th>
+
+												<th>Date</th>
+
+
+											</tr>
+
+										</thead>
+
+
+
+										<tbody>
+
+											<tr th:each="payment : ${recentPayments}">
+
+												<!-- Student Name -->
+												<td th:text="${payment.studentName}">Student Name</td>
+
+
+												<!-- Course Name -->
+												<td th:text="${payment.courseName}">Course Name</td>
+
+
+												<!-- Payment Type -->
+												<td><span class="badge bg-info"
+													th:text="${payment.paymentType}"> Payment Type </span></td>
+
+
+												<!-- Amount -->
+												<td th:text="${payment.amount}">Amount</td>
+
+
+												<!-- Payment Status -->
+												<td><span class="badge bg-success"
+													th:if="${payment.status == 'Success'}"> Success </span> <span
+													class="badge bg-warning text-dark"
+													th:if="${payment.status == 'Pending'}"> Pending </span> <span
+													class="badge bg-danger"
+													th:if="${payment.status == 'Failed'}"> Failed </span> <span
+													class="badge bg-secondary"
+													th:if="${payment.status == 'Refunded'}"> Refunded </span></td>
+
+
+												<!-- Payment Date -->
+												<td th:text="${payment.paymentDate}">Date</td>
+
+
+											</tr>
+
+
+											<!-- If no payments exist -->
+											<tr th:if="${#lists.isEmpty(recentPayments)}">
+
+												<td colspan="6" class="text-center text-muted">No
+													payment records found.</td>
+
+											</tr>
+
+
+										</tbody>
+
+
+									</table>
+
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+
+
+						<div class="col-lg-4">
+
+
+							<div class="content-panel">
+
+
+								<h5 class="fw-bold mb-3">Quick Actions</h5>
+
+
+
+								<button class="btn btn-outline-primary w-100 mb-2">
+
+									Create Course</button>
+
+
+								<button class="btn btn-outline-success w-100 mb-2">
+
+									View Payments</button>
+
+
+								<button class="btn btn-outline-warning w-100">Review
+									Scholarship</button>
+
+
+							</div>
+
+
+						</div>
+
+
+
+					</div>
+
+
+
+				</div>
+
+
+			</div>
+
+
+		</section>
+
+
+	</div>
+
+
+</body>
+
+>>>>>>> main
 </html>
