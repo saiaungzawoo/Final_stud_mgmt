@@ -73,52 +73,86 @@
 <!-- Thymeleaf Variable -->
 <script th:inline="javascript">
 
-
 const schedules = /*[[${scheduleList}]]*/ [];
 
 
 
 let events = schedules.map(function(schedule){
 
-	return {
 
-	    title:schedule.topic,
-
-	    start:schedule.scheduleDate,
+    let color = "#808080"; 
+    // default Gray (attendance မမှတ်ရသေး)
 
 
-	    backgroundColor:
-	        schedule.attendanceMarked
-	        ? "#28a745"
-	        : "#2f80ed",
+    if(schedule.attendanceStatus === "COMPLETED"){
+
+        color = "#28a745"; 
+        // Green (လူအကုန်မှတ်ပြီး)
+
+    }
+    else if(schedule.attendanceStatus === "PARTIAL"){
+
+        color = "#90EE90"; 
+        // Light Green (တချို့ပဲမှတ်ပြီး)
+
+    }
+    else if(schedule.attendanceStatus === "NOT_MARKED"){
+
+        color = "#808080";
+        // Gray (မမှတ်ရသေး)
+
+    }
 
 
-	    borderColor:
-	        schedule.attendanceMarked
-	        ? "#28a745"
-	        : "#2f80ed",
+
+    return {
 
 
-	    extendedProps:{
-
-	        startTime:schedule.startTime,
-
-	        endTime:schedule.endTime,
-
-	        room:schedule.room
-
-	    },
+        id:schedule.scheduleId,
 
 
-	    url:
-	    "/attendance/mark/"
-	    + schedule.courseId
-	    + "/"
-	    + schedule.scheduleId
+        title:schedule.topic,
 
-	};
+
+        start:schedule.scheduleDate,
+
+
+
+        backgroundColor:color,
+
+
+        borderColor:color,
+
+
+
+        extendedProps:{
+
+
+            startTime:schedule.startTime,
+
+
+            endTime:schedule.endTime,
+
+
+            room:schedule.room
+
+
+        },
+
+
+
+        url:
+        "/attendance/mark/"
+        + schedule.courseId
+        + "/"
+        + schedule.scheduleId
+
+
+    };
+
 
 });
+
 
 
 
@@ -126,6 +160,7 @@ let events = schedules.map(function(schedule){
 document.addEventListener(
 "DOMContentLoaded",
 function(){
+
 
 
 let calendar =
@@ -143,11 +178,15 @@ initialView:"dayGridMonth",
 height:650,
 
 
+
 events:events,
 
 
 
+
+
 eventContent:function(arg){
+
 
 
 let time =
@@ -172,12 +211,15 @@ html:
 `
 <div class="schedule-box">
 
+
 <div class="schedule-time">
 
 <i class="bi bi-clock"></i>
+
 ${time}
 
 </div>
+
 
 
 <div class="schedule-topic">
@@ -187,11 +229,13 @@ ${arg.event.title}
 </div>
 
 
+
 <div class="schedule-room">
 
 ${room ? "Room "+room : ""}
 
 </div>
+
 
 
 </div>
@@ -206,23 +250,50 @@ ${room ? "Room "+room : ""}
 
 
 
+
+
 eventClick:function(info){
 
-    info.jsEvent.preventDefault();
 
-    let today = new Date();
-    today.setHours(0,0,0,0);
 
-    let eventDate = new Date(info.event.start);
-    eventDate.setHours(0,0,0,0);
+info.jsEvent.preventDefault();
 
-    if(eventDate.getTime() !== today.getTime()){
-        alert("Attendance can only be taken for today's class.");
-        return;
-    }
 
-    window.location.href = info.event.url;
+
+// ဒီနေ့ပဲ Attendance မှတ်ခွင့်ပြု
+
+let today = new Date();
+
+today.setHours(0,0,0,0);
+
+
+
+let eventDate = new Date(info.event.start);
+
+eventDate.setHours(0,0,0,0);
+
+
+
+if(eventDate.getTime() !== today.getTime()){
+
+
+    alert("Attendance can only be taken for today's class.");
+
+    return;
+
+
 }
+
+
+
+
+window.location.href = info.event.url;
+
+
+
+}
+
+
 
 
 
@@ -237,7 +308,6 @@ calendar.render();
 
 
 });
-
 
 </script>
 </body>

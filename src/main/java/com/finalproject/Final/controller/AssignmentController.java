@@ -1,16 +1,16 @@
 package com.finalproject.Final.controller;
 
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalproject.Final.model.AssignmentBean;
 import com.finalproject.Final.model.AssignmentStatus;
@@ -25,183 +25,111 @@ public class AssignmentController {
     @Autowired
     private AssignmentRepository assignmentRepo;
 
-    // Create Page
-    @GetMapping("/create")
-    public String createPage(Model model) {
+    private final String TEACHER_ID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
 
-        AssignmentBean bean = new AssignmentBean();
+    /**
+     * ၁။ အဓိက Dashboard Page (List ပြသခြင်း၊ Course Filter လုပ်ခြင်းအားလုံး ဝင်မည့်နေရာ)
+     * URL: /assignment/list
+     */
+    @GetMapping("/list")
+    public String assignmentDashboard(
+            @RequestParam(value = "courseID", required = false) String courseID,
+            Model model) {
 
-        // Default Status
-        bean.setStatus(AssignmentStatus.Draft);
+        if (!model.containsAttribute("assignment")) {
+            AssignmentBean bean = new AssignmentBean();
+            bean.setStatus(AssignmentStatus.Draft); // Default Status 
+            model.addAttribute("assignment", bean);
+        }
 
-        // Temporary Teacher ID
-        String teacherID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
+        if (courseID != null && !courseID.isEmpty()) {
+            model.addAttribute("assignmentList", assignmentRepo.getAssignmentListByCourse(courseID));
+        } else {
+            model.addAttribute("errorMessage", "Please select a course to view assignments.");
+        }
 
-        model.addAttribute("assignment", bean);
+        // Dropdown Form တွေအတွက် Course List နဲ့ Status List ကို ထည့်ပေးခြင်း
+        model.addAttribute("courseList", assignmentRepo.getTeacherCourses(TEACHER_ID));
+        model.addAttribute("statusList", AssignmentStatus.values());
 
-        model.addAttribute(
-                "courseList",
-                assignmentRepo.getTeacherCourses(teacherID)
-        );
-
-        model.addAttribute(
-                "statusList",
-                AssignmentStatus.values()
-        );
-
-        return "teacher/assignment-create";
+        return "teacher/assignment-dashboard"; //  Single-page HTML Name
     }
 
-    // Save
+    /**
+     * ၂။ Assignment အသစ်ကို သိမ်းဆည်းခြင်း (Create Form ကနေ လာမည့်နေရာ)
+     * URL: /assignment/save
+     */
     @PostMapping("/save")
     public String saveAssignment(
             @Valid @ModelAttribute("assignment") AssignmentBean bean,
             BindingResult result,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
-
-        System.out.println("========== SAVE METHOD START ==========");
-
-
-        System.out.println("ID : " + bean.getAssignmentID());
-        System.out.println("TITLE : " + bean.getTitle());
-        System.out.println("COURSE : " + bean.getCourseID());
-
-
-        if(result.hasErrors()) {
-
-
-            System.out.println("VALIDATION ERROR");
-
-
-            result.getFieldErrors()
-                  .forEach(error -> {
-
-                      System.out.println(
-                          error.getField()
-                          + " : "
-                          + error.getDefaultMessage()
-                      );
-
-                  });
-
-
-            String teacherID =
-                "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
-
-            model.addAttribute(
-                "courseList",
-                assignmentRepo.getTeacherCourses(teacherID)
-            );
-
-
-            model.addAttribute(
-                "statusList",
-                AssignmentStatus.values()
-            );
-
-
-            return "teacher/assignment-create";
+        // validation input error 
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.assignment", result);
+            redirectAttributes.addFlashAttribute("assignment", bean);
+            return "redirect:/assignment/list?courseID=" + bean.getCourseID();
         }
 
-
-
-        // INSERT
-        if(bean.getAssignmentID() == null ||
-           bean.getAssignmentID().isEmpty()) {
-
-
-            System.out.println("INSERT MODE");
-
-
-            bean.setAssignmentID(
-                UUID.randomUUID().toString()
-            );
-
-
-            bean.setCreatedByID(
-                "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02"
-            );
-
-
-            assignmentRepo.saveAssignment(bean);
-
-
-        }
-        // UPDATE
-        else {
-
-
-            System.out.println("UPDATE MODE");
-
-
-            assignmentRepo.updateAssignment(bean);
-
+        if (bean.getAssignmentID() == null || bean.getAssignmentID().isEmpty()) {
+            bean.setAssignmentID(UUID.randomUUID().toString());
         }
 
+        bean.setCreatedByID(TEACHER_ID); // Teacher ID 
+        assignmentRepo.saveAssignment(bean); // DB 
 
+        //  Course ရဲ့ list ဆီကို Redirect 
+        return "redirect:/assignment/list?courseID=" + bean.getCourseID();
+    }
 
-        System.out.println("========== SAVE SUCCESS ==========");
+    /**
+     * ၃။ Assignment ကို တည်းဖြတ်ခြင်း (Update လုပ်ခြင်း)
+     * URL: /assignment/update
+     */
+    @PostMapping("/update")
+    public String updateAssignment(@ModelAttribute("assignment") AssignmentBean bean) {
+        
+        // Form ထဲမှာ teacher id မပျောက်သွားအောင် ယာယီ ID ပြန်ထည့်ပေးထားမယ်
+        bean.setCreatedByID(TEACHER_ID);
+        
+        assignmentRepo.updateAssignment(bean); // DB ထဲမှာ သွားပြင်မယ်
 
+        //Course list 
+        return "redirect:/assignment/list?courseID=" + bean.getCourseID();
+    }
 
+    /**
+     * ၄။ Assignment ကို ဖျက်သိမ်းခြင်း (Delete Modal ကနေ လာမည့်နေရာ)
+     * URL: /assignment/delete
+     */
+	/*
+	 * @PostMapping("/delete") public String deleteAssignment(
+	 * 
+	 * @RequestParam("assignmentID") String assignmentID,
+	 * 
+	 * @RequestParam(value = "courseID", required = false) String courseID) {
+	 * 
+	 * // မင်းရဲ့ Repository ထဲမှာ ရှိပြီးသား Delete Method ကို လှမ်းခေါ်ပါမယ် //
+	 * (မှတ်ချက် - မင်းရဲ့ Repo ထဲက method name က deleteAssignment ဖြစ်ဖြစ်
+	 * deleteById ဖြစ်ဖြစ် ပြောင်းပေးပါ)
+	 * assignmentRepo.deleteAssignment(assignmentID);
+	 * 
+	 * // ဖျက်ပြီးရင် အဲ့ဒီ course ရဲ့ Dashboard list ဆီကိုပဲ Redirect ပြန်လုပ်မယ်
+	 * if (courseID != null && !courseID.isEmpty()) { return
+	 * "redirect:/assignment/list?courseID=" + courseID; } return
+	 * "redirect:/assignment/list"; }
+	 */
+
+    /**
+     */
+    @GetMapping("/course-select")
+    public String redirectOldSelect() {
         return "redirect:/assignment/list";
-
-    }
-    // Assignment List
-    @GetMapping("/list")
-    public String assignmentList(Model model) {
-
-        String teacherID =
-                "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
-        model.addAttribute(
-                "assignmentList",
-                assignmentRepo.getAssignmentList(teacherID)
-        );
-
-        return "teacher/assignment-list";
-    }
-    @GetMapping("/edit/{id}")
-    public String editPage(
-            @PathVariable String id,
-            Model model) {
-
-
-        AssignmentBean bean =
-                assignmentRepo.getAssignmentById(id);
-
-
-        String teacherID =
-                "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
-
-        model.addAttribute(
-                "assignment",
-                bean
-        );
-
-
-        model.addAttribute(
-                "courseList",
-                assignmentRepo.getTeacherCourses(teacherID)
-        );
-
-
-        model.addAttribute(
-                "statusList",
-                AssignmentStatus.values()
-        );
-
-
-        model.addAttribute(
-                "isUpdate",
-                true
-        );
-
-
-        return "teacher/assignment-create";
-
     }
 
+    @GetMapping("/create")
+    public String redirectOldCreate() {
+        return "redirect:/assignment/list";
+    }
 }

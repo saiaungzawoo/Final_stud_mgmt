@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+
+<body class="bg-light">
+
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}">
+</div>
+
+
+<div class="container-fluid">
+
+<div class="row">
+
+
+<!-- Sidebar -->
+
+<div class="col-md-3 col-lg-2 p-0">
+
+<div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+</div>
+
+</div>
+
+
+
+
+<!-- Main Content -->
+
+<div class="col-md-9 col-lg-10">
+
+
+<div class="container mt-4">
+
+
+<div class="card shadow">
+
+
+<div class="card-header bg-primary text-white">
+
+
+<h4 class="mb-0">
+
+<i class="bi bi-clipboard-check me-2"></i>
+
+Exam Result
+
+</h4>
+
+
+</div>
+
+
+
+<div class="card-body">
+
+
+
+<table class="table table-bordered table-hover">
+
+
+<thead class="table-dark">
+
+<tr>
+
+<th>No</th>
+
+<th>Course</th>
+
+<th>Exam</th>
+
+<th>Type</th>
+
+<th>Score</th>
+
+<th>Max Score</th>
+
+<th>Remarks</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+<tr th:each="result, stat : ${results}">
+
+
+<td th:text="${stat.count}"></td>
+
+
+<td th:text="${result.courseName}"></td>
+
+
+<td th:text="${result.examName}"></td>
+
+
+<td th:text="${result.examType}"></td>
+
+
+<td th:text="${result.score}"></td>
+
+
+<td th:text="${result.maxScore}"></td>
+
+
+<td th:text="${result.remarks}"></td>
+
+
+</tr>
+
+
+
+<tr th:if="${#lists.isEmpty(results)}">
+
+<td colspan="7"
+    class="text-center text-muted">
+
+No exam result found.
+
+</td>
+
+</tr>
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div th:replace="~{fragment/footer :: footer}">
+</div>
+
+
+<div th:replace="~{fragment/js :: js}">
+</div>
+
+
+
+</body>
+
+</html>

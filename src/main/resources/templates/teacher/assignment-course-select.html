@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body>
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+            </div>
+
+        </div>
+
+
+
+
+        <!-- Content -->
+        <div class="col-md-9 col-lg-10">
+
+
+            <div class="container mt-4">
+
+
+                <div class="card shadow-sm border-0">
+
+
+
+                    <div class="card-header bg-primary text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-journal-text"></i>
+
+                            View Assignment List
+
+                        </h5>
+
+                    </div>
+
+
+
+
+
+                    <div class="card-body">
+
+
+                        <p class="text-muted">
+
+                            Please select a course to view its assignment list.
+
+                        </p>
+
+
+
+
+                        <div class="mb-4">
+
+
+                            <h3 class="fw-bold">
+
+                                Assignment Management
+
+                            </h3>
+
+
+
+                            <p class="text-muted">
+
+                                Select a course to manage assignments.
+
+                            </p>
+
+
+                        </div>
+
+
+
+
+
+
+                        <form th:action="@{/assignment/list}"
+                              method="get">
+
+
+
+
+
+                            <div class="mb-3">
+
+
+                                <label class="form-label fw-bold">
+
+                                    Select Course
+
+                                </label>
+
+
+
+
+
+                                <select name="courseID"
+                                        class="form-select">
+
+
+
+
+
+                                    <option value="">
+
+                                        -- Select Course --
+
+                                    </option>
+
+
+
+
+
+
+                                    <option th:each="course : ${courseList}"
+                                            th:value="${course.courseId}"
+                                            th:text="${course.name}">
+
+                                    </option>
+
+
+
+
+
+                                </select>
+
+
+
+
+
+
+                                <div class="text-danger mt-2"
+                                     th:if="${errorMessage}"
+                                     th:text="${errorMessage}">
+
+                                </div>
+
+
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="text-end">
+
+
+
+                                <button type="submit"
+                                        class="btn btn-primary px-4">
+
+
+
+                                    <i class="bi bi-search"></i>
+
+                                    View Assignments
+
+
+
+                                </button>
+
+
+
+                            </div>
+
+
+
+
+
+                        </form>
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>

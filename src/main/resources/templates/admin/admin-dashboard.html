@@ -3,7 +3,7 @@
 <head th:replace="~{fragment/css :: css}"></head>
 <body class="bg-light">
 
-<header th:fragment="teacherHeader" class="teacher-header navbar navbar-expand-lg bg-white border-bottom px-3">
+<header th:fragment="adminHeader" class="teacher-header navbar navbar-expand-lg bg-white border-bottom px-3">
   <div class="container-fluid">
     <button class="btn btn-outline-secondary d-lg-none me-2" type="button"
             data-bs-toggle="offcanvas" data-bs-target="#teacherSidebar">
@@ -14,7 +14,7 @@
      <span class="ace-logo">
               <i class="bi bi-mortarboard-fill"></i>
             </span>
-      SkillForge Teacher
+      SkillForge admin
     </a>
 
     <form class="d-none d-md-flex ms-auto me-3" role="search">
@@ -36,7 +36,7 @@
         <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
                 data-bs-toggle="dropdown">
           <i class="bi bi-person-circle fs-5"></i>
-          <span class="d-none d-md-inline">Teacher</span>
+          <span class="d-none d-md-inline">Admin</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
          <li>
@@ -58,7 +58,7 @@
   <aside th:fragment="sidebar" class="teacher-sidebar offcanvas-lg offcanvas-start bg-dark text-white"
        tabindex="-1" id="teacherSidebar">
   <div class="offcanvas-header border-bottom border-secondary">
-    <h5 class="offcanvas-title">Teacher Panel</h5>
+    <h5 class="offcanvas-title">Admin Panel</h5>
     <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas"></button>
   </div>
 
@@ -68,37 +68,38 @@
         <i class="bi bi-speedometer2 me-2"></i> Dashboard
       </a>
       <a class="nav-link text-white" th:href="@{/teacher/classes}">
-        <i class="bi bi-journal-bookmark me-2"></i> My Classes
+        <i class="bi bi-journal-bookmark me-2"></i> Students
       </a>
       <a class="nav-link text-white" th:href="@{/attendance/list}">
-        <i class="bi bi-calendar-check me-2"></i> Attendance
+        <i class="bi bi-calendar-check me-2"></i> Teachers
       </a>
-      <a class="nav-link text-white" th:href="@{/announcement/list}">
-   
-  
-        <i class="bi bi-megaphone me-2"></i> Announcements
+      <a class="nav-link text-white" th:href="@{/announce/announcement}">
+        <i class="bi bi-megaphone me-2"></i> Courses
       </a>
-      <a class="nav-link text-white" th:href="@{/assignment/list}">
-        <i class="bi bi-clipboard-check me-2"></i> Assignments
+      <a class="nav-link text-white" th:href="@{/assignment/create}">
+        <i class="bi bi-clipboard-check me-2"></i> Enrollment
       </a>
-      <a class="nav-link text-white" th:href="@{/exam/result/course}">
-        <i class="bi bi-inbox me-2"></i> Exam Result
+      <a class="nav-link text-white" th:href="@{/teacher/submissions}">
+        <i class="bi bi-inbox me-2"></i> Schedule
       </a>
      <a class="nav-link text-white" th:href="@{/attendance/students}">
-    <i class="bi bi-people me-2"></i> Students
+    <i class="bi bi-people me-2"></i> Attendance
 </a>
       <a class="nav-link text-white" th:href="@{/schedule/list-course}">
-        <i class="bi bi-calendar-event me-2"></i> Schedule
+        <i class="bi bi-calendar-event me-2"></i> Payment
       </a>
-       <a class="nav-link text-white" th:href="@{/exam/list}">
-        <i class="bi bi-clipboard-check me-2"></i>
-Exam Manangement
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Scholarship
       </a>
-      
-       <a class="nav-link text-white" th:href="@{/teacher/submission/dashboard}">
-    <i class="bi bi-people me-2"></i> Submission
-</a>
-
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Announcement
+      </a>
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Reports
+      </a>
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Settings
+      </a>
     </nav>
   </div>
 </aside>
@@ -107,7 +108,7 @@ Exam Manangement
     <div class="container-fluid py-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h3 class="fw-bold mb-1">Teacher Dashboard</h3>
+          <h3 class="fw-bold mb-1">Admin Dashboard</h3>
           <p class="text-muted mb-0">View your classes, attendance, announcements and assignments.</p>
         </div>
         <a th:href="@{/teacher/announcements/create}" class="btn btn-primary">

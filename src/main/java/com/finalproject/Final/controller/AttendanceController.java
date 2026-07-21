@@ -1,6 +1,7 @@
 package com.finalproject.Final.controller;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.finalproject.Final.model.AttendanceBean;
 import com.finalproject.Final.model.AttendanceFormBean;
+import com.finalproject.Final.model.ScheduleBean;
 import com.finalproject.Final.repository.AttendanceRepository;
 
 
@@ -42,7 +44,7 @@ public class AttendanceController {
     @PostMapping("/save")
     public String saveAttendance(
             @ModelAttribute AttendanceFormBean attendanceForm) {
-    	 System.out.println("Save clicked");
+    
 
         for (AttendanceBean attendance : attendanceForm.getAttendances()) {
 
@@ -106,22 +108,17 @@ public class AttendanceController {
     @GetMapping("/calendar/{courseID}")
     public String attendanceCalendar(
             @PathVariable String courseID,
-            Model model){
+            Model model) {
 
-        model.addAttribute(
-                "courseID",
-                courseID
-        );
+        List<ScheduleBean> scheduleList =
+                attendanceRepository.getScheduleByCourse(courseID);
 
-
-        model.addAttribute(
-                "scheduleList",
-                attendanceRepository.getScheduleByCourse(courseID)
-        );
-
+        model.addAttribute("courseID", courseID);
+        model.addAttribute("scheduleList", scheduleList);
 
         return "teacher/attendance-calendar";
     }
+    
     @GetMapping("/student/{userID}")
     public String studentAttendance(
             @PathVariable String userID,

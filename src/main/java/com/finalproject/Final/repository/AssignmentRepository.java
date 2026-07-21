@@ -188,5 +188,106 @@ public class AssignmentRepository {
         );
 
     }
+    public List<AssignmentBean> getAssignmentListByCourse(String courseID) {
+
+
+        String sql = """
+                SELECT
+                    a.assignmentID,
+                    a.courseID,
+                    a.createdByID,
+                    a.title,
+                    a.description,
+                    a.max_score,
+                    a.weight_percent,
+                    a.due_date,
+                    a.status,
+                    c.name AS courseName
+
+                FROM assignment a
+
+                JOIN course c
+                ON a.courseID = c.courseID
+
+                WHERE a.courseID = ?
+
+                ORDER BY a.due_date DESC
+                """;
+
+
+        return jdbc.query(sql, (rs, rowNum) -> {
+
+
+            AssignmentBean bean = new AssignmentBean();
+
+
+
+            bean.setAssignmentID(
+                    rs.getString("assignmentID")
+            );
+
+
+            bean.setCourseID(
+                    rs.getString("courseID")
+            );
+
+
+            bean.setCreatedByID(
+                    rs.getString("createdByID")
+            );
+
+
+            bean.setTitle(
+                    rs.getString("title")
+            );
+
+
+            bean.setDescription(
+                    rs.getString("description")
+            );
+
+
+            bean.setMaxScore(
+                    rs.getBigDecimal("max_score")
+            );
+
+
+            bean.setWeightPercent(
+                    rs.getBigDecimal("weight_percent")
+            );
+
+
+
+            if(rs.getTimestamp("due_date") != null) {
+
+                bean.setDueDate(
+                        rs.getTimestamp("due_date")
+                          .toLocalDateTime()
+                );
+
+            }
+
+
+
+            bean.setStatus(
+                    AssignmentStatus.valueOf(
+                            rs.getString("status")
+                    )
+            );
+
+
+
+            bean.setCourseName(
+                    rs.getString("courseName")
+            );
+
+
+
+            return bean;
+
+
+        }, courseID);
+
+    }
 
 }

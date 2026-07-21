@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+    <meta charset="UTF-8">
+    <title>Exam Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .custom-card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); background-color: #ffffff; }
+        .table-responsive { border-radius: 12px; overflow: hidden; }
+        .hover-row:hover { background-color: rgba(13, 110, 253, 0.02); transition: background-color 0.2s ease; }
+        .btn-action { padding: 0.375rem 0.5rem; border-radius: 6px; }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Menu Integration Module Navigation View -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Workspace Interface Container Layout Canvas -->
+        <div class="col-md-9 col-lg-10 px-md-4 py-4">
+            
+            <!-- Context Path Navigation Guide Stack Elements -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Exam Management</li>
+                </ol>
+            </nav>
+
+            <!-- Dashboard Header Segment Details View Module -->
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-1"><i class="bi bi-journal-text text-primary me-2"></i>Exam Management</h2>
+                    <p class="text-muted mb-0">Create, manage, and monitor exams for your courses.</p>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary px-4 py-2 fw-semibold shadow-sm rounded-pill" 
+                            data-bs-toggle="modal" data-bs-target="#createExamModal">
+                        <i class="bi bi-plus-lg me-2"></i>Create Exam
+                    </button>
+                </div>
+            </div>
+
+            <!-- Context Processing Cards Filters Display Module Block -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card custom-card p-4 h-100">
+                        <h5 class="fw-bold mb-3 text-secondary">Filter by Course</h5>
+                        
+                        <form th:action="@{/exam/list}" method="get" id="courseFilterForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Select Course</label>
+                                <!-- Matches th:value="${course.CourseId}" and th:text="${course.name}" from CourseBean -->
+                                <select name="courseID" class="form-select form-select-lg" onchange="this.form.submit()">
+                                    <option value="">-- Select Course Context --</option>
+                                    <option th:each="course : ${courseList}"
+                                            th:value="${course.CourseId}"
+                                            th:text="${course.name}"
+                                            th:selected="${param.courseID != null && param.courseID[0] == #strings.toString(course.CourseId)}">
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Display Context Active Summary Grid Matrix Block -->
+                <div class="col-lg-6" th:if="${param.courseID != null && !#strings.isEmpty(param.courseID[0])}">
+                    <div class="card custom-card bg-primary text-white p-4 h-100 position-relative overflow-hidden">
+                        <div class="position-absolute end-0 bottom-0 opacity-10 mb-n3 me-n3">
+                            <i class="bi bi-mortarboard-fill" style="font-size: 7rem;"></i>
+                        </div>
+                        <h5 class="fw-semibold text-white-50 mb-1">Active Course Context</h5>
+                        <h3 class="fw-bold mb-3" th:each="c : ${courseList}" th:if="${#strings.toString(c.CourseId) == param.courseID[0]}" th:text="${c.name}">Selected Course</h3>
+                        <div class="d-flex gap-4 mt-auto">
+                            <div>
+                                <span class="d-block small text-white-50">Total Exams</span>
+                                <span class="fs-4 fw-bold" th:text="${examList != null ? examList.size() : 0}">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Evaluation Table Workspace Interface Shell Block Grid -->
+            <div class="card custom-card">
+                <div class="card-body p-0">
+                    
+                    <!-- View Configuration Render Scope A: Records Array Exists Check Block -->
+                    <div th:if="${examList != null && !examList.empty}" class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-secondary text-uppercase fs-7 fw-semibold">
+                                <tr>
+                                    <th class="ps-4 py-3">Course Name</th>
+                                    <th class="py-3">Exam Name</th>
+                                    <th class="py-3">Type</th>
+                                    <th class="py-3">Date &amp; Time</th>
+                                    <th class="py-3">Duration</th>
+                                    <th class="py-3">Max Score</th>
+                                    <th class="py-3">Weight</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="pe-4 py-3 text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="exam : ${examList}" class="hover-row">
+                                    <td class="ps-4 fw-medium text-dark" th:text="${exam.CourseName}">Course Name</td>
+                                    <td class="fw-semibold text-primary" th:text="${exam.name}">Exam Name</td>
+                                    <td><span class="text-muted" th:text="${exam.examType}">Type</span></td>
+                                    <td class="text-secondary small">
+                                        <i class="bi bi-calendar3 me-1 text-muted"></i>
+                                        <!-- Utilizes explicit temporal processing for Java LocalDateTime objects -->
+                                        <span th:text="${#temporals.format(exam.examDate, 'yyyy-MM-dd HH:mm')}">Date String</span>
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-clock me-1 text-muted"></i>
+                                        <span th:text="${exam.durationMinutes + ' mins'}">0 mins</span>
+                                    </td>
+                                    <td class="fw-medium text-dark" th:text="${exam.maxScore}">0</td>
+                                    <td class="text-secondary" th:text="${exam.weightPercent + '%'}">0%</td>
+                                    <td>
+                                        <!-- Dynamic Badges accurately synchronized to your precise String states -->
+                                        <span th:if="${exam.currentStatus == 'Scheduled'}" class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1.5 rounded-pill fs-7 fw-semibold">Scheduled</span>
+                                        <span th:if="${exam.currentStatus == 'In Progress'}" class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1.5 rounded-pill fs-7 fw-semibold">Active</span>
+                                        <span th:if="${exam.currentStatus == 'Completed'}" class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2.5 py-1.5 rounded-pill fs-7 fw-semibold">Completed</span>
+                                        <span th:if="${exam.currentStatus == 'Cancelled'}" class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1.5 rounded-pill fs-7 fw-semibold">Cancelled</span>
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <div class="d-inline-flex gap-2">
+                                         <a th:if="${exam.currentStatus != 'Cancelled' 
+                && exam.currentStatus != 'Completed'}"
+       th:href="@{/exam/cancel/{id}(id=${exam.examID},courseID=${exam.courseID})}"
+       class="btn btn-outline-danger btn-sm btn-action"
+       onclick="return confirm('Cancel this exam?')"
+       title="Cancel Exam">
+
+        <i class="bi bi-x-circle"></i>
+    </a>
+                                            <button type="button" class="btn btn-outline-warning btn-sm btn-action" title="Edit Exam"
+                                                    th:data-id="${exam.examID}"
+                                                    th:data-course="${exam.courseID}"
+                                                    th:data-name="${exam.name}"
+                                                    th:data-type="${exam.examType}"
+                                                    th:data-max="${exam.maxScore}"
+                                                    th:data-weight="${exam.weightPercent}"
+                                                    th:data-date="${#temporals.format(exam.examDate, 'yyyy-MM-dd''T''HH:mm')}"
+                                                    th:data-duration="${exam.durationMinutes}"
+                                                   
+                                                    onclick="populateEditModal(this)">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            
+                                            <button type="button" class="btn btn-outline-danger btn-sm btn-action" title="Delete Exam"
+                                                    th:data-id="${exam.examID}" th:data-name="${exam.name}" th:data-course="${exam.courseID}"
+                                                    onclick="triggerDeleteModal(this)">
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- View Configuration Render Scope B: Empty State Context -->
+                    <div th:if="${examList == null || examList.empty}" class="text-center py-5 my-3">
+                        <div class="mb-4">
+                            <i class="bi bi-journal-x text-muted opacity-25" style="font-size: 5.5rem;"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">No exams available for this course.</h4>
+                        <p class="text-muted mx-auto mb-4" style="max-width: 420px;">
+                            Please select a course option context choice above or execute deployment of a new assessment tracking matrix window using the options below.
+                        </p>
+                        <button type="button" class="btn btn-primary px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#createExamModal">
+                            <i class="bi bi-plus-lg me-2"></i>Create Your First Exam
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- CREATION CONTEXT INTERFACE TARGET LAYER MODAL OVERLAY -->
+<div class="modal fade" id="createExamModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
+            <div class="modal-header bg-primary text-white border-0 py-3">
+                <h5 class="modal-title fw-bold" id="createModalLabel"><i class="bi bi-plus-circle-fill me-2"></i>Create New Exam</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/exam/save}" th:object="${exam}" method="post">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Course <span class="text-danger">*</span></label>
+                            <select class="form-select" th:field="*{courseID}">
+                                <option value="">-- Select Target Course --</option>
+                                <option th:each="course : ${courseList}" th:value="${course.CourseId}" th:text="${course.name}"></option>
+                            </select>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('courseID')}" th:errors="*{courseID}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Exam Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="Enter exam name">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Exam Type <span class="text-danger">*</span></label>
+                            <select class="form-select" th:field="*{examType}">
+                                <option value="">-- Select Type --</option>
+                                <option th:each="type : ${examTypeList}" th:value="${type}" th:text="${type}"></option>
+                            </select>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('examType')}" th:errors="*{examType}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Maximum Score <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{maxScore}">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('maxScore')}" th:errors="*{maxScore}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Weight Percent (%) <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{weightPercent}">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('weightPercent')}" th:errors="*{weightPercent}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Exam Date &amp; Time <span class="text-danger">*</span></label>
+                            <input type="datetime-local" class="form-control" th:field="*{examDate}">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('examDate')}" th:errors="*{examDate}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Duration (Minutes) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" th:field="*{durationMinutes}">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('durationMinutes')}" th:errors="*{durationMinutes}"></div>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0 py-3">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4"><i class="bi bi-save me-2"></i>Save Exam</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- UPDATE INTERACTIVE DATA REFRESH MATRIX MODAL ELEMENT STRUCTURE -->
+<div class="modal fade" id="editExamModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
+            <div class="modal-header bg-warning text-dark border-0 py-3">
+                <h5 class="modal-title fw-bold" id="editModalLabel"><i class="bi bi-pencil-square me-2"></i>Edit Exam Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/exam/update}" th:object="${exam}" method="post">
+                <!-- Data Model Key Backing Fields mapping correctly during updates processing routines -->
+                <input type="hidden" th:field="*{examID}" id="edit_examID">
+                <input type="hidden" th:field="*{courseID}" id="edit_courseID">
+                
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Exam Name</label>
+                            <input type="text" class="form-control" th:field="*{name}" id="edit_name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Exam Type</label>
+                            <select class="form-select" th:field="*{examType}" id="edit_examType">
+                                <option th:each="type : ${examTypeList}" th:value="${type}" th:text="${type}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Maximum Score</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{maxScore}" id="edit_maxScore">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Weight Percent</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{weightPercent}" id="edit_weightPercent">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Exam Date</label>
+                            <input type="datetime-local" class="form-control" th:field="*{examDate}" id="edit_examDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Duration Minutes</label>
+                            <input type="number" class="form-control" th:field="*{durationMinutes}" id="edit_durationMinutes">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Status</label>
+                           <input type="text" 
+       class="form-control" 
+       th:value="*{status}" 
+       id="edit_status"
+       readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0 py-3">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning px-4 fw-semibold text-dark"><i class="bi bi-check-circle me-2"></i>Update Exam</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- DATA REMOVAL CONFIRMATION SECURE INTERLOCK MODAL STRUCTURE DIAGRAM -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="modal-body text-center p-4">
+                <div class="text-danger mb-3"><i class="bi bi-exclamation-triangle-fill" style="font-size: 3.5rem;"></i></div>
+                <h5 class="fw-bold text-dark mb-2">Delete Exam Record?</h5>
+                <p class="text-muted small mb-4">Are you absolute sure you wish to delete <strong id="deleteTargetExamName" class="text-dark">this assessment</strong>? This cannot be undone.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-light px-4 w-50" data-bs-dismiss="modal">Cancel</button>
+                    <a id="confirmedDeleteBtn" href="#" class="btn btn-danger px-4 w-50">Delete Exam</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+<!-- Automated Validation Handler: Re-opens Creation Modal immediately if Spring catches validation errors -->
+<script th:if="${openCreateModal}">
+    window.addEventListener('DOMContentLoaded', () => {
+        new bootstrap.Modal(document.getElementById('createExamModal')).show();
+    });
+</script>
+
+<script autocomplete="off">
+    function populateEditModal(btn) {
+        document.getElementById('edit_examID').value = btn.getAttribute('data-id');
+        document.getElementById('edit_courseID').value = btn.getAttribute('data-course');
+        document.getElementById('edit_name').value = btn.getAttribute('data-name');
+        document.getElementById('edit_examType').value = btn.getAttribute('data-type');
+        document.getElementById('edit_maxScore').value = btn.getAttribute('data-max');
+        document.getElementById('edit_weightPercent').value = btn.getAttribute('data-weight');
+        document.getElementById('edit_examDate').value = btn.getAttribute('data-date');
+        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
+        
+        
+        new bootstrap.Modal(document.getElementById('editExamModal')).show();
+    }
+
+    function triggerDeleteModal(btn) {
+        var id = btn.getAttribute('data-id');
+        var name = btn.getAttribute('data-name');
+        var course = btn.getAttribute('data-course');
+        
+        document.getElementById('deleteTargetExamName').innerText = name;
+        document.getElementById('confirmedDeleteBtn').setAttribute('href', '/exam/delete/' + id + '?courseID=' + course);
+        
+        new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
+    }
+</script>
+</body>
+</html>

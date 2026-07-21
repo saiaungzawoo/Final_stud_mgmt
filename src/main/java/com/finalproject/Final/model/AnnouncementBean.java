@@ -18,6 +18,9 @@ public class AnnouncementBean {
     private String createdByID;
 
     private String courseID;
+    
+    private String courseName;
+
 
     private String title;
 

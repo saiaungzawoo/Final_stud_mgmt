@@ -108,37 +108,128 @@ public class AttendanceRepository {
 
         String sql = """
                 SELECT
-                    scheduleID,
-                    courseID,
-                    schedule_date,
-                    start_time,
-                    end_time,
-                    room,
-                    topic,
-                    status
-                FROM schedule
-                WHERE courseID=?
-                ORDER BY schedule_date,start_time
+                    s.scheduleID,
+                    s.courseID,
+                    s.schedule_date,
+                    s.start_time,
+                    s.end_time,
+                    s.room,
+                    s.topic,
+                    s.status,
+
+                    COUNT(DISTINCT e.userID) AS totalStudent,
+
+                    COUNT(DISTINCT a.userID) AS markedStudent
+
+                FROM schedule s
+
+                LEFT JOIN enrollment e
+                ON s.courseID = e.courseID
+                AND e.status='Active'
+
+                LEFT JOIN attendance a
+                ON s.scheduleID = a.scheduleID
+
+                WHERE s.courseID=?
+
+                GROUP BY 
+                    s.scheduleID,
+                    s.courseID,
+                    s.schedule_date,
+                    s.start_time,
+                    s.end_time,
+                    s.room,
+                    s.topic,
+                    s.status
+
+                ORDER BY 
+                    s.schedule_date,
+                    s.start_time
                 """;
+
 
         return jdbcTemplate.query(sql,(rs,rowNum)->{
 
+
             ScheduleBean obj=new ScheduleBean();
 
-            obj.setScheduleId(rs.getString("scheduleID"));
-            obj.setCourseId(rs.getString("courseID"));
-            obj.setScheduleDate(rs.getDate("schedule_date").toLocalDate());
-            obj.setStartTime(rs.getTime("start_time").toLocalTime());
-            obj.setEndTime(rs.getTime("end_time").toLocalTime());
-            obj.setRoom(rs.getString("room"));
-            obj.setTopic(rs.getString("topic"));
-            obj.setStatus(rs.getString("status"));
-            obj.setAttendanceMarked(
-                    isAttendanceMarked(
-                        rs.getString("scheduleID")
-                    )
+
+            obj.setScheduleId(
+                    rs.getString("scheduleID")
             );
+
+
+            obj.setCourseId(
+                    rs.getString("courseID")
+            );
+
+
+            obj.setScheduleDate(
+                    rs.getDate("schedule_date")
+                    .toLocalDate()
+            );
+
+
+            obj.setStartTime(
+                    rs.getTime("start_time")
+                    .toLocalTime()
+            );
+
+
+            obj.setEndTime(
+                    rs.getTime("end_time")
+                    .toLocalTime()
+            );
+
+
+            obj.setRoom(
+                    rs.getString("room")
+            );
+
+
+            obj.setTopic(
+                    rs.getString("topic")
+            );
+
+
+            obj.setStatus(
+                    rs.getString("status")
+            );
+
+
+            int totalStudent =
+                    rs.getInt("totalStudent");
+
+
+            int markedStudent =
+                    rs.getInt("markedStudent");
+           
+
+            String attendanceStatus;
+
+
+            if(markedStudent == 0){
+
+                attendanceStatus = "NOT_MARKED";
+
+            }
+            else if(markedStudent < totalStudent){
+
+                attendanceStatus = "PARTIAL";
+
+            }
+            else{
+
+                attendanceStatus = "COMPLETED";
+
+            }
+
+
+            obj.setAttendanceStatus(attendanceStatus);
+
+
             return obj;
+
 
         },courseID);
 

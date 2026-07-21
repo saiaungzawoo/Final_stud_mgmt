@@ -12,183 +12,234 @@
 
     <div class="row">
 
+
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 p-0">
 
-            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+            </div>
 
         </div>
 
 
-        <!-- Main -->
-        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
 
+        <!-- Content -->
+        <div class="col-md-9 col-lg-10">
 
-            <div class="mb-4">
 
-                <h2 class="fw-bold">
-                    Assignment List
-                </h2>
+            <div class="container mt-4">
 
-                <p class="text-muted">
-                    Manage your course assignments.
-                </p>
 
-            </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
 
-            <div class="card shadow-sm border-0">
+                    <h3>
+                        Assignment Management
+                    </h3>
 
 
-                <div class="card-header bg-primary text-white">
+                    <a th:href="@{/assignment/create}"
+                       class="btn btn-primary">
 
-                    <h5 class="mb-0">
+                        Create Assignment
 
-                        <i class="bi bi-journal-text"></i>
-                        Assignments
-
-                    </h5>
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    <div class="table-responsive">
-
-                        <table class="table table-hover align-middle">
-
-
-                            <thead class="table-light">
-
-                                <tr>
-
-                                    <th>No</th>
-                                    <th>Course</th>
-                                    <th>Title</th>
-                                    <th>Due Date</th>
-                                    <th>Score</th>
-                                    <th>Weight</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody>
-
-
-                                <tr th:each="assignment, stat : ${assignmentList}">
-
-
-                                    <td th:text="${stat.count}">
-                                    </td>
-
-
-                                    <td th:text="${assignment.courseName}">
-                                    </td>
-
-
-                                    <td th:text="${assignment.title}">
-                                    </td>
-
-
-                                    <td th:text="${assignment.dueDate}">
-                                    </td>
-
-
-                                    <td th:text="${assignment.maxScore}">
-                                    </td>
-
-
-                                    <td>
-                                        <span th:text="${assignment.weightPercent}">
-                                        </span> %
-                                    </td>
-
-
-                                    <td>
-
-                                        <span class="badge bg-success"
-                                              th:if="${assignment.status.name() == 'Published'}">
-
-                                            Published
-
-                                        </span>
-
-
-                                        <span class="badge bg-secondary"
-                                              th:if="${assignment.status.name() == 'Draft'}">
-
-                                            Draft
-
-                                        </span>
-
-
-                                        <span class="badge bg-danger"
-                                              th:if="${assignment.status.name() == 'Closed'}">
-
-                                            Closed
-
-                                        </span>
-
-
-                                    </td>
-
-
-                                    <td>
-
-
-                                       <a class="btn btn-sm btn-outline-primary"
-   th:href="@{/assignment/edit/{id}(id=${assignment.assignmentID})}">
-
-    <i class="bi bi-pencil"></i>
-
-</a>
-
-
-                                        <a class="btn btn-sm btn-outline-danger">
-
-                                            <i class="bi bi-trash"></i>
-
-                                        </a>
-
-
-                                    </td>
-
-
-                                </tr>
-
-
-                            </tbody>
-
-
-                        </table>
-
-
-                    </div>
+                    </a>
 
 
                 </div>
 
 
+
+
+                <!-- Assignment Table -->
+
+                <table class="table table-bordered table-hover">
+
+
+                   <thead class="table-primary">
+
+
+                        <tr>
+
+                            <th>
+                                Course
+                            </th>
+
+
+                            <th>
+                                Title
+                            </th>
+
+
+                            <th>
+                                Description
+                            </th>
+
+
+                            <th>
+                                Due Date
+                            </th>
+
+
+                            <th>
+                                Score
+                            </th>
+
+
+                            <th>
+                                Weight (%)
+                            </th>
+
+
+                            <th>
+                                Status
+                            </th>
+
+
+                            <th>
+                                Action
+                            </th>
+
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+
+                    <tbody>
+
+
+                        <tr th:each="assignment : ${assignmentList}">
+
+
+                            <td th:text="${assignment.courseName}">
+                            </td>
+
+
+
+                            <td th:text="${assignment.title}">
+                            </td>
+
+
+
+
+                            <td>
+
+                                <span th:text="${assignment.description}">
+                                </span>
+
+                            </td>
+
+
+
+
+
+                            <td>
+
+                                <span th:text="${#temporals.format(assignment.dueDate,'dd-MM-yyyy HH:mm')}">
+                                </span>
+
+                            </td>
+
+
+
+
+
+                            <td>
+
+                                <span th:text="${assignment.maxScore}">
+                                </span>
+
+                            </td>
+
+
+
+
+
+                            <td>
+
+                                <span th:text="${assignment.weightPercent + '%'}">
+                                </span>
+
+                            </td>
+
+
+
+
+
+
+                            <td>
+
+
+                                <span class="badge bg-info"
+                                      th:text="${assignment.status}">
+                                </span>
+
+
+                            </td>
+
+
+
+
+
+
+
+                            <td>
+
+
+                                <a class="btn btn-sm btn-warning"
+                                   th:href="@{/assignment/edit/{id}(id=${assignment.assignmentID})}">
+
+                                    Edit
+
+                                </a>
+
+
+
+
+
+                                <a class="btn btn-sm btn-danger"
+                                   th:href="@{/assignment/delete/{id}(id=${assignment.assignmentID})}"
+                                   onclick="return confirm('Delete this assignment?')">
+
+                                    Delete
+
+                                </a>
+
+
+
+                            </td>
+
+
+
+                        </tr>
+
+
+
+                    </tbody>
+
+
+
+                </table>
+
+
+
+
             </div>
 
 
-        </main>
+        </div>
+
 
 
     </div>
 
+
 </div>
 
-
-<div th:replace="~{fragment/footer :: footer}"></div>
-
-<div th:replace="~{fragment/js :: js}"></div>
 
 
 </body>
