@@ -20,34 +20,44 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private EnrollmentService enrollmentService;
-	
-	
-	@GetMapping("/portal")
-	public String showStudentHome(Model model, HttpSession session) {
+  
+  @Autowired
+  private UserService userService;
+  
+  @Autowired
+  private EnrollmentService enrollmentService;
+  
+  
+  @GetMapping("/portal")
+  public String showStudentHome(Model model, HttpSession session) {
 
-//	    UserBean student = userService.findById(5); // temporary hardcoded
-		
-		 UserBean student = (UserBean)session.getAttribute("loginUser");
+//      UserBean student = userService.findById(5); // temporary hardcoded
+    
+     UserBean student = (UserBean)session.getAttribute("loginUser");
+     
+     //test
+     System.out.println("LOGIN USER:");
+        System.out.println(student);
+        
+        System.out.println("USER ID:");
+        System.out.println(student.getUserID());
 
-	    List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getId());
-//	           
+      List<CourseBean> courses =  enrollmentService.getEnrolledCourses(student.getUserID());
+//             
+      //test
+      System.out.println("COURSE COUNT: " + courses.size());
 
-	    model.addAttribute("student", student);
-	    model.addAttribute("studentCode", 
-	    		UserCodeUtil.formatUserCode(student.getRoleId(), student.getId()));
-	           
-	    model.addAttribute("courses", courses);
-	    model.addAttribute("enrolledCoursesCount", courses.size());
+      model.addAttribute("student", student);
+      model.addAttribute("studentCode", student.getUserCode());
+//      model.addAttribute("studentCode", 
+//          UserCodeUtil.formatUserCode(student.getRoleID(), student.getUserID()));
+             
+      model.addAttribute("courses", courses);
+      model.addAttribute("enrolledCoursesCount", courses.size());
 
-	    return "student/student-home";
-	}
-	
-	
+      return "student/student-home";
+  }
+  
+  
 
 }
