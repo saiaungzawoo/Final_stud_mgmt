@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class TestInstallmentPage {
-@GetMapping("/test-installment")
+@GetMapping("/admin/course-list")
 public String testInstallmentPage() {
-    return "student/installment-payment";}}
+    return "admin/admin-course-list";}}
 

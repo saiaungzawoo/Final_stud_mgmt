@@ -47,4 +47,18 @@ public class CourseService {
         return courseRepository.findByCategory(categoryId);
 
     }
+    
+    
+    public int countCourses(){
+
+        return courseRepository.countAllCourses();
+
+    }
+
+
+    public int countCoursesByStatus(String status){
+
+        return courseRepository.countByStatus(status);
+
+    }
 }

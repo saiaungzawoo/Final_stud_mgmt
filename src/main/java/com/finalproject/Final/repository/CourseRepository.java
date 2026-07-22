@@ -221,4 +221,36 @@ public class CourseRepository {
         return jdbc.query(sql, mapper, categoryId);
 
     }
+    
+    
+    
+    //new
+    public int countAllCourses(){
+
+        String sql =
+                "SELECT COUNT(*) FROM course";
+
+        return jdbc.queryForObject(sql,Integer.class);
+
+    }
+
+
+
+    public int countByStatus(String status){
+
+        String sql =
+                """
+                SELECT COUNT(*)
+                FROM course
+                WHERE status=?
+                """;
+
+
+        return jdbc.queryForObject(
+                sql,
+                Integer.class,
+                status
+        );
+
+    }
 }
