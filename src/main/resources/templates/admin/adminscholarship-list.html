@@ -1,178 +1,143 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-<head th:replace="~{fragment/css :: css}">
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>Scholarship Management</title>
+    <head th:replace="~{fragment/css :: css}"></head>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<title>Scholarship Management</title>
+    <!-- CSS Animation & Table UI Styles -->
+    <style>
+        .management-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .management-card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+        }
+        /* Header Title Icon Hover Animation */
+        .title-area:hover .animated-icon {
+            animation: wiggle 0.5s ease-in-out infinite alternate;
+        }
+        /* Action Buttons Hover Effect */
+        .hover-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+        /* Table Row Styling */
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        .table-responsive {
+            white-space: nowrap;
+        }
 
-
+        @keyframes wiggle {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+    </style>
 </head>
-
-
 <body class="bg-light">
 
+<div th:replace="~{fragment/header :: header}"></div>
 
+<div class="container py-5"> 
 
-<div class="container mt-5">
+    <!-- Upper Control Header -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4 title-area">
+        <div>
+            <h2 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+                <i class="bi bi-mortarboard-fill text-primary animated-icon d-inline-block"></i>
+                Scholarship Management
+            </h2>
+            <p class="text-muted small mb-0">Overview, create and update all available institute scholarships</p>
+        </div>
 
+        <a th:href="@{/admin/scholarship-create}" class="btn btn-success px-4 py-2 rounded-pill shadow-sm hover-btn fw-semibold">
+            <i class="bi bi-plus-lg me-1"></i> Add Scholarship
+        </a>
+    </div>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Data Table Card -->
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden management-card">
+        <div class="card-body p-0">
+            
+            <!-- Table Responsive Wrap -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-primary text-white bg-primary">
+                        <tr>
+                            <th class="ps-4 py-3">Name</th>
+                            <th class="py-3">Description</th>
+                            <th class="py-3">Discount Type</th>
+                            <th class="py-3">Discount Value</th>
+                            <th class="py-3">Max Recipients</th>
+                            <th class="py-3">Deadline</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Created Date</th>
+                            <th class="py-3">Updated Date</th>
+                            <th class="pe-4 py-3 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <!-- Empty State If No Scholarships Available -->
+                        <tr th:if="${#lists.isEmpty(scholarships)}">
+                            <td colspan="10" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                                No scholarships records found.
+                            </td>
+                        </tr>
 
-<h2>
-    Scholarship Management
-</h2>
+                        <!-- Row Loop -->
+                        <tr th:each="s : ${scholarships}">
+                            <td class="ps-4 fw-semibold text-dark" th:text="${s.scholarshipName}">Name</td>
+                            <td th:text="${s.description}">Description</td>
+                            <td>
+                                <span class="badge bg-light text-dark border px-2 py-1.5 fw-medium" th:text="${s.discountType}">Type</span>
+                            </td>
+                            <td class="fw-bold text-primary" th:text="${s.discountValue}">Value</td>
+                            <td th:text="${s.maxRecipients}">Max</td>
+                            <td>
+                                <span class="text-secondary small" th:text="${s.applicationDeadline != null ? s.applicationDeadline : 'No Deadline'}">Deadline</span>
+                            </td>
+                            <td>
+                                <span th:if="${s.isActive == 1}" class="badge bg-success-subtle text-success px-2.5 py-1.5 border border-success-subtle rounded-pill">
+                                    <i class="bi bi-check-circle-fill small me-1"></i> Active
+                                </span>
+                                <span th:if="${s.isActive == 0}" class="badge bg-danger-subtle text-danger px-2.5 py-1.5 border border-danger-subtle rounded-pill">
+                                    <i class="bi bi-x-circle-fill small me-1"></i> Inactive
+                                </span>
+                            </td>
+                            <td class="text-muted small" th:text="${s.createdAt}">Created</td>
+                            <td class="text-muted small" th:text="${s.updatedAt}">Updated</td>
+                            <td class="pe-4 text-center">
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a th:href="@{/admin/edit/{id}(id=${s.scholarshipID})}" class="btn btn-sm btn-outline-primary rounded-pill px-3 hover-btn">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                    </a>
+                                    <a th:href="@{/admin/scholarship/{id}/applications(id=${s.scholarshipID})}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm hover-btn">
+                                        <i class="bi bi-people me-1"></i> Applicants
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> <!-- /table-responsive -->
 
-
-<a th:href="@{/admin/scholarship-create}"
-   class="btn btn-success">
-    + Add Scholarship
-</a>
+        </div>
+    </div> <!-- /card -->
 
 </div>
 
-
-
-<div class="card shadow">
-
-<div class="card-body">
-
-
-<table class="table table-bordered table-striped">
-
-
-<thead class="table-primary">
-
-<tr>
-
-<th>Name</th>
-
-<th>Description</th>
-
-<th>Discount Type</th>
-
-<th>Discount Value</th>
-
-<th>Max Recipients</th>
-
-<th>Deadline</th>
-
-<th>Status</th>
-
-<th>Created Date</th>
-
-<th>Updated Date</th>
-
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody>
-
-
-<tr th:each="s : ${scholarships}">
-
-
-<td th:text="${s.scholarshipName}">
-</td>
-
-
-<td th:text="${s.description}">
-</td>
-
-
-<td th:text="${s.discountType}">
-</td>
-
-
-<td th:text="${s.discountValue}">
-</td>
-
-
-<td th:text="${s.maxRecipients}">
-</td>
-
-
-<td>
-    <span th:text="${s.applicationDeadline != null ? s.applicationDeadline : 'No Deadline'}"></span>
-</td>
-
-
-
-<td>
-
-<span th:if="${s.isActive == 1}"
-      class="badge bg-success">
-    Active
-</span>
-
-
-<span th:if="${s.isActive == 0}"
-      class="badge bg-danger">
-    Inactive
-</span>
-
-
-</td>
-
-
-
-<td th:text="${s.createdAt}">
-</td>
-
-
-<td th:text="${s.updatedAt}">
-</td>
-
-
-
-
-<td>
-
-
-<a th:href="@{/admin/edit/{id}(id=${s.scholarshipID})}"
-    class="btn btn-primary btn-sm">
-    Edit
-</a>
-
-
-
-<!-- <a th:href="@{/admin/delete/{id}(id=${s.scholarshipID})}"
-   class="btn btn-danger btn-sm"
-   onclick="return confirm('Are you sure to delete?')">
-    Delete
-</a> -->
-
-
-</td>
-
-
-</tr>
-
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-</div>
-
-
-</div>
-
-
-
-    <!-- JavaScript -->
-    <div th:replace="~{fragment/js :: js}"></div>
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
 
 </body>
-
 </html>

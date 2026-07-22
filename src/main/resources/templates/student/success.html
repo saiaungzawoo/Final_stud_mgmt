@@ -2,104 +2,149 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User Profile</title>
+    <title>Registration Successful</title>
+    <head th:replace="~{fragment/css :: css}"></head>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <!-- CSS Animation & Success Page UI Styles -->
+    <style>
+        .success-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        /* Card ပေါ် mouse ရောက်ရင် Header က Check icon လှုပ်စေရန် */
+        .success-card:hover .animated-icon {
+            animation: scaleWiggle 0.6s ease-in-out infinite alternate;
+        }
+        .hover-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        @keyframes scaleWiggle {
+            0% { transform: scale(1) rotate(-5deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
+        }
+    </style>
 </head>
+<body class="bg-light">
 
-<body>
 <div th:replace="~{fragment/header :: header}"></div>
-      
-<div class="container mt-6">
 
-    <div class="card shadow">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
 
-        <div class="card-header bg-primary text-white text-center">
-            <h3>✅ Registration Successful</h3>
-            <p class="mb-0">Your account has been created successfully.</p>
-        </div>
-
-        <div class="card-body">
-
-            <!-- Profile Photo -->
-            <div class="text-center mb-4">
-             
-             <img th:src="${userObj.profileImage}"
-
-     class="rounded-circle border"
-     width="130"
-     height="130">
-           
-          
-
-            <h4 class="text-center mb-4">Photo</h4>
-            </div>
-
-            <table class="table table-bordered">
-
-                <tr>
-                    <th width="30%">Name</th>
-                    <td th:text="${userObj.name}"></td>
-                </tr>
-
-                <tr>
-                    <th>Email</th>
-                    <td th:text="${userObj.email}"></td>
-                </tr>
-
-
-                   
-                    <tr>
-    <th>Password</th>
-    <td th:text="'********'"></td>
-</tr>
-
-
-                <tr>
-                    <th>Phone Number</th>
-                    <td th:text="${userObj.phoneNumber}"></td>
-                </tr>
-
-                <tr>
-                    <th>Address</th>
-                    <td th:text="${userObj.address}"></td>
-                </tr>
-
-                <tr>
-                    <th>Date of Birth</th>
-                    <td th:text="${userObj.dob}"></td>
-                </tr>
-
-                <tr>
-                    <th>Gender</th>
-                    <td th:text="${userObj.gender}"></td>
-                </tr>
-
-            </table>
-
-            <div class="text-center mt-4">
-                <a th:href="@{/student/register}" class="btn btn-primary">
-                    Register Another User
-                </a>
-
+            <!-- Success Card Layout -->
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden success-card">
                 
-                
-               
-            </div>
+                <!-- Card Header -->
+                <div class="card-header bg-success text-white text-center py-4 border-0">
+                    <div class="mb-2">
+                        <i class="bi bi-check-circle-fill animated-icon d-inline-block fs-1"></i>
+                    </div>
+                    <h3 class="mb-0 fw-bold">Registration Successful</h3>
+                    <p class="text-white-50 small mb-0 mt-1">Your account has been created successfully</p>
+                </div>
 
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5 bg-white">
+                    
+                    <!-- Profile Photo Section -->
+                    <div class="text-center mb-5">
+                        <div class="position-relative d-inline-block mb-2">
+                            <img th:src="${userObj.profileImage != null ? userObj.profileImage : '/images/default-user.png'}"
+                                 class="rounded-circle border border-3 border-success-subtle shadow-sm"
+                                 width="130"
+                                 height="130"
+                                 style="object-fit: cover;">
+                        </div>
+                        <h6 class="text-secondary fw-semibold mb-0">Registered Profile Photo</h6>
+                    </div>
+
+                    <!-- Registered Info Fields (Grid Style) -->
+                    <div class="row g-3 text-dark">
+                        
+                        <!-- Full Name -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Full Name</small>
+                                <span class="fw-bold" th:text="${userObj.name}">Name</span>
+                            </div>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Email Address</small>
+                                <span class="fw-medium text-break" th:text="${userObj.email}">email@domain.com</span>
+                            </div>
+                        </div>
+
+                        <!-- Password Placeholder -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Password</small>
+                                <span class="text-muted">********</span>
+                            </div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Phone Number</small>
+                                <span class="fw-medium" th:text="${userObj.phoneNumber}">091234567</span>
+                            </div>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Date of Birth</small>
+                                <span class="fw-medium" th:text="${userObj.dob}">01-01-2000</span>
+                            </div>
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Gender</small>
+                                <span class="fw-medium" th:text="${userObj.gender}">Male</span>
+                            </div>
+                        </div>
+
+                        <!-- Residential Address -->
+                        <div class="col-12">
+                            <div class="p-3 border rounded-3 bg-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-1">Residential Address</small>
+                                <span class="fw-medium lh-base" th:text="${userObj.address}">Address Details</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="text-muted opacity-25 my-4">
+
+                    <!-- Action Button -->
+                    <div class="text-center">
+                        <a th:href="@{/student/register}" class="btn btn-success px-4 py-2 rounded-pill shadow-sm hover-btn">
+                            <i class="bi bi-person-plus-fill me-1"></i> Register Another User
+                        </a>
+                    </div>
+
+                </div>
+
+            </div> <!-- /card -->
         </div>
-
     </div>
-     </div>
-
-
-
-
-   
-  
+</div>
 
 <div th:replace="~{fragment/footer :: footer}"></div>
-<th:block th:replace="~{fragment/js :: js}"></th:block>
+<div th:replace="~{fragment/js :: js}"></div>
 
 </body>
 </html>

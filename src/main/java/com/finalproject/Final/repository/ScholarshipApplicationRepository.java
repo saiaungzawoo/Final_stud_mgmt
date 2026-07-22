@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.ScholarshipApplicationBean;
 import com.finalproject.Final.model.ScholarshipBean;
 
@@ -278,10 +279,10 @@ obj.setApplicationDate(
 
     // 2. Admin View Application Detail
     
-
     public ScholarshipApplicationBean getApplicationDetail(String id){
  String sql = """
  SELECT
+ sa.scholarshipID,
 sa.scholarshipApplicationID,
 sa.application_date,
 sa.reason,
@@ -305,7 +306,7 @@ WHERE sa.scholarshipApplicationID = ?
   sql,
 (rs,rowNum)->{
  ScholarshipApplicationBean obj =new ScholarshipApplicationBean();
- 
+ obj.setScholarshipID(rs.getString("scholarshipID"));
 obj.setScholarshipApplicationID(rs.getString("scholarshipApplicationID")
                     );
  obj.setScholarshipName( rs.getString("scholarship_name")
@@ -336,15 +337,10 @@ obj.setScholarshipApplicationID(rs.getString("scholarshipApplicationID")
     }
 
 
-
-
-
-
-
-
     
     // 3. Admin Approve / Reject
- public int updateApplicationStatus(String applicationID,String status,String adminID,String reviewNotes){
+ public int updateApplicationStatus(String applicationID,String status,
+		 String adminID,String reviewNotes){
     String sql = """
 UPDATE scholarship_application
 SET status = ?,
@@ -367,8 +363,188 @@ WHERE scholarshipApplicationID = ?
 
 
     }
+ 
+ 
+
+ 
+	
+ 
+//Select Course Name for Scholarship Create
+public List<CourseBean> getAllCourseNa(){
+
+  String sql = """
+      SELECT 
+          courseID,
+          name
+      FROM course
+      ORDER BY name
+      """;
 
 
+  return jdbc.query(sql, (rs, rowNum) -> {
+
+      CourseBean course = new CourseBean();
+
+      course.setCourseId(
+              rs.getString("courseID")
+      );
+
+      course.setName(
+              rs.getString("name")
+      );
+
+      return course;
+
+  });
+}
+
+
+
+public List<ScholarshipApplicationBean> getApplicationsByScholarship(String scholarshipID) {
+
+    String sql = """
+        SELECT
+            sa.scholarshipApplicationID,
+            sa.application_date,
+            sa.reason,
+            sa.supporting_documents,
+            sa.status,
+sa.review_notes AS reviewNotes,
+            u.userID,
+            u.name AS user_name,
+            u.email,
+            u.phone_no,
+            u.address,
+
+            s.name AS scholarship_name,
+
+            c.name AS course_name
+
+        FROM scholarship_application sa
+
+        JOIN user u
+            ON sa.userID = u.userID
+
+        JOIN scholarship s
+            ON sa.scholarshipID = s.scholarshipID
+
+        LEFT JOIN course c
+            ON s.courseID = c.courseID
+
+        WHERE sa.scholarshipID = ?
+
+        ORDER BY sa.application_date DESC
+        """;
+
+    return jdbc.query(sql, (rs, rowNum) -> {
+
+        ScholarshipApplicationBean app = new ScholarshipApplicationBean();
+
+        app.setScholarshipApplicationID(
+                rs.getString("scholarshipApplicationID"));
+
+        app.setApplicationDate(
+                rs.getDate("application_date").toLocalDate());
+
+        app.setReason(
+                rs.getString("reason"));
+
+        app.setSupportingDocuments(
+                rs.getString("supporting_documents"));
+
+        app.setStatus(
+                rs.getString("status"));
+        
+        app.setReviewNotes(
+                rs.getString("reviewNotes"));
+
+        // User
+        app.setUserID(
+                rs.getString("userID"));
+
+        app.setUserName(
+                rs.getString("user_name"));
+
+        app.setEmail(
+                rs.getString("email"));
+
+        app.setPhoneNo(
+                rs.getString("phone_no"));
+
+        app.setAddress(
+                rs.getString("address"));
+
+        // Scholarship
+        app.setScholarshipName(
+                rs.getString("scholarship_name"));
+
+        // Course
+        app.setCourseName(
+                rs.getString("course_name"));
+
+        return app;
+
+    }, scholarshipID);
+}
+
+//4. Count approved applications for a specific scholarship
+public int getApprovedCountByScholarship(String scholarshipID) {
+    String sql = """
+        SELECT COUNT(*) 
+        FROM scholarship_application 
+        WHERE scholarshipID = ? AND status = 'Approved'
+        """;
+    
+    // queryForObject returns the count as an Integer
+    return jdbc.queryForObject(sql, Integer.class, scholarshipID);
+}
+
+// 5. Update scholarship active status to inactive (0) when max limit is reached
+public int updateScholarshipStatus(String scholarshipID, String status) {
+    String sql = """
+        UPDATE scholarship 
+        SET is_active = 0,
+            updated_at = NOW()
+        WHERE scholarshipID = ?
+        """;
+    
+    return jdbc.update(sql, scholarshipID);
+}
+
+//6 scholarship inactive
+public void makeInactive(String scholarshipID) {
+	String sql="Update scholarship set status='Inactive' where scholarshipID=?";
+	
+	
+	jdbc.update(sql,scholarshipID);
+}
+
+//7reject all pending
+public void rejectPendingApplications(String scholarshipID,
+        String adminID,
+        String reviewNotes) {
+
+    String sql = """
+        UPDATE scholarship_application
+        SET
+            status = ?,
+            reviewedByID = ?,
+            reviewed_at = NOW(),
+            review_notes = ?,
+            updated_at = NOW()
+        WHERE scholarshipID = ?
+          AND status = ?
+        """;
+
+    jdbc.update(
+            sql,
+            "Rejected",
+            adminID,
+            reviewNotes,
+            scholarshipID,
+            "Pending"
+    );
+}
 
 }
   

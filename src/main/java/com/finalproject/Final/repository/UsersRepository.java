@@ -1,6 +1,8 @@
 package com.finalproject.Final.repository;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,19 +11,11 @@ import org.springframework.stereotype.Repository;
 import com.finalproject.Final.model.UserBean;
 
 
-
-
-
-
-
-
-
-
 @Repository
 public class UsersRepository {
 	@Autowired
 	JdbcTemplate jdbc;
-	
+	//for student to insert
 	public int insertUser(UserBean obj) {
 		int i=0;
 		
@@ -49,7 +43,7 @@ i= jdbc.update(
 	return i;
 }
 	
-	
+	//for student
 	public boolean existsByEmail(String email) {
 
 	    String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
@@ -58,7 +52,7 @@ i= jdbc.update(
 	    return count != null && count > 0;
 	}
 
-	
+	//for student 
 	public UserBean getLatestStudent() {
 		String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
 	   
@@ -100,12 +94,10 @@ i= jdbc.update(
 	
 	
 	
-	           
+	           //for student edit
 	public int updateUser(UserBean userObj) {
-		
-		
-			
-		 String sql = " UPDATE user SET name = ?,email = ?,password = ?,"
+	
+		String sql = " UPDATE user SET name = ?,email = ?,password = ?,"
 		 		+ "phone_no = ?,address = ?, dob = ?,gender = ?,profile_image = ?"
 		 		+ " WHERE userID = ?";
 		            
@@ -124,7 +116,7 @@ i= jdbc.update(
 	      
 	}
 	
-	
+	//for student
 	public UserBean getUserByEmail(String email) {
 
 	    String sql = "SELECT * FROM user WHERE email=?";
@@ -155,8 +147,7 @@ i= jdbc.update(
 	    	            if (rs.getTimestamp("updated_at") != null) {
 	    	                userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
 	    	            }
-
-	    	            userObj.setIsActive(rs.getInt("is_active"));
+  userObj.setIsActive(rs.getInt("is_active"));
 	    	            userObj.setProfileImage(rs.getString("profile_image"));
 
 	    	            return userObj;
@@ -169,7 +160,7 @@ i= jdbc.update(
 	    	    }
 	    	}
 	   
-	
+	//for student
 	public UserBean getUserById(String userID) {
 
 	    String sql = "SELECT * FROM user WHERE userID = ?";
@@ -224,7 +215,102 @@ i= jdbc.update(
 
 	    return count != null && count > 0;
 	}
-	}
+	
+ // Admin View All Students 
+    public List<UserBean> selectAllStudents() {
+
+        String sql = """
+                SELECT  userID,roleID,name,email,phone_no,address,dob,gender,
+                profile_image,is_active,created_at,updated_at FROM user
+                WHERE roleID IN (SELECT roleID FROM role WHERE name = 'Student'
+                ) ORDER BY created_at DESC
+                """;
+
+ return jdbc.query(sql, (rs, rowNum) -> {
+
+            UserBean user = new UserBean();
+ user.setUserID(rs.getString("userID"));
+            user.setRoleID(rs.getString("roleID"));
+            user.setName(rs.getString("name"));
+            user.setEmail(rs.getString("email"));
+            user.setPhoneNumber(rs.getString("phone_no"));
+            user.setAddress(rs.getString("address"));
+
+            if(rs.getDate("dob") != null) {
+                user.setDob(rs.getDate("dob").toLocalDate());
+            }
+
+            user.setGender(rs.getString("gender"));
+            user.setProfileImage(rs.getString("profile_image"));
+            user.setIsActive(rs.getInt("is_active"));
+
+            if(rs.getTimestamp("created_at") != null) {
+                user.setCreatedAt(
+                    rs.getTimestamp("created_at").toLocalDateTime()
+                );
+            }
+
+            if(rs.getTimestamp("updated_at") != null) {
+                user.setUpdatedAt(
+                    rs.getTimestamp("updated_at").toLocalDateTime()
+                );
+            }
+
+            return user;
+        });
+    }
+    
+ // Admin View Student Detail
+    public UserBean selectStudentById(String userID) {
+
+        String sql = """
+                SELECT  userID, roleID,name,email,phone_no,address,dob,gender,profile_image,
+                    is_active,created_at,updated_at  FROM user WHERE userID = ?
+                """;
+  return jdbc.queryForObject(sql,
+                (rs, rowNum) -> {
+ UserBean user = new UserBean();
+                    user.setUserID(rs.getString("userID"));
+                    user.setRoleID(rs.getString("roleID"));
+                    user.setName(rs.getString("name"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPhoneNumber(rs.getString("phone_no"));
+                    user.setAddress(rs.getString("address"));
+
+                    if(rs.getDate("dob") != null) {
+                        user.setDob(
+                            rs.getDate("dob").toLocalDate()
+                        );
+                    }
+
+                    user.setGender(rs.getString("gender"));
+                    user.setProfileImage(rs.getString("profile_image"));
+                    user.setIsActive(rs.getInt("is_active"));
+
+                    if(rs.getTimestamp("created_at") != null) {
+                        user.setCreatedAt(
+                            rs.getTimestamp("created_at")
+                            .toLocalDateTime()
+                        );
+                    }
+
+                    if(rs.getTimestamp("updated_at") != null) {
+                        user.setUpdatedAt(
+                            rs.getTimestamp("updated_at")
+                            .toLocalDateTime()
+                        );
+                    }
+
+                    return user;
+
+                },
+                userID);
+    }
+
+}
+    
+
+	
 
 		
 	

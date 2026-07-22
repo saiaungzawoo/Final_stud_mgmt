@@ -119,8 +119,8 @@ public class TeacherController {
         // UUID role ID ထည့်
         obj.setUserID(UUID.randomUUID().toString());
 
-        obj.setRoleID("00ec67a1-7a6f-11f1-8f4f-183d2d227d02");
-
+       // obj.setRoleID("00ec67a1-7a6f-11f1-8f4f-183d2d227d02");//Lin Pyae Nyein
+        obj.setRoleID("19dac071-7acd-11f1-898e-e4b97a5cf834");//Thiri Thwe
         obj.setIsActive(1);
 
 
@@ -172,11 +172,7 @@ public class TeacherController {
         }
     }
 
-
-
-
-
-    @GetMapping("/teacherLists")
+ @GetMapping("/teacherLists")
     public String showAllTeacher(Model m) {
 
 
@@ -188,21 +184,13 @@ public class TeacherController {
         return "teacher/teachers-list";
     }
 
-
-
-
-
-    @GetMapping("/getbyid")
+ @GetMapping("/getbyid")
     public ModelAndView getById( @RequestParam("id") String userID) {
         TeacherBean obj = mRepo.getByTeacherId(userID);
         return new ModelAndView("teacher/teacher-edit","teacherObj", obj );
 
     }
   
-
-
-
-
 
     @PostMapping("/update")
     public String updateUpload(

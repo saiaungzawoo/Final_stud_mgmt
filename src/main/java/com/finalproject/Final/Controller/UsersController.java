@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -19,7 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,31 +44,25 @@ public class UsersController {
 	
 	private UsersRepository uRepo;
 	
-
-	
-	
+	//use for student register form
 	@GetMapping("/register")
 	public String registerPage(Model m) {
 		 UserBean user = new UserBean();
 		    user.setGender("Male");   // Default selected
 		    m.addAttribute("userObj", user);
-	   // m.addAttribute("userObj", new UserBean());
-		  
-	   // return "student_register";
-	    return "student/student_register";
+	 return "student/student_register";
 	}
-	
+	//use for student success page
 	@GetMapping("/registers")
 	public String success(Model m) {
 		 UserBean user = uRepo.getLatestStudent();
 	    m.addAttribute("userObj",user);
-	    
-	   //return "success";
+	 
 	   return "student/success";
 	}
 	
 	
-	
+	//use for student save
 	@PostMapping("/register")
 	public String studentRegistrater(@Valid @ModelAttribute("userObj")UserBean obj,
 			BindingResult br,Model m,
@@ -152,17 +147,15 @@ public class UsersController {
 		    obj.setCreatedAt(LocalDateTime.now());
 
 		    obj.setUpdatedAt(LocalDateTime.now());
-
-		    obj.setPassword(passwordEncoder.encode(obj.getPassword()));
-		   
-		    uRepo.insertUser(obj);
-
-		    m.addAttribute("userObj", obj);
-
-		    return "student/success";
-		    //return"success";
+ obj.setPassword(passwordEncoder.encode(obj.getPassword()));
+		    
+		   uRepo.insertUser(obj);
+ m.addAttribute("userObj", obj);
+ return "student/success";
+		  
 		}
-	  
+	
+	  //use for student edit
 	@PostMapping("/update")
 	public String updateStudent(
 	         @ModelAttribute("userObj") UserBean userObj,
@@ -173,8 +166,7 @@ public class UsersController {
 	    // Age Validation
 	    if (userObj.getDob() != null &&
 	            userObj.getDob().isAfter(LocalDate.now().minusYears(16))) {
-
-	        br.rejectValue(
+ br.rejectValue(
 	                "dob",
 	                "error.dob",
 	                "Age must be at least 16 years old.");
@@ -223,16 +215,7 @@ public class UsersController {
 	        model.addAttribute("emailError", "Email already exists.");
 	        return "student/student_edit";
 	    }
-	   // if (emailUser != null &&
-	       //     emailUser.getUserId() != userObj.getUserId()) {
-
-	     //   model.addAttribute(
-	        //        "emailError",
-	          //      "Email already exists.");
-         // return "student/student_edit";
-	     //   return "student_edit";
-	  //  }
-
+	   
 	    // Photo Upload (Optional)
 	    if (!photo.isEmpty()) {
 
@@ -269,13 +252,11 @@ public class UsersController {
 	                ImageIO.read(photo.getInputStream());
 
 	        if (image == null) {
-
-	            model.addAttribute(
-	                    "error",
+model.addAttribute("error",
 	                    "Invalid image.");
 
 	            return "student/student_edit";
-	           // return "student_edit";
+	          
 	        }
 
 	        // Upload Folder
@@ -314,41 +295,79 @@ public class UsersController {
 	    // Update User
 	    uRepo.updateUser(userObj);
 	    return "student/student-profile";
-	    //return "student-profile";
+	  
 	  
 	}
-	
+	//use for student edit 
+//	@GetMapping("/update")
+//	public String update(Model m) {
+//		 UserBean user = uRepo.getLatestStudent();
+//	    m.addAttribute("userObj", user);
+//	  return "student/student_edit";
+//	  
+//	}
+	//use for student edit 
 	@GetMapping("/update")
-	public String update(Model m) {
-		 UserBean user = uRepo.getLatestStudent();
-	    m.addAttribute("userObj", user);
-	    
-	    
-	   // return "success";
-	    return "student/student_edit";
-	  //  return "student_edit";
-	}
-	
-	
+	public String update(HttpSession session, Model model) {
 
-
-	@GetMapping("/profile")
-	public String profile(HttpSession session, Model model) {
-
-	    UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+	    UserBean loginUser =
+	            (UserBean) session.getAttribute("loginUser");
 
 	    if (loginUser == null) {
 	        return "redirect:/login";
 	    }
 
+	    UserBean user =
+	            uRepo.getUserById(loginUser.getUserID());
+
+	    model.addAttribute("userObj", user);
+
+	    return "student/student_edit";
+	}
+	
+	
+
+//use for student profile
+	@GetMapping("/profile")
+	public String profile(HttpSession session, Model model) {
+ UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+ if (loginUser == null) {
+	        return "redirect:/login";
+	    }
+
 	    // Database ထဲက latest data ပြန်ယူချင်ရင်
 	    UserBean userObj = uRepo.getUserByEmail(loginUser.getEmail());
-	    
-	    
-	    model.addAttribute("userObj", userObj);
+  model.addAttribute("userObj", userObj);
 
 	   return "student/student-profile";
-	    //return "student-profile";
+	 
 	}
+	//use for admin
+	@GetMapping("/admin/students")
+	public String viewStudents(Model model) {
+
+	    List<UserBean> students = uRepo.selectAllStudents();
+
+	    model.addAttribute("students", students);
+ return "admin/adminstudent-list";
+	}
+	
+	//use for admin
+	@GetMapping("/admin/student/detail/{id}")
+	public String studentDetail(
+	        @PathVariable String id,
+	        Model model) {
+
+	    UserBean student = uRepo.selectStudentById(id);
+
+	    model.addAttribute("student", student);
+
+	    return "admin/adminstudent-detail";
+	}
+	   
+	       
+
+	   
+	
 }
 

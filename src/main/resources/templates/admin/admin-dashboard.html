@@ -1,0 +1,207 @@
+ <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/css :: css}"></head>
+<body class="bg-light">
+
+<header th:fragment="adminHeader" class="teacher-header navbar navbar-expand-lg bg-white border-bottom px-3">
+  <div class="container-fluid">
+    <button class="btn btn-outline-secondary d-lg-none me-2" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#teacherSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <a class="navbar-brand fw-bold" th:href="@{/create/dashboard}">
+     <span class="ace-logo">
+              <i class="bi bi-mortarboard-fill"></i>
+            </span>
+      SkillForge admin
+    </a>
+
+    <form class="d-none d-md-flex ms-auto me-3" role="search">
+      <div class="input-group">
+        <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+        <input class="form-control" type="search" placeholder="Search classes, students...">
+      </div>
+    </form>
+
+    <div class="d-flex align-items-center gap-2">
+      <a th:href="@{/teacher/announcements}" class="btn btn-light position-relative">
+        <i class="bi bi-bell"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          3
+        </span>
+      </a>
+
+      <div class="dropdown">
+        <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+                data-bs-toggle="dropdown">
+          <i class="bi bi-person-circle fs-5"></i>
+          <span class="d-none d-md-inline">Admin</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+         <li>
+    <a class="dropdown-item" 
+       th:href="@{/dashboard/getbyid1(id='00ee5b4b-7a6f-11f1-8f4f-183d2d227d02')}">
+        Profile
+    </a>
+</li>
+          <li><a class="dropdown-item" th:href="@{/teacher/settings}">Settings</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" th:href="@{/logout}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="teacher-layout">
+  <aside th:fragment="sidebar" class="teacher-sidebar offcanvas-lg offcanvas-start bg-dark text-white"
+       tabindex="-1" id="teacherSidebar">
+  <div class="offcanvas-header border-bottom border-secondary">
+    <h5 class="offcanvas-title">Admin Panel</h5>
+    <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas"></button>
+  </div>
+ <div class="offcanvas-body p-0">
+    <nav class="nav flex-column py-3">
+      <a class="nav-link text-white" th:href="@{/dashboard/dashboard-teacher}">
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      </a>
+      <a class="nav-link text-white" th:href="@{/student/admin/students}">
+        <i class="bi bi-journal-bookmark me-2"></i> Students
+      </a>
+      <a class="nav-link text-white" th:href="@{/users/teacherLists}">
+        <i class="bi bi-calendar-check me-2"></i> Teachers
+      </a>
+      <a class="nav-link text-white" th:href="@{/announce/announcement}">
+        <i class="bi bi-megaphone me-2"></i> Courses
+      </a>
+      <a class="nav-link text-white" th:href="@{/assignment/create}">
+        <i class="bi bi-clipboard-check me-2"></i> Enrollment
+      </a>
+      <a class="nav-link text-white" th:href="@{/teacher/submissions}">
+        <i class="bi bi-inbox me-2"></i> Schedule
+      </a>
+     <!-- <a class="nav-link text-white" th:href="@{/attendance/students}">
+    <i class="bi bi-people me-2"></i> Attendance
+</a> -->
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Payment
+      </a>
+      <a class="nav-link text-white" th:href="@{/admin/list}">
+        <i class="bi bi-calendar-event me-2"></i> Scholarship
+      </a>
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Announcement
+      </a>
+      <!-- <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Reports
+      </a> -->
+      <a class="nav-link text-white" th:href="@{/schedule/list-course}">
+        <i class="bi bi-calendar-event me-2"></i> Settings
+      </a>
+    </nav>
+  </div>
+</aside>
+
+  <main class="teacher-main">
+    <div class="container-fluid py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="fw-bold mb-1">Admin Dashboard</h3>
+          <p class="text-muted mb-0">View your classes, attendance, announcements and assignments.</p>
+        </div>
+        <a th:href="@{/teacher/announcements/create}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-1"></i> New Announcement
+        </a>
+      </div>
+
+     
+      
+          <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+                <i class="bi bi-journal-bookmark text-primary"></i>
+                <h3>My Classes</h3>
+                <p> 8</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+              <i class="bi bi-calendar-check text-success"></i>
+                <h3>Today Attendance</h3>
+                <p> 90%</p>
+              </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+                <i class="bi bi-clipboard-check text-warning"></i>
+                <h3>Assignment</h3>
+                <p>9</p>
+              </a>
+            </div>
+             <div class="col-md-6 col-xl-3">
+              <a class="category-card" href="#">
+               <i class="bi bi-inbox text-danger"></i>
+                <h3>Pending Reviews</h3>
+                <p> 6</p>
+              </a>
+            </div>
+            </div>
+ <div class="row g-4">
+        <div class="col-lg-20">
+          <div class="content-panel">
+            <h5 class="fw-bold mb-3">Today Classes</h5>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Class</th>
+                    <th>Course</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>09:00 AM</td>
+                    <td>Batch A</td>
+                    <td>Web Development</td>
+                    <td><a th:href="@{/teacher/attendance}" class="btn btn-sm btn-outline-primary">Take Attendance</a></td>
+                  </tr>
+                  <tr>
+                    <td>01:00 PM</td>
+                    <td>Batch B</td>
+                    <td>Java Spring</td>
+                    <td><a th:href="@{/teacher/assignments}" class="btn btn-sm btn-outline-secondary">View Assignments</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-9">
+          <div class="content-panel mb-4">
+            <h5 class="fw-bold mb-3">Recent Announcements</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item px-0">Exam schedule updated</li>
+              <li class="list-group-item px-0">Project submission deadline reminder</li>
+              <li class="list-group-item px-0">New workshop added this week</li>
+            </ul>
+          </div>
+
+          <div class="content-panel">
+            <h5 class="fw-bold mb-3">Assignments To Check</h5>
+            <p class="mb-2">Portfolio Project <span class="badge bg-warning text-dark">9 pending</span></p>
+            <p class="mb-0">Spring CRUD Task <span class="badge bg-danger">5 pending</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+</body>
+</html>

@@ -1,162 +1,197 @@
  <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title> </title>
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+    <head th:replace="~{fragment/css :: css}"></head>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<head th:replace="~{fragment/css :: css}"></head>
+    <!-- CSS Animation & Form UI Styles -->
+    <style>
+        .register-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+       /*  /* Card ပေါ် mouse ရောက်ရင် Header က Icon လှုပ်စေရန် */
+       /*  .register-card:hover .animated-icon {
+            animation: wiggle 0.5s ease-in-out infinite alternate;
+        } */ */
+        /* Buttons Hover Effect */
+        .hover-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
 
-
+        @keyframes wiggle {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light">
 
 <div th:replace="~{fragment/header :: header}"></div>
 
-<div class="container mt-5"> 
-<div class="row justify-content-center"> 
-<div class="col-md-8"> <div class="card shadow"> 
-<div class="card-header text-center"> 
-<h3>Student Registration</h3> 
-<h4>Create your Student Account</h4>
-</div>
- <div class="card-body">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
 
-
-<form th:action="@{/student/register}" th:object="${userObj}"
- method="post" 
-enctype="multipart/form-data">
-
-
-<br>
- <!-- Name --> 
- <div class="mb-3">
- <label class="form-label">Full Name*</label>
- 
-  <input type="text" th:field="*{name}"placeholder="Enter your full name" class="form-control"> 
-   
-  <small class="text-danger" th:errors="*{name}"></small>
- </div> 
-   
-   <!-- Email -->
-    <div class="mb-3">
-     <label class="form-label">Email*</label> 
-     <input type="email" th:field="*{email}"placeholder="example@gmail.com" class="form-control">
-    
-      <small class="text-danger" th:errors="*{email}"></small>
-      
-       </div> 
-       
-       <!-- Password -->
-        <div class="mb-3"> 
-        <label class="form-label">Password*</label> 
-        <input type="password" th:field="*{password}"placeholder="Enter password" class="form-control">
-         <small class="text-muted">
-Password must contain at least 6 characters.
-</small><br>
-<small class="text-muted">
-Contain one letter and one number.
-</small><br>
-         <small class="text-danger" th:errors="*{password}"></small>
-          </div>
-          
-          <!-- Phone Number --> <div class="mb-3">
-           <label class="form-label">Phone Number*</label>
-           <input type="text" th:field="*{phoneNumber}" placeholder="09xxxxxxxxx"class="form-control">
-            <small class="text-muted">
-Must start with 09 (e.g., 09123456789)
-</small><br>
-            <small class="text-danger" th:errors="*{phoneNumber}"></small> 
-            </div>
-            
-             <!-- Address -->
-              <div class="mb-3"> 
-              <label class="form-label">Address*</label>
-               <textarea th:field="*{address}"placeholder="Enter your address" class="form-control" rows="3"></textarea> 
-             
-               <small class="text-danger" th:errors="*{address}"></small>
-                </div> 
+            <!-- Register Card Layout -->
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden register-card">
                 
-                <!-- Date of Birth -->
-                 <div class="mb-3"> <label class="form-label"> Date of Birth
-                 *</label> 
-                 <input type="date" th:field="*{dob}" class="form-control"> 
-                 <small class="text-muted">
-You must be at least 16 years old.
-</small><br>
-                 <small class="text-danger" th:errors="*{dob}"></small> 
-                 </div> 
-                 
-                 <!-- Gender -->
-                <div class="mb-3">
-                    <label class="form-label">
-                        Gender *
-                    </label>
-                    <br>
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input"
-                               type="radio"
-                               th:field="*{gender}"
-                               value="Male">
-
-                        <label class="form-check-label">
-                            Male
-                        </label>
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white text-center py-4 border-0">
+                    <div class="mb-2">
+                        <i class="bi bi-person-plus animated-icon d-inline-block fs-1"></i>
                     </div>
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input"
-                               type="radio"
-                               th:field="*{gender}"
-                               value="Female" >
- <label class="form-check-label">
-                            Female
-                        </label>
-                    </div>
-               <small class="text-danger" th:errors="*{gender}"></small>
-                    </div>
-                    
-                    <!-- PHOTO -->
-             <div class="mb-3">
-             <label class="form-label">Profile Photo</label>
-            <input type="file" name="photo" class="form-control" accept="image/*">
-           <small class="text-muted">Allowed formats: JPG, JPEG, PNG</small><br>
-            <small class="text-danger" th:errors="*{profileImage}"></small>
-
-            <p th:if="${error}" style="color: red;" th:text="${error}"></p>
-
-        </div>
-        
-        <!-- Terms -->
-                <div class="form-check mb-4">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           required>
-
-                    <label class="form-check-label">
-                        I agree to the Terms & Conditions
-                    </label>
+                    <h3 class="mb-0 fw-bold">Student Registration</h3>
+                    <p class="text-white-50 small mb-0 mt-1">Create your Student Account to get started</p>
                 </div>
-                
-                     <div class="d-grid">
-                      <button type="submit" class="btn btn-primary"> Register </button> 
-                      </div>
-                      
-                      
-                       <div class="text-center mt-4"> Already have an account?
-                       
- <a th:href="@{/login}">Sign In </a>
-                           </div> 
-                                 </form> 
-                               </div> 
-                             </div> 
-                          </div> 
-                        </div> 
-                     </div>
-                    
-                     <div th:replace="~{fragment/footer :: footer}"></div>
 
-   <div th:replace="~{fragment/js :: js}"></div>
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5 bg-white">
+
+                    <form th:action="@{/student/register}" 
+                          th:object="${userObj}"
+                          method="post" 
+                          enctype="multipart/form-data">
+
+                        <!-- Form Fields Grid -->
+                        <div class="row g-4">
+                            
+                            <!-- Full Name -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-person me-1 text-primary"></i> Full Name*
+                                </label>
+                                <input type="text" th:field="*{name}" placeholder="Enter your full name" class="form-control rounded-3 p-2.5">
+                                <div class="text-danger small mt-1" th:errors="*{name}"></div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-envelope me-1 text-primary"></i> Email Address*
+                                </label>
+                                <input type="email" th:field="*{email}" placeholder="example@gmail.com" class="form-control rounded-3 p-2.5">
+                                <div class="text-danger small mt-1" th:errors="*{email}"></div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-key me-1 text-primary"></i> Password*
+                                </label>
+                                <input type="password" th:field="*{password}" placeholder="Enter password" class="form-control rounded-3 p-2.5">
+                                <div class="text-muted-emphasis small mt-1" style="font-size: 0.8rem;">
+                                    <i class="bi bi-info-circle small"></i> Must be at least 6 characters with 1 letter & 1 number.
+                                </div>
+                                <div class="text-danger small mt-1" th:errors="*{password}"></div>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-telephone me-1 text-primary"></i> Phone Number*
+                                </label>
+                                <input type="text" th:field="*{phoneNumber}" placeholder="09xxxxxxxxx" class="form-control rounded-3 p-2.5">
+                                <div class="text-muted-emphasis small mt-1" style="font-size: 0.8rem;">
+                                    <i class="bi bi-info-circle small"></i> Must start with 09 (e.g., 09123456789)
+                                </div>
+                                <div class="text-danger small mt-1" th:errors="*{phoneNumber}"></div>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-calendar3 me-1 text-primary"></i> Date of Birth*
+                                </label>
+                                <input type="date" th:field="*{dob}" class="form-control rounded-3 p-2.5">
+                                <div class="text-muted-emphasis small mt-1" style="font-size: 0.8rem;">
+                                    <i class="bi bi-info-circle small"></i> You must be at least 16 years old.
+                                </div>
+                                <div class="text-danger small mt-1" th:errors="*{dob}"></div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-gender-ambiguous me-1 text-primary"></i> Gender*
+                                </label>
+                                <div class="pt-2">
+                                    <div class="form-check form-check-inline me-4">
+                                        <input class="form-check-input" type="radio" th:field="*{gender}" value="Male" id="genderMale">
+                                        <label class="form-check-label text-dark fw-medium" for="genderMale">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" th:field="*{gender}" value="Female" id="genderFemale">
+                                        <label class="form-check-label text-dark fw-medium" for="genderFemale">Female</label>
+                                    </div>
+                                </div>
+                                <div class="text-danger small mt-1" th:errors="*{gender}"></div>
+                            </div>
+
+                            <!-- Profile Photo -->
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-image me-1 text-primary"></i> Profile Photo
+                                </label>
+                                <div class="p-3 border rounded-3 bg-light">
+                                    <input type="file" name="photo" class="form-control rounded-2 bg-white" accept="image/*">
+                                    <div class="mt-2 text-muted-emphasis small">
+                                        <i class="bi bi-info-circle small"></i> Allowed formats: <strong>JPG, JPEG, PNG</strong>
+                                    </div>
+                                    <div class="text-danger small mt-1" th:errors="*{profileImage}"></div>
+                                    <div class="text-danger small mt-1" th:if="${error}" th:text="${error}"></div>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-dark mb-2">
+                                    <i class="bi bi-geo-alt me-1 text-primary"></i> Residential Address*
+                                </label>
+                                <textarea th:field="*{address}" placeholder="Enter your full street address" class="form-control rounded-3 p-3" rows="3"></textarea>
+                                <div class="text-danger small mt-1" th:errors="*{address}"></div>
+                            </div>
+
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-check mb-4 mt-4">
+                            <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                            <label class="form-check-label text-secondary small" for="termsCheck">
+                                I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a> and privacy policy.
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary py-2.5 rounded-pill shadow-sm hover-btn fw-semibold">
+                                Register Account
+                            </button>
+                        </div>
+
+                        <!-- Sign In Link -->
+                        <div class="text-center mt-4">
+                            <span class="text-secondary">Already have an account?</span>
+                            <a th:href="@{/login}" class="text-primary fw-semibold text-decoration-none ms-1">Sign In</a>
+                        </div>
+                        
+                    </form>
+                </div>
+
+            </div> <!-- /card -->
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
    
 </body>
 </html>
