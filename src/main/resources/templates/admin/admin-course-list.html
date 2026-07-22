@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/css :: css}">
+<title>Course Management</title>
+</head>
+<body>
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+		<section th:fragment="section">
+			<div
+				class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+				<div>
+					<h3 class="fw-bold mb-1">Course Management</h3>
+
+					<p class="text-muted mb-0">Create, update and manage all
+						courses in the system.</p>
+				</div>
+
+
+				<a class="btn btn-primary" href="#"
+					th:href="@{/admin/courses/create}"> <i
+					class="bi bi-plus-circle me-1"></i> Create Course
+
+				</a>
+
+			</div>
+
+			<div class="row g-3 mb-4">
+				<div class="col-sm-6 col-xl-3">
+					<div class="category-card">
+						<i class="bi bi-book"></i>
+						<h3>Total Courses</h3>
+						<p class="fs-3 fw-bold mb-0 text-dark" th:text="${totalCourses}">120</p>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-xl-3">
+					<div class="category-card">
+						<i class="bi bi-check-circle"></i>
+						<h3>Open Courses</h3>
+						<p class="fs-3 fw-bold mb-0 text-dark" th:text="${openCourses}">85</p>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-xl-3">
+					<div class="category-card">
+						<i class="bi bi-pencil-square"></i>
+						<h3>Draft Courses</h3>
+						<p class="fs-3 fw-bold mb-0 text-dark" th:text="${draftCourses}">20</p>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-xl-3">
+					<div class="category-card">
+						<i class="bi bi-calendar-event"></i>
+						<h3>Scheduled Courses</h3>
+						<p class="fs-3 fw-bold mb-0 text-dark"
+							th:text="${scheduledCourses}">60</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-panel bg-white rounded-3 shadow-sm border p-3">
+				<div
+					class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 mb-4">
+					<h5 class="fw-bold mb-0">Course List</h5>
+
+					<div class="d-flex flex-column flex-md-row gap-2">
+						<div class="input-group">
+							<span class="input-group-text bg-white"><i
+								class="bi bi-search"></i></span> <input type="search"
+								class="form-control" placeholder="Search courses..."
+								aria-label="Search courses">
+						</div>
+
+						<select class="form-select" aria-label="Filter courses by status">
+							<option selected>All Status</option>
+							<option>Open</option>
+							<option>Draft</option>
+							<option>Completed</option>
+							<option>Cancelled</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-hover align-middle mb-0">
+						<thead class="table-light">
+							<tr>
+								<th>No.</th>
+								<th>Course Name</th>
+								<th>Category</th>
+								<th>Teacher</th>
+								<th>Duration</th>
+								<th>Fee</th>
+								<th>Seats</th>
+								<th>Status</th>
+								<th class="text-end">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="course, iterStat : ${courses}">
+								<td th:text="${iterStat.count}">1</td>
+								<td class="fw-semibold" th:text="${course.name}">Java
+									Programming</td>
+								<td th:text="${course.categoryName}">Programming</td>
+								<td th:text="${course.teacherName}">John Smith</td>
+								<td th:text="${course.durationWeeks + ' Weeks'}">12 Weeks</td>
+								<td
+									th:text="${'MMK ' + #numbers.formatDecimal(course.fee,1,'COMMA',2,'POINT')}">
+								</td>
+								<td>
+									<div>
+										<span class="fw-semibold"
+											th:text="${course.seatsTotal - course.seatsAvailable}">
+											0 </span> / <span th:text="${course.seatsTotal}"> 50 </span>
+									</div> <small class="text-muted"> Available: <span
+										th:text="${course.seatsAvailable}"> 50 </span>
+								</small>
+								</td>
+								<td><span th:if="${course.status == 'Open'}"
+									class="badge text-bg-success" th:text="${course.status}">Open</span>
+									<span th:if="${course.status == 'Draft'}"
+									class="badge text-bg-secondary" th:text="${course.status}">Draft</span>
+									<span th:if="${course.status == 'Completed'}"
+									class="badge text-bg-primary" th:text="${course.status}">Completed</span>
+									<span th:if="${course.status == 'Cancelled'}"
+									class="badge text-bg-danger" th:text="${course.status}">Cancelled</span>
+								</td>
+								<td>
+									<div class="d-flex flex-wrap justify-content-end gap-2">
+										<a class="btn btn-sm btn-outline-primary" href="#"
+											th:href="@{/admin/courses/{id}(id=${course.CourseId})}"
+											aria-label="View course"> <i class="bi bi-eye"></i>
+										</a> <a class="btn btn-sm btn-outline-warning" href="#"
+											th:href="@{/admin/courses/{id}/edit(id=${course.CourseId})}"
+											aria-label="Edit course"> <i class="bi bi-pencil"></i>
+										</a> <a class="btn btn-sm btn-outline-danger" href="#"
+											th:href="@{/admin/courses/{id}/delete(id=${course.CourseId})}"
+											aria-label="Delete course"> <i class="bi bi-trash"></i>
+										</a> <a class="btn btn-sm btn-outline-success" href="#"
+											th:href="@{/admin/courses/{id}/schedule(id=${course.CourseId})}"
+											aria-label="Manage schedule"> <i
+											class="bi bi-calendar-event"></i>
+										</a>
+									</div>
+								</td>
+							</tr>
+
+							<tr th:if="${#lists.isEmpty(courses)}">
+								<td colspan="9" class="text-center text-muted py-5">No
+									courses found.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div
+					class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-4">
+					<p class="text-muted mb-0">Showing course records</p>
+					<nav aria-label="Course list pagination">
+						<ul class="pagination mb-0">
+							<li class="page-item disabled"><a class="page-link" href="#">Previous</a>
+							</li>
+							<li class="page-item active" aria-current="page"><a
+								class="page-link" href="#">1</a></li>
+							<li class="page-item"><a class="page-link" href="#">2</a></li>
+							<li class="page-item"><a class="page-link" href="#">3</a></li>
+							<li class="page-item"><a class="page-link" href="#">Next</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

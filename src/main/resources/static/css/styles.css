@@ -607,6 +607,13 @@ a {
   min-height: calc(100vh - 72px);
 }
 
+/* sai - for admin */
+.teacher-main {
+    flex: 1;
+    padding: 24px 30px;
+    overflow-x: hidden;
+}
+
 .teacher-sidebar {
   width: 260px;
   min-height: calc(100vh - 72px);
