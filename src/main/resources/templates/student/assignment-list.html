@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment List</title>
+    <head th:replace="~{fragment/css :: css}"></head>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- CSS Animation & Card Feed UI Styles -->
+    <style>
+        .assignment-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        /* Card ပေါ် mouse ရောက်ရင် ကြွတက်ပြီး Icon လှုပ်စေရန် */
+        .assignment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12) !important;
+        }
+        .assignment-card:hover .animated-icon {
+            animation: wiggle 0.5s ease-in-out infinite alternate;
+        }
+        .hover-btn {
+            transition: transform 0.2s ease;
+        }
+        .hover-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        @keyframes wiggle {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<div class="container py-5">
+
+    <!-- Header Title Section -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold display-5 text-primary mb-2">
+            Available Assignments
+        </h1>
+        <p class="text-muted fs-5">
+            Manage your coursework, track deadlines, and submit your tasks.
+        </p>
+    </div>
+
+    <!-- Assignments Responsive Grid -->
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4" th:each="a, stat : ${assignments}">
+            <div class="card shadow-sm border-0 h-100 assignment-card rounded-4 overflow-hidden">
+                <div class="card-body p-4 d-flex flex-column">
+
+                    <!-- Top Row: Course Badge & Number -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1.5 rounded-pill fw-semibold small">
+                            <i class="bi bi-bookmark-fill me-1"></i>
+                            <span th:text="${a.courseName}">Course</span>
+                        </span>
+                        <small class="text-muted fw-bold" th:text="'#' + ${stat.count}">#1</small>
+                    </div>
+
+                    <!-- Title with Animated Icon -->
+                    <div class="d-flex align-items-start gap-2 mb-2">
+                        <i class="bi bi-journal-text animated-icon text-primary fs-4 mt-0.5 d-inline-block"></i>
+                        <h5 class="fw-bold text-dark mb-0 lh-base" th:text="${a.title}">
+                            Assignment Title
+                        </h5>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-muted small flex-grow-1 my-3 lh-base" th:text="${a.description}">
+                        Assignment description goes here...
+                    </p>
+
+                    <!-- Score & Weight Stats Row -->
+                    <div class="row g-2 text-center mb-3">
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded-3 border border-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-0.5" style="font-size: 0.75rem;">Max Score</small>
+                                <span class="fw-bold text-dark" th:text="${a.maxScore}">100</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded-3 border border-light-subtle">
+                                <small class="text-muted d-block fw-semibold mb-0.5" style="font-size: 0.75rem;">Weight</small>
+                                <span class="fw-bold text-dark" th:text="${a.weightPercent} + '%'">20%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted my-3 opacity-25">
+
+                    <!-- Bottom Metadata & Actions -->
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div>
+                            <small class="text-muted d-block fw-semibold mb-0.5" style="font-size: 0.75rem;">
+                                <i class="bi bi-calendar-event text-danger me-1"></i> Due Date
+                            </small>
+                            <span class="text-danger small fw-bold" th:text="${#temporals.format(a.dueDate,'dd-MM-yyyy HH:mm')}">
+                                20-07-2026 23:59
+                            </span>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <a class="btn btn-primary btn-sm px-3 rounded-pill shadow-sm hover-btn"
+                           th:href="@{/submission/assignment/submit/{id}(id=${a.assignmentID})}">
+                            Submit <i class="bi bi-cloud-arrow-up-fill ms-1 small"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State Handling -->
+        <div th:if="${#lists.isEmpty(assignments)}" class="col-12 text-center py-5 bg-white rounded-4 shadow-sm">
+            <div class="mb-3">
+                <i class="bi bi-file-earmark-x text-muted" style="font-size: 3.5rem;"></i>
+            </div>
+            <h5 class="text-secondary fw-semibold">No Assignment Found</h5>
+            <p class="text-muted small mb-0">There are currently no active assignments allocated to you.</p>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+</html>

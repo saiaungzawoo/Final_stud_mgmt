@@ -75,7 +75,8 @@ public class TeacherRepository {
                         rs.getTimestamp("updated_at")
                 ),
 
-                "00ec67a1-7a6f-11f1-8f4f-183d2d227d02"
+               // "00ec67a1-7a6f-11f1-8f4f-183d2d227d02"
+                "19dac071-7acd-11f1-898e-e4b97a5cf834"
         );
     }
 

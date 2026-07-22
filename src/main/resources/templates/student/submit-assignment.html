@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Apply Scholarship</title>
+    <title>Submit Assignment</title>
     <head th:replace="~{fragment/css :: css}"></head>
     
     <!-- Bootstrap Icons -->
@@ -10,13 +10,13 @@
 
     <!-- CSS Animation & Form UI Styles -->
     <style>
-        .form-card {
+        .submit-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        /* /* Card သို့မဟုတ် Header ကို mouse ထိရင် Icon လှုပ်စေရန် */
-       /*  .form-card:hover .animated-icon {
+        /* Card ပေါ် mouse ရောက်ရင် Header က Icon လှုပ်စေရန် */
+        .submit-card:hover .animated-icon {
             animation: wiggle 0.5s ease-in-out infinite alternate;
-        } */ */
+        }
         /* Buttons Hover Effect */
         .hover-btn {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -40,69 +40,73 @@
     <div class="row justify-content-center">
         <div class="col-lg-7 col-md-9">
 
-            <!-- Form Card Layout -->
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden form-card">
+            <!-- Submit Card Layout -->
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden submit-card">
                 
                 <!-- Card Header -->
                 <div class="card-header bg-primary text-white text-center py-4 border-0">
                     <div class="mb-2">
-                        <i class="bi bi-file-earmark-text-fill animated-icon d-inline-block fs-1"></i>
+                        <i class="bi bi-cloud-arrow-up-fill animated-icon d-inline-block fs-1"></i>
                     </div>
-                    <h3 class="mb-0 fw-bold">Scholarship Application Form</h3>
-                    <p class="text-white-50 small mb-0 mt-1">Please fill in the details below to submit your application</p>
+                    <h3 class="mb-0 fw-bold">Submit Assignment</h3>
+                    <p class="text-white-50 small mb-0 mt-1">Provide your text response and upload your assignment files below</p>
                 </div>
 
                 <!-- Card Body -->
                 <div class="card-body p-4 p-md-5 bg-white">
-                    <form th:action="@{/scholarship/save}"
-                          th:object="${application}"
+                    
+                    <!-- Error Message -->
+                    <div class="alert alert-danger d-flex align-items-center rounded-3 mb-4"
+                         th:if="${error}">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span th:text="${error}">Error text</span>
+                    </div>
+
+                    <form th:action="@{/submission/assignment/submit}"
+                          th:object="${submission}"
                           method="post"
                           enctype="multipart/form-data">
 
-                        <!-- Scholarship ID (Hidden Input) -->
-                        <input type="hidden" th:field="*{scholarshipID}">
+                        <!-- Hidden Field for Assignment ID -->
+                        <input type="hidden" th:field="*{assignmentID}">
 
-                        <!-- Reason Field -->
+                        <!-- Answer Textarea Field -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold text-dark mb-2">
-                                <i class="bi bi-chat-left-quote me-1 text-primary"></i> 
-                                Reason for Applying <span class="text-danger">*</span>
+                                <i class="bi bi-pencil-square me-1 text-primary"></i> Answer / Text Response
                             </label>
 
-                            <textarea
-                                    class="form-control rounded-3 p-3 fs-6"
-                                    th:field="*{reason}"
-                                    rows="5"
-                                    placeholder="Explain your academic goals, financial needs, and why you deserve this scholarship...">
-                            </textarea>
+                            <textarea class="form-control rounded-3 p-3 fs-6"
+                                      rows="6"
+                                      th:field="*{submissionText}"
+                                      placeholder="Type or paste your assignment answer details here..."></textarea>
 
                             <div class="text-danger small mt-1"
-                                 th:if="${#fields.hasErrors('reason')}"
-                                 th:errors="*{reason}">
+                                 th:if="${#fields.hasErrors('submissionText')}"
+                                 th:errors="*{submissionText}">
                             </div>
                         </div>
 
-                        <!-- Supporting Document Field -->
+                        <!-- File Upload Field -->
                         <div class="mb-5">
                             <label class="form-label fw-semibold text-dark mb-2">
-                                <i class="bi bi-cloud-arrow-up me-1 text-primary"></i> 
-                                Supporting Document <span class="text-danger">*</span>
+                                <i class="bi bi-file-earmark-arrow-up me-1 text-primary"></i> Upload File
                             </label>
 
                             <div class="p-3 border rounded-3 bg-light">
                                 <input type="file"
                                        class="form-control rounded-2 bg-white"
                                        th:field="*{file}"
-                                       accept=".pdf,.doc,.docx,.ppt,.pptx">
-                                
-                                <div class="text-danger small mt-1"
-                                     th:if="${#fields.hasErrors('file')}"
-                                     th:errors="*{file}">
-                                </div>
+                                       accept=".pdf,.doc,.docx">
 
+                                <div class="text-danger small mt-1"
+                                     th:if="${fileError}"
+                                     th:text="${fileError}">
+                                </div>
+                                
                                 <div class="mt-2 text-muted-emphasis small d-flex align-items-center gap-1">
                                     <i class="bi bi-info-circle small"></i>
-                                    <span>Allowed formats: <strong>PDF, DOC, DOCX, PPT, PPTX</strong> (Max: 5 MB)</span>
+                                    <span>Accepted extensions: <strong>PDF, DOC, DOCX</strong></span>
                                 </div>
                             </div>
                         </div>
@@ -111,15 +115,16 @@
 
                         <!-- Responsive Action Buttons -->
                         <div class="d-flex flex-column-reverse flex-sm-row justify-content-between gap-2">
-                            <!-- Back Link -->
-                            <a th:href="@{/scholarship/scholarships}"
+                            <!-- Back Button -->
+                            <a th:href="@{/submission/assignments}"
                                class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center">
                                 <i class="bi bi-arrow-left me-1"></i> Back
                             </a>
-                            
+
                             <!-- Submit Button -->
-                            <button type="submit" class="btn btn-success px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
-                                Submit Application <i class="bi bi-check2-circle ms-1"></i>
+                            <button type="submit"
+                                    class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
+                                Submit Assignment <i class="bi bi-check2-circle ms-1"></i>
                             </button>
                         </div>
 

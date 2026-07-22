@@ -1,167 +1,217 @@
 package com.finalproject.Final.controller;
 
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+
+import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.ScholarshipApplicationBean;
 import com.finalproject.Final.model.ScholarshipBean;
-import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.ScholarshipApplicationRepository;
-import com.finalproject.Final.repository.ScholarshipsRepository;
+import com.lowagie.text.List;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
+
 
 @Controller
 @RequestMapping("/admin")
 public class ScholarshipsControllerAdmin {
 
-	
 	@Autowired
-	private ScholarshipsRepository schRepo;
-	
-	@Autowired
-	private ScholarshipApplicationRepository sArepo;
-	
-	//insert for new scholarship
-	@GetMapping("/scholarship-create")
-    public String create(Model model) {
+    private ScholarshipApplicationRepository sArepo;
 
-        model.addAttribute("scholarship",
-                new ScholarshipBean());
 
+    // Create Scholarship Page
+  
+    @GetMapping("/scholarship-create")
+    public String create(Model model){
+
+    	model.addAttribute("scholarship", new ScholarshipBean());
+        
+        // MAKE SURE THIS LINE EXISTS
+        model.addAttribute("courses", sArepo.getAllCourseNa()); 
+        
         return "admin/create-scholarship";
     }
-//insert for new  scholarship 
     @PostMapping("/save")
-    public String save(@ModelAttribute ScholarshipBean scholarship,
-                       HttpSession session) {
+    public String save(
+           @Valid @ModelAttribute("scholarship") ScholarshipBean scholarship,
+           BindingResult result,
+           Model model,
+           HttpSession session) {
 
-        UserBean loginUser =
-                (UserBean) session.getAttribute("loginUser");
+        // If validation error
+        if (result.hasErrors()) {
+            // FIX: Match the repository call used in the original create method
+            model.addAttribute("courses", sArepo.getAllCourseNa()); 
+ return "admin/create-scholarship";
+        }
 
-        scholarship.setCreatedByUserID(loginUser.getUserID());
-
+        scholarship.setScholarshipID(java.util.UUID.randomUUID().toString());
         scholarship.setCreatedAt(LocalDateTime.now());
         scholarship.setUpdatedAt(LocalDateTime.now());
 
         sArepo.insert(scholarship);
 
-        return "redirect:/admin/scholarship-create";
+        return "redirect:/admin/list";
     }
+	
     
-    //view all scholarships 
+  
+
+    // Scholarship Management List
+     
     @GetMapping("/list")
     public String list(Model model){
 
-        model.addAttribute(
-                "scholarships",
-                sArepo.getAll()
+ model.addAttribute("scholarships",sArepo.getAll()
+        );
+ return "admin/adminscholarship-list";
+    }
+
+   
+    // Edit Scholarship
+ @GetMapping("/edit/{id}")
+    public String edit(@PathVariable String id,
+            Model model){
+
+
+        ScholarshipBean scholarship =sArepo.findByScholarshipId(id);
+model.addAttribute("scholarship",scholarship
+        );
+return "admin/update-scholarship";
+    }
+
+
+   
+    // Update Scholarship
+   
+
+    @PostMapping("/update")
+    public String update(
+            @ModelAttribute("scholarship") ScholarshipBean scholarship,
+            @RequestParam(value="oldDeadline",
+                    required=false) String oldDeadline){
+
+ if(scholarship.getApplicationDeadline()==null
+                && oldDeadline!=null
+                && !oldDeadline.isEmpty()){
+
+  scholarship.setApplicationDeadline(
+                    LocalDate.parse(oldDeadline)
+            );
+
+        }
+ scholarship.setUpdatedAt(
+                LocalDateTime.now()
         );
 
-        return "admin/adminscholarship-list";
-    }
-    
-    
-   // edit scholarship 
-   @GetMapping("/edit/{id}")
-   public String edit(
-            @PathVariable("id") String id,
-           Model model){
-ScholarshipBean scholarship = sArepo.findByScholarshipId(id);
-model.addAttribute("scholarship",scholarship);
 
- return "admin/update-scholarship";
+
+        sArepo.update(scholarship);
+
+  return "redirect:/admin/list";
+    }
+
+
+
+    // Show Applicants By Scholarship
+ 
+    @GetMapping("/scholarship/{id}/applications")
+    public String scholarshipApplications(
+            @PathVariable String id,
+            Model model){
+
+
+
+        model.addAttribute("applications",sArepo.getApplicationsByScholarship(id)
+        );
+ return "admin/scholarshipapplication-list";
+    }
+
+
+    // Student Application Detail
+ @GetMapping("/application/detail/{id}")
+    public String applicationDetail(@PathVariable String id,Model model){
+
+        ScholarshipApplicationBean application =sArepo.getApplicationDetail(id);
+ model.addAttribute("appdetail",application);
+ 
+  return "admin/scholarshipapplication-detail";
+    }
+
+
+
+    // Approve / Reject
+   
+ @PostMapping("/application/status")
+    public String updateStatus( @RequestParam("applicationID")
+            String applicationID, @RequestParam("status")
+            String status, @RequestParam(value="reviewNotes", required=false)
+String reviewNotes,@RequestParam("scholarshipID")
+  String scholarshipID){
+// Later replace with session admin ID
+        String adminID =
+                "19dda97d-7acd-11f1-898e-e4b97a5cf834";
+
+ 
+////1. Update the application status (Approved / Rejected)
+// sArepo.updateApplicationStatus(applicationID, status, adminID, reviewNotes);
+// 
+// // 2. AUTOMATION LOGIC: If the admin approved the student, check maximum recipients
+// if ("APPROVED".equalsIgnoreCase(status)) { // Make sure this matches your status string (e.g., "Approved" or "APPROVED")
+//     
+//     // Fetch the specific scholarship to get its maxRecipients
+//     ScholarshipBean scholarship = sArepo.findByScholarshipId(scholarshipID);
+//     
+//     // Get the current total number of approved students for this scholarship
+//     int currentApprovedCount = sArepo.getApprovedCountByScholarship(scholarshipID);
+//     
+//     // If the max limit is reached or exceeded, turn the status to inactive
+//     if (currentApprovedCount >= scholarship.getMaxRecipients()) {
+//         sArepo.updateScholarshipStatus(scholarshipID, "INACTIVE"); // Or use 0 if your database flag is an Integer
+//     }
+// }
+//        // return same scholarship applicants
+//        return "redirect:/admin/scholarship/"
+//                + scholarshipID
+//                + "/applications";
+//    }
+     // Update selected application
+        sArepo.updateApplicationStatus(applicationID, status, adminID, reviewNotes);
+
+        // Only check when approving
+        if ("APPROVED".equalsIgnoreCase(status)) {
+
+            ScholarshipBean scholarship = sArepo.findByScholarshipId(scholarshipID);
+
+            int approvedCount = sArepo.getApprovedCountByScholarship(scholarshipID);
+
+            // Maximum reached
+            if (approvedCount >= scholarship.getMaxRecipients()) {
+
+                // 1. Scholarship inactive
+                sArepo.updateScholarshipStatus(scholarshipID, "INACTIVE");
+
+                // 2. Reject every pending application
+                sArepo.rejectPendingApplications(
+                        scholarshipID,
+                        adminID,
+                        "Automatically rejected because scholarship quota has been filled."
+                );
+            }
         }
-    
-    
- // Update Scholarship
- @PostMapping("/update")
-    public String update(
-            @ModelAttribute ScholarshipBean scholarship){
-	 
-
-	 scholarship.setUpdatedAt(LocalDateTime.now());
-
- sArepo.update(scholarship);
- return "redirect:/admin/list";
-
-    }
-
- 
- 
- // 1. Admin View All  Scholarship Applications
-@GetMapping("/applications")
- public String viewApplications(Model model){
- model.addAttribute("applications",sArepo.getAllApplications()
-     );
-return "admin/scholarshipapplication-list";
-   }
- 
-
- // 2. Admin View Application Detail
-@GetMapping("/application/detail/{id}")
- public String applicationDetail(
-         @PathVariable("id") String id,
-         Model model){
-
-	
-     ScholarshipApplicationBean application =
-             sArepo.getApplicationDetail(id);
-     
-    	//System.out.println(application.getUserName());
-    	//System.out.println(application.getScholarshipName());
-model.addAttribute(
-             "application",
-             application
-     );
- return "admin/scholarshipapplication-detail";
-
-
+            return "redirect:/admin/scholarship/" + scholarshipID + "/applications";
+        
  }
-
-
-// 3. Admin Approve / Reject
-@PostMapping("/application/status")
-public String updateStatus(@RequestParam("applicationID")
-        String applicationID,
-        @RequestParam("status")
-        String status,
-@RequestParam(value="reviewNotes",
- required=false)
-String reviewNotes
-){
-//if admin is login //
-//	UserBean admin =
-//	 (UserBean) session.getAttribute("loginUser");
-//	 String adminID = admin.getUserID();
-//	       
-	String adminID = "19dab99f-7acd-11f1-898e-e4b97a5cf834"; 
-    // replace with session admin id
-
-    sArepo.updateApplicationStatus(
-applicationID,
-status,
-adminID,
- reviewNotes
-
-    );
-
-
-
-    return "redirect:/admin/applications";
-
-
 }
-}
-	
-	
-

@@ -3,6 +3,8 @@ package com.finalproject.Final.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -34,4 +36,19 @@ public class SubmissionBean {
     private LocalDateTime updatedAt;
     
     private String assignmentTitle; 
+    
+    //thiri
+        private String courseName;
+private String courseID;
+private String createdByID;
+private String description;
+private BigDecimal weightPercent;
+private LocalDateTime dueDate;
+private String remarks;
+private String title;
+private String status; 
+private LocalDateTime createdAt;
+private LocalDateTime AssignupdatedAt;
+private MultipartFile file;
+     
 }

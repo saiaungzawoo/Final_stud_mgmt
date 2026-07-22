@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +27,17 @@ public class ScholarshipApplicationBean {
     private String userID;
  
     private LocalDate applicationDate;// Application Information
+    
+    @NotBlank(message = "Reason is required.")
 
     private String reason;
     
  // Upload File
     // Only used in form upload
+   
+
     private MultipartFile file;
- 
+
     private String supportingDocuments;// Database file path
  
     private String status;  // Admin Review
@@ -55,5 +61,7 @@ public class ScholarshipApplicationBean {
     private String phoneNo;
 
     private String address;
+    
+    private String courseName;
 }
 

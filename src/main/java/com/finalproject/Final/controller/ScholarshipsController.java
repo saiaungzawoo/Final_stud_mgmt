@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.ScholarshipsRepository;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,38 +68,67 @@ UserBean loginUser =
 
 
 if(loginUser == null){
-
 return "redirect:/login";
-
 }
 
+boolean applied =schRepo.hasApplied(id, loginUser.getUserID());
+//CRITICAL FIX: Send the 'applied' boolean variable to your Thymeleaf template
+model.addAttribute("applied", applied);
 	    // Login ဝင်ထားတဲ့ userID ကို HTML ပို့
 	   model.addAttribute("userID", session.getAttribute("userID"));
      return "student/scholarship-detail";
 	}
+	
+	
+	      
 
+	   
+
+
+ 
+ 
+
+ 
 // Apply button click
-       @GetMapping("/apply/{id}")
-    public String applyForm(
-            @PathVariable("id") String scholarshipID,
-            HttpSession session,
-            Model model){
+	@GetMapping("/apply/{id}")
+	public String applyForm(
+	        @PathVariable("id") String scholarshipID,
+	        HttpSession session,
+	        Model model) {
 
-    	if(session.getAttribute("userID") == null){
-            return "redirect:/login";
-        }
-        ScholarshipApplicationBean obj =
-                new ScholarshipApplicationBean();
- obj.setScholarshipID(scholarshipID);
 
-model.addAttribute("application", obj);
+	    // Check Login
+	    UserBean loginUser = 
+	            (UserBean) session.getAttribute("loginUser");
+
+
+	    if(loginUser == null){
+	        return "redirect:/login";
+	    }
+
+	    String userID = loginUser.getUserID();
+
+
+	    // Check Already Applied
+	    if (schRepo.hasApplied(scholarshipID, userID)) {
+   return "redirect:/scholarship/" + scholarshipID;
+	    }
+
+	    // Create Application Object
+	    ScholarshipApplicationBean obj =
+	            new ScholarshipApplicationBean();
+
+	    obj.setScholarshipID(scholarshipID);
+	    obj.setUserID(userID);
+ model.addAttribute("application", obj);
  return "student/apply-scholarship";
-}
+	}
 
  // Submit Form
         @PostMapping("/save")
-    public String saveApplication(@ModelAttribute("application")
+    public String saveApplication(@Valid @ModelAttribute("application")
             ScholarshipApplicationBean obj,
+            BindingResult result,
             HttpSession session,
             Model model) throws IOException {
 
@@ -109,8 +140,43 @@ model.addAttribute("application", obj);
         obj.setUserID(userID);
      // current date
         obj.setApplicationDate(LocalDate.now());
+        
+        
+        
      // file upload
         MultipartFile file = obj.getFile();
+  // File Validation
+   if (file == null || file.isEmpty()) {
+            result.rejectValue("file", "error.file",
+                    "Supporting document is required.");
+        } else {
+
+            // Maximum 5 MB
+            long maxSize = 5 * 1024 * 1024;
+
+            if (file.getSize() > maxSize) {
+                result.rejectValue("file", "error.file",
+                        "File size must not exceed 5 MB.");
+            }
+
+            String filename = file.getOriginalFilename().toLowerCase();
+
+            if (!(filename.endsWith(".pdf")
+                    || filename.endsWith(".doc")
+                    || filename.endsWith(".docx")
+                    || filename.endsWith(".ppt")
+                    || filename.endsWith(".pptx"))) {
+
+                result.rejectValue("file", "error.file",
+                        "Only PDF, DOC, DOCX, PPT and PPTX files are allowed.");
+            }
+        }
+
+        // Return form if validation fails
+        if (result.hasErrors()) {
+            return "student/apply-scholarship";
+        }
+
         if(file != null && !file.isEmpty()){
         	String fileName = file.getOriginalFilename();
         	// upload location

@@ -1,4 +1,4 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -120,8 +120,7 @@ public class UsersController {
              // return "student_register";
               }
         String fileName = photo.getOriginalFilename();
-
-          String path = "D:/upload/";
+ String path = "D:/upload/";
 //file 
           File dir = new File(path);
           if (!dir.exists()) {
@@ -252,10 +251,9 @@ public class UsersController {
           String contentType = photo.getContentType();
 
           if (contentType == null ||
-                  !(contentType.equals("image/jpeg") ||
-                           contentType.equals("image/png"))) {
-
-              model.addAttribute(
+                 !(contentType.equals("image/jpeg") 
+                         ||  contentType.equals("image/png"))) {
+ model.addAttribute(
                       "error",
                       "Only JPG and PNG images are allowed.");
 

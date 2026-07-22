@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Detail</title>
+    <head th:replace="~{fragment/css :: css}"></head>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- CSS Animation & Profile UI Styles -->
+    <style>
+        .detail-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .detail-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+        }
+        .profile-avatar-placeholder {
+            width: 150px;
+            height: 150px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            color: #adb5bd;
+        }
+        .info-label {
+            width: 150px;
+            display: inline-block;
+        }
+        /* Buttons Hover Effect */
+        .hover-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-md-11">
+
+            <!-- Back Button Link Upper Control -->
+            <div class="mb-4">
+                <a th:href="@{/student/admin/students}" class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn bg-white shadow-sm fw-semibold">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Student List
+                </a>
+            </div>
+
+            <!-- Main Detail Card -->
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden detail-card">
+                
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white py-3 px-4 d-flex align-items-center gap-2 border-0">
+                    <i class="bi bi-person-card-heading fs-4"></i>
+                    <h4 class="mb-0 fw-bold">Student Profile Details</h4>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <div class="row g-4 align-items-center align-items-md-start">
+                        
+                        <!-- Left Column: Profile Image -->
+                        <div class="col-md-4 text-center">
+                            <div class="mb-3">
+                                <img th:if="${student.profileImage != null}" 
+                                     th:src="@{${student.profileImage}}" 
+                                     width="150" height="150" 
+                                     class="rounded-circle border shadow-sm object-fit-cover" alt="Student Profile">
+                                
+                                <div th:unless="${student.profileImage != null}" 
+                                     class="rounded-circle profile-avatar-placeholder border shadow-sm">
+                                    <i class="bi bi-person text-secondary" style="font-size: 4.5rem;"></i>
+                                </div>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-1" th:text="${student.name}">Student Name</h5>
+                            <p class="text-muted small mb-0" th:text="${student.email}">email@domain.com</p>
+                        </div>
+
+                        <!-- Right Column: Student Specifications List -->
+                        <div class="col-md-8">
+                            <h5 class="fw-bold border-bottom pb-2 text-secondary mb-3">Account Information</h5>
+                            
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-person me-2 text-primary"></i> Full Name</span>
+                                    <span class="text-dark fw-medium" th:text="${student.name}">Name</span>
+                                </li>
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-envelope me-2 text-primary"></i> Email</span>
+                                    <span class="text-dark" th:text="${student.email}">Email</span>
+                                </li>
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-telephone me-2 text-primary"></i> Phone Number</span>
+                                    <span class="text-dark" th:text="${student.phoneNumber}">Phone</span>
+                                </li>
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-geo-alt me-2 text-primary"></i> Address</span>
+                                    <span class="text-dark" th:text="${student.address}">Address</span>
+                                </li>
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-calendar-event me-2 text-primary"></i> Date of Birth</span>
+                                    <span class="text-dark" th:text="${student.dob}">DOB</span>
+                                </li>
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-gender-ambiguous me-2 text-primary"></i> Gender</span>
+                                    <span class="badge bg-light text-dark border px-2.5 py-1 fw-medium align-self-start" th:text="${student.gender}">Gender</span>
+                                </li>
+                                <li class="list-group-item bg-transparent px-0 py-2.5 d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
+                                    <span class="fw-bold text-muted info-label"><i class="bi bi-shield-check me-2 text-primary"></i> Account Status</span>
+                                    <span th:if="${student.isActive == 1}" class="badge bg-success-subtle text-success px-2.5 py-1.5 border border-success-subtle rounded-pill">
+                                        Active
+                                    </span>
+                                    <span th:if="${student.isActive == 0}" class="badge bg-danger-subtle text-danger px-2.5 py-1.5 border border-danger-subtle rounded-pill">
+                                        Inactive
+                                    </span>
+                                </li>
+                            </ul>
+
+                            <h5 class="fw-bold border-bottom pb-2 text-secondary mb-3 mt-4">System Logging</h5>
+                            <div class="row g-2 text-muted small">
+                                <div class="col-sm-6">
+                                    <strong>Created:</strong> <span th:text="${student.createdAt}">Date</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Last Updated:</strong> <span th:text="${student.updatedAt}">Date</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- /card -->
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+</html>
