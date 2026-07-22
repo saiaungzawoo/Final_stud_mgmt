@@ -47,6 +47,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 	    if(uri.equals("/")
 	            || uri.startsWith("/login")
+	            || uri.startsWith("/student")
 	            || uri.startsWith("/css")
 	            || uri.startsWith("/js")
 	            || uri.startsWith("/images")
