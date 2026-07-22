@@ -179,7 +179,7 @@ public List<SubmissionBean> getAllAssignment() {
         bean.setTitle(rs.getString("title"));
         bean.setDescription(rs.getString("description"));
 
-        bean.setMaxScore(rs.getBigDecimal("max_score"));
+        bean.setScore(rs.getBigDecimal("max_score"));
         bean.setWeightPercent(rs.getBigDecimal("weight_percent"));
 
         if (rs.getTimestamp("due_date") != null) {
@@ -246,7 +246,7 @@ public List<SubmissionBean> getStudentAssignments(String userID) {
         bean.setTitle(rs.getString("title"));
         bean.setDescription(rs.getString("description"));
 
-        bean.setMaxScore(rs.getBigDecimal("max_score"));
+        bean.setScore(rs.getBigDecimal("max_score"));
         bean.setWeightPercent(rs.getBigDecimal("weight_percent"));
 
         if (rs.getTimestamp("due_date") != null) {
