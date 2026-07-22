@@ -33,6 +33,7 @@ public class CourseCategoryController {
 	@Autowired
 	CourseCategoryService courseCategoryService;
 	
+	
 	/*
 	 * @GetMapping("/list") public String showAllCourseCategory(Model m) {
 	 * List<CourseCategoryBean> courseCategoryList =
@@ -42,11 +43,12 @@ public class CourseCategoryController {
 	 * "admin/course-category"; }
 	 */
 	
-	@PostMapping("/create")
-	public String createCourseCategory(@ModelAttribute("courseCategory") CourseCategoryDTO courseCatDTO) {
-		courseCategoryService.createCourseCategory(courseCatDTO);
-		return "redirect:/course-category/list";
-	}
+	/*
+	me * @PostMapping("/create") public String
+	 * createCourseCategory(@ModelAttribute("courseCategory") CourseCategoryDTO
+	 * courseCatDTO) { courseCategoryService.createCourseCategory(courseCatDTO);
+	 * return "redirect:/course-category/list"; }
+	 */
 	
 	/*
 	 * @GetMapping("/list/{courseCategoryId}") public String

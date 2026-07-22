@@ -13,17 +13,52 @@ public class UserRepository {
 	//test
     @Autowired
     private JdbcTemplate jdbc;
+    //wont delete any codes, i will just comment codes
 
     private final UserRowMapper mapper = new UserRowMapper();
     
+//    public UserBean findByEmail(String email) {
+//        String sql = "SELECT * FROM user WHERE email = ?";
+//        try {
+//            return jdbc.queryForObject(
+//                    sql,
+//                    new BeanPropertyRowMapper<>(UserBean.class),
+//                    email);
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
+    
+    //sai
+    // to get role name 
     public UserBean findByEmail(String email) {
-        String sql = "SELECT * FROM user WHERE email = ?";
+
+        String sql = """
+                
+                SELECT 
+                    u.*,
+                    r.name AS roleName
+
+                FROM user u
+
+                JOIN role r
+                ON u.roleID = r.roleID
+
+                WHERE u.email = ?
+
+                """;
+
+
         try {
+
             return jdbc.queryForObject(
                     sql,
-                    new BeanPropertyRowMapper<>(UserBean.class),
-                    email);
-        } catch (Exception e) {
+                    new UserRowMapper(),
+                    email
+            );
+
+        } catch(Exception e) {
+
             return null;
         }
     }

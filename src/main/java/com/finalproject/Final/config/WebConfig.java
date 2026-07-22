@@ -8,20 +8,46 @@ import org.springframework.http.MediaType; // မှန်ကန်သော Spr
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
+import org.springframework.http.MediaType; // မှန်ကန်သော Spring MediaType ကို Import လုပ်ခြင်း
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/upload/**")
                 .addResourceLocations("file:D:/upload/");
     }
+    
+    //sai
+    //for role validation
+    //dont delete this
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//
+//
+//        registry.addInterceptor(roleInterceptor)
+//                .addPathPatterns(
+//                    "/admin/**",
+//                    "/dashboard/**",
+//                    "/attendance/**",
+//                    "/announce/**",
+//                    "/student/**",
+//                    "/forgot-password"
+//                );
+//
+//    }
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         // URL အဆုံးက .pptx သို့မဟုတ် အခြား extension တွေကြောင့် 400 Error မတက်အောင် တားဆီးခြင်း

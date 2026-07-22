@@ -95,6 +95,7 @@ Generate Schedule
 <th>Topic</th>
 
 <th>Status</th>
+<th>Action</th>
 
 </tr>
 
@@ -149,6 +150,20 @@ Generate Schedule
 
 
 </td>
+ <td>
+
+            <a class="btn btn-warning btn-sm"
+               th:href="@{/schedule/edit/{id}(id=${schedule.scheduleId})}">
+                Edit
+            </a>
+
+            <a class="btn btn-danger btn-sm"
+               th:href="@{/schedule/delete/{id}(id=${schedule.scheduleId})}"
+               onclick="return confirm('Delete this schedule?')">
+                Delete
+            </a>
+
+        </td>
 
 
 

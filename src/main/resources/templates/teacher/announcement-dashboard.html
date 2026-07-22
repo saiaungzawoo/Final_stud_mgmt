@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+    <!-- Custom Hover Lift Effect & UI Optimizations -->
+    <style>
+    /* စာသားအရှည်ကြီးတွေကို ၃ ကြောင်းပဲပြပြီး အစက်ကလေးတွေ (...) ဖြတ်ရန် */
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        }
+        .announcement-card {
+            border-left: 4px solid #0d6efd; /* Primary Blue Indicator */
+        }
+        .announcement-card.priority-high {
+            border-left: 4px solid #ffc107;
+        }
+        .announcement-card.priority-urgent {
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar Section -->
+        <div class="col-md-3 col-lg-2 p-0 bg-white shadow-sm min-vh-100">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-md-9 col-lg-10 py-4 px-md-4">
+            <div class="container-fluid">
+
+                <!-- A. Header Section -->
+                <div class="d-md-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold text-dark d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone text-primary"></i> 
+                            Announcement Management
+                        </h2>
+                        <p class="text-muted mb-0">Create and manage course announcements seamlessly.</p>
+                    </div>
+                    <div class="mt-3 mt-md-0">
+                        <!-- Button triggering the Create Modal Form directly -->
+                        <button type="button" class="btn btn-primary px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#announcementModal" onclick="openCreateModal()">
+                            <i class="bi bi-megaphone-fill me-2"></i>New Announcement
+                        </button>
+                    </div>
+                </div>
+
+                <!-- B. Course Section (Responsive Cards Grid) -->
+                <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-book me-2"></i>Your Active Courses</h5>
+                <div class="row g-3 mb-5">
+                    <div class="col-md-6 col-lg-4" th:each="course : ${courseList}">
+                        <div class="card h-100 border-0 shadow-sm rounded-3 hover-lift" 
+                             th:classappend="${courseID == course.courseId} ? 'border border-primary border-2' : ''">
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title fw-bold text-dark mb-0 th-text" th:text="${course.name}">Course Title</h5>
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill">
+                                        <i class="bi bi-chat-left-text me-1"></i>
+                                       <!--  <span th:text="${course.announcementCount != null ? course.announcementCount : '0'}">0</span> -->
+                                       <span>0</span>
+                                    </span>
+                                </div>
+                                <p class="text-muted small flex-grow-1" th:text="${course.description}">Course description overview text goes here...</p>
+                                <div class="mt-3">
+                                    <a th:href="@{/announcement/list(courseID=${course.courseId})}" class="btn btn-outline-primary w-100 rounded-3 text-nowrap">
+                                        <i class="bi bi-eye me-2"></i>View Announcements
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- C. Announcement List Section -->
+                <div class="row" th:if="${courseID != null}">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-dark mb-0">
+                                <i class="bi bi-list-stars me-2 text-primary"></i>Recent Announcements for Selected Course
+                            </h5>
+                        </div>
+
+                        <!-- Empty State Handling -->
+                        <div th:if="${#lists.isEmpty(announcementList)}" class="text-center py-5 bg-white rounded-3 shadow-sm p-4">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+                            <p class="text-muted mb-0">No announcements found for this course group yet.</p>
+                        </div>
+
+                        <!-- Card list structure -->
+                        <div class="row g-3" th:if="${!#lists.isEmpty(announcementList)}">
+                            <div class="col-12" th:each="ann : ${announcementList}">
+                                <div class="card border-0 shadow-sm rounded-3 hover-lift announcement-card"
+                                     th:classappend="'priority-' + ${#strings.toLowerCase(ann.priority)}">
+                                    <div class="card-body p-4">
+                                        <div class="d-md-flex justify-content-between align-items-start gap-3">
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                                    <!-- Title -->
+                                                    <h5 class="fw-bold text-dark mb-0" th:text="${ann.title}">Announcement Title</h5>
+                                                    
+                                                    <!-- Badges Context -->
+                                                    <span class="badge" th:text="${ann.priority}"
+                                                          th:classappend="${ann.priority == 'Urgent' ? 'bg-danger' : (ann.priority == 'High' ? 'bg-warning text-dark' : (ann.priority == 'Normal' ? 'bg-primary' : 'bg-secondary'))}">Priority</span>
+                                                    
+                                                    <span class="badge bg-info-subtle text-info" th:text="${ann.targetType}">Target</span>
+                                                    
+                                                    <span class="badge" th:text="${ann.published ? 'Published' : 'Draft'}"
+                                                          th:classappend="${ann.published ? 'bg-success' : 'bg-secondary'}">Status</span>
+                                                </div>
+
+                                                <!-- Content Text Preview -->
+<!-- Content Text Preview (စာသားအစကိုပြပြီး ... ဖြတ်ရန် ပြောင်းလဲထားသည်) -->
+<!-- Content Text Preview -->
+<!-- text-pre-wrap ကို သေချာပေါက် ဖြုတ်ပေးရပါမယ်ဗျာ -->
+<div th:text="${ann.content}" 
+     style="display: -webkit-box !important; 
+            -webkit-line-clamp: 1 !important; 
+            -webkit-box-orient: vertical !important; 
+            overflow: hidden !important; 
+            text-overflow: ellipsis !important; 
+            white-space: normal !important;
+            color: #6c757d;" 
+     class="mb-3">
+</div>                                                <div class="d-flex flex-wrap gap-3 text-muted small">
+                                                    <div>
+                                                        <i class="bi bi-calendar-check me-1"></i>
+                                                        Publish: <span th:text="${#temporals.format(ann.publishDate, 'yyyy-MM-dd HH:mm')}">2026-07-20 10:00</span>
+                                                    </div>
+                                                    <div th:if="${ann.expiryDate != null}">
+                                                        <i class="bi bi-calendar-x me-1"></i>
+                                                        Expires: <span th:text="${#temporals.format(ann.expiryDate, 'yyyy-MM-dd HH:mm')}">2026-07-25 18:00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Action Buttons Block -->
+                                            <div class="mt-3 mt-md-0 d-flex gap-2 text-nowrap">
+                                                <button type="button" class="btn btn-sm btn-light border px-3" 
+                                                        data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                        th:data-title="${ann.title}" th:data-content="${ann.content}"
+                                                        onclick="viewDetail(this)">
+                                                    <i class="bi bi-eye-fill"></i> View
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-primary px-3"
+                                                        data-bs-toggle="modal" data-bs-target="#announcementModal"
+                                                        th:data-id="${ann.announcementID}" th:data-course="${ann.courseID}"
+                                                        th:data-title="${ann.title}" th:data-content="${ann.content}"
+                                                        th:data-target="${ann.targetType}" th:data-priority="${ann.priority}"
+                                                        th:data-expiry="${ann.expiryDate}" th:data-pub="${ann.published}"
+                                                        onclick="openEditModal(this)">
+                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- D. Announcement Form Section inside Modal Form Structure -->
+<div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-3">
+            <div class="modal-header bg-primary text-white py-3">
+                <h5 class="modal-title fw-bold" id="formModalLabel"><i class="bi bi-megaphone-fill me-2"></i>Announcement Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form th:action="@{/announcement/save}" th:object="${announcement}" method="post">
+                <div class="modal-body p-4">
+                    <!-- Hidden mapping infrastructure variables -->
+                    <input type="hidden" id="formAnnouncementID" th:field="*{announcementID}">
+                    <input type="hidden" id="formCourseID" th:field="*{courseID}">
+
+                    <div class="row g-3">
+                        <!-- Course Display Context Field -->
+                        <div class="col-12" id="courseSelectFieldWrapper">
+                            <label class="form-label fw-bold text-secondary"><i class="bi bi-book me-2"></i>Target Course Context</label>
+                            <select class="form-select rounded-3" id="formCourseSelect" onchange="syncCourseID(this.value)">
+                                <option value="">-- Select Target Course --</option>
+                                <option th:each="c : ${courseList}" th:value="${c.courseId}" th:text="${c.name}" th:selected="${c.courseId == courseID}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Left Fields Column -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary"><i class="bi bi-pencil me-2"></i>Announcement Title</label>
+                                <input type="text" class="form-control rounded-3" th:field="*{title}" placeholder="Enter subject heading..." required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary"><i class="bi bi-people me-2"></i>Target Audience Type</label>
+                                <select class="form-select rounded-3" th:field="*{targetType}">
+                                    <option value="ALL">ALL</option>
+                                    <option value="ALL_STUDENTS">ALL_STUDENTS</option>
+                                    <option value="ALL_TEACHERS">ALL_TEACHERS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Right Fields Column -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary"><i class="bi bi-shield-exclamation me-2"></i>Priority Scale</label>
+                                <select class="form-select rounded-3" th:field="*{priority}">
+                                    <option value="Low">Low</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="High">High</option>
+                                    <option value="Urgent">Urgent</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary"><i class="bi bi-clock-history me-2"></i>Expiry Date & Time</label>
+                                <input type="datetime-local" class="form-control rounded-3" th:field="*{expiryDate}">
+                            </div>
+                        </div>
+
+                        <!-- Description Box Textarea Full Width -->
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary"><i class="bi bi-card-text me-2"></i>Message Content Body</label>
+                                <textarea class="form-control rounded-3" rows="5" th:field="*{content}" placeholder="Type notification information detailed instructions..." required></textarea>
+                            </div>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" role="switch" id="formPublished" th:field="*{published}">
+                                <label class="form-check-label fw-bold text-dark" for="formPublished">Publish this announcement immediately</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-top-0 rounded-bottom-3">
+                    <button type="button" class="btn btn-secondary px-4 rounded-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4 rounded-3">Save Announcement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- E. Detail View Modal Panel -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-3">
+            <div class="modal-header bg-dark text-white py-3">
+                <h5 class="modal-title fw-bold" id="detailTitle">Announcement Subject</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p id="detailContent" class="text-secondary text-pre-wrap mb-0"></p>
+            </div>
+            <div class="modal-footer bg-light border-top-0 rounded-bottom-3">
+                <button type="button" class="btn btn-secondary px-4 rounded-3" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
+
+<!-- Lightweight Dataset Parser Interactivity Scripts -->
+<script th:inline="javascript">
+    /* Get current globally scoped URL configuration layout properties */
+    const selectedCourseID = /*[[${courseID}]]*/ '';
+
+    function syncCourseID(value) {
+        document.getElementById('formCourseID').value = value;
+    }
+
+    function openCreateModal() {
+        document.getElementById('formAnnouncementID').value = '';
+        document.getElementById('formCourseID').value = selectedCourseID;
+        document.getElementById('formCourseSelect').value = selectedCourseID || '';
+        document.getElementById('formCourseSelect').disabled = false;
+        
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        document.getElementById('targetType').value = 'ALL';
+        document.getElementById('priority').value = 'Normal';
+        document.getElementById('expiryDate').value = '';
+        document.getElementById('formPublished').checked = false;
+    }
+
+    function openEditModal(btn) {
+        document.getElementById('formAnnouncementID').value = btn.getAttribute('data-id');
+        const cId = btn.getAttribute('data-course');
+        document.getElementById('formCourseID').value = cId;
+        document.getElementById('formCourseSelect').value = cId;
+        document.getElementById('formCourseSelect').disabled = true; // Protect scope allocation mapping
+
+        document.getElementById('title').value = btn.getAttribute('data-title');
+        document.getElementById('content').value = btn.getAttribute('data-content');
+        document.getElementById('targetType').value = btn.getAttribute('data-target');
+        document.getElementById('priority').value = btn.getAttribute('data-priority');
+        
+        // Parse raw ISO datetime standard safely to structure field context layout mapping
+        let exp = btn.getAttribute('data-expiry');
+        if (exp && exp.length >= 16) {
+            document.getElementById('expiryDate').value = exp.substring(0, 16);
+        } else {
+            document.getElementById('expiryDate').value = '';
+        }
+        
+        document.getElementById('formPublished').checked = btn.getAttribute('data-pub') === 'true';
+    }
+
+    function viewDetail(btn) {
+        document.getElementById('detailTitle').innerText = btn.getAttribute('data-title');
+        document.getElementById('detailContent').innerText = btn.getAttribute('data-content');
+    }
+</script>
+
+</body>
+</html>

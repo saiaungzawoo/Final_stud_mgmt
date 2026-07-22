@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/css :: css}">
+    <title>Submission Management</title>
+</head>
+<body class="bg-light">
+
+<!-- Internal CSS for Modern Styling & Interactions -->
+<style>
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+    .lms-accent-bar {
+        border-left: 5px solid #0d6efd;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
+    }
+</style>
+
+<!-- Teacher Header Fragment -->
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        
+        <!-- Sidebar Column -->
+        <div class="col-md-3 col-lg-2 p-0 bg-white shadow-sm min-vh-100">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-md-9 col-lg-10 p-4">
+            
+            <!-- 1. Page Header Section -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-1">
+                        <i class="bi bi-folder-check text-primary me-2"></i>Submission Management
+                    </h2>
+                    <p class="text-muted mb-0">Review student assignments and manage grades</p>
+                </div>
+            </div>
+
+            <!-- 2. Statistics Summary Cards -->
+            <div class="row g-3 mb-5">
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-3 card-hover">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3 text-primary">
+                                <i class="bi bi-journal-text fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-1">Total Assignments</h6>
+                                <h3 class="fw-bold mb-0" th:text="${assignments != null ? #lists.size(assignments) : 0}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-3 card-hover">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-warning bg-opacity-10 p-3 rounded-3 me-3 text-warning">
+                                <i class="bi bi-clock-history fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-1">Pending Submissions</h6>
+                                <h3 class="fw-bold mb-0" th:text="${submissions != null ? #lists.size(submissions) : 0}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-3 card-hover">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3 text-success">
+                                <i class="bi bi-check-circle fs-3"></i>
+                            </div>
+                          <!-- 💡 အောက်ပါအတိုင်း Thymeleaf variable သုံးပြီး အရေအတွက်ကို dynamic ပြောင်းခိုင်းနိုင်ပါတယ် -->
+<!-- 💡 HTML Line 87 ဝန်းကျင်ရှိ Graded Submissions card နေရာတွင် ဤကုဒ်ဖြင့် အစားထိုးပါ -->
+<div>
+    <h6 class="text-muted mb-1">Graded Submissions</h6>
+    <h3 class="fw-bold mb-0" 
+        th:text="${submissions != null && !#lists.isEmpty(submissions)} ? ${#lists.size(submissions.?[score != null])} : '0'">
+        0
+    </h3>
+</div>
+<!-- 💡 ပြင်ဆင်ရန် - #lists.?[...] အစား submissions.?[...] ဟု တိုက်ရိုက်ပြောင်းပေးပါ -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="text-muted opacity-25 mb-5">
+
+            <!-- 3. Course Section -->
+            <div class="mb-5" th:if="${courses != null}">
+                <h4 class="fw-bold mb-3 text-secondary d-flex align-items-center">
+                    <span class="badge bg-primary me-2">1</span> Select Course
+                </h4>
+                <div class="row g-4">
+                    <div class="col-12 col-md-6 col-lg-4" th:each="course : ${courses}">
+                        <div class="card h-100 border-0 shadow-sm rounded-3 card-hover lms-accent-bar">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title fw-bold text-dark" th:text="${course.name}">Course Name</h5>
+                                <p class="card-text text-muted flex-grow-1" th:text="${course.description}">Course Description snippet.</p>
+                                <div class="d-flex justify-content-end align-items-center mt-3">
+                                    <!-- Controller ၏ @GetMapping("/assignment/{courseID}") သို့ လှမ်းချိတ်ထားသည် -->
+                                  <!-- Dashboard Controller အသစ်သုံးထားလျှင် URL ပုံစံပြောင်းရန် -->
+<a th:href="@{/teacher/submission/dashboard(courseID=${course.courseId})}" class="btn btn-outline-primary btn-sm rounded-2">
+    View Assignments <i class="bi bi-arrow-right ms-1"></i>
+</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Assignment Section -->
+           <!-- ========================================== -->
+<!-- 4. Assignment Section -->
+<!-- ========================================== -->
+<div class="mb-5" th:if="${assignments != null}">
+    
+    <!-- 💡 ပြင်ဆင်ရန် - Assignment ပြသတဲ့နေရာရဲ့ Header ညာဘက်မှာ Course ပြန်ပြောင်းတဲ့ ခလုတ်ကို အမြဲပြထားပါမယ် -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold text-secondary mb-0 d-flex align-items-center">
+            <span class="badge bg-primary me-2">2</span> Select Assignment
+        </h4>
+        <!-- ဆရာက Sidebar သွားနှိပ်စရာမလိုဘဲ ချက်ချင်း Course ပြန်ရွေးနိုင်ရန် -->
+        <a th:href="@{/teacher/submission/dashboard}" class="btn btn-outline-secondary btn-sm rounded-2">
+            <i class="bi bi-arrow-left-right me-1"></i> Change Course
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-4" th:each="assignment : ${assignments}">
+            <div class="card h-100 border-0 shadow-sm rounded-3 card-hover">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-bold text-dark mb-0" th:text="${assignment.title}">Assignment Title</h5>
+                    </div>
+                    <div class="text-muted small mb-3">
+                        <div class="mb-1">
+                            <i class="bi bi-trophy me-1"></i> Max Score: <strong class="text-dark" th:text="${assignment.maxScore}">100</strong>
+                        </div>
+                        <div th:if="${assignment.dueDate != null}">
+                            <i class="bi bi-calendar-event me-1"></i> Due: <strong class="text-dark" th:text="${#temporals.format(assignment.dueDate, 'yyyy-MM-dd HH:mm')}">2026-07-31 23:59</strong>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <a th:href="@{/teacher/submission/list/{id}(id=${assignment.assignmentID})}" class="btn btn-primary w-100 rounded-2 btn-sm">
+                            <i class="bi bi-eye me-1"></i> View Submissions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 5. Submission List Section -->
+<!-- ========================================== -->
+<div class="mb-5" th:if="${submissions != null}">
+    
+    <!-- 💡 ပြင်ဆင်ရန် - ကျောင်းသား submission လုံးဝမရှိသေးတဲ့ အခြေအနေမျိုး (Empty State) အတွက် Handling ပြုလုပ်ခြင်း -->
+    <div th:if="${#lists.isEmpty(submissions)}" class="alert alert-info border-0 shadow-sm rounded-3 p-5 text-center">
+        <i class="bi bi-info-circle fs-1 mb-3 text-primary d-block"></i>
+        <h5 class="fw-bold text-dark">No Submissions Found</h5>
+        <p class="text-muted mb-4">No student has submitted this assignment yet.</p>
+        
+        <!-- Submission မရှိရင်လည်း Assignment list သို့မဟုတ် Course list ဆီ အလွယ်တကူ ပြန်သွားနိုင်မယ့် ခလုတ်များ -->
+        <div class="d-flex justify-content-center gap-2">
+            <a th:href="@{/teacher/submission/dashboard(courseID=${selectedCourseId})}" class="btn btn-outline-primary rounded-2 px-4">
+                <i class="bi bi-arrow-left me-2"></i> Back to Assignments
+            </a>
+            <a th:href="@{/teacher/submission/dashboard}" class="btn btn-primary rounded-2 px-4 shadow-sm">
+                <i class="bi bi-journal-album me-2"></i> Change Course
+            </a>
+        </div>
+    </div>
+
+    <!-- ကျောင်းသား Submission ရှိမှသာ အောက်က list ကို ပြပါမယ် -->
+    <div th:unless="${#lists.isEmpty(submissions)}">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold text-secondary mb-0 d-flex align-items-center">
+                <span class="badge bg-primary me-2">3</span> Student Submissions
+            </h4>
+            <div class="d-flex gap-2">
+                <a th:href="@{/teacher/submission/dashboard(courseID=${selectedCourseId})}" class="btn btn-outline-primary btn-sm rounded-2">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Assignments
+                </a>
+                <a th:href="@{/teacher/submission/dashboard}" class="btn btn-outline-secondary btn-sm rounded-2">
+                    <i class="bi bi-journal-album me-1"></i> Change Course
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12" th:each="sub : ${submissions}">
+                <!-- မင်းရဲ့ လက်ရှိ ရှိပြီးသား Submission Cards ကုဒ်များကို ဒီအတိုင်း ဆက်ထားလိုက်ပါ -->
+                <div class="card border-0 shadow-sm rounded-3 card-hover">
+                    <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">
+                                <i class="bi bi-person-circle text-secondary me-2"></i><span th:text="${sub.studentName}">Student Name</span>
+                            </h6>
+                            <small class="text-muted" th:if="${sub.submittedAt != null}">
+                                <i class="bi bi-clock me-1"></i>Submitted at: <span th:text="${#temporals.format(sub.submittedAt, 'yyyy-MM-dd HH:mm')}">2026-07-20 14:30</span>
+                            </small>
+                        </div>
+                        <div>
+                            <span th:if="${sub.filePath != null}" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-2 py-2 px-3">
+                                <i class="bi bi-file-earmark-check me-1"></i> File Submitted
+                            </span>
+                            <span th:if="${sub.filePath == null}" class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-2 py-2 px-3">
+                                <i class="bi bi-file-earmark-x me-1"></i> No File Submitted
+                            </span>
+                        </div>
+                        <div>
+                            <span th:if="${sub.score != null}" class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-25 rounded-pill px-3 py-2">
+                                <i class="bi bi-check-circle-fill me-1"></i> Graded (<span th:text="${sub.score}">90</span>)
+                            </span>
+                            <span th:if="${sub.score == null}" class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-25 rounded-pill px-3 py-2">
+                                <i class="bi bi-exclamation-circle-fill me-1"></i> Pending Review
+                            </span>
+                        </div>
+                        <div class="text-end">
+                            <a th:href="@{/teacher/submission/detail/{id}(id=${sub.submissionID})}" class="btn btn-outline-primary btn-sm rounded-2 w-100 w-md-auto px-4">
+                                Grade / View <i class="bi bi-chevron-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- 5. Submission List Section -->
+            <div class="mb-5" th:if="${submissions != null}">
+                <h4 class="fw-bold mb-3 text-secondary d-flex align-items-center">
+                    <span class="badge bg-primary me-2">3</span> Student Submissions
+                </h4>
+                
+                <div th:if="${#lists.isEmpty(submissions)}" class="alert alert-info border-0 shadow-sm rounded-3 p-4 text-center">
+                    <i class="bi bi-info-circle fs-2 mb-2 d-block"></i> No submissions found for this assignment yet.
+                </div>
+
+                <div class="row g-3" th:unless="${#lists.isEmpty(submissions)}">
+                    <div class="col-12" th:each="sub : ${submissions}">
+                        <div class="card border-0 shadow-sm rounded-3 card-hover">
+                            <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                                
+                                <!-- Student & Date Details -->
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">
+                                        <i class="bi bi-person-circle text-secondary me-2"></i><span th:text="${sub.studentName}">Student Name</span>
+                                    </h6>
+                                    <small class="text-muted" th:if="${sub.submittedAt != null}">
+                                        <i class="bi bi-clock me-1"></i>Submitted at: <span th:text="${#temporals.format(sub.submittedAt, 'yyyy-MM-dd HH:mm')}">2026-07-20 14:30</span>
+                                    </small>
+                                </div>
+
+                                <!-- File Attachment Actions -->
+                                <div>
+                                    <span class="small text-muted d-block mb-1 d-md-none">Attachment:</span>
+                                    <!-- Download function သို့မဟုတ် ပြသရန် နေရာ -->
+                                    <span th:if="${sub.filePath != null}" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-2 py-2 px-3">
+                                        <i class="bi bi-file-earmark-check me-1"></i> File Submitted
+                                    </span>
+                                    <span th:if="${sub.filePath == null}" class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-2 py-2 px-3">
+                                        <i class="bi bi-file-earmark-x me-1"></i> No File Submitted
+                                    </span>
+                                </div>
+
+                                <!-- Grading Status Badge -->
+                                <div>
+                                    <span class="small text-muted d-block mb-1 d-md-none">Status:</span>
+                                    <span th:if="${sub.score != null}" class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-25 rounded-pill px-3 py-2">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Graded (<span th:text="${sub.score}">90</span>)
+                                    </span>
+                                    <span th:if="${sub.score == null}" class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-25 rounded-pill px-3 py-2">
+                                        <i class="bi bi-exclamation-circle-fill me-1"></i> Pending Review
+                                    </span>
+                                </div>
+
+                                <!-- View/Grade Submission Trigger -->
+                                <div class="text-end">
+                                    <!-- Controller ၏ @GetMapping("/detail/{submissionID}") သို့ လှမ်းချိတ်ထားသည် -->
+                                    <!-- မှန်ကန်သော ပုံစံ (အရှေ့ဆုံးတွင် / ပါရမည်ဖြစ်ပြီး Variable Name ကွက်တိ တူရပါမည်) -->
+<a th:href="@{/teacher/submission/detail/{id}(id=${sub.submissionID})}" class="btn btn-outline-primary btn-sm rounded-2 w-100 w-md-auto px-4">
+    Grade / View <i class="bi bi-chevron-right ms-1"></i>
+</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Grading Form Section -->
+            <div class="row" th:if="${submission != null}">
+                <div class="col-12 col-xl-8">
+                    <div class="card border-0 shadow-sm rounded-3">
+                        <div class="card-header bg-gradient-primary text-white border-0 py-3 rounded-top-3">
+                            <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i> Evaluate Submission</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            
+                            <!-- Context Information inside Panel -->
+                            <div class="bg-light rounded-3 p-3 mb-4 border-start border-primary border-3">
+                                <div class="row g-2">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted d-block">Student</small>
+                                        <strong class="text-dark" th:text="${submission.studentName}">John Doe</strong>
+                                    </div>
+                                    <div class="col-sm-6" th:if="${submission.submittedAt != null}">
+                                        <small class="text-muted d-block">Submitted On</small>
+                                        <strong class="text-dark" th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')}">2026-07-20 18:00</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Controller ၏ @PostMapping("/grade") သို့ လှမ်းချိတ်ထားသည် -->
+                         <!-- 💡 ပြင်ဆင်ရန် - th:action တွင် courseID နှင့် assignmentID ပါအောင် parameter တွဲပေးလိုက်ပါ -->
+<form th:action="@{/teacher/submission/grade(courseID=${selectedCourseId}, assignmentID=${selectedAssignmentId})}" method="post">
+    
+    <!-- Hidden Field for Submission ID (@ModelAttribute အတွက် ဖြစ်သည်) -->
+    <input type="hidden" name="submissionID" th:value="${submission.submissionID}">
+
+    <div class="row g-3">
+        <!-- Score Input -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold text-secondary">
+                <i class="bi bi-trophy me-1"></i> Award Score
+            </label>
+            <div class="input-group">
+                <input type="number" step="0.01" class="form-control rounded-start-2" name="score" th:value="${submission.score}" placeholder="0.00" required min="0">
+                <span class="input-group-text bg-light text-muted">Points</span>
+            </div>
+        </div>
+
+        <!-- Feedback Textarea -->
+        <div class="col-12 mb-3">
+            <label class="form-label fw-bold text-secondary">
+                <i class="bi bi-chat-left-text me-1"></i> Feedback Note
+            </label>
+            <textarea class="form-control rounded-2" rows="4" name="feedback" th:text="${submission.feedback}" placeholder="Provide detailed constructive feedback..."></textarea>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-end gap-2 mt-3">
+        <a th:href="@{/teacher/submission/dashboard}" class="btn btn-secondary rounded-2 px-4">Cancel</a>
+        <button type="submit" class="btn btn-primary rounded-2 px-4 shadow-sm">
+            <i class="bi bi-save me-1"></i> Save Grade
+        </button>
+    </div>
+</form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Fragment Footer and JS elements -->
+<footer th:replace="~{fragment/footer :: footer}"></footer>
+<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+</html>

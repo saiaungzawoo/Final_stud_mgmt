@@ -16,7 +16,7 @@ public class AnnouncementService {
 
     public void update(AnnouncementBean announcement){
 
-        announcementRepository.update(announcement);
+       // announcementRepository.update(announcement);
 
     }
 

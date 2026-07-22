@@ -12,167 +12,130 @@ import com.finalproject.Final.model.PaymentBean;
 @Repository
 public class PaymentRepository {
 
-    @Autowired
-    private JdbcTemplate jdbc;
+	@Autowired
+	private JdbcTemplate jdbc;
 
-    // Save Payment
-    public String savePayment(
-            String enrollmentId,
-            String paymentMethodId,
-            Double amount
-    ){
+	// Save Payment
+	//for full payment
+	public String savePayment(String enrollmentId, String paymentMethodId, Double amount) {
 
-    String paymentId =
-    UUID.randomUUID().toString();
+		String paymentId = UUID.randomUUID().toString();
 
+		String reference = "TXN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-    String reference =
-    "TXN-"+UUID.randomUUID()
-    .toString()
-    .substring(0,8)
-    .toUpperCase();
+		String sql = "INSERT INTO payment\r\n" + "    (\r\n" + "    paymentID,\r\n" + "    enrollmentID,\r\n"
+				+ "    paymentMethodID,\r\n" + "    amount,\r\n" + "    payment_date,\r\n"
+				+ "    transaction_reference,\r\n" + "    status,\r\n" + "    created_at,\r\n" + "    updated_at\r\n"
+				+ "    )\r\n" + "    VALUES\r\n" + "    (?,?,?,?,CURRENT_DATE,?,'Success',NOW(),NOW())";
 
+		jdbc.update(sql, paymentId, enrollmentId, paymentMethodId, amount, reference);
 
+		return paymentId;
 
-    String sql ="INSERT INTO payment\r\n"
-    		+ "    (\r\n"
-    		+ "    paymentID,\r\n"
-    		+ "    enrollmentID,\r\n"
-    		+ "    paymentMethodID,\r\n"
-    		+ "    amount,\r\n"
-    		+ "    payment_date,\r\n"
-    		+ "    transaction_reference,\r\n"
-    		+ "    status,\r\n"
-    		+ "    created_at,\r\n"
-    		+ "    updated_at\r\n"
-    		+ "    )\r\n"
-    		+ "    VALUES\r\n"
-    		+ "    (?,?,?,?,CURRENT_DATE,?,'Success',NOW(),NOW())";
-   
+	}
 
+	// for installment payment
+	public String savePayment(String enrollmentId, String installmentPlanId, String paymentMethodId, Double amount) {
 
-    jdbc.update(
-    sql,
-    paymentId,
-    enrollmentId,
-    paymentMethodId,
-    amount,
-    reference
-    );
+		String paymentId = UUID.randomUUID().toString();
 
+		String reference = "TXN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-    return paymentId;
+		String sql = """
+				INSERT INTO payment
+				(
+				    paymentID,
+				    enrollmentID,
+				    installmentPlanID,
+				    paymentMethodID,
+				    amount,
+				    payment_date,
+				    transaction_reference,
+				    status,
+				    created_at,
+				    updated_at
+				)
+				VALUES
+				(
+				    ?,?,?,?,?,CURRENT_DATE,
+				    ?,
+				    'Success',
+				    NOW(),
+				    NOW()
+				)
+				""";
 
-    }
-    
-    //overload
-    public String savePayment(
-            String enrollmentId,
-            String installmentPlanId,
-            String paymentMethodId,
-            Double amount
-    ){
+		jdbc.update(sql, paymentId, enrollmentId, installmentPlanId, paymentMethodId, amount, reference);
 
-        String paymentId =
-                UUID.randomUUID().toString();
+		return paymentId;
 
-        String reference =
-                "TXN-"
-                + UUID.randomUUID()
-                        .toString()
-                        .substring(0,8)
-                        .toUpperCase();
+	}
 
-        String sql = """
-            INSERT INTO payment
-            (
-                paymentID,
-                enrollmentID,
-                installmentPlanID,
-                paymentMethodID,
-                amount,
-                payment_date,
-                transaction_reference,
-                status,
-                created_at,
-                updated_at
-            )
-            VALUES
-            (
-                ?,?,?,?,?,CURRENT_DATE,
-                ?,
-                'Success',
-                NOW(),
-                NOW()
-            )
-            """;
+	// Find latest payment by enrollment
+	public PaymentBean getByEnrollmentId(String enrollmentID) {
 
-        jdbc.update(
-                sql,
-                paymentId,
-                enrollmentId,
-                installmentPlanId,
-                paymentMethodId,
-                amount,
-                reference
-        );
+		String sql = "SELECT\r\n" + "            p.*,\r\n" + "            pm.name AS paymentMethodName,\r\n"
+				+ "            pt.name AS paymentTypeName,\r\n" + "            u.name AS studentName\r\n"
+				+ "        FROM payment p\r\n" + "       LEFT JOIN payment_method pm\r\n"
+				+ "            ON p.paymentMethodID = pm.paymentMethodID\r\n" + "       LEFT JOIN enrollment e\r\n"
+				+ "            ON p.enrollmentID = e.enrollmentID\r\n" + "       LEFT JOIN payment_type pt\r\n"
+				+ "            ON e.paymentTypeID = pt.paymentTypeID\r\n" + "       LEFT JOIN user u\r\n"
+				+ "            ON e.userID = u.userID\r\n" + "        WHERE p.enrollmentID = ?\r\n"
+				+ "        ORDER BY p.created_at DESC\r\n" + "        LIMIT 1";
 
-        return paymentId;
+		List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), enrollmentID);
 
-    }
+		return list.isEmpty() ? null : list.get(0);
+	}
 
-    // Find latest payment by enrollment
-    public PaymentBean getByEnrollmentId(String enrollmentID) {
+	// Find payment by UUID
+	public PaymentBean getById(String paymentID) {
 
-        String sql = "SELECT\r\n"
-        		+ "            p.*,\r\n"
-        		+ "            pm.name AS paymentMethodName,\r\n"
-        		+ "            pt.name AS paymentTypeName,\r\n"
-        		+ "            u.name AS studentName\r\n"
-        		+ "        FROM payment p\r\n"
-        		+ "       LEFT JOIN payment_method pm\r\n"
-        		+ "            ON p.paymentMethodID = pm.paymentMethodID\r\n"
-        		+ "       LEFT JOIN enrollment e\r\n"
-        		+ "            ON p.enrollmentID = e.enrollmentID\r\n"
-        		+ "       LEFT JOIN payment_type pt\r\n"
-        		+ "            ON e.paymentTypeID = pt.paymentTypeID\r\n"
-        		+ "       LEFT JOIN user u\r\n"
-        		+ "            ON e.userID = u.userID\r\n"
-        		+ "        WHERE p.enrollmentID = ?\r\n"
-        		+ "        ORDER BY p.created_at DESC\r\n"
-        		+ "        LIMIT 1";
-            
-           
+		String sql = """
+				        	SELECT
+				    p.*,
 
-        List<PaymentBean> list =
-                jdbc.query(sql, new PaymentRowMapper(), enrollmentID);
+				    pm.name AS paymentMethodName,
+				    pt.name AS paymentTypeName,
+				    u.name AS studentName,
 
-        return list.isEmpty() ? null : list.get(0);
-    }
+				    ip.installment_number,
+				    ip.amount_due,
+				    ip.paid_amount,
+				    ip.due_date,
 
-    // Find payment by UUID
-    public PaymentBean getById(String paymentID) {
+				    ir.installment_count
 
-        String sql = "SELECT\r\n"
-        		+ "            p.*,\r\n"
-        		+ "            pm.name AS paymentMethodName,\r\n"
-        		+ "            pt.name AS paymentTypeName,\r\n"
-        		+ "            u.name AS studentName\r\n"
-        		+ "        FROM payment p\r\n"
-        		+ "        LEFT JOIN payment_method pm\r\n"
-        		+ "            ON p.paymentMethodID = pm.paymentMethodID\r\n"
-        		+ "        LEFT JOIN enrollment e\r\n"
-        		+ "            ON p.enrollmentID = e.enrollmentID\r\n"
-        		+ "        LEFT JOIN payment_type pt\r\n"
-        		+ "            ON e.paymentTypeID = pt.paymentTypeID\r\n"
-        		+ "       LEFT JOIN user u\r\n"
-        		+ "            ON e.userID = u.userID\r\n"
-        		+ "        WHERE p.paymentID = ?";
+				FROM payment p
 
-        List<PaymentBean> list =
-                jdbc.query(sql, new PaymentRowMapper(), paymentID);
+				LEFT JOIN payment_method pm
+				ON p.paymentMethodID = pm.paymentMethodID
 
-        return list.isEmpty() ? null : list.get(0);
-    }
+				LEFT JOIN enrollment e
+				ON p.enrollmentID = e.enrollmentID
+
+				LEFT JOIN payment_type pt
+				ON e.paymentTypeID = pt.paymentTypeID
+
+				LEFT JOIN user u
+				ON e.userID = u.userID
+
+				LEFT JOIN installment_plan ip
+				ON p.installmentPlanID = ip.installmentPlanID
+
+				LEFT JOIN installment_rule_item iri
+				ON ip.installmentRuleItemID = iri.installmentRuleItemID
+
+				LEFT JOIN installment_rule ir
+				ON iri.installmentRuleID = ir.installmentRuleID
+
+				WHERE p.paymentID = ?
+
+				        		""";
+
+		List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), paymentID);
+
+		return list.isEmpty() ? null : list.get(0);
+	}
 
 }

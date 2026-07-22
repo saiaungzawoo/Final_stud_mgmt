@@ -38,4 +38,5 @@ public class AttendanceBean {
 	    private LocalTime startTime;
 
 	    private LocalTime endTime;
+	   
 }

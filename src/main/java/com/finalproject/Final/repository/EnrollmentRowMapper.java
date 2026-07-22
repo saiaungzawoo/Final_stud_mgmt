@@ -49,6 +49,30 @@ public class EnrollmentRowMapper implements RowMapper<EnrollmentBean> {
         try {
             e.setUsername(rs.getString("user_name"));
         } catch (SQLException ignored) {}
+        
+        try {
+            e.setTeacherName(rs.getString("teacher_name"));
+        } catch (SQLException ignored) {}
+
+        try {
+            e.setRemainingBalance(
+                    (Double) rs.getDouble("remaining_balance"));
+        } catch (SQLException ignored) {}
+
+        try {
+            e.setTotalPaid(
+                    (Double) rs.getDouble("total_paid"));
+        } catch (SQLException ignored) {}
+
+        try {
+            e.setTotalInstallments(
+                    (Integer) rs.getInt("total_installments"));
+        } catch (SQLException ignored) {}
+
+        try {
+            e.setCompletedInstallments(
+                    (Integer) rs.getInt("completed_installments"));
+        } catch (SQLException ignored) {}
 
         return e;
     }

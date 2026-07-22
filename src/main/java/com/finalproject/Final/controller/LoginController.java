@@ -32,19 +32,52 @@ public class LoginController {
                         Model m) {
 
         UserBean user = uRepo.findByEmail(email);
-
-//        if (user != null && password.equals(user.getPassword())) {
-//
-//            session.setAttribute("loginUser", user);
-//            return "redirect:/home";
-//        }
+        
+        //sai
+        //role based login
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
 
             session.setAttribute("loginUser", user);
+
+            session.setAttribute("userID", user.getUserID());
+
+
+            String role = user.getRoleName();
             
-            session.setAttribute("userID", user.getUserID());//use for scholarship
-            return "redirect:/home";
+            //test
+            System.out.println("ROLE = " + role);
+
+
+            if("Admin".equals(role)) {
+
+                return "redirect:/admin/dashboard";
+
+            } else if("Teacher".equals(role)) {
+
+                return "redirect:/dashboard/dashboard-teacher";
+
+            } else {
+
+                return "redirect:/";
+
+            }
+
         }
+        
+       
+
+
+//        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+//        	
+//        	//test
+////        	System.out.println("USER: " + user.getName());
+////        	System.out.println("ROLE: " + user.getRoleName());
+//
+//            session.setAttribute("loginUser", user);
+//            
+//            session.setAttribute("userID", user.getUserID());//use for scholarship
+//            return "redirect:/home";
+        
        
   m.addAttribute("error", "Invalid email or password");
         return "auth/login";

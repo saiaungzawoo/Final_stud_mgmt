@@ -28,4 +28,6 @@ public class ScheduleBean {
 	    private String topicPrefix;
 	    private boolean attendanceMarked;
 
+	    // Calendar color control
+	    private String attendanceStatus;
 }

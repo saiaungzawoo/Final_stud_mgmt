@@ -22,14 +22,16 @@ public class UsersRepository {
 		
 		String sql = """
                 INSERT INTO user
-                (userID, roleID, name, email, password,
+                (userID, roleID, userCode, name, email, password,
                  phone_no, address, dob, gender, profile_image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 i= jdbc.update(
                 sql,
                 obj.getUserID(),
                 obj.getRoleID(),
+                //SAI
+                obj.getUserCode(),
                 obj.getName(),
                 obj.getEmail(),
                obj.getPassword(),
@@ -52,9 +54,10 @@ i= jdbc.update(
 	    return count != null && count > 0;
 	}
 
-	//for student 
+	
+	@SuppressWarnings("deprecation")
 	public UserBean getLatestStudent() {
-		String studentRoleId = "19dac244-7acd-11f1-898e-e4b97a5cf834";
+		String studentRoleId = "3c2f4396-7a84-11f1-bfcb-b4b686e7f920";
 	   
 	    
 	    String sql = """
@@ -73,6 +76,8 @@ i= jdbc.update(
 
 	                userObj.setUserID(rs.getString("userID"));
 	                userObj.setRoleID(rs.getString("roleID"));
+	                //SAI
+		            userObj.setUserCode(rs.getString("userCode"));
 	                userObj.setName(rs.getString("name"));
 	                userObj.setEmail(rs.getString("email"));
 	                userObj.setPassword(rs.getString("password"));
@@ -116,7 +121,8 @@ i= jdbc.update(
 	      
 	}
 	
-	//for student
+	
+	@SuppressWarnings("deprecation")
 	public UserBean getUserByEmail(String email) {
 
 	    String sql = "SELECT * FROM user WHERE email=?";
@@ -128,6 +134,8 @@ i= jdbc.update(
 
 	    	            userObj.setUserID(rs.getString("userID"));
 	    	            userObj.setRoleID(rs.getString("roleID"));
+	    	            //SAI
+	    	            userObj.setUserCode(rs.getString("userCode"));
 	    	            userObj.setName(rs.getString("name"));
 	    	            userObj.setEmail(rs.getString("email"));
 	    	            userObj.setPassword(rs.getString("password"));
@@ -160,7 +168,8 @@ i= jdbc.update(
 	    	    }
 	    	}
 	   
-	//for student
+	
+	@SuppressWarnings("deprecation")
 	public UserBean getUserById(String userID) {
 
 	    String sql = "SELECT * FROM user WHERE userID = ?";
@@ -173,6 +182,8 @@ i= jdbc.update(
 
 	            userObj.setUserID(rs.getString("userID"));
 	            userObj.setRoleID(rs.getString("roleID"));
+	            //SAI
+	            userObj.setUserCode(rs.getString("userCode"));
 	            userObj.setName(rs.getString("name"));
 	            userObj.setEmail(rs.getString("email"));
 	            userObj.setPassword(rs.getString("password"));
@@ -215,104 +226,10 @@ i= jdbc.update(
 
 	    return count != null && count > 0;
 	}
-	
- // Admin View All Students 
-    public List<UserBean> selectAllStudents() {
-
-        String sql = """
-                SELECT  userID,roleID,name,email,phone_no,address,dob,gender,
-                profile_image,is_active,created_at,updated_at FROM user
-                WHERE roleID IN (SELECT roleID FROM role WHERE name = 'Student'
-                ) ORDER BY created_at DESC
-                """;
-
- return jdbc.query(sql, (rs, rowNum) -> {
-
-            UserBean user = new UserBean();
- user.setUserID(rs.getString("userID"));
-            user.setRoleID(rs.getString("roleID"));
-            user.setName(rs.getString("name"));
-            user.setEmail(rs.getString("email"));
-            user.setPhoneNumber(rs.getString("phone_no"));
-            user.setAddress(rs.getString("address"));
-
-            if(rs.getDate("dob") != null) {
-                user.setDob(rs.getDate("dob").toLocalDate());
-            }
-
-            user.setGender(rs.getString("gender"));
-            user.setProfileImage(rs.getString("profile_image"));
-            user.setIsActive(rs.getInt("is_active"));
-
-            if(rs.getTimestamp("created_at") != null) {
-                user.setCreatedAt(
-                    rs.getTimestamp("created_at").toLocalDateTime()
-                );
-            }
-
-            if(rs.getTimestamp("updated_at") != null) {
-                user.setUpdatedAt(
-                    rs.getTimestamp("updated_at").toLocalDateTime()
-                );
-            }
-
-            return user;
-        });
-    }
-    
- // Admin View Student Detail
-    public UserBean selectStudentById(String userID) {
-
-        String sql = """
-                SELECT  userID, roleID,name,email,phone_no,address,dob,gender,profile_image,
-                    is_active,created_at,updated_at  FROM user WHERE userID = ?
-                """;
-  return jdbc.queryForObject(sql,
-                (rs, rowNum) -> {
- UserBean user = new UserBean();
-                    user.setUserID(rs.getString("userID"));
-                    user.setRoleID(rs.getString("roleID"));
-                    user.setName(rs.getString("name"));
-                    user.setEmail(rs.getString("email"));
-                    user.setPhoneNumber(rs.getString("phone_no"));
-                    user.setAddress(rs.getString("address"));
-
-                    if(rs.getDate("dob") != null) {
-                        user.setDob(
-                            rs.getDate("dob").toLocalDate()
-                        );
-                    }
-
-                    user.setGender(rs.getString("gender"));
-                    user.setProfileImage(rs.getString("profile_image"));
-                    user.setIsActive(rs.getInt("is_active"));
-
-                    if(rs.getTimestamp("created_at") != null) {
-                        user.setCreatedAt(
-                            rs.getTimestamp("created_at")
-                            .toLocalDateTime()
-                        );
-                    }
-
-                    if(rs.getTimestamp("updated_at") != null) {
-                        user.setUpdatedAt(
-                            rs.getTimestamp("updated_at")
-                            .toLocalDateTime()
-                        );
-                    }
-
-                    return user;
-
-                },
-                userID);
-    }
-
-}
-    
-
-	
+	}
 
 		
+	
 	
 	
 
@@ -326,4 +243,3 @@ i= jdbc.update(
 
 
      
-

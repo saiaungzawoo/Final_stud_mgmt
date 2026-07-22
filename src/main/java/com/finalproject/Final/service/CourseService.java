@@ -33,4 +33,18 @@ public class CourseService {
     public void deleteCourse(String id) {
         courseRepository.delete(id);
     }
+    
+    public void decreaseSeat(String courseId) {
+        courseRepository.decreaseSeat(courseId);
+    }
+    
+    public int getSeatsAvailable(String courseId){
+        return courseRepository.getSeatsAvailable(courseId);
+    }
+    
+    public List<CourseBean> getByCategory(String categoryId){
+
+        return courseRepository.findByCategory(categoryId);
+
+    }
 }
