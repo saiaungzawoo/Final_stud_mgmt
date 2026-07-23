@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalproject.Final.dto.CourseCategoryDTO;
 import com.finalproject.Final.model.CourseCategoryBean;
-import com.finalproject.Final.repository.CourseCategoryRepository;
+//import com.finalproject.Final.repository.CourseCategoryRepository;
 
 /**
  * Course Category CRUD
@@ -19,10 +19,10 @@ import com.finalproject.Final.repository.CourseCategoryRepository;
 @Service
 public class CourseCategoryService {
 
-	@Autowired
+	/*@Autowired
 	CourseCategoryRepository courseCategoryReop;
 
-	public boolean createCourseCategory(CourseCategoryDTO courseCategory) {
+	/*public boolean createCourseCategory(CourseCategoryDTO courseCategory) {
 
 		int result = 0;
 
@@ -46,7 +46,7 @@ public class CourseCategoryService {
 	 * return courseCategoryReop.getAllCourseCategory(); }
 	 */
 
-	public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
+	/*public CourseCategoryBean getCourseCategoryById(int courseCategoryId) {
 
 		return courseCategoryReop.getCourseCategoryById(courseCategoryId);
 	}
@@ -83,6 +83,6 @@ public class CourseCategoryService {
 			System.out.println("Fail to Delete Course Category ::" + courseCategoryId);
 			return false;
 		}
-	}
+	}*/
 
 }

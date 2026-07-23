@@ -42,8 +42,8 @@ public class CourseCategoryController {
 	 * "admin/course-category"; }
 	 */
 	
-	@PostMapping("/create")
-	public String createCourseCategory(@ModelAttribute("courseCategory") CourseCategoryDTO courseCatDTO) {
+	//@PostMapping("/create")
+	/*public String createCourseCategory(@ModelAttribute("courseCategory") CourseCategoryDTO courseCatDTO) {
 		courseCategoryService.createCourseCategory(courseCatDTO);
 		return "redirect:/course-category/list";
 	}
@@ -62,8 +62,8 @@ public class CourseCategoryController {
 	 * "redirect:/list"; }
 	 */
 	
-	@PostMapping("/update/{courseCategoryId}")
-    public String updateCourseCategory(@PathVariable("courseCategoryId") int courseCatId,
+	//@PostMapping("/update/{courseCategoryId}")
+   /* public String updateCourseCategory(@PathVariable("courseCategoryId") int courseCatId,
                                        @RequestParam("name") String name,
                                        RedirectAttributes ra) {
         courseCategoryService.updateCoureCategory(courseCatId, name);
@@ -75,8 +75,7 @@ public class CourseCategoryController {
 	public String deleteCourseCategory(@PathVariable("courseCategoryId") int courseCatId) {
 		courseCategoryService.deleteCourseCategory(courseCatId);
 		return "redirect:/course-category/list";
-	}
-	
+*/	
 	
 	
 	

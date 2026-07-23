@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<title>Verify OTP</title>
+
+<th:block th:replace="~{fragment/css :: css}"></th:block>
+
+</head>
+
+
+<body>
+
+
+<div th:replace="~{fragment/header :: header}"></div>
+
+
+<div class="container mt-5">
+
+
+<div class="row justify-content-center">
+
+<div class="col-md-6">
+
+
+<div class="card shadow">
+
+
+<div class="card-header text-center">
+
+<h3>
+Verify OTP
+</h3>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+
+<div th:if="${error}"
+     class="alert alert-danger"
+     th:text="${error}">
+</div>
+
+
+
+<!-- Verify OTP Form -->
+
+<form th:action="@{/verify-otp}"
+      method="post">
+
+
+<label>
+OTP Code
+</label>
+
+<input type="text"
+       name="otp"
+       maxlength="6"
+       inputmode="numeric"
+       class="form-control"
+       placeholder="Enter 6 digit OTP"
+       required>
+
+
+
+
+<br>
+
+
+
+<div class="text-center text-danger">
+
+OTP expires in
+
+<b id="timer">
+00:30
+</b>
+
+</div>
+
+
+
+<br>
+
+
+
+<button type="submit"
+        class="btn btn-success w-100">
+
+Verify OTP
+
+</button>
+
+
+</form>
+
+
+
+
+<!-- Resend OTP Form -->
+
+<form th:action="@{/forgot-password/resend}"
+      method="post"
+      class="text-center mt-3">
+
+
+<input type="hidden"
+       name="email"
+       th:value="${session.email}">
+
+
+
+<button type="submit"
+        id="resendBtn"
+        class="btn btn-link"
+        disabled>
+
+Resend OTP
+
+</button>
+
+
+</form>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+let time = 30;
+
+let verifyBtn = document.querySelector("button[type='submit']");
+let otpInput = document.querySelector("input[name='otp']");
+
+
+// OTP input validation
+otpInput.addEventListener("input", function(){
+
+    this.value = this.value.replace(/[^0-9]/g, "");
+
+
+    if(this.value.length > 6){
+
+        this.value = this.value.substring(0,6);
+
+    }
+
+});
+
+
+// Timer
+let timer = setInterval(function(){
+
+
+    let min = Math.floor(time / 60);
+
+    let sec = time % 60;
+
+
+    document.getElementById("timer").innerHTML =
+        min + ":" + (sec < 10 ? "0" : "") + sec;
+
+
+
+    time--;
+
+
+    if(time < 0){
+
+
+        clearInterval(timer);
+
+
+        document.getElementById("timer")
+        .innerHTML = "Expired";
+
+
+        otpInput.disabled = true;
+
+
+        verifyBtn.disabled = true;
+
+
+        document.getElementById("resendBtn")
+        .disabled = false;
+
+
+    }
+
+
+},1000);
+
+
+
+// Submit validation
+
+document.querySelector("form")
+.addEventListener("submit", function(e){
+
+
+    let otp = otpInput.value.trim();
+
+
+
+    if(otp.length !== 6){
+
+
+        e.preventDefault();
+
+
+        alert("OTP Code must be 6 digits");
+
+
+        return false;
+
+    }
+
+
+
+    if(isNaN(otp)){
+
+
+        e.preventDefault();
+
+
+        alert("Only numbers are allowed");
+
+
+        return false;
+
+    }
+
+
+
+});
+
+</script>
+</body>
+</html>

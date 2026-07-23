@@ -1,57 +1,203 @@
 package com.finalproject.Final.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.finalproject.Final.service.ForgotPasswordService;
+import org.springframework.web.bind.annotation.*;
 
+import com.finalproject.Final.service.ForgotPasswordService;
+import jakarta.servlet.http.HttpSession;
 @Controller
 public class ForgotPasswordController {
-
-	//test
     @Autowired
     private ForgotPasswordService forgotPasswordService;
-
     @GetMapping("/forgot-password")
-    public String forgotPasswordPage() {
-        return "forgot-password"; 
-    }
+    public String forgotPage() {
 
-    // Email လက်ခံပြီး OTP လှမ်းပိုပေးသည့် Endpoint
-    @PostMapping("/forgot-password/send-otp")
-    public String sendOtp(@RequestParam String email, Model m) {
-        boolean isSent = forgotPasswordService.sendOtp(email);
-        
-        if (isSent) {
-            m.addAttribute("email", email);
-            m.addAttribute("showOtpForm", true); // ဒုတိယအဆင့် OTP ဖြည့်သည့် Form ကို ပြရန်
-            m.addAttribute("message", "OTP sent successfully to your email.");
-        } else {
-            m.addAttribute("error", "Email not found or failed to send OTP.");
-        }
         return "forgot-password";
     }
 
-    // OTP နှင့် စကားဝှက်အသစ်ကို စစ်ဆေးအတည်ပြုပေးသည့် Endpoint
-    @PostMapping("/forgot-password/reset")
-    public String resetPassword(@RequestParam String email,
-                                 @RequestParam String otp,
-                                 @RequestParam String newPassword,
-                                 Model m) {
 
-        String result = forgotPasswordService.verifyAndResetPassword(email, otp, newPassword);
 
-        if ("SUCCESS".equals(result)) {
-            m.addAttribute("message", "Password updated successfully. Please login.");
-            return "login"; // Password ပြောင်းလဲပြီးပါက Login Page သို တန်းပိုပေးမည်
+
+    // Send OTP
+    @PostMapping("/forgot-password/send-otp")
+    public String sendOtp(
+            @RequestParam String email,
+            HttpSession session,
+            Model model
+    ) {
+
+
+        boolean sent =
+                forgotPasswordService.sendOtp(email);
+
+
+
+        if(sent) {
+
+
+            session.setAttribute(
+                    "email",
+                    email
+            );
+
+
+            return "redirect:/verify-otp";
+
+
         } else {
-            m.addAttribute("email", email);
-            m.addAttribute("showOtpForm", true);
-            m.addAttribute("error", result);
+
+
+            model.addAttribute(
+                    "error",
+                    "Email not found"
+            );
+
+
             return "forgot-password";
+
         }
+
     }
+    // Resend OTP
+    @PostMapping("/forgot-password/resend")
+    public String resendOtp(
+            @RequestParam String email,
+            HttpSession session,
+            Model model
+    ) {
+
+
+        boolean sent =
+                forgotPasswordService.sendOtp(email);
+
+
+
+        if(sent) {
+
+
+            session.setAttribute(
+                    "email",
+                    email
+            );
+
+
+            return "redirect:/verify-otp";
+
+
+        } else {
+
+
+            model.addAttribute(
+                    "error",
+                    "Email not found"
+            );
+
+
+            return "verify-otp";
+
+        }
+
+    }
+
+
+
+
+
+    // OTP Page
+    @GetMapping("/verify-otp")
+    public String otpPage() {
+
+        return "verify-otp";
+
+    }
+
+
+
+
+    // Verify OTP
+    @PostMapping("/verify-otp")
+    public String verifyOtp(
+            @RequestParam String otp,
+            HttpSession session,
+            Model model
+    ) {
+
+
+        String email =
+                (String)session.getAttribute("email");
+
+
+
+        String result =
+                forgotPasswordService.verifyOtp(
+                        email,
+                        otp
+                );
+
+
+
+        if("SUCCESS".equals(result)) {
+
+
+            return "redirect:/new-password";
+
+
+        } else {
+
+
+            model.addAttribute(
+                    "error",
+                    result
+            );
+
+
+            return "verify-otp";
+
+        }
+
+    }
+
+
+
+
+    // New Password Page
+    @GetMapping("/new-password")
+    public String newPasswordPage() {
+
+        return "new-password";
+
+    }
+
+
+
+
+    // Update Password
+    @PostMapping("/new-password")
+    public String updatePassword(
+            @RequestParam String newPassword,
+            HttpSession session
+    ) {
+
+
+        String email =
+                (String)session.getAttribute("email");
+
+
+
+        forgotPasswordService.updatePassword(
+                email,
+                newPassword
+        );
+
+
+
+        session.invalidate();
+
+
+
+        return "redirect:/login";
+
+    }
+
 }

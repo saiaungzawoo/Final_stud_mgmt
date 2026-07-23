@@ -22,13 +22,13 @@ import com.finalproject.Final.model.CourseCategoryBean;
 
 //fixed sazo
 
-@Repository
+/*@Repository
 public class CourseCategoryRepository {
 
 	@Autowired
 	JdbcTemplate jdbc;
 	
-	public int createdCourseCategory(CourseCategoryDTO courseCategory) {
+	/*public int createdCourseCategory(CourseCategoryDTO courseCategory) {
 		
 		String sql = "insert into course_category (name) values (?)";
 		
@@ -83,4 +83,4 @@ public class CourseCategoryRepository {
 		
 		return jdbc.update(sql,courseCategoryId);
 	}
-}
+}*/

@@ -7,33 +7,89 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.finalproject.Final.model.UserBean;
 
+
 public class UserRowMapper implements RowMapper<UserBean> {
+
 
     @Override
     public UserBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 
+
         UserBean u = new UserBean();
 
-        u.setId(rs.getInt("id"));
-        u.setRoleId(rs.getInt("role_id"));
+
+        u.setUserID(rs.getString("userID"));
+
+        u.setRoleID(rs.getString("roleID"));
+
 
         u.setName(rs.getString("name"));
+
         u.setEmail(rs.getString("email"));
+
         u.setPassword(rs.getString("password"));
 
-        u.setPhoneNumber(rs.getString("phone_no"));
-        u.setAddress(rs.getString("address"));
 
-        u.setDob(rs.getDate("dob") != null ? rs.getDate("dob").toLocalDate() : null);
-        u.setGender(rs.getString("gender"));
+        u.setPhoneNumber(
+                rs.getString("phone_no")
+        );
+        
+        u.setOtpCode(
+                rs.getString("otp_code")
+        );
 
-        u.setCreatedAt(rs.getTimestamp("created_at") != null
-                ? rs.getTimestamp("created_at").toLocalDateTime()
-                : null);
+        u.setAddress(
+                rs.getString("address")
+        );
 
-        u.setIsActive(rs.getInt("is_active"));
-        u.setFilePath(rs.getString("file_path"));
+
+
+        if(rs.getDate("dob") != null) {
+
+            u.setDob(
+                rs.getDate("dob").toLocalDate()
+            );
+
+        }
+
+
+        u.setGender(
+                rs.getString("gender")
+        );
+
+
+        u.setProfileImage(
+                rs.getString("profile_image")
+        );
+
+
+        u.setIsActive(
+                rs.getInt("is_active")
+        );
+
+
+
+        if(rs.getTimestamp("created_at") != null) {
+
+            u.setCreatedAt(
+                rs.getTimestamp("created_at")
+                .toLocalDateTime()
+            );
+        }
+
+
+
+        if(rs.getTimestamp("updated_at") != null) {
+
+            u.setUpdatedAt(
+                rs.getTimestamp("updated_at")
+                .toLocalDateTime()
+            );
+        }
+
+
 
         return u;
     }
+
 }

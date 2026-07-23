@@ -14,5 +14,3 @@ import lombok.Setter;
 	private String email;
 	private String password;
 	}
-
-

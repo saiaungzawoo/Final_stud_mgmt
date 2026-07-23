@@ -14,7 +14,7 @@ public class SubCategoryRepository {
 	 @Autowired
 	    private JdbcTemplate jdbc;
 
-	 public List<SubCategoryBean> getAllSubCategory() {
+	 /*public List<SubCategoryBean> getAllSubCategory() {
 
 		    String sql = "SELECT sc.id, sc.name, sc.course_category_id FROM subcategory sc";
 
@@ -28,7 +28,7 @@ public class SubCategoryRepository {
 
 		        return obj;
 		    });
-		}
+		}*/
 	
 	
 }
