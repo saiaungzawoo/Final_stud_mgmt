@@ -3,7 +3,7 @@ package com.finalproject.Final.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -143,10 +144,11 @@ model.addAttribute("applied", applied);
         
         
         
-     // file upload
+     // File upload
         MultipartFile file = obj.getFile();
-  // File Validation
-   if (file == null || file.isEmpty()) {
+
+        // File Validation
+        if (file == null || file.isEmpty()) {
             result.rejectValue("file", "error.file",
                     "Supporting document is required.");
         } else {
@@ -159,16 +161,24 @@ model.addAttribute("applied", applied);
                         "File size must not exceed 5 MB.");
             }
 
-            String filename = file.getOriginalFilename().toLowerCase();
+            String originalFilename = file.getOriginalFilename();
 
-            if (!(filename.endsWith(".pdf")
-                    || filename.endsWith(".doc")
-                    || filename.endsWith(".docx")
-                    || filename.endsWith(".ppt")
-                    || filename.endsWith(".pptx"))) {
-
+            if (originalFilename == null || originalFilename.isBlank()) {
                 result.rejectValue("file", "error.file",
-                        "Only PDF, DOC, DOCX, PPT and PPTX files are allowed.");
+                        "Invalid file.");
+            } else {
+
+                String lowerFilename = originalFilename.toLowerCase();
+
+                if (!(lowerFilename.endsWith(".pdf")
+                        || lowerFilename.endsWith(".doc")
+                        || lowerFilename.endsWith(".docx")
+                        || lowerFilename.endsWith(".ppt")
+                        || lowerFilename.endsWith(".pptx"))) {
+
+                    result.rejectValue("file", "error.file",
+                            "Only PDF, DOC, DOCX, PPT and PPTX files are allowed.");
+                }
             }
         }
 
@@ -177,31 +187,44 @@ model.addAttribute("applied", applied);
             return "student/apply-scholarship";
         }
 
-        if(file != null && !file.isEmpty()){
-        	String fileName = file.getOriginalFilename();
-        	// upload location
+        // Save file
+        if (file != null && !file.isEmpty()) {
+
+            String originalFilename = file.getOriginalFilename();
+
+            // Generate unique and safe filename
+            String fileName = UUID.randomUUID() + "_"
+                    + originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+            // Upload folder
             String uploadDir = "D:/upload/";
             Path uploadPath = Paths.get(uploadDir);
-         // create folder if not exist
-            if(!Files.exists(uploadPath)){
+
+            // Create folder if it doesn't exist
+            if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-         // save file
+
+            // Save file (replace if exists)
             Path filePath = uploadPath.resolve(fileName);
+
             Files.copy(
                     file.getInputStream(),
-                    filePath
-                );
-         // save file path into database
-            obj.setSupportingDocuments(
-                    "/upload/" + fileName
-            );  }
-        
+                    filePath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            // Save URL to database
+            obj.setSupportingDocuments("/upload/" + fileName);
+        }
+
+        // Save application
         schRepo.insert(obj);
- return "redirect:/scholarship/scholarships";
-    }
-   
- 
+
+        return "redirect:/scholarship/scholarships";
+        
+        }
+        
         @GetMapping("/my-applications")
         public String myApplications(
                 HttpSession session,
