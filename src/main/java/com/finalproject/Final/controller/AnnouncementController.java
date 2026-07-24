@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalproject.Final.model.AnnouncementBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.AnnouncementRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/announcement")
@@ -21,7 +24,7 @@ public class AnnouncementController {
 
     private final AnnouncementRepository announcementRepo;
     
-    private final String TEACHER_ID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
+   
 
     public AnnouncementController(AnnouncementRepository announcementRepo) {
         this.announcementRepo = announcementRepo;
@@ -34,10 +37,14 @@ public class AnnouncementController {
     @GetMapping("/list")
     public String announcementDashboard(
             @RequestParam(value = "courseID", required = false) String courseID,
-            Model model) {
+            Model model ,HttpSession session) {
+    	
+    	  UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+    	    String teacherID = loginUser.getUserID();
 
         //  Course List Grid Card
-        model.addAttribute("courseList", announcementRepo.getTeacherCourses(TEACHER_ID));
+        model.addAttribute("courseList", announcementRepo.getTeacherCourses(teacherID));
 
         // Form Object Binding 
         AnnouncementBean bean = new AnnouncementBean();
@@ -47,6 +54,9 @@ public class AnnouncementController {
             //  Course  Announcement List 
             List<AnnouncementBean> announcementList = announcementRepo.getAnnouncementsByCourse(courseID);
             model.addAttribute("announcementList", announcementList);
+            System.out.println("ANNOUNCEMENT SIZE = " 
+                    + announcementList.size());
+
             model.addAttribute("courseID", courseID);
         }
 
@@ -60,9 +70,11 @@ public class AnnouncementController {
      * URL: /announcement/save
      */
     @PostMapping("/save")
-    public String saveAnnouncement(@ModelAttribute("announcement") AnnouncementBean bean) {
+    public String saveAnnouncement(@ModelAttribute("announcement") AnnouncementBean bean,HttpSession session) {
+    	  UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
-        bean.setCreatedByID(TEACHER_ID);
+  	    String teacherID = loginUser.getUserID();
+        bean.setCreatedByID(teacherID);
 
       
         if (bean.getAnnouncementID() == null || bean.getAnnouncementID().isEmpty()) {

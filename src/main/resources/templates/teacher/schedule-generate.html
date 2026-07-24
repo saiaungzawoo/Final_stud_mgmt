@@ -1,230 +1,286 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
+<head th:replace="~{fragment/css :: css}">
+ 
+   
+</head>
+
 
 <body>
 
-
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
 
-
 <div class="container-fluid">
-
     <div class="row">
-
 
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 p-0">
-
             <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
-
         </div>
-
-
 
         <!-- Main Content -->
         <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
 
-
             <div class="mb-4">
-
-                <h2 class="fw-bold">
-                    Generate Course Schedule
-                </h2>
-
-                <p class="text-muted">
-                    Create class schedules based on course duration.
-                </p>
-
+                <h2 class="fw-bold">Generate Course Schedule</h2>
+                <p class="text-muted">Create class schedules based on course duration.</p>
             </div>
 
-
-
-            <div class="card shadow-sm border-0">
-
-
+            <!-- FORM CARD -->
+            <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
 
-<form method="post"
-      th:object="${schedule}"
-      th:action="${isUpdate} ? @{/schedule/update} : @{/schedule/generate}">
+                    <form method="post"
+                          th:object="${schedule}"
+                          th:action="${isUpdate} ? @{/schedule/update} : @{/schedule/generate}">
 
-<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="bi bi-exclamation-triangle-fill"></i>
-    <span th:text="${error}"></span>
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
 
-    <button type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"></button>
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span th:text="${success}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Course ID -->
+                        <input type="hidden" id="courseIdField" th:field="*{courseId}">
+
+                        <!-- Start Date -->
+                        <div class="mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date"
+                                   class="form-control"
+                                   th:value="${schedule.startDate}"
+                                   name="startDate" required>
+                        </div>
+
+                        <!-- Time -->
+                       <!-- Time Section -->
+<div class="row">
+    
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Start Time</label>
+        <input type="time"
+               class="form-control"
+               th:field="*{startTime}" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">End Time</label>
+        <input type="time"
+               class="form-control"
+               th:field="*{endTime}" required>
+    </div>
+
 </div>
-    <!-- Course ID -->
-    <input type="hidden" th:field="*{courseId}">
 
-    <!-- Start Date -->
-    <div class="mb-3">
-        <label class="form-label">Start Date</label>
-       <input type="date"
-       class="form-control"
-       th:value="${schedule.startDate}"
-       name="startDate">
-    </div>
+                        <!-- Room -->
+                        <div class="mb-3">
+                            <label class="form-label">Room</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{room}"
+                                   placeholder="Room Number">
+                        </div>
 
-    <!-- Time -->
-    <div class="row">
+                        <!-- Repeat Days -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Repeat Days</label>
+                            <div class="row g-2">
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="MONDAY"><label class="ms-1">Monday</label></div>
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="TUESDAY"><label class="ms-1">Tuesday</label></div>
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="WEDNESDAY"><label class="ms-1">Wednesday</label></div>
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="THURSDAY"><label class="ms-1">Thursday</label></div>
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="FRIDAY"><label class="ms-1">Friday</label></div>
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="SATURDAY"><label class="ms-1">Saturday</label></div>
+                                <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="SUNDAY"><label class="ms-1">Sunday</label></div>
+                            </div>
+                        </div>
 
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Start Time</label>
-            <input type="time"
-       class="form-control"
-       th:value="${#temporals.format(schedule.startTime,'HH:mm')}"
-       name="startTime">
-                  
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-            <label class="form-label">End Time</label>
-           <input type="time"
-       class="form-control"
-       th:value="${#temporals.format(schedule.endTime,'HH:mm')}"
-       name="endTime">
-                 
-
-        </div>
-
-    </div>
-
-    <!-- Room -->
-    <div class="mb-3">
-        <label class="form-label">Room</label>
-        <input type="text"
-               class="form-control"
-               th:field="*{room}"
-               placeholder="Room Number">
-    </div>
-
-    <!-- Repeat Days -->
-    <div class="mb-3">
-
-        <label class="form-label fw-bold">Repeat Days</label>
-
-        <div class="row g-2">
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="MONDAY">
-                <label class="ms-1">Monday</label>
-            </div>
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="TUESDAY">
-                <label class="ms-1">Tuesday</label>
-            </div>
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="WEDNESDAY">
-                <label class="ms-1">Wednesday</label>
-            </div>
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="THURSDAY">
-                <label class="ms-1">Thursday</label>
-            </div>
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="FRIDAY">
-                <label class="ms-1">Friday</label>
-            </div>
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="SATURDAY">
-                <label class="ms-1">Saturday</label>
-            </div>
-
-            <div class="col-md-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       th:field="*{repeatDays}"
-                       value="SUNDAY">
-                <label class="ms-1">Sunday</label>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Topic -->
-    <div class="mb-3">
-        <label class="form-label">Topic Prefix</label>
-        <input type="text"
-               class="form-control"
-               th:field="*{topicPrefix}"
-               placeholder="Lesson">
-    </div>
-
-    <div class="text-end">
-
-        <a th:href="@{/schedule/list}"
-           class="btn btn-outline-primary">
-            <i class="bi bi-list-ul"></i>
-            View Schedule List
-        </a>
-
-        <button type="submit" class="btn btn-primary">
-
-            <span th:if="${isUpdate}">
-                Update Schedule
-            </span>
-
-            <span th:unless="${isUpdate}">
-                Generate Schedule
-            </span>
-
+                       <div class="text-end">
+    <!-- Start Date ရောက်ပြီးပါက Update Button ကို ပိတ် (Disable) ထားမည် -->
+    <th:block th:if="${isUpdate}">
+        <button type="submit" 
+                class="btn btn-warning" 
+                th:disabled="${schedule.startDate != null and !schedule.startDate.isAfter(T(java.time.LocalDate).now())}">
+            <i class="bi bi-pencil-square"></i> Update Schedule
         </button>
+        <small th:if="${schedule.startDate != null and !schedule.startDate.isAfter(T(java.time.LocalDate).now())}" 
+               class="d-block text-danger mt-1">
+            * Start date has arrived or passed. Schedule cannot be edited.
+        </small>
+    </th:block>
 
-    </div>
+    <!-- IsUpdate false ဖြစ်လျှင် (အသစ် Generate လုပ်လျှင်) -->
+    <th:block th:unless="${isUpdate}">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-calendar-plus"></i> Generate Schedule
+        </button>
+    </th:block>
+</div>
 
-</form>
+                    </form>
                 </div>
-
-
             </div>
 
-
+            <!-- CALENDAR VIEW CARD -->
+            <div class="card shadow-sm border-0 mb-4" th:if="${hasSchedule}">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-calendar3"></i> Class Schedule Calendar</h5>
+                 
+                </div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
 
         </main>
-
-
     </div>
-
-
 </div>
 
+<!-- TOPIC INPUT MODAL -->
+<div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-bold" id="topicModalLabel"><i class="bi bi-journal-bookmark-fill me-2"></i>Set Class Topic</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modalScheduleId">
+        
+        <!-- Date & Time Row -->
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label fw-bold text-secondary mb-0">Date</label>
+                <div id="modalScheduleDate" class="fw-semibold text-dark fs-6"></div>
+            </div>
+            <div class="col-6">
+                <label class="form-label fw-bold text-secondary mb-0">Time & Room</label>
+                <div id="modalScheduleTimeRoom" class="fw-semibold text-dark fs-6"></div>
+            </div>
+        </div>
 
+        <hr class="text-muted opacity-25">
+
+        <!-- Topic Input -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Topic Name</label>
+            <input type="text" id="modalTopicInput" class="form-control" placeholder="Enter topic for this class..." autofocus>
+        </div>
+      </div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btnSaveModalTopic">Save Topic</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div th:replace="~{fragment/footer :: footer}"></div>
-
 <div th:replace="~{fragment/js :: js}"></div>
 
+<!-- FullCalendar 6.1.10 JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    var calendarEl = document.getElementById('calendar');
+    var courseId = document.getElementById('courseIdField').value;
+
+    if (calendarEl && courseId) {
+        
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 450,
+            width:150,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            
+            // AJAX ဖြင့် JSON Event များ ဆွဲယူမည်
+            events: '/schedule/events/' + courseId,
+            
+            // Event Box ကို Click နှိပ်လျှင် Modal ပေါ်မည်
+         eventClick: function(info) {
+    var eventObj = info.event;
+    
+    // Schedule ID
+    document.getElementById('modalScheduleId').value = eventObj.id;
+    
+    // Date (YYYY-MM-DD)
+    var dateStr = eventObj.start ? eventObj.start.toISOString().split('T')[0] : '';
+    document.getElementById('modalScheduleDate').innerText = dateStr;
+    
+    // Time & Room (Start Time - End Time)
+    var timeRange = eventObj.extendedProps.timeRange || '';
+    var room = eventObj.extendedProps.room ? ' (' + eventObj.extendedProps.room + ')' : '';
+    document.getElementById('modalScheduleTimeRoom').innerText = timeRange + room;
+    
+    // Topic
+    document.getElementById('modalTopicInput').value = eventObj.extendedProps.rawTopic || '';
+
+    // Show Modal
+    var topicModal = new bootstrap.Modal(document.getElementById('topicModal'));
+    topicModal.show();
+}
+        });
+
+        calendar.render();
+
+        // Modal ထဲမှ Save Topic နှိပ်လျှင် AJAX ဖြင့် DB ထဲ သိမ်းမည်
+        document.getElementById('btnSaveModalTopic').addEventListener('click', function() {
+            var scheduleId = document.getElementById('modalScheduleId').value;
+            var topicValue = document.getElementById('modalTopicInput').value;
+            var btn = this;
+
+            btn.disabled = true;
+            btn.innerText = 'Saving...';
+
+            var params = new URLSearchParams();
+            params.append('scheduleId', scheduleId);
+            params.append('topic', topicValue);
+
+            fetch('/schedule/update-topic', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params
+            })
+            .then(response => {
+                if (response.ok) {
+                    calendar.refetchEvents(); 
+                    var topicModalEl = document.getElementById('topicModal');
+                    var modal = bootstrap.Modal.getInstance(topicModalEl);
+                    modal.hide();
+                    
+                    btn.disabled = false;
+                    btn.innerText = 'Save Topic';
+                } else {
+                    alert('Failed to save topic.');
+                    btn.disabled = false;
+                    btn.innerText = 'Save Topic';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Something went wrong!');
+                btn.disabled = false;
+                btn.innerText = 'Save Topic';
+            });
+        });
+    }
+});
+</script>
 
 </body>
-
 </html>

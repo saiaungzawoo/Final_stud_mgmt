@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.finalproject.Final.model.TeacherBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.TeacherRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -38,9 +40,59 @@ public class DashbroadController {
 
 	    }
 	  @GetMapping("/dashboard-teacher")
-		public String teacherdashboard() {
-			return "teacher/teacher-dashboard";
-		}
+	  public String teacherdashboard(
+	          Model model,
+	          HttpSession session) {
+
+
+	      UserBean loginUser =
+	              (UserBean) session.getAttribute("loginUser");
+
+
+	      String teacherID =
+	              loginUser.getUserID();
+
+
+
+	      model.addAttribute(
+	              "classCount",
+	              mRepo.countClasses(teacherID)
+	      );
+
+
+	      model.addAttribute(
+	              "attendancePercent",
+	              mRepo.todayAttendancePercent(teacherID)
+	      );
+
+
+	      model.addAttribute(
+	              "assignmentCount",
+	              mRepo.countAssignments(teacherID)
+	      );
+
+
+	      model.addAttribute(
+	              "pendingCount",
+	              mRepo.countPendingSubmission(teacherID)
+	      );
+
+
+	      model.addAttribute(
+	              "todaySchedules",
+	              mRepo.getTodaySchedule(teacherID)
+	      );
+
+
+	      model.addAttribute(
+	              "announcements",
+	              mRepo.getRecentAnnouncements(teacherID)
+	      );
+
+
+	      return "teacher/teacher-dashboard";
+	  }
+
 	  @PostMapping("/update")
 	    public String updateUpload(
 	            @Valid @ModelAttribute("teacherObj") TeacherBean obj,

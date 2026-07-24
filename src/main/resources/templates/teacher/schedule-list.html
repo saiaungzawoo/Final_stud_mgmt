@@ -1,223 +1,143 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragment/css :: css}"></head>
 
-
 <body>
-
 
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
 
-
-
 <div class="container-fluid">
 
+    <div class="row">
 
-<div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
 
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
 
-<!-- Sidebar -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold">Course Schedule List</h2>
+                    <p class="text-muted">
+                      
+                    </p>
+                </div>
+            </div>
 
-<div class="col-md-3 col-lg-2 p-0">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
 
-    <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Room</th>
+                                    <th style="width: 40%;">Topic</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="s, iter : ${schedules}">
+                                    <td th:text="${iter.count}">1</td>
+                                    <td th:text="${s.scheduleDate}" class="fw-bold text-primary">2026-07-25</td>
+                                    <td th:text="${s.startTime + ' - ' + s.endTime}">09:00 - 11:00</td>
+                                    <td th:text="${s.room}">Room 101</td>
+                                    <td>
+                                        <!-- Interactive Topic Input Field -->
+                                        <input type="text" 
+                                               class="form-control topic-input" 
+                                               th:value="${s.topic}" 
+                                               th:data-id="${s.scheduleId != null ? s.scheduleId : s.scheduleID}" 
+                                               placeholder="Enter topic for this date...">
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- Save Button -->
+                                        <button type="button" class="btn btn-sm btn-success btn-save-topic">
+                                            <i class="bi bi-check-circle"></i> Save
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+    </div>
 
 </div>
-
-
-
-
-<!-- Content -->
-
-<main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
-
-
-
-<div class="d-flex justify-content-between mb-4">
-
-
-<div>
-
-<h2 class="fw-bold">
-Course Schedule
-</h2>
-
-<p class="text-muted">
-Generated class schedules
-</p>
-
-</div>
-
-
-
-<a th:href="@{/schedule/generate}"
-   class="btn btn-primary">
-
-<i class="bi bi-plus-circle"></i>
-Generate Schedule
-
-</a>
-
-
-</div>
-
-
-
-
-
-<div class="card shadow-sm border-0">
-
-
-<div class="card-body">
-
-
-<div class="table-responsive">
-
-
-<table class="table table-hover">
-
-
-<thead class="table-light">
-
-<tr>
-
-<th>No</th>
-
-<th>Date</th>
-
-<th>Time</th>
-
-<th>Room</th>
-
-<th>Topic</th>
-
-<th>Status</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody>
-
-
-<tr th:each="schedule,stat:${schedules}">
-
-
-<td th:text="${stat.count}"></td>
-
-
-<td th:text="${schedule.scheduleDate}">
-</td>
-
-
-
-<td>
-
-<span th:text="${schedule.startTime}">
-</span>
-
--
-
-<span th:text="${schedule.endTime}">
-</span>
-
-</td>
-
-
-
-<td th:text="${schedule.room}">
-</td>
-
-
-
-<td th:text="${schedule.topic}">
-</td>
-
-
-
-<td>
-
-
-<span class="badge bg-success"
-      th:text="${schedule.status}">
-</span>
-
-
-</td>
- <td>
-
-            <a class="btn btn-warning btn-sm"
-               th:href="@{/schedule/edit/{id}(id=${schedule.scheduleId})}">
-                Edit
-            </a>
-
-            <a class="btn btn-danger btn-sm"
-               th:href="@{/schedule/delete/{id}(id=${schedule.scheduleId})}"
-               onclick="return confirm('Delete this schedule?')">
-                Delete
-            </a>
-
-        </td>
-
-
-
-</tr>
-
-
-
-<tr th:if="${#lists.isEmpty(schedules)}">
-
-
-<td colspan="6"
-    class="text-center text-muted py-5">
-
-No schedule found.
-
-</td>
-
-
-</tr>
-
-
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-</main>
-
-
-</div>
-
-
-</div>
-
-
-
 
 <div th:replace="~{fragment/footer :: footer}"></div>
-
 <div th:replace="~{fragment/js :: js}"></div>
 
+<!-- AJAX Quick Save Topic Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-save-topic').forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const input = row.querySelector('.topic-input');
+            const scheduleId = input.getAttribute('data-id');
+            const topicValue = input.value;
+
+            if (!scheduleId) {
+                alert('Schedule ID is missing!');
+                return;
+            }
+
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
+
+            const params = new URLSearchParams();
+            params.append('scheduleId', scheduleId);
+            params.append('topic', topicValue);
+
+            fetch('/schedule/update-topic', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params
+            })
+            .then(response => {
+                if(response.ok) {
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-success');
+                    btn.innerHTML = '<i class="bi bi-check-lg"></i> Saved';
+                    
+                    setTimeout(() => {
+                        btn.classList.remove('btn-outline-success');
+                        btn.classList.add('btn-success');
+                        btn.innerHTML = '<i class="bi bi-check-circle"></i> Save';
+                        btn.disabled = false;
+                    }, 1500);
+                } else {
+                    alert('Failed to update topic.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-check-circle"></i> Save';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Something went wrong!');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Save';
+            });
+        });
+    });
+});
+</script>
 
 </body>
-
 </html>

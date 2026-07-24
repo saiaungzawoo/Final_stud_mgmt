@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalproject.Final.model.ScheduleBean;
 import com.finalproject.Final.model.TeacherBean;
 
 
@@ -169,5 +170,255 @@ public class TeacherRepository {
 
         );
     }
+    public int countClasses(String teacherID) {
+
+        String sql = """
+                SELECT COUNT(*)
+                FROM course
+                WHERE teacherID = ?
+                """;
+
+
+        return jdbc.queryForObject(
+                sql,
+                Integer.class,
+                teacherID
+        );
+    }
+
+
+
+
+    // =========================
+    // Assignment Count
+    // =========================
+
+    public int countAssignments(String teacherID) {
+
+
+        String sql = """
+                SELECT COUNT(*)
+                FROM assignment
+                WHERE createdByID = ?
+                """;
+
+
+        return jdbc.queryForObject(
+                sql,
+                Integer.class,
+                teacherID
+        );
+    }
+
+
+
+
+
+    // =========================
+    // Pending Submission
+    // =========================
+
+    public int countPendingSubmission(String teacherID) {
+
+
+        String sql = """
+                SELECT COUNT(*)
+                FROM submission s
+                JOIN assignment a
+                ON s.assignmentID = a.assignmentID
+                WHERE a.createdByID = ?
+                AND s.score IS NULL
+                """;
+
+
+        return jdbc.queryForObject(
+                sql,
+                Integer.class,
+                teacherID
+        );
+
+    }
+
+
+
+
+
+
+    // =========================
+    // Today Attendance %
+    // =========================
+
+    public int todayAttendancePercent(String teacherID) {
+
+
+        String sql = """
+
+        SELECT 
+        CASE 
+        WHEN COUNT(a.attendanceID)=0 THEN 0
+
+        ELSE ROUND(
+        SUM(
+        CASE 
+        WHEN a.status='Present'
+        THEN 1 ELSE 0 END
+        )
+        *100 / COUNT(a.attendanceID)
+        )
+
+        END
+
+        FROM attendance a
+
+        JOIN schedule s
+        ON a.scheduleID=s.scheduleID
+
+        JOIN course c
+        ON s.courseID=c.courseID
+
+        WHERE c.teacherID=?
+
+        AND s.schedule_date = CURDATE()
+
+        """;
+
+
+        return jdbc.queryForObject(
+                sql,
+                Integer.class,
+                teacherID
+        );
+    }
+
+
+
+
+
+
+
+    // =========================
+    // Today's Schedule
+    // =========================
+
+    public List<ScheduleBean> getTodaySchedule(
+            String teacherID) {
+
+
+        String sql = """
+
+        SELECT 
+        s.scheduleID,
+        s.courseID,
+        c.name AS courseName,
+        s.schedule_date,
+        s.start_time,
+        s.end_time,
+        s.room,
+        s.topic
+
+        FROM schedule s
+
+        JOIN course c
+        ON s.courseID=c.courseID
+
+        WHERE c.teacherID=?
+
+        AND s.schedule_date = CURDATE()
+
+        ORDER BY s.start_time
+
+        """;
+
+
+        return jdbc.query(
+                sql,
+                (rs,rowNum)->{
+
+
+                    ScheduleBean obj =
+                            new ScheduleBean();
+
+
+                    obj.setScheduleId(
+                            rs.getString("scheduleID")
+                    );
+
+
+                    obj.setCourseId(
+                            rs.getString("courseID")
+                    );
+
+
+                    obj.setCourseName(
+                            rs.getString("courseName")
+                    );
+
+                    obj.setStartTime(
+                    	    rs.getTime("start_time").toLocalTime()
+                    	);
+
+
+                    	obj.setEndTime(
+                    	    rs.getTime("end_time").toLocalTime()
+                    	);
+
+
+                    obj.setRoom(
+                            rs.getString("room")
+                    );
+
+
+                    obj.setTopic(
+                            rs.getString("topic")
+                    );
+
+
+                    return obj;
+
+                },
+                teacherID
+        );
+
+    }
+
+
+
+
+
+
+    // =========================
+    // Recent Announcement
+    // =========================
+
+    public List<String> getRecentAnnouncements(
+            String teacherID){
+
+
+        String sql = """
+
+        SELECT title
+
+        FROM announcement
+
+        WHERE createdByID=?
+
+        ORDER BY created_at DESC
+
+        LIMIT 5
+
+        """;
+
+
+        return jdbc.query(
+                sql,
+                (rs,rowNum)
+                ->
+                rs.getString("title"),
+                teacherID
+        );
+
+    }
+
+
 
 }

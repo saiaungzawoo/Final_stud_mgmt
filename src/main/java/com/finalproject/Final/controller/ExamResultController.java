@@ -1,357 +1,121 @@
 package com.finalproject.Final.controller;
 
-import java.net.BindException;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.ExamBean;
 import com.finalproject.Final.model.ExamResultBean;
 import com.finalproject.Final.model.ExamResultFormBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.ExamRepository;
 import com.finalproject.Final.repository.ExamResultRepository;
-
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/exam/result")
+@RequestMapping("/teacher/exam-results")
 public class ExamResultController {
 
-@Autowired
-private ExamRepository examRepo;
-    private final ExamResultRepository examResultRepo;
+    @Autowired
+    private ExamRepository examRepo;
 
+    @Autowired
+    private ExamResultRepository examResultRepo;
 
-    public ExamResultController(ExamResultRepository examResultRepo) {
-        this.examResultRepo = examResultRepo;
-    }
+ 
+    @GetMapping
+    public String showDashboard(
+            @RequestParam(value = "courseId", required = false) String courseId,
+            @RequestParam(value = "examId", required = false) String examId,
+            Model model,
+            HttpSession session) {
 
-
-    @GetMapping("/{examID}")
-    public String showResultForm(
-            @PathVariable String examID,
-            Model model) {
-
-    	 // Check existing result
-        List<ExamResultBean> existing =
-                examResultRepo.getResultListByExam(examID);
-
-
-        if(existing != null && !existing.isEmpty()) {
-
-            return "redirect:/exam/result/view/" + examID;
-
+        // Session Checking
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/login";
         }
 
-        ExamResultFormBean form = new ExamResultFormBean();
-
-
-        form.setExamID(examID);
-
-
-
-        form.setResults(
-            examResultRepo.getStudentListByExam(examID)
-        );
-
-
-
-        model.addAttribute("form", form);
-
-
-
-        return "teacher/exam-result-form";
-    }
-    @PostMapping("/save")
-    public String saveResult(
-            @Valid @ModelAttribute("form") ExamResultFormBean form,
-            BindingResult result,
-            Model model) {
-
-
-        if(result.hasErrors()) {
-
-            System.out.println("ERROR COUNT : "
-                    + result.getErrorCount());
-
-            System.out.println(
-                    result.getAllErrors()
-            );
-
-
-            model.addAttribute(
-                    "form",
-                    form
-            );
-
-
-            return "teacher/exam-result-form";
-        }
-
-
-
-        ExamBean exam =
-                examRepo.getExamByID(form.getExamID());
-
-
-
-        for(ExamResultBean bean : form.getResults()) {
-
-
-            // Score empty check
-            if(bean.getScore() == null) {
-
-
-                model.addAttribute(
-                        "error",
-                        "Please enter score for all students"
-                );
-
-
-                model.addAttribute(
-                        "form",
-                        form
-                );
-
-
-                return "teacher/exam-result-form";
-            }
-
-
-
-            // Max score check
-            if(bean.getScore()
-                    .compareTo(exam.getMaxScore()) > 0) {
-
-
-                model.addAttribute(
-                        "error",
-                        "Score cannot exceed maximum score : "
-                        + exam.getMaxScore()
-                );
-
-
-                model.addAttribute(
-                        "form",
-                        form
-                );
-
-
-                return "teacher/exam-result-form";
-            }
-
-
-
-            bean.setExamID(
-                    form.getExamID()
-            );
-
-
-        }
-
-
-
-        examResultRepo.saveResults(
-                form.getResults()
-        );
-
-
-        return "redirect:/exam/result/view/"
-                + form.getExamID();
-    }
-    @GetMapping("/select")
-    public String selectExam(Model model) {
-
-
-        String teacherID =
-            "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
-
-        List<ExamBean> exams =
-                examRepo.getExamListByTeacher(teacherID);
-
-
-        model.addAttribute("exams", exams);
-
-
-        return "teacher/exam-result-select";
-
-    }
-    @GetMapping("/course")
-    public String selectCourse(Model model) {
-
-
-        String teacherID =
-            "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
-
-        List<CourseBean> courses =
-                examRepo.getTeacherCourses(teacherID);
-
-
+        String teacherID = loginUser.getUserID();
+//course list
+        List<CourseBean> courses = examRepo.getTeacherCourses(teacherID);
         model.addAttribute("courses", courses);
+//exam list
+        if (courseId != null && !courseId.trim().isEmpty()) {
+        	List<ExamBean> exams = examResultRepo.getCompletedExamListByCourse(courseId);
+            model.addAttribute("exams", exams);
+            model.addAttribute("selectedCourseId", courseId);
+        }
+//exam result
+        if (examId != null && !examId.trim().isEmpty()) {
+            List<ExamResultBean> results = examResultRepo.getResultListByExam(examId);
+            model.addAttribute("results", results);
+            model.addAttribute("selectedExamId", examId);
 
-
-        return "teacher/exam-result-course-select";
-    }
-    @GetMapping("/exam/{courseID}")
-    public String selectExam(
-            @PathVariable String courseID,
-            Model model) {
-
-
-        List<ExamBean> exams =
-                examRepo.getExamListByCourse(courseID);
-
-
-        model.addAttribute("exams", exams);
-
-        model.addAttribute("courseID", courseID);
-
-
-        return "teacher/exam-result-exam-select";
-    }
-    @GetMapping("/view/{examID}")
-    public String viewResult(
-            @PathVariable String examID,
-            Model model) {
-
-
-        List<ExamResultBean> results =
-                examResultRepo.getResultListByExam(examID);
-
-
-        model.addAttribute("results", results);
-
-        model.addAttribute("examID", examID);
-
-
-        return "teacher/exam-result-list";
-    }
-    @PostMapping("/update")
-    public String updateResult(
-            @Valid @ModelAttribute("result") ExamResultBean bean,
-            BindingResult bindingResult,
-            Model model) {
-    	 System.out.println("SCORE = " + bean.getScore());
-
-    	    System.out.println("ERROR = "
-    	            + bindingResult.getErrorCount());
-
-
-    	    if(bindingResult.hasErrors()) {
-
-
-    	        ExamResultBean oldData =
-    	                examResultRepo.getResultByID(
-    	                        bean.getExamResultID()
-    	                );
-
-
-    	        oldData.setScore(bean.getScore());
-    	        oldData.setRemarks(bean.getRemarks());
-
-
-    	        model.addAttribute(
-    	                "result",
-    	                oldData
-    	        );
-
-
-    	        model.addAttribute(
-    	                "org.springframework.validation.BindingResult.result",
-    	                bindingResult
-    	        );
-
-
-    	        return "teacher/exam-result-edit";
-    	    }
-
-
-        ExamBean exam =
-                examRepo.getExamByID(bean.getExamID());
-
-
-
-        if(bean.getScore() == null) {
-
-
-            ExamResultBean oldData =
-                    examResultRepo.getResultByID(
-                            bean.getExamResultID()
-                    );
-
-
-            oldData.setScore(bean.getScore());
-            oldData.setRemarks(bean.getRemarks());
+            // Directly URL ကနေ examId ပဲ ရောက်လာခဲ့ရင် Course နဲ့ Exam Dropdown ကို auto select လုပ်ပေးရန်
+            if (courseId == null || courseId.trim().isEmpty()) {
+                ExamBean exam = examRepo.getExamByID(examId);
+                if (exam != null) {
+                    model.addAttribute("selectedCourseId", exam.getCourseID());
+                    model.addAttribute("exams", examRepo.getExamListByCourse(exam.getCourseID()));
+                }
+            }
+            ExamResultFormBean form = new ExamResultFormBean();
+            form.setExamID(examId);
             
+            // Repository ထဲက NOT EXISTS Query ကိုသုံးပြီး Record မရှိသေးတဲ့ Student များ ဆွဲထုတ်ခြင်း
+            List<ExamResultBean> pendingStudents = examResultRepo.getStudentListByExam(examId);
+            form.setResults(pendingStudents);
             
-            model.addAttribute(
-                    "error",
-                    "Score is required"
-            );
-
-            model.addAttribute(
-                    "result",
-                    oldData
-            );
-
-
-          
-
-
-            return "teacher/exam-result-edit";
+            // HTML (Thymeleaf) သို့ 'form' name ဖြင့် Binding လုပ်ပေးရန်
+            model.addAttribute("form", form);
+        
         }
 
-
-        examResultRepo.updateResult(bean);
-
-
-        return "redirect:/exam/result/view/"
-                + bean.getExamID();
-    }  
-    
-    @GetMapping("/edit/{id}")
-    public String editResult(
-            @PathVariable String id,
-            Model model) {
-
-
-        ExamResultBean bean =
-                examResultRepo.getResultByID(id);
-
-
-        model.addAttribute("result", bean);
-
-
-        return "teacher/exam-result-edit";
+        return "teacher/exam-result-dashboard";
     }
-    @GetMapping("/student/{userID}")
-    public String viewStudentExamResult(
-            @PathVariable String userID,
-            Model model) {
 
+    /**
+     * 2. Grade / Create Exam Result (New Student Grade)
+     */
+    @PostMapping("/save")
+    public String saveResults(@ModelAttribute("form") ExamResultFormBean form, HttpSession session) {
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+        
+        for (ExamResultBean item : form.getResults()) {
+            // Score ထည့်ထားသည့် ကျောင်းသားများကိုပဲ DB ထဲ သိမ်းမည်
+            if (item.getScore() != null) {
+                item.setExamID(form.getExamID());
+                examResultRepo.saveResult(item, loginUser.getUserID());
+            }
+        }
+        
+        return "redirect:/teacher/exam-results?examId=" + form.getExamID();
+    }
+    /**
+     * 3. Update Existing Exam Result (Modal Form Submit)
+     */
+    @PostMapping("/update")
+    public String updateResult(@Valid @ModelAttribute("examResult") ExamResultBean examResult,
+                               BindingResult bindingResult,
+                               HttpSession session) {
 
-        List<ExamResultBean> results =
-                examResultRepo.getResultByStudent(userID);
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/login";
 
+        if (!bindingResult.hasErrors()) {
+            examResultRepo.updateResult(examResult, loginUser.getUserID());
+        }
 
-        model.addAttribute(
-                "results",
-                results
-        );
-
-
-        return "teacher/student-exam-result";
+        // 🟢 examId ပါဝင်သော Fresh URL သို့ Redirect လုပ်ပေးပါ
+        return "redirect:/teacher/exam-results?examId=" + examResult.getExamID();
     }
     
-    }
+    
+}

@@ -187,4 +187,13 @@ public class ScheduleRepository {
 
 	    return topic.replaceAll("\\s+\\d+$","");
 	}
+	public int updateTopic(String scheduleId, String topic) {
+	    String sql = """
+	            UPDATE schedule
+	            SET topic = ?
+	            WHERE scheduleID = ?
+	            """;
+
+	    return jdbc.update(sql, topic, scheduleId);
+	}
 }
