@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.finalproject.Final.model.AssignmentBean;
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.SubmissionBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.SubmissionRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/teacher/submission")
 public class TeacherSubmissionController {
 
     private final SubmissionRepository submissionRepo;
-    private final String TEACHER_ID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02"; // Temporary Teacher ID
+   
 
     public TeacherSubmissionController(SubmissionRepository submissionRepo) {
         this.submissionRepo = submissionRepo;
@@ -35,10 +38,15 @@ public class TeacherSubmissionController {
             @RequestParam(required = false) String courseID,
             @RequestParam(required = false) String assignmentID,
             @RequestParam(required = false) String submissionID,
-            Model model) {
+            Model model,HttpSession session) {
 
+    	
+    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+  	    String teacherID = loginUser.getUserID();
+  	    
         //  Course List 
-        List<CourseBean> courses = submissionRepo.getTeacherCourses(TEACHER_ID);
+        List<CourseBean> courses = submissionRepo.getTeacherCourses(teacherID);
         model.addAttribute("courses", courses);
 
         // Course  Assignment List
@@ -70,9 +78,12 @@ public class TeacherSubmissionController {
 
      */
     @PostMapping("/grade")
-    public String gradeSubmission(@ModelAttribute SubmissionBean bean, @RequestParam(required = false) String courseID, @RequestParam(required = false) String assignmentID) {
+    public String gradeSubmission(@ModelAttribute SubmissionBean bean, @RequestParam(required = false) String courseID, @RequestParam(required = false) String assignmentID,HttpSession session) {
+    	
+    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
-        bean.setGradedByID(TEACHER_ID);
+  	    String teacherID = loginUser.getUserID();
+        bean.setGradedByID(teacherID);
         submissionRepo.updateGrade(bean);
 
 
@@ -122,8 +133,10 @@ public class TeacherSubmissionController {
         return "teacher/submission-dashboard"; 
     }
     @GetMapping("/course")
-    public String selectCourse(Model model) {
-        String teacherID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
+    public String selectCourse(Model model,HttpSession session) {
+    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+  	    String teacherID = loginUser.getUserID();
         List<CourseBean> courses = submissionRepo.getTeacherCourses(teacherID);
         model.addAttribute("courses", courses);
 

@@ -43,7 +43,7 @@ public class AttendanceRepository {
         },courseID);
 
     }
-    public int saveAttendance(AttendanceBean obj) {
+    public int saveAttendance(AttendanceBean obj,String teacherID) {
 
         System.out.println("Saving...");
         System.out.println(obj.getUserID());
@@ -70,7 +70,7 @@ public class AttendanceRepository {
                 obj.getStatus().name(),
                 obj.getCheckInTime(),
                 obj.getRemarks(),
-                "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02"
+                teacherID
         );
 
         System.out.println("Insert Result = " + result);
@@ -252,7 +252,7 @@ public class AttendanceRepository {
         return count!=null && count>0;
 
     }
-    public int updateAttendance(AttendanceBean obj){
+    public int updateAttendance(AttendanceBean obj, String teacherID){
 
         String sql="""
             UPDATE attendance
@@ -270,7 +270,7 @@ public class AttendanceRepository {
                 obj.getStatus().name(),
                 obj.getCheckInTime(),
                 obj.getRemarks(),
-                "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02",
+                teacherID,
                 obj.getScheduleID(),
                 obj.getUserID()
         );

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalproject.Final.model.ExamBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.ExamRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -24,12 +26,18 @@ public class ExamController {
 	private ExamRepository examRepo;
 	
 	// Hardcoded teacher tracking profile token string used across actions
-	private final String teacherID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
+
 
 	@GetMapping("/list")
 	public String examList(
 	        @RequestParam(value="courseID", required=false) String courseID,
-	        Model model) {
+	        Model model,HttpSession session) {
+
+		
+		 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+ 	    String teacherID = loginUser.getUserID();
+ 	    
 
 	    // Standard UI reference list populations needed by the creation/edition modals on this same view
 	    model.addAttribute("courseList", examRepo.getTeacherCourses(teacherID));
@@ -56,7 +64,11 @@ public class ExamController {
 	public String saveExam(
 	        @Valid @ModelAttribute("exam") ExamBean bean,
 	        BindingResult result,
-	        Model model) {
+	        Model model,HttpSession session) {
+		
+		 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+ 	    String teacherID = loginUser.getUserID();
 
 	    if(result.hasErrors()) {
 	        // If inputs fail validation checks, reload the dashboard view with operational context lists intact
