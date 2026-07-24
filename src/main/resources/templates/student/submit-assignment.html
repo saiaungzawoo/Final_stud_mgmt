@@ -1,26 +1,40 @@
+
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Assignment</title>
-    <head th:replace="~{fragment/css :: css}"></head>
+
+    <!-- CSS Fragment -->
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- CSS Animation & Form UI Styles -->
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
         .submit-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        
         /* Card ပေါ် mouse ရောက်ရင် Header က Icon လှုပ်စေရန် */
         .submit-card:hover .animated-icon {
             animation: wiggle 0.5s ease-in-out infinite alternate;
         }
+        
         /* Buttons Hover Effect */
         .hover-btn {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        
         .hover-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
@@ -34,111 +48,128 @@
 </head>
 <body class="bg-light">
 
-<div th:replace="~{fragment/header :: header}"></div>
+    <!-- Student Header -->
+    <div th:replace="~{fragment/student-header :: studentHeader}"></div>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-9">
+    <div class="d-flex flex-column flex-lg-row min-vh-100">
 
-            <!-- Submit Card Layout -->
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden submit-card">
-                
-                <!-- Card Header -->
-                <div class="card-header bg-primary text-white text-center py-4 border-0">
-                    <div class="mb-2">
-                        <i class="bi bi-cloud-arrow-up-fill animated-icon d-inline-block fs-1"></i>
-                    </div>
-                    <h3 class="mb-0 fw-bold">Submit Assignment</h3>
-                    <p class="text-white-50 small mb-0 mt-1">Provide your text response and upload your assignment files below</p>
-                </div>
+        <!-- Student Sidebar -->
+        <div th:replace="~{fragment/student-sidebar :: studentSidebar}"></div>
 
-                <!-- Card Body -->
-                <div class="card-body p-4 p-md-5 bg-white">
-                    
-                    <!-- Error Message -->
-                    <div class="alert alert-danger d-flex align-items-center rounded-3 mb-4"
-                         th:if="${error}">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <span th:text="${error}">Error text</span>
-                    </div>
+        <!-- Main Wrapper -->
+        <div class="flex-grow-1 d-flex flex-column min-vh-100">
 
-                    <form th:action="@{/submission/assignment/submit}"
-                          th:object="${submission}"
-                          method="post"
-                          enctype="multipart/form-data">
+            <!-- Main Content -->
+            <main class="container-fluid flex-grow-1 px-3 px-md-4 py-5 overflow-auto">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-xl-7">
 
-                        <!-- Hidden Field for Assignment ID -->
-                        <input type="hidden" th:field="*{assignmentID}">
-
-                        <!-- Answer Textarea Field -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold text-dark mb-2">
-                                <i class="bi bi-pencil-square me-1 text-primary"></i> Answer / Text Response
-                            </label>
-
-                            <textarea class="form-control rounded-3 p-3 fs-6"
-                                      rows="6"
-                                      th:field="*{submissionText}"
-                                      placeholder="Type or paste your assignment answer details here..."></textarea>
-
-                            <div class="text-danger small mt-1"
-                                 th:if="${#fields.hasErrors('submissionText')}"
-                                 th:errors="*{submissionText}">
-                            </div>
-                        </div>
-
-                        <!-- File Upload Field -->
-                        <div class="mb-5">
-                            <label class="form-label fw-semibold text-dark mb-2">
-                                <i class="bi bi-file-earmark-arrow-up me-1 text-primary"></i> Upload File
-                            </label>
-
-                            <div class="p-3 border rounded-3 bg-light">
-                                <input type="file"
-                                       class="form-control rounded-2 bg-white"
-                                       th:field="*{file}"
-                                       accept=".pdf,.doc,.docx">
-
-                                <div class="text-danger small mt-1"
-                                     th:if="${fileError}"
-                                     th:text="${fileError}">
+                        <!-- Submit Card Layout -->
+                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden submit-card">
+                            
+                            <!-- Card Header -->
+                            <div class="card-header bg-primary text-white text-center py-4 border-0">
+                                <div class="mb-2">
+                                    <i class="bi bi-cloud-arrow-up-fill animated-icon d-inline-block fs-1"></i>
                                 </div>
+                                <h3 class="mb-0 fw-bold">Submit Assignment</h3>
+                                <p class="text-white-50 small mb-0 mt-1">Provide your text response and upload your assignment files below</p>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-4 p-md-5 bg-white">
                                 
-                                <div class="mt-2 text-muted-emphasis small d-flex align-items-center gap-1">
-                                    <i class="bi bi-info-circle small"></i>
-                                    <span>Accepted extensions: <strong>PDF, DOC, DOCX</strong></span>
+                                <!-- Error Message -->
+                                <div class="alert alert-danger d-flex align-items-center rounded-3 mb-4"
+                                     th:if="${error}">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    <span th:text="${error}">Error text</span>
                                 </div>
+
+                                <form th:action="@{/student/submission/assignment/submit}"
+                                      th:object="${submission}"
+                                      method="post"
+                                      enctype="multipart/form-data">
+
+                                    <!-- Hidden Field for Assignment ID -->
+                                    <input type="hidden" th:field="*{assignmentID}">
+
+                                    <!-- Answer Textarea Field -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-semibold text-dark mb-2">
+                                            <i class="bi bi-pencil-square me-1 text-primary"></i> Answer / Text Response
+                                        </label>
+
+                                        <textarea class="form-control rounded-3 p-3 fs-6"
+                                                  rows="6"
+                                                  th:field="*{submissionText}"
+                                                  placeholder="Type or paste your assignment answer details here..."></textarea>
+
+                                        <div class="text-danger small mt-1"
+                                             th:if="${#fields.hasErrors('submissionText')}"
+                                             th:errors="*{submissionText}">
+                                        </div>
+                                    </div>
+
+                                    <!-- File Upload Field -->
+                                    <div class="mb-5">
+                                        <label class="form-label fw-semibold text-dark mb-2">
+                                            <i class="bi bi-file-earmark-arrow-up me-1 text-primary"></i> Upload File
+                                        </label>
+
+                                        <div class="p-3 border rounded-3 bg-light">
+                                            <input type="file"
+                                                   class="form-control rounded-2 bg-white"
+                                                   th:field="*{file}"
+                                                   accept=".pdf,.doc,.docx">
+
+                                            <div class="text-danger small mt-1"
+                                                 th:if="${fileError}"
+                                                 th:text="${fileError}">
+                                            </div>
+                                            
+                                            <div class="mt-2 text-muted small d-flex align-items-center gap-1">
+                                                <i class="bi bi-info-circle small"></i>
+                                                <span>Accepted extensions: <strong>PDF, DOC, DOCX</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="text-muted opacity-25 mb-4">
+
+                                    <!-- Responsive Action Buttons -->
+                                    <div class="d-flex flex-column-reverse flex-sm-row justify-content-between gap-2">
+                                        <!-- Back Button -->
+                                        <a th:href="@{/student/submission/assignments}"
+                                           class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center">
+                                            <i class="bi bi-arrow-left me-1"></i> Back
+                                        </a>
+
+                                        <!-- Submit Button -->
+                                        <button type="submit"
+                                                class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
+                                            Submit Assignment <i class="bi bi-check2-circle ms-1"></i>
+                                        </button>
+                                    </div>
+
+                                </form>
                             </div>
-                        </div>
 
-                        <hr class="text-muted opacity-25 mb-4">
+                        </div> <!-- /card -->
 
-                        <!-- Responsive Action Buttons -->
-                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-between gap-2">
-                            <!-- Back Button -->
-                            <a th:href="@{/submission/assignments}"
-                               class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center">
-                                <i class="bi bi-arrow-left me-1"></i> Back
-                            </a>
-
-                            <!-- Submit Button -->
-                            <button type="submit"
-                                    class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
-                                Submit Assignment <i class="bi bi-check2-circle ms-1"></i>
-                            </button>
-                        </div>
-
-                    </form>
+                    </div>
                 </div>
+            </main>
 
-            </div> <!-- /card -->
-
+           
         </div>
-    </div>
-</div>
 
-<div th:replace="~{fragment/footer :: footer}"></div>
-<div th:replace="~{fragment/js :: js}"></div>
+    </div>
+ <!-- Footer -->
+            <div th:replace="~{fragment/footer :: footer}"></div>
+
+    <!-- JS Scripts -->
+    <div th:replace="~{fragment/js :: js}"></div>
 
 </body>
 </html>

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -19,7 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -344,5 +345,28 @@ public class UsersController {
 
      return "student/student-profile";
       //return "student-profile";
+  }
+  
+//use for admin
+  @GetMapping("/admin/students")
+  public String viewStudents(Model model) {
+
+      List<UserBean> students = uRepo.selectAllStudents();
+
+      model.addAttribute("students", students);
+ return "admin/adminstudent-list";
+  }
+  
+  //use for admin
+  @GetMapping("/admin/student/detail/{id}")
+  public String studentDetail(
+          @PathVariable String id,
+          Model model) {
+
+      UserBean student = uRepo.selectStudentById(id);
+
+      model.addAttribute("student", student);
+
+      return "admin/adminstudent-detail";
   }
 }

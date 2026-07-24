@@ -91,57 +91,9 @@ return bean;
 
 
 
-//4 teacher view all submission
-//public List<SubmissionBean> getAllSubmission(){
-//
-//    String sql="""
-//SELECT s.*,
-//u.name studentName,a.title assignmentTitle FROM submission s
-//JOIN user u
-//ON s.userID=u.userID
-//JOIN assignment a
-//ON s.assignmentID=a.assignmentID
-//ORDER BY s.submitted_at DESC
-//""";
-//
-//    return jdbc.query(sql,(rs,row)->{
-//
-//        SubmissionBean bean=new SubmissionBean();
-//
-//        bean.setSubmissionID(rs.getString("submissionID"));
-//        bean.setAssignmentID(rs.getString("assignmentID"));
-//        bean.setUserID(rs.getString("userID"));
-//        bean.setStudentName(rs.getString("studentName"));
-//        bean.setAssignmentTitle(rs.getString("assignmentTitle"));
-//        bean.setFilePath(rs.getString("file_path"));
-//        bean.setSubmissionText(rs.getString("submission_text"));
-//        bean.setScore(rs.getBigDecimal("score"));
-//        bean.setFeedback(rs.getString("feedback"));
-// return bean;
-//
-//    });
-//
-//}
 
 
-//// 5 grade teacher view give score and feedback
-//public int gradeSubmission(SubmissionBean bean){
-//
-//    String sql="""
-//UPDATE submission
-// SET
-//score=?,feedback=?,gradedByID=?,graded_at=NOW(),updated_at=NOW() WHERE submissionID=?
-//""";
-//
-//    return jdbc.update(sql,
-//
-//            bean.getScore(),
-//            bean.getFeedback(),
-//            bean.getGradedByID(),
-//            bean.getSubmissionID()
-//
-//            );
-//}
+
 
 // Get All Published Assignments
 public List<SubmissionBean> getAllAssignment() {
@@ -289,6 +241,133 @@ public boolean hasSubmitted(String assignmentID, String userID) {
     return count != null && count > 0;
 }
 
+
+//Get student assignments with submitted status
+public List<SubmissionBean> getStudentAssignment(String userID) {
+
+ String sql = """
+     SELECT
+         a.assignmentID,
+         a.courseID,
+         c.name AS courseName,
+         a.createdByID,
+         a.title,
+         a.description,
+         a.max_score,
+         a.weight_percent,
+         a.due_date,
+         a.status,
+         a.created_at,
+         a.updated_at,
+
+         CASE 
+             WHEN s.submissionID IS NOT NULL 
+             THEN true
+             ELSE false
+         END AS submitted
+
+     FROM assignment a
+
+     JOIN course c
+         ON a.courseID = c.courseID
+
+     JOIN enrollment e
+         ON a.courseID = e.courseID
+
+     LEFT JOIN submission s
+         ON a.assignmentID = s.assignmentID
+         AND s.userID = ?
+
+     WHERE e.userID = ?
+       AND a.status = 'Published'
+
+     ORDER BY a.due_date ASC
+     """;
+
+
+ return jdbc.query(sql, (rs, rowNum) -> {
+
+     SubmissionBean bean = new SubmissionBean();
+
+     bean.setAssignmentID(
+             rs.getString("assignmentID")
+     );
+
+     bean.setCourseID(
+             rs.getString("courseID")
+     );
+
+     bean.setCourseName(
+             rs.getString("courseName")
+     );
+
+     bean.setCreatedByID(
+             rs.getString("createdByID")
+     );
+
+
+     bean.setTitle(
+             rs.getString("title")
+     );
+
+     bean.setDescription(
+             rs.getString("description")
+     );
+
+
+     bean.setScore(
+             rs.getBigDecimal("max_score")
+     );
+
+
+     bean.setWeightPercent(
+             rs.getBigDecimal("weight_percent")
+     );
+
+
+     if(rs.getTimestamp("due_date") != null){
+
+         bean.setDueDate(
+             rs.getTimestamp("due_date")
+             .toLocalDateTime()
+         );
+     }
+
+
+     bean.setStatus(
+             rs.getString("status")
+     );
+
+
+     if(rs.getTimestamp("created_at") != null){
+
+         bean.setCreatedAt(
+             rs.getTimestamp("created_at")
+             .toLocalDateTime()
+         );
+     }
+
+
+     if(rs.getTimestamp("updated_at") != null){
+
+         bean.setAssignupdatedAt(
+             rs.getTimestamp("updated_at")
+             .toLocalDateTime()
+         );
+     }
+
+
+     // Important
+     bean.setSubmitted(
+             rs.getBoolean("submitted")
+     );
+
+
+     return bean;
+
+
+ }, userID, userID);
+}
 }
 
 

@@ -2,155 +2,204 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scholarship Application Detail</title>
-    <head th:replace="~{fragment/css :: css}"></head>
-    
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- CSS Animation & UI Styles -->
+    <!-- Global CSS Fragment -->
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    
+    <!-- Bootstrap Icons & Google Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    <!-- Custom CSS Animation & Styling -->
     <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .main-wrapper {
+            min-height: 100vh;
+        }
+
         .detail-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid #e2e8f0;
         }
         .detail-card:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08) !important;
         }
+
         /* Header Title Icon Hover Animation */
         .title-area:hover .animated-icon {
-            animation: wiggle 0.5s ease-in-out infinite alternate;
+            animation: wiggle 0.4s ease-in-out infinite alternate;
         }
+
         /* Action Buttons Hover Effect */
         .hover-btn {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .hover-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+            transform: translateY(-1px);
+        }
+
+        .label-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.03em;
         }
 
         @keyframes wiggle {
-            0% { transform: rotate(-10deg); }
-            100% { transform: rotate(10deg); }
+            0% { transform: rotate(-8deg); }
+            100% { transform: rotate(8deg); }
         }
     </style>
 </head>
-<body class="bg-light">
+<body class="d-flex flex-column min-vh-100">
 
-<div th:replace="~{fragment/header :: header}"></div>
+    <!-- ADMIN HEADER FRAGMENT -->
+    <div th:replace="~{fragment/admin-header :: adminHeader}"></div>
 
-<div class="container py-5">
+    <!-- MAIN WRAPPER (SIDEBAR + CONTENT) -->
+    <div class="d-flex flex-column flex-lg-row flex-grow-1">
 
-    <!-- Header Title Area -->
-    <div class="mb-4 title-area">
-        <h2 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
-            <i class="bi bi-file-earmark-person text-primary animated-icon d-inline-block"></i>
-            Scholarship Application Detail
-        </h2>
-        <p class="text-muted small mb-0">Review student credentials, statements and update submission status</p>
-    </div>
+        <!-- ADMIN SIDEBAR FRAGMENT -->
+        <div th:replace="~{fragment/admin-sidebar :: adminSidebar}"></div>
 
-    <!-- User Information Card -->
-    <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden detail-card">
-        <div class="card-header bg-primary text-white fw-bold py-3 px-4 d-flex align-items-center gap-2">
-            <i class="bi bi-person-bounding-box"></i> User Information
-        </div>
-        <div class="card-body p-4 bg-white">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary small mb-2">Name</label>
-                    <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium" th:value="${appdetail.userName}" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary small mb-2">Email</label>
-                    <input type="email" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium" th:value="${appdetail.email}" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary small mb-2">Phone</label>
-                    <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium" th:value="${appdetail.phoneNo}" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary small mb-2">Address</label>
-                    <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium" th:value="${appdetail.address}" readonly>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-grow-1 d-flex flex-column main-wrapper overflow-y-auto">
 
-    <!-- Scholarship Information Card -->
-    <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden detail-card">
-        <div class="card-header bg-primary text-white fw-bold py-3 px-4 d-flex align-items-center gap-2">
-            <i class="bi bi-mortarboard"></i> Scholarship Details
-        </div>
-        <div class="card-body p-4 bg-white">
-            <div class="mb-4">
-                <label class="form-label fw-semibold text-secondary small mb-2">Applied Scholarship</label>
-                <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-bold text-primary" th:value="${appdetail.scholarshipName}" readonly>
-            </div>
-            <div class="mb-4">
-                <label class="form-label fw-semibold text-secondary small mb-2">Reason / Statement of Purpose</label>
-                <textarea class="form-control rounded-3 bg-light border-0 p-3 lh-base fw-medium" rows="4" readonly th:text="${appdetail.reason}"></textarea>
-            </div>
-            <div>
-                <label class="form-label fw-semibold text-secondary small mb-2 d-block">Supporting Document</label>
-                <a th:if="${appdetail.supportingDocuments != null}" th:href="@{${appdetail.supportingDocuments}}" target="_blank" class="btn btn-outline-primary rounded-pill px-3 py-1.5 hover-btn btn-sm inline-flex align-items-center gap-1">
-                    <i class="bi bi-file-earmark-pdf"></i> View Attached Document
-                </a>
-                <span th:if="${appdetail.supportingDocuments == null}" class="badge bg-light text-muted border px-3 py-2 rounded-pill">
-                    <i class="bi bi-paperclip me-1"></i> No Document Uploaded
-                </span>
-            </div>
-        </div>
-    </div>
+            <!-- PAGE CONTENT -->
+            <main class="container-fluid p-3 p-sm-4 p-lg-5 flex-grow-1">
 
-    <!-- Review Form Card -->
-    <div class="card shadow-sm border-0 rounded-4 overflow-hidden detail-card">
-        <div class="card-header bg-primary text-white fw-bold py-3 px-4 d-flex align-items-center gap-2">
-            <i class="bi bi-pencil-square"></i> Review Application
-        </div>
-        <div class="card-body p-4 p-md-5 bg-white">
-            <form th:action="@{/admin/application/status}" method="post" enctype="multipart/form-data">
+                <!-- Header Title Area -->
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4 title-area">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1 fs-3 fs-md-2 d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-person text-primary animated-icon d-inline-block"></i>
+                            Scholarship Application Detail
+                        </h2>
+                        <p class="text-muted small mb-0">Review student credentials, statements, and update submission status.</p>
+                    </div>
 
-                <!-- Hidden inputs (Keep names exact) -->
-                <input type="hidden" name="applicationID" th:value="${appdetail.scholarshipApplicationID}">
-                <input type="hidden" name="scholarshipID" th:value="${appdetail.scholarshipID}">
-
-                <!-- Status Selector -->
-                <div class="mb-4">
-                    <label class="form-label fw-semibold text-dark mb-2">Application Status</label>
-                    <select name="status" class="form-select rounded-3 p-2.5 fw-medium" style="max-width: 300px;">
-                        <option value="Pending" th:selected="${appdetail.status == 'Pending'}">⏳ Pending</option>
-                        <option value="Approved" th:selected="${appdetail.status == 'Approved'}">✅ Approved</option>
-                        <option value="Rejected" th:selected="${appdetail.status == 'Rejected'}">❌ Rejected</option>
-                    </select>
-                </div>
-
-                <!-- Review Notes -->
-                <div class="mb-4">
-                    <label class="form-label fw-semibold text-dark mb-2">Review Notes / Remarks</label>
-                    <textarea name="reviewNotes" class="form-control rounded-3 p-3" rows="4" placeholder="Provide reasons or notes for this evaluation outcome..." th:text="${appdetail.reviewNotes}"></textarea>
-                </div>
-
-                <hr class="text-muted opacity-25 my-4">
-
-                <!-- Responsive Action Controls -->
-                <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
-                    <a th:href="@{/admin/scholarship/{id}/applications(id=${appdetail.scholarshipID})}" class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center">
-                        Cancel
+                    <a th:href="@{/admin/scholarship/{id}/applications(id=${appdetail.scholarshipID})}" class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm hover-btn fw-semibold w-100 w-sm-auto text-center">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Applicants
                     </a>
-                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
-                        Save Review <i class="bi bi-check2-circle ms-1"></i>
-                    </button>
                 </div>
 
-            </form>
+                <!-- User Information Card -->
+                <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden detail-card bg-white">
+                    <div class="card-header bg-primary text-white fw-bold py-3 px-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-person-bounding-box fs-5"></i> User Information
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2">Name</label>
+                                <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium text-dark" th:value="${appdetail.userName}" readonly>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2">Email</label>
+                                <input type="email" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium text-dark" th:value="${appdetail.email}" readonly>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2">Phone</label>
+                                <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium text-dark" th:value="${appdetail.phoneNo}" readonly>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2">Address</label>
+                                <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-medium text-dark" th:value="${appdetail.address}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scholarship Information Card -->
+                <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden detail-card bg-white">
+                    <div class="card-header bg-primary text-white fw-bold py-3 px-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-mortarboard fs-5"></i> Scholarship Details
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2">Applied Scholarship</label>
+                            <input type="text" class="form-control rounded-3 bg-light border-0 p-2.5 fw-bold text-primary" th:value="${appdetail.scholarshipName}" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2">Reason / Statement of Purpose</label>
+                            <textarea class="form-control rounded-3 bg-light border-0 p-3 lh-base fw-medium text-secondary" rows="4" readonly th:text="${appdetail.reason}"></textarea>
+                        </div>
+                        <div>
+                            <label class="form-label fw-semibold text-muted label-title text-uppercase mb-2 d-block">Supporting Document</label>
+                            <a th:if="${appdetail.supportingDocuments != null}" 
+   th:href="@{__${appdetail.supportingDocuments}__}" 
+   target="_blank" 
+   class="btn btn-outline-primary rounded-pill px-3 py-1.5 hover-btn btn-sm d-inline-flex align-items-center gap-1 fw-medium">
+    <i class="bi bi-file-earmark-pdf"></i> View Attached Document
+</a>
+                               
+                            <span th:if="${appdetail.supportingDocuments == null}" class="badge bg-light text-muted border px-3 py-2 rounded-pill fw-medium">
+                                <i class="bi bi-paperclip me-1"></i> No Document Uploaded
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Form Card -->
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden detail-card bg-white mb-4">
+                    <div class="card-header bg-primary text-white fw-bold py-3 px-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-pencil-square fs-5"></i> Review Application
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <form th:action="@{/admin/application/status}" method="post" enctype="multipart/form-data">
+
+                            <!-- Hidden inputs -->
+                            <input type="hidden" name="applicationID" th:value="${appdetail.scholarshipApplicationID}">
+                            <input type="hidden" name="scholarshipID" th:value="${appdetail.scholarshipID}">
+
+                            <!-- Status Selector -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark label-title text-uppercase mb-2">Application Status</label>
+                                <select name="status" class="form-select rounded-3 p-2.5 fw-medium text-dark border-secondary-subtle" style="max-width: 320px;">
+                                    <option value="Pending" th:selected="${appdetail.status == 'Pending'}">⏳ Pending</option>
+                                    <option value="Approved" th:selected="${appdetail.status == 'Approved'}">✅ Approved</option>
+                                    <option value="Rejected" th:selected="${appdetail.status == 'Rejected'}">❌ Rejected</option>
+                                </select>
+                            </div>
+
+                            <!-- Review Notes -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark label-title text-uppercase mb-2">Review Notes / Remarks</label>
+                                <textarea name="reviewNotes" class="form-control rounded-3 p-3 border-secondary-subtle" rows="4" placeholder="Provide reasons or notes for this evaluation outcome..." th:text="${appdetail.reviewNotes}"></textarea>
+                            </div>
+
+                            <hr class="text-muted opacity-25 my-4">
+
+                            <!-- Responsive Action Controls -->
+                            <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                                <a th:href="@{/admin/scholarship/{id}/applications(id=${appdetail.scholarshipID})}" class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center fw-medium">
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn fw-semibold w-100 w-sm-auto">
+                                    Save Review <i class="bi bi-check2-circle ms-1"></i>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div> <!-- /card -->
+
+            </main>
+
+            
         </div>
-    </div> <!-- /card -->
+    </div>
+     <footer class="mt-auto">
+                <div th:replace="~{fragment/footer :: footer}"></div>
+            </footer>
 
-</div>
-
-<div th:replace="~{fragment/footer :: footer}"></div>
-<div th:replace="~{fragment/js :: js}"></div>
+    <!-- Global JS Fragment -->
+    <div th:replace="~{fragment/js :: js}"></div>
 
 </body>
 </html>

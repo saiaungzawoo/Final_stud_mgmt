@@ -38,7 +38,7 @@ public class TeacherController {
 	@GetMapping("/forms")
 	public ModelAndView showForm() {
 		
-		return new ModelAndView("teacher/create-teacher","userObj",new TeacherBean());
+		return new ModelAndView("admin/create-teacher","userObj",new TeacherBean());
 		
 	}
 	@PostMapping("/teacherRegister")
@@ -55,7 +55,7 @@ public class TeacherController {
 
         if(result.hasErrors() || file.isEmpty()) {
 
-            return "teacher/create-teacher";
+            return "admin/create-teacher";
         }
 
 
@@ -68,12 +68,9 @@ public class TeacherController {
             m.addAttribute("fileError",
                     "File size must be less than 2MB");
 
-            return "teacher/create-teacher";
+            return "admin/create-teacher";
         }
-
-
-
-        String contentType = file.getContentType();
+ String contentType = file.getContentType();
 
         if(contentType == null ||
                 !contentType.startsWith("image/")) {
@@ -82,12 +79,9 @@ public class TeacherController {
             m.addAttribute("fileError",
                     "Only image files allowed");
 
-            return "teacher/create-teacher";
+            return "admin/create-teacher";
         }
-
-
-
-        BufferedImage image =
+BufferedImage image =
                 ImageIO.read(file.getInputStream());
 
 
@@ -96,12 +90,9 @@ public class TeacherController {
             m.addAttribute("fileError",
                     "Invalid image file");
 
-            return "teacher/create-teacher";
+            return "admin/create-teacher";
         }
-
-
-
-        String fileName = file.getOriginalFilename();
+String fileName = file.getOriginalFilename();
 
 
         file.transferTo(
@@ -120,35 +111,24 @@ public class TeacherController {
         obj.setUserID(UUID.randomUUID().toString());
 
        // obj.setRoleID("00ec67a1-7a6f-11f1-8f4f-183d2d227d02");//Lin Pyae Nyein
-        obj.setRoleID("19dac071-7acd-11f1-898e-e4b97a5cf834");//Thiri Thwe
+        obj.setRoleID("3c2f3f12-7a84-11f1-bfcb-b4b686e7f920");//Thiri Thwe
         obj.setIsActive(1);
 
 
 
-        obj.setPassword(
-                passwordEncoder.encode(
-                        obj.getPassword()
+        obj.setPassword(passwordEncoder.encode(obj.getPassword()
                 )
         );
-
-
-
-        int i = mRepo.insertTeacher(obj);
-
-
-
-        if(i != 0) {
-
-            return "redirect:/users/teacherLists";
-
-        }else {
-
-            m.addAttribute(
+int i = mRepo.insertTeacher(obj);
+if(i != 0) {
+return "redirect:/users/teacherLists";
+}else {
+m.addAttribute(
                     "fail",
                     "insert fail"
             );
 
-            return "teacher/create-teacher";
+            return "admin/create-teacher";
         }
 
     }
@@ -181,13 +161,13 @@ public class TeacherController {
         System.out.println(list);
 
         m.addAttribute("teacherList",list);
-        return "teacher/teachers-list";
+        return "admin/teachers-list";
     }
 
  @GetMapping("/getbyid")
     public ModelAndView getById( @RequestParam("id") String userID) {
         TeacherBean obj = mRepo.getByTeacherId(userID);
-        return new ModelAndView("teacher/teacher-edit","teacherObj", obj );
+        return new ModelAndView("admin/teacher-edit","teacherObj", obj );
 
     }
   
@@ -199,33 +179,18 @@ public class TeacherController {
             @RequestParam("file") MultipartFile file,
             Model m) throws IOException {
 
+if(result.hasErrors()) {
 
-
-        if(result.hasErrors()) {
-
-            return "teacher/teacher-edit";
+            return "admin/teacher-edit";
         }
-
-
-
-        TeacherBean oldObj =
+ TeacherBean oldObj =
                 mRepo.getByTeacherId(
                         obj.getUserID()
                 );
-
-
-
-
-        if(file != null && !file.isEmpty()) {
-
-
-
-            long maxSize =
+if(file != null && !file.isEmpty()) {
+ long maxSize =
                     2 * 1024 * 1024;
-
-
-
-            if(file.getSize() > maxSize) {
+if(file.getSize() > maxSize) {
 
                 m.addAttribute(
                     "fileError",
@@ -234,94 +199,45 @@ public class TeacherController {
 
                 return "teacher/teacher-edit";
             }
-
-
-
-            String contentType =
-                    file.getContentType();
-
-
-
-            if(contentType == null ||
+String contentType =file.getContentType();
+if(contentType == null ||
                     !contentType.startsWith("image/")) {
-
-
-                m.addAttribute(
+ m.addAttribute(
                     "fileError",
                     "Only image files allowed"
                 );
-
-
-                return "teacher/teacher-edit";
+return "admin/teacher-edit";
             }
 
-
-
-
-            if(oldObj.getProfileImage()!=null) {
-
-                Files.deleteIfExists(
-                    Paths.get(oldObj.getProfileImage())
+if(oldObj.getProfileImage()!=null) {
+Files.deleteIfExists(Paths.get(oldObj.getProfileImage())
                 );
             }
 
-
-
-            String fileName =
-                    file.getOriginalFilename();
-
-
-
-            file.transferTo(
+String fileName =file.getOriginalFilename();
+file.transferTo(
                     Paths.get("uploads/" + fileName)
             );
-
-
-
-            obj.setProfileImage(
+obj.setProfileImage(
                     "uploads/" + fileName
             );
+}else {
+obj.setProfileImage(oldObj.getProfileImage()
+  );
+     }
 
-
-
-        }else {
-
-
-            obj.setProfileImage(
-                    oldObj.getProfileImage()
-            );
-
-        }
-
-
-
-
-        if(obj.getPassword()!=null &&
+if(obj.getPassword()!=null &&
                 !obj.getPassword().isBlank()) {
-
-
-            obj.setPassword(
-                passwordEncoder.encode(
-                    obj.getPassword()
-                )
+obj.setPassword(passwordEncoder.encode(
+                    obj.getPassword() )
             );
-
-        }else {
-
-
-            obj.setPassword(
+}else {
+obj.setPassword(
                 oldObj.getPassword()
             );
         }
-
-
-
-
-        mRepo.updateUpload(obj);
-
-
-
-        return "redirect:/users/teacherLists";
+mRepo.updateUpload(obj);
+return "redirect:/users/teacherLists";
 
     }
 

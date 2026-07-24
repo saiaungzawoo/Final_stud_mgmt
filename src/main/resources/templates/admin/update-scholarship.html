@@ -1,7 +1,9 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Scholarship</title>
     <head th:replace="~{fragment/css :: css}"></head>
     
@@ -13,7 +15,7 @@
         .scholarship-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        /* Card ပေါ် mouse ရောက်ရင် Header က Icon လှုပ်စေရန် */
+        /* Card Icon Animation */
         .scholarship-card:hover .animated-icon {
             animation: wiggle 0.5s ease-in-out infinite alternate;
         }
@@ -33,123 +35,165 @@
     </style>
 </head>
 <body class="bg-light">
+ <!-- ADMIN HEADER -->
+            <header>
+                <div th:replace="~{fragment/admin-header :: adminHeader}"></div>
+            </header>
+<div class="container-fluid min-vh-100 p-0">
+    <div class="row g-0 min-vh-100">
 
-<div th:replace="~{fragment/header :: header}"></div>
+        <!-- DESKTOP SIDEBAR -->
+        <aside class="col-md-3 col-lg-2 bg-dark text-white d-none d-md-block border-end">
+            <div th:replace="~{fragment/admin-sidebar :: adminSidebar}"></div>
+        </aside>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
-
-            <!-- Scholarship Form Card -->
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden scholarship-card">
-                
-                <!-- Card Header -->
-                <div class="card-header bg-primary text-white text-center py-4 border-0">
-                    <div class="mb-2">
-                        <i class="bi bi-pencil-square animated-icon d-inline-block fs-1"></i>
-                    </div>
-                    <h3 class="mb-0 fw-bold">Edit Scholarship</h3>
-                    <p class="text-white-50 small mb-0 mt-1">Update scholarship program criteria and runtime specifications</p>
-                </div>
-
-                <!-- Card Body -->
-                <div class="card-body p-4 p-md-5 bg-white">
-
-                    <form th:action="@{/admin/update}"
-                          th:object="${scholarship}"
-                          method="post">
-
-                        <!-- Hidden Fields -->
-                        <input type="hidden" th:field="*{scholarshipID}">
-
-                        <div class="row g-4">
-                            
-                            <!-- Scholarship Name -->
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-bookmark-star me-1 text-primary"></i> Scholarship Name
-                                </label>
-                                <input type="text" class="form-control rounded-3 p-2.5" th:field="*{scholarshipName}" placeholder="Enter scholarship name" required>
-                            </div>
-
-                            <!-- Description -->
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-card-text me-1 text-primary"></i> Description
-                                </label>
-                                <textarea class="form-control rounded-3 p-3" rows="4" th:field="*{description}" placeholder="Enter description" required></textarea>
-                            </div>
-
-                            <!-- Discount Type -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-tags me-1 text-primary"></i> Discount Type
-                                </label>
-                                <select class="form-select rounded-3 p-2.5" th:field="*{discountType}">
-                                    <option value="Percentage">Percentage (%)</option>
-                                    <option value="Fixed Amount">Fixed Amount</option>
-                                </select>
-                            </div>
-
-                            <!-- Discount Value -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-cash-coin me-1 text-primary"></i> Discount Value
-                                </label>
-                                <input type="number" step="0.01" class="form-control rounded-3 p-2.5" th:field="*{discountValue}" placeholder="Enter discount value" required>
-                            </div>
-
-                            <!-- Max Recipients -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-people me-1 text-primary"></i> Max Recipients
-                                </label>
-                                <input type="number" class="form-control rounded-3 p-2.5" th:field="*{maxRecipients}" placeholder="Enter maximum recipients" required>
-                            </div>
-
-                            <!-- Deadline -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-calendar-x me-1 text-primary"></i> Application Deadline
-                                </label>
-                                <input type="date" class="form-control rounded-3 p-2.5" th:field="*{applicationDeadline}">
-                                <input type="hidden" name="oldDeadline" th:value="${scholarship.applicationDeadline}">
-                            </div>
-
-                            <!-- Status -->
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-toggle-on me-1 text-primary"></i> Status
-                                </label>
-                                <select class="form-select rounded-3 p-2.5" th:field="*{isActive}" style="max-width: 250px;">
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <hr class="text-muted opacity-25 my-4">
-
-                        <!-- Action Buttons -->
-                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
-                            <a th:href="@{/admin/list}" class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center">
-                                Cancel
-                            </a>
-                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
-                                Update <i class="bi bi-check2-circle ms-1"></i>
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-
-            </div> <!-- /card -->
+        <!-- MOBILE SIDEBAR (OFFCANVAS) -->
+        <div class="offcanvas offcanvas-start bg-dark text-white d-md-none" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+            <div class="offcanvas-header border-bottom border-secondary">
+                <h5 class="offcanvas-title text-white" id="mobileSidebarLabel">Admin Menu</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div th:replace="~{fragment/admin-sidebar :: adminSidebar}"></div>
+            </div>
         </div>
-    </div>
-</div>
 
-<div th:replace="~{fragment/footer :: footer}"></div>
+        <!-- MAIN CONTENT AREA -->
+        <main class="col-12 col-md-9 col-lg-10 d-flex flex-column min-vh-100">
+
+            <!-- MOBILE TOGGLE HEADER BAR -->
+            <div class="d-md-none bg-dark text-white p-2 d-flex justify-content-between align-items-center shadow-sm">
+                <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                    <i class="bi bi-list fs-5"></i> Menu
+                </button>
+                <span class="fw-semibold">Admin Panel</span>
+            </div>
+
+           
+
+            <!-- FORM CONTENT CONTAINER -->
+            <section class="container py-4 py-md-5 flex-grow-1">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-sm-11 col-md-10 col-lg-8">
+
+                        <!-- Scholarship Form Card -->
+                        <div class="card shadow-sm border-0 rounded-4 overflow-hidden scholarship-card">
+                            
+                            <!-- Card Header -->
+                            <div class="card-header bg-primary text-white text-center py-4 border-0">
+                                <div class="mb-2">
+                                    <i class="bi bi-pencil-square animated-icon d-inline-block fs-1"></i>
+                                </div>
+                                <h3 class="mb-0 fw-bold fs-4 fs-md-3">Edit Scholarship</h3>
+                                <p class="text-white-50 small mb-0 mt-1">Update scholarship program criteria and runtime specifications</p>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-3 p-sm-4 p-md-5 bg-white">
+
+                                <form th:action="@{/admin/update}"
+                                      th:object="${scholarship}"
+                                      method="post">
+
+                                    <!-- Hidden Fields -->
+                                    <input type="hidden" th:field="*{scholarshipID}">
+
+                                    <div class="row g-3 g-md-4">
+                                        
+                                        <!-- Scholarship Name -->
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-bookmark-star me-1 text-primary"></i> Scholarship Name
+                                            </label>
+                                            <input type="text" class="form-control rounded-3 p-2.5" th:field="*{scholarshipName}" placeholder="Enter scholarship name" required>
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-card-text me-1 text-primary"></i> Description
+                                            </label>
+                                            <textarea class="form-control rounded-3 p-3" rows="4" th:field="*{description}" placeholder="Enter description" required></textarea>
+                                        </div>
+
+                                        <!-- Discount Type -->
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-tags me-1 text-primary"></i> Discount Type
+                                            </label>
+                                            <select class="form-select rounded-3 p-2.5" th:field="*{discountType}">
+                                                <option value="Percentage">Percentage (%)</option>
+                                                <option value="Fixed Amount">Fixed Amount</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Discount Value -->
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-cash-coin me-1 text-primary"></i> Discount Value
+                                            </label>
+                                            <input type="number" step="0.01" class="form-control rounded-3 p-2.5" th:field="*{discountValue}" placeholder="Enter discount value" required>
+                                        </div>
+
+                                        <!-- Max Recipients -->
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-people me-1 text-primary"></i> Max Recipients
+                                            </label>
+                                            <input type="number" class="form-control rounded-3 p-2.5" th:field="*{maxRecipients}" placeholder="Enter maximum recipients" required>
+                                        </div>
+
+                                        <!-- Deadline -->
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-calendar-x me-1 text-primary"></i> Application Deadline
+                                            </label>
+                                            <input type="date" class="form-control rounded-3 p-2.5" th:field="*{applicationDeadline}">
+                                            <input type="hidden" name="oldDeadline" th:value="${scholarship.applicationDeadline}">
+                                        </div>
+
+                                        <!-- Status -->
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="bi bi-toggle-on me-1 text-primary"></i> Status
+                                            </label>
+                                            <select class="form-select rounded-3 p-2.5 w-100 w-sm-auto" th:field="*{isActive}" style="max-width: 250px;">
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                    <hr class="text-muted opacity-25 my-4">
+
+                                    <!-- Action Buttons -->
+                                    <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                                        <a th:href="@{/admin/list}" class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn w-100 w-sm-auto text-center">
+                                            Cancel
+                                        </a>
+                                        <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn w-100 w-sm-auto">
+                                            Update <i class="bi bi-check2-circle ms-1"></i>
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                        </div> <!-- /card -->
+                    </div>
+                </div>
+            </section>
+
+            
+
+        </main> <!-- /main content col -->
+    </div> <!-- /row -->
+</div> <!-- /container-fluid -->
+<!-- FOOTER -->
+            <footer class="mt-auto">
+                <div th:replace="~{fragment/footer :: footer}"></div>
+            </footer>
 <div th:replace="~{fragment/js :: js}"></div>
 
 </body>
