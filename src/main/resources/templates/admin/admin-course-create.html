@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragment/css :: css}">
+<title>Create Course</title>
+</head>
+
+
+<body>
+
+
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+
+		<section th:fragment="section">
+
+
+			<div class="container-fluid py-3">
+
+
+				<!-- Header -->
+
+				<div
+					class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+
+					<div>
+
+						<h3 class="fw-bold mb-1">Create Course</h3>
+
+						<p class="text-muted mb-0">Create a new course and configure
+							course details.</p>
+
+					</div>
+
+
+					<a class="btn btn-outline-secondary" th:href="@{/admin/courses}">
+
+						<i class="bi bi-arrow-left me-1"></i> Back to Courses
+
+					</a>
+
+
+				</div>
+
+
+
+
+
+				<div class="content-panel bg-white rounded-3 shadow-sm border p-4">
+
+
+
+					<form th:action="@{/admin/courses/create}" th:object="${course}"
+						method="post" enctype="multipart/form-data">
+
+
+
+						<!-- COURSE INFORMATION -->
+
+						<div class="mb-4">
+
+
+							<div class="d-flex align-items-center gap-2 mb-3">
+
+								<i class="bi bi-book text-primary"></i>
+
+								<h5 class="fw-bold mb-0">Course Information</h5>
+
+							</div>
+
+
+
+							<div class="row g-4">
+
+
+								<div class="col-md-12">
+
+									<label class="form-label"> Course Name </label> <input
+										type="text" class="form-control" th:field="*{name}"
+										placeholder="Enter course name">
+
+
+								</div>
+
+
+
+								<div class="col-md-12">
+
+									<label class="form-label"> Description </label>
+
+
+									<textarea class="form-control" rows="4"
+										th:field="*{description}">
+</textarea>
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+									<label class="form-label">Category</label> <select
+										class="form-select" th:field="*{courseCategoryId}">
+
+										<option value="">Select Category</option>
+
+
+										<option th:each="category : ${categories}"
+											th:value="${category.courseCategoryId}"
+											th:text="${category.name}"></option>
+
+
+									</select>
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+									<label class="form-label"> Subcategory </label> <select
+										class="form-select" th:field="*{subcategoryId}">
+
+
+										<option value="">Select Subcategory</option>
+
+
+										<option th:each="subcategory : ${subcategories}"
+											th:value="${subcategory.subCategoryId}"
+											th:text="${subcategory.name}"></option>
+
+
+									</select>
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+									<label class="form-label"> Teacher </label> <select
+										class="form-select" th:field="*{teacherId}">
+
+
+										<option value="">Select Teacher</option>
+
+
+										<option th:each="teacher : ${teachers}"
+											th:value="${teacher.userID}" th:text="${teacher.name}">
+										</option>
+
+
+									</select>
+
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+
+
+						<hr>
+
+
+
+
+
+						<!-- COURSE SETTINGS -->
+
+
+						<div class="mb-4">
+
+
+							<div class="d-flex align-items-center gap-2 mb-3">
+
+
+								<i class="bi bi-gear text-primary"></i>
+
+
+								<h5 class="fw-bold mb-0">Course Settings</h5>
+
+
+							</div>
+
+
+
+							<div class="row g-4">
+
+
+
+								<div class="col-md-3">
+
+
+									<label class="form-label"> Duration </label>
+
+
+									<div class="input-group">
+
+
+										<input type="number" class="form-control"
+											th:field="*{durationWeeks}"> <span
+											class="input-group-text"> Weeks </span>
+
+
+									</div>
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-3">
+
+
+									<label class="form-label"> Fee </label> <input type="number"
+										class="form-control" th:field="*{fee}">
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-3">
+
+
+									<label class="form-label"> Level </label> <select
+										class="form-select" th:field="*{level}">
+										<option value="">Select Level</option>
+										<option value="Beginner">Beginner</option>
+										<option value="Intermediate">Intermediate</option>
+										<option value="Advanced">Advanced</option>
+									</select>
+
+								</div>
+
+
+
+
+
+								<div class="col-md-3">
+
+
+									<label class="form-label"> Status </label> <select
+										class="form-select" th:field="*{status}">
+										<option value="">Select Status</option>
+										<option value="Draft">Draft</option>
+										<option value="Open">Open</option>
+										<option value="In Progress">In Progress</option>
+										<option value="Completed">Completed</option>
+										<option value="Cancelled">Cancelled</option>
+									</select>
+
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+
+
+
+						<hr>
+
+
+
+
+
+						<!-- ENROLLMENT SETTINGS -->
+
+
+						<div class="mb-4">
+
+
+							<div class="d-flex align-items-center gap-2 mb-3">
+
+
+								<i class="bi bi-people text-primary"></i>
+
+
+								<h5 class="fw-bold mb-0">Enrollment Settings</h5>
+
+
+							</div>
+
+
+
+							<div class="row g-4">
+
+
+
+								<div class="col-md-4">
+
+
+									<label class="form-label"> Seats </label> <input type="number"
+										class="form-control" th:field="*{seatsTotal}">
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+
+									<div class="category-card">
+
+
+										<div class="form-check form-switch">
+
+											<input class="form-check-input" type="checkbox"
+												id="allowInstallment" th:field="*{allowedInstallment}"
+												value="1"> <label
+												class="form-check-label fw-semibold"> Allow
+												Installment Payment </label>
+
+
+										</div>
+
+
+									</div>
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+
+									<div class="category-card">
+
+
+										<div class="form-check form-switch">
+
+
+											<input class="form-check-input" type="checkbox" checked>
+
+
+											<label class="form-check-label fw-semibold"> Allow
+												Scholarship </label>
+
+
+										</div>
+
+
+									</div>
+
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+
+
+
+						<!-- INSTALLMENT PLAN -->
+
+
+						<div id="installmentSection"
+							class="content-panel border rounded-3 p-4 mb-4"
+							style="display: none;">
+
+
+
+							<h5 class="fw-bold mb-1">Installment Plan</h5>
+
+
+							<p class="text-muted">Let students split the course fee
+								across multiple payments.</p>
+
+
+
+
+
+							<div class="row g-3 mb-4">
+
+
+								<div class="col-md-4">
+
+
+									<label class="form-label"> Installment Count </label> <input
+										class="form-control" value="3">
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+
+									<label class="form-label"> Course Fee </label> <input
+										class="form-control" value="300000 MMK" readonly>
+
+
+								</div>
+
+
+
+
+
+								<div class="col-md-4">
+
+
+									<label class="form-label"> Plan Total </label> <input
+										class="form-control" value="300000 MMK" readonly>
+
+
+								</div>
+
+
+
+							</div>
+
+
+
+
+
+
+							<h6 class="fw-bold mb-3">Payment Schedule</h6>
+
+
+
+
+
+							<div class="row g-3 mb-3">
+
+
+								<div class="col-md-2">
+
+									<label class="form-label"> # </label> <input
+										class="form-control" value="1" readonly>
+
+								</div>
+
+
+								<div class="col-md-5">
+
+									<label class="form-label"> Amount </label> <input
+										class="form-control" value="100000">
+
+								</div>
+
+
+								<div class="col-md-5">
+
+									<label class="form-label"> Due Date </label> <input type="date"
+										class="form-control">
+
+								</div>
+
+
+							</div>
+
+
+
+
+
+							<div class="row g-3 mb-3">
+
+
+								<div class="col-md-2">
+
+									<input class="form-control" value="2" readonly>
+
+								</div>
+
+
+								<div class="col-md-5">
+
+									<input class="form-control" value="100000">
+
+								</div>
+
+
+								<div class="col-md-5">
+
+									<input type="date" class="form-control">
+
+								</div>
+
+
+							</div>
+
+
+
+
+
+							<div class="row g-3">
+
+
+								<div class="col-md-2">
+
+									<input class="form-control" value="3" readonly>
+
+								</div>
+
+
+								<div class="col-md-5">
+
+									<input class="form-control" value="100000">
+
+								</div>
+
+
+								<div class="col-md-5">
+
+									<input type="date" class="form-control">
+
+								</div>
+
+
+							</div>
+
+
+
+						</div>
+
+
+
+
+
+
+						<hr>
+
+
+
+
+
+						<!-- THUMBNAIL -->
+
+
+						<div class="mb-4">
+
+
+							<h5 class="fw-bold mb-3">
+
+								<i class="bi bi-image text-primary me-2"></i> Thumbnail
+
+							</h5>
+
+
+
+							<input type="file" class="form-control">
+
+
+						</div>
+
+
+
+
+
+
+						<div class="d-flex justify-content-end gap-2 border-top pt-3">
+
+
+							<a class="btn btn-outline-secondary" th:href="@{/admin/courses}">
+
+								Cancel </a>
+
+
+
+							<button class="btn btn-primary" type="submit">Create
+								Course</button>
+
+
+						</div>
+
+
+
+
+					</form>
+
+
+				</div>
+
+
+			</div>
+
+
+
+		</section>
+
+
+	</div>
+
+
+
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+
+			const checkbox = document.getElementById("allowInstallment");
+
+			const section = document.getElementById("installmentSection");
+
+			checkbox.addEventListener("change", function() {
+
+				if (this.checked) {
+
+					section.style.display = "block";
+
+				}
+
+				else {
+
+					section.style.display = "none";
+
+				}
+
+			});
+
+		});
+	</script>
+
+
+
+</body>
+
+</html>

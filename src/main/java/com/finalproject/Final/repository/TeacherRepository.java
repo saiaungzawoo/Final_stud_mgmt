@@ -46,14 +46,55 @@ public class TeacherRepository {
     }
 
 
-
+//i didnt delete anything//sai
     // Get All Teacher
+//    public List<TeacherBean> getAllTeacher() {
+//
+//        String sql = """
+//                SELECT *
+//                FROM `user`
+//                WHERE roleID = ?
+//                """;
+//
+//
+//        return jdbc.query(
+//                sql,
+//
+//                (rs,rowNum)-> new TeacherBean(
+//                        rs.getString("userID"),
+//                        rs.getString("roleID"),
+//                        rs.getString("name"),
+//                        rs.getString("email"),
+//                        rs.getString("password"),
+//                        rs.getString("phone_no"),
+//                        rs.getString("address"),
+//                        rs.getString("dob"),
+//                        rs.getString("gender"),
+//                        rs.getString("profile_image"),
+//                        rs.getInt("is_active"),
+//                        rs.getTimestamp("created_at"),
+//                        rs.getTimestamp("updated_at")
+//                ),
+//
+//               // "00ec67a1-7a6f-11f1-8f4f-183d2d227d02"
+//                "19dac071-7acd-11f1-898e-e4b97a5cf834"
+    
+    //sai
+    //hard coding UUID is not good. use role name instead 
+//        );
+//    }
+    
+    //sai
+  //hard coding UUID is not good. use role name instead 
     public List<TeacherBean> getAllTeacher() {
 
+
         String sql = """
-                SELECT *
-                FROM `user`
-                WHERE roleID = ?
+                SELECT u.*
+                FROM user u
+                JOIN role r
+                ON u.roleID = r.roleID
+                WHERE r.name = 'Teacher'
                 """;
 
 
@@ -61,25 +102,37 @@ public class TeacherRepository {
                 sql,
 
                 (rs,rowNum)-> new TeacherBean(
-                        rs.getString("userID"),
-                        rs.getString("roleID"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone_no"),
-                        rs.getString("address"),
-                        rs.getString("dob"),
-                        rs.getString("gender"),
-                        rs.getString("profile_image"),
-                        rs.getInt("is_active"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                ),
 
-               // "00ec67a1-7a6f-11f1-8f4f-183d2d227d02"
-                "3c2f3f12-7a84-11f1-bfcb-b4b686e7f920"
+                        rs.getString("userID"),
+
+                        rs.getString("roleID"),
+
+                        rs.getString("name"),
+
+                        rs.getString("email"),
+
+                        rs.getString("password"),
+
+                        rs.getString("phone_no"),
+
+                        rs.getString("address"),
+
+                        rs.getString("dob"),
+
+                        rs.getString("gender"),
+
+                        rs.getString("profile_image"),
+
+                        rs.getInt("is_active"),
+
+                        rs.getTimestamp("created_at"),
+
+                        rs.getTimestamp("updated_at")
+                )
         );
     }
+    
+    
 
 
     // Get Teacher By ID

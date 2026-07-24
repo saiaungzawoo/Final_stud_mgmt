@@ -26,15 +26,26 @@ public class CourseRepository {
     // 🔹 GET ALL COURSES
     public List<CourseBean> findAll() {
 
-        String sql =
-            "SELECT c.*, " +
-            "sc.name AS subcategory_name, " +
-            "cc.name AS category_name, " +
-            "u.name AS teacher_name " +
-            "FROM course c " +
-            "JOIN subcategory sc ON c.subcategoryID = sc.subcategoryID " +
-            "JOIN course_category cc ON c.courseCategoryID = cc.courseCategoryID " +
-            "JOIN user u ON c.teacherID = u.userID";
+//        String sql =
+//            "SELECT c.*, " +
+//            "sc.name AS subcategory_name, " +
+//            "cc.name AS category_name, " +
+//            "u.name AS teacher_name " +
+//            "FROM course c " +
+//            "JOIN subcategory sc ON c.subcategoryID = sc.subcategoryID " +
+//            "JOIN course_category cc ON c.courseCategoryID = cc.courseCategoryID " +
+//            "JOIN user u ON c.teacherID = u.userID";
+    	
+    	String sql =
+    		    "SELECT c.*, " +
+    		    "sc.name AS subcategory_name, " +
+    		    "cc.name AS category_name, " +
+    		    "u.name AS teacher_name " +
+    		    "FROM course c " +
+    		    "JOIN subcategory sc ON c.subcategoryID = sc.subcategoryID " +
+    		    "JOIN course_category cc ON c.courseCategoryID = cc.courseCategoryID " +
+    		    "JOIN user u ON c.teacherID = u.userID " +
+    		    "ORDER BY c.created_at DESC";
 
         return jdbc.query(sql, mapper);
     }
