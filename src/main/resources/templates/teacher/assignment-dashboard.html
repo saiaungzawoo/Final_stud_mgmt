@@ -1,18 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}">
-    <!-- Custom Hover Lift Effect Embedded as requested -->
-    <style>
-        .hover-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-        }
-    </style>
-</head>
+<head th:replace="~{fragment/css :: css}"></head>
+
 
 <body class="bg-light">
 
@@ -337,15 +327,16 @@
                                 <label class="form-label fw-bold text-secondary"><i class="bi bi-calendar-event me-2"></i>Due Date & Time</label>
                                 <input type="datetime-local" class="form-control rounded-3" id="editDueDate" name="dueDate" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-secondary"><i class="bi bi-flag me-2"></i>Status</label>
-                                <select class="form-select rounded-3" id="editStatus" name="status">
-                                    <option th:each="status : ${statusList}"
-                                            th:value="${status}"
-                                            th:text="${status}">
-                                    </option>
-                                </select>
-                            </div>
+                          <div class="mb-3">
+    <label class="form-label fw-bold text-secondary">
+        <i class="bi bi-flag me-2"></i>Status
+    </label>
+
+    <input type="text" 
+           class="form-control rounded-3"
+           id="editStatus"
+           readonly>
+</div>
                         </div>
                         
                         <div class="col-12">

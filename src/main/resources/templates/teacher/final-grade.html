@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+</head>
+
+
+<body>
+
+
+<!-- Header -->
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+            </div>
+
+        </div>
+
+
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 p-4">
+
+
+            <h3 class="mb-4">
+                Final Grade Management
+            </h3>
+
+
+
+            <!-- Course Select -->
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    Select Course
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <form method="get"
+                          th:action="@{/teacher/final-grade}">
+
+
+                        <select class="form-select"
+                                name="courseId"
+                                onchange="this.form.submit()">
+
+
+                            <option value="">
+                                -- Select Course --
+                            </option>
+
+
+                            <option th:each="course : ${courseList}"
+                                    th:value="${course.CourseId}"
+                                    th:text="${course.name}"
+                                    th:selected="${course.CourseId == selectedCourse}">
+                            </option>
+
+
+                        </select>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <!-- Student List -->
+
+            <div class="card mb-4"
+                 th:if="${studentList != null}">
+
+
+                <div class="card-header">
+                    Student List
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <table class="table table-bordered">
+
+
+                        <thead>
+                            <tr>
+
+                                <th>No</th>
+                                <th>Student Name</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                            <tr th:each="student, stat : ${studentList}">
+
+
+                                <td th:text="${stat.count}">
+                                </td>
+
+
+                                <td th:text="${student.username}">
+                                </td>
+
+
+                                <td>
+
+                                    <a class="btn btn-primary btn-sm"
+                                       th:href="@{/teacher/final-grade/view/{id}(id=${student.enrollmentId})}">
+                                        View Result
+                                    </a>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        </tbody>
+
+
+                    </table>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <!-- Result Preview -->
+
+            <div class="card"
+                 th:if="${grade != null}">
+
+
+                <div class="card-header">
+                    Final Result Preview
+                </div>
+
+
+
+                <div class="card-body">
+
+
+                    <form th:action="@{/teacher/final-grade/finalize}"
+                          method="post">
+
+
+
+                        <input type="hidden"
+                               name="enrollmentID"
+                               th:value="${grade.enrollmentID}">
+
+
+
+                        <div class="row">
+
+
+                            <div class="col-md-4">
+
+                                <label>
+                                    Assignment Score
+                                </label>
+
+                                <input class="form-control"
+                                       readonly
+                                       th:value="${grade.assignmentTotalScore}">
+
+                                <input type="hidden"
+                                       name="assignmentTotalScore"
+                                       th:value="${grade.assignmentTotalScore}">
+
+                            </div>
+
+
+
+
+                            <div class="col-md-4">
+
+                                <label>
+                                    Exam Score
+                                </label>
+
+                                <input class="form-control"
+                                       readonly
+                                       th:value="${grade.examTotalScore}">
+
+                                <input type="hidden"
+                                       name="examTotalScore"
+                                       th:value="${grade.examTotalScore}">
+
+                            </div>
+
+
+
+
+
+                            <div class="col-md-4">
+
+                                <label>
+                                    Attendance Score
+                                </label>
+
+                                <input class="form-control"
+                                       readonly
+                                       th:value="${grade.attendanceScore}">
+
+                                <input type="hidden"
+                                       name="attendanceScore"
+                                       th:value="${grade.attendanceScore}">
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <hr>
+
+
+
+                        <h5>
+                            Final Score :
+                            <span th:text="${grade.finalScore}">
+                            </span>
+                        </h5>
+
+
+
+                        <h5>
+                            Grade :
+                            <span th:text="${grade.letterGrade}">
+                            </span>
+                        </h5>
+
+
+
+                        <h5>
+                            Status :
+                            <span th:text="${grade.status}">
+                            </span>
+                        </h5>
+
+
+
+
+                        <input type="hidden"
+                               name="finalScore"
+                               th:value="${grade.finalScore}">
+
+
+                        <input type="hidden"
+                               name="letterGrade"
+                               th:value="${grade.letterGrade}">
+
+
+                        <input type="hidden"
+                               name="status"
+                               th:value="${grade.status}">
+
+
+
+
+
+                        <div class="mt-3">
+
+                            <label>
+                                Remarks
+                            </label>
+
+
+                            <textarea class="form-control"
+                                      name="remarks"
+                                      rows="3"></textarea>
+
+
+                        </div>
+
+
+
+                        <button class="btn btn-success mt-3">
+                            Finalize Result
+                        </button>
+
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- Footer -->
+<div th:replace="~{fragment/footer :: footer}">
+</div>
+
+
+
+<div th:replace="~{fragment/js :: js}">
+</div>
+
+
+
+</body>
+
+</html>

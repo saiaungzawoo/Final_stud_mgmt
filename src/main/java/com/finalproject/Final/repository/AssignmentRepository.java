@@ -167,8 +167,7 @@ public class AssignmentRepository {
                     description=?,
                     max_score=?,
                     weight_percent=?,
-                    due_date=?,
-                    status=?
+                    due_date=?
                 WHERE assignmentID=?
                 """;
 
@@ -182,9 +181,7 @@ public class AssignmentRepository {
                 obj.getMaxScore(),
                 obj.getWeightPercent(),
                 obj.getDueDate(),
-                obj.getStatus().name(),
                 obj.getAssignmentID()
-
         );
 
     }
@@ -288,6 +285,17 @@ public class AssignmentRepository {
 
         }, courseID);
 
+    }
+    public int updateClosedAssignments() {
+
+        String sql = """
+                UPDATE assignment
+                SET status='Closed'
+                WHERE due_date < NOW()
+                AND status='Published'
+                """;
+
+        return jdbc.update(sql);
     }
 
 }

@@ -50,5 +50,13 @@ private String status;
 private LocalDateTime createdAt;
 private LocalDateTime AssignupdatedAt;
 private MultipartFile file;
+private boolean submitted;
+
+public boolean isSubmitted() {
+    return submitted;
+}
+public void setSubmitted(boolean submitted) {
+    this.submitted = submitted;
+}
      
 }

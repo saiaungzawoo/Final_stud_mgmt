@@ -1,137 +1,261 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assignment List</title>
-    <head th:replace="~{fragment/css :: css}"></head>
-    
-    <!-- Bootstrap Icons -->
+
+    <!-- Fragment Replacement -->
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <!-- Bootstrap Icons & Fonts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <!-- CSS Animation & Card Feed UI Styles -->
     <style>
-        .assignment-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        /* Card ပေါ် mouse ရောက်ရင် ကြွတက်ပြီး Icon လှုပ်စေရန် */
-        .assignment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12) !important;
-        }
-        .assignment-card:hover .animated-icon {
-            animation: wiggle 0.5s ease-in-out infinite alternate;
-        }
-        .hover-btn {
-            transition: transform 0.2s ease;
-        }
-        .hover-btn:hover {
-            transform: translateY(-1px);
-        }
+       body {
+           font-family: 'Inter', sans-serif;
+           background: #f8fafc;
+           overflow-x: hidden;
+       }
 
-        @keyframes wiggle {
-            0% { transform: rotate(-10deg); }
-            100% { transform: rotate(10deg); }
-        }
+       .assignment-card {
+           transition: .3s;
+           border: 1px solid #e2e8f0;
+       }
+
+       .assignment-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 12px 25px rgba(0,0,0,.08);
+       }
+
+       .assignment-card:hover .animated-icon {
+           animation: wiggle .4s infinite alternate;
+       }
+
+       .hover-btn {
+           transition: .3s;
+       }
+
+       .hover-btn:hover {
+           transform: translateY(-2px);
+       }
+
+       @keyframes wiggle {
+           from { transform: rotate(-8deg); }
+           to { transform: rotate(8deg); }
+       }
+
+       main {
+           min-height: calc(100vh - 130px);
+       }
+
+       @media(max-width:992px) {
+           main {
+               padding: 20px;
+           }
+       }
+
+       @media(max-width:768px) {
+           .card-body {
+               padding: 1rem;
+           }
+
+           .btn {
+               width: 100%;
+           }
+
+           .d-flex.justify-content-between.align-items-center.mt-auto {
+               flex-direction: column;
+               align-items: flex-start !important;
+           }
+       }
+
+       @media(max-width:576px) {
+           h2 {
+               font-size: 1.5rem;
+           }
+
+           .assignment-card {
+               border-radius: 18px;
+           }
+       }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div th:replace="~{fragment/header :: header}"></div>
+    <!-- Header -->
+    <div th:replace="~{fragment/student-header :: studentHeader}"></div>
 
-<div class="container py-5">
+    <div class="d-flex flex-column flex-lg-row min-vh-100">
 
-    <!-- Header Title Section -->
-    <div class="text-center mb-5">
-        <h1 class="fw-bold display-5 text-primary mb-2">
-            Available Assignments
-        </h1>
-        <p class="text-muted fs-5">
-            Manage your coursework, track deadlines, and submit your tasks.
-        </p>
-    </div>
+        <!-- Sidebar -->
+        <div th:replace="~{fragment/student-sidebar :: studentSidebar}"></div>
 
-    <!-- Assignments Responsive Grid -->
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4" th:each="a, stat : ${assignments}">
-            <div class="card shadow-sm border-0 h-100 assignment-card rounded-4 overflow-hidden">
-                <div class="card-body p-4 d-flex flex-column">
+        <!-- Main Wrapper -->
+        <div class="flex-grow-1 d-flex flex-column min-vh-100">
 
-                    <!-- Top Row: Course Badge & Number -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1.5 rounded-pill fw-semibold small">
-                            <i class="bi bi-bookmark-fill me-1"></i>
-                            <span th:text="${a.courseName}">Course</span>
-                        </span>
-                        <small class="text-muted fw-bold" th:text="'#' + ${stat.count}">#1</small>
-                    </div>
+            <!-- Main Content -->
+            <main class="container-fluid flex-grow-1 px-3 px-md-4 py-4 overflow-auto">
 
-                    <!-- Title with Animated Icon -->
-                    <div class="d-flex align-items-start gap-2 mb-2">
-                        <i class="bi bi-journal-text animated-icon text-primary fs-4 mt-0.5 d-inline-block"></i>
-                        <h5 class="fw-bold text-dark mb-0 lh-base" th:text="${a.title}">
-                            Assignment Title
-                        </h5>
-                    </div>
-
-                    <!-- Description -->
-                    <p class="text-muted small flex-grow-1 my-3 lh-base" th:text="${a.description}">
-                        Assignment description goes here...
+                <!-- Header Title -->
+                <div class="mb-4">
+                    <h2 class="fw-bold text-dark mb-1">
+                        <i class="bi bi-journal-bookmark-fill text-primary me-2"></i>
+                        Available Assignments
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Manage your coursework, track deadlines, and submit your tasks.
                     </p>
+                </div>
 
-                    <!-- Score & Weight Stats Row -->
-                    <div class="row g-2 text-center mb-3">
-                        <div class="col-6">
-                            <div class="bg-light p-2 rounded-3 border border-light-subtle">
-                                <small class="text-muted d-block fw-semibold mb-0.5" style="font-size: 0.75rem;">Max Score</small>
-                                <span class="fw-bold text-dark" th:text="${a.maxScore}">100</span>
+                <!-- Assignments -->
+                <div class="row g-4">
+
+                    <div class="col-12 col-md-6 col-xl-4"
+                         th:each="a, stat : ${assignments}">
+
+                        <div class="card assignment-card shadow-sm rounded-4 h-100">
+
+                            <div class="card-body d-flex flex-column">
+
+                                <!-- Course -->
+                                <div class="d-flex justify-content-between mb-3">
+
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill">
+                                        <i class="bi bi-bookmark-fill me-1"></i>
+                                        <span th:text="${a.courseName}"></span>
+                                    </span>
+
+                                    <small class="text-muted"
+                                           th:text="'#'+${stat.count}">
+                                    </small>
+
+                                </div>
+
+                                <!-- Title -->
+                                <div class="d-flex mb-3">
+
+                                    <i class="bi bi-journal-text text-primary fs-4 me-2 animated-icon"></i>
+
+                                    <h5 class="fw-bold mb-0"
+                                        th:text="${a.title}">
+                                    </h5>
+
+                                </div>
+
+                                <!-- Description -->
+                                <p class="text-muted flex-grow-1"
+                                   th:text="${a.description}">
+                                </p>
+
+                                <!-- Score -->
+                                <div class="row g-2 mb-3">
+
+                                    <div class="col-6">
+                                        <div class="border rounded-3 p-2 text-center bg-light">
+                                            <small class="text-muted">Max Score</small>
+                                            <div class="fw-bold"
+                                                 th:text="${a.score}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="border rounded-3 p-2 text-center bg-light">
+                                            <small class="text-muted">Weight</small>
+                                            <div class="fw-bold"
+                                                 th:text="${a.weightPercent}+'%'">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <hr>
+
+                                <!-- Bottom -->
+                                <div class="d-flex justify-content-between align-items-center mt-auto flex-wrap gap-2">
+
+                                    <div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar-event text-danger"></i>
+                                            Due Date
+                                        </small>
+
+                                        <div class="fw-bold text-danger"
+                                             th:text="${#temporals.format(a.dueDate,'dd-MM-yyyy HH:mm')}">
+                                        </div>
+
+                                    </div>
+
+                                 
+ <!-- Not Submitted -->
+<a th:if="${!a.submitted}"
+   class="btn btn-primary rounded-pill"
+   th:href="@{/student/submission/assignment/submit/{id}(id=${a.assignmentID})}">
+
+    <i class="bi bi-cloud-arrow-up"></i>
+    Submit
+
+</a>
+
+
+<!-- Already Submitted -->
+<button th:if="${a.submitted}"
+        class="btn btn-success rounded-pill"
+        disabled>
+
+    <i class="bi bi-check-circle"></i>
+    Already Submitted
+
+</button>
+                                </div>
+
                             </div>
+
                         </div>
-                        <div class="col-6">
-                            <div class="bg-light p-2 rounded-3 border border-light-subtle">
-                                <small class="text-muted d-block fw-semibold mb-0.5" style="font-size: 0.75rem;">Weight</small>
-                                <span class="fw-bold text-dark" th:text="${a.weightPercent} + '%'">20%</span>
-                            </div>
-                        </div>
+
                     </div>
 
-                    <hr class="text-muted my-3 opacity-25">
+                    <!-- Empty State -->
+                    <div class="col-12"
+                         th:if="${#lists.isEmpty(assignments)}">
 
-                    <!-- Bottom Metadata & Actions -->
-                    <div class="d-flex justify-content-between align-items-center mt-auto">
-                        <div>
-                            <small class="text-muted d-block fw-semibold mb-0.5" style="font-size: 0.75rem;">
-                                <i class="bi bi-calendar-event text-danger me-1"></i> Due Date
-                            </small>
-                            <span class="text-danger small fw-bold" th:text="${#temporals.format(a.dueDate,'dd-MM-yyyy HH:mm')}">
-                                20-07-2026 23:59
-                            </span>
+                        <div class="card shadow-sm border-0 rounded-4">
+
+                            <div class="card-body text-center py-5">
+
+                                <i class="bi bi-file-earmark-x display-3 text-secondary"></i>
+
+                                <h4 class="mt-3">
+                                    No Assignment Found
+                                </h4>
+
+                                <p class="text-muted">
+                                    There are currently no active assignments allocated to you.
+                                </p>
+
+                            </div>
+
                         </div>
-                        
-                        <!-- Submit Button -->
-                        <a class="btn btn-primary btn-sm px-3 rounded-pill shadow-sm hover-btn"
-                           th:href="@{/submission/assignment/submit/{id}(id=${a.assignmentID})}">
-                            Submit <i class="bi bi-cloud-arrow-up-fill ms-1 small"></i>
-                        </a>
+
                     </div>
 
                 </div>
-            </div>
+
+            </main>
+
+           
         </div>
 
-        <!-- Empty State Handling -->
-        <div th:if="${#lists.isEmpty(assignments)}" class="col-12 text-center py-5 bg-white rounded-4 shadow-sm">
-            <div class="mb-3">
-                <i class="bi bi-file-earmark-x text-muted" style="font-size: 3.5rem;"></i>
-            </div>
-            <h5 class="text-secondary fw-semibold">No Assignment Found</h5>
-            <p class="text-muted small mb-0">There are currently no active assignments allocated to you.</p>
-        </div>
     </div>
+ <!-- Footer -->
+            <div th:replace="~{fragment/footer :: footer}"></div>
 
-</div>
-
-<div th:replace="~{fragment/footer :: footer}"></div>
-<div th:replace="~{fragment/js :: js}"></div>
+    <!-- JS Scripts -->
+    <div th:replace="~{fragment/js :: js}"></div>
 
 </body>
 </html>

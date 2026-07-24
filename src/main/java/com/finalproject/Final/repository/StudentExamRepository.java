@@ -62,7 +62,7 @@ public class StudentExamRepository {
             SELECT 
                 e.examID,
                 e.courseID,
-                c.course_name AS courseName,
+                c.name AS courseName,
                 e.name,
                 e.exam_type,
                 e.max_score,

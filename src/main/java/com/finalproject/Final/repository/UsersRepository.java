@@ -4,7 +4,7 @@ package com.finalproject.Final.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -226,7 +226,29 @@ i= jdbc.update(
 
 	    return count != null && count > 0;
 	}
-	}
+	
+	/**
+     * Retrieves all users with the 'STUDENT' role. use for admin
+     */
+    public List<UserBean> selectAllStudents() {
+        String sql = "SELECT * FROM user WHERE roleID ='3c2f4396-7a84-11f1-bfcb-b4b686e7f920' ORDER BY created_at DESC";
+        
+        return jdbc.query(sql, new BeanPropertyRowMapper<>(UserBean.class));
+    }
+
+    /**
+     * Retrieves a single student details by user ID. use for admin
+     */
+    public UserBean selectStudentById(String id) {
+        String sql = "SELECT * FROM user WHERE userID = ? AND roleID ='3c2f4396-7a84-11f1-bfcb-b4b686e7f920'";
+        
+        List<UserBean> students = jdbc.query(sql, new BeanPropertyRowMapper<>(UserBean.class), id);
+        
+        // Return student if found, or null if not found
+        return students.stream().findFirst().orElse(null);
+    }
+}
+	
 
 		
 	

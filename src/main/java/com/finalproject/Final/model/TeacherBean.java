@@ -30,7 +30,7 @@ public class TeacherBean {
     private String email;
 
 
-    @NotBlank(message = "Please create your password.")
+ 
     private String password;
 
 

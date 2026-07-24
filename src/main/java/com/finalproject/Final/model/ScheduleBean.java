@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +17,9 @@ public class ScheduleBean {
 	private String scheduleId;
 	private String courseId;
 	private LocalDate scheduleDate;
+	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime startTime;
+	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime endTime;
 	private String room;
 	private String topic;
@@ -30,4 +34,5 @@ public class ScheduleBean {
 
 	    // Calendar color control
 	    private String attendanceStatus;
+	    private String courseName;
 }

@@ -245,69 +245,7 @@
     </div>
 </div>
 
-            <!-- 5. Submission List Section -->
-            <div class="mb-5" th:if="${submissions != null}">
-                <h4 class="fw-bold mb-3 text-secondary d-flex align-items-center">
-                    <span class="badge bg-primary me-2">3</span> Student Submissions
-                </h4>
-                
-                <div th:if="${#lists.isEmpty(submissions)}" class="alert alert-info border-0 shadow-sm rounded-3 p-4 text-center">
-                    <i class="bi bi-info-circle fs-2 mb-2 d-block"></i> No submissions found for this assignment yet.
-                </div>
-
-                <div class="row g-3" th:unless="${#lists.isEmpty(submissions)}">
-                    <div class="col-12" th:each="sub : ${submissions}">
-                        <div class="card border-0 shadow-sm rounded-3 card-hover">
-                            <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-                                
-                                <!-- Student & Date Details -->
-                                <div>
-                                    <h6 class="fw-bold text-dark mb-1">
-                                        <i class="bi bi-person-circle text-secondary me-2"></i><span th:text="${sub.studentName}">Student Name</span>
-                                    </h6>
-                                    <small class="text-muted" th:if="${sub.submittedAt != null}">
-                                        <i class="bi bi-clock me-1"></i>Submitted at: <span th:text="${#temporals.format(sub.submittedAt, 'yyyy-MM-dd HH:mm')}">2026-07-20 14:30</span>
-                                    </small>
-                                </div>
-
-                                <!-- File Attachment Actions -->
-                                <div>
-                                    <span class="small text-muted d-block mb-1 d-md-none">Attachment:</span>
-                                    <!-- Download function သို့မဟုတ် ပြသရန် နေရာ -->
-                                    <span th:if="${sub.filePath != null}" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-2 py-2 px-3">
-                                        <i class="bi bi-file-earmark-check me-1"></i> File Submitted
-                                    </span>
-                                    <span th:if="${sub.filePath == null}" class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-2 py-2 px-3">
-                                        <i class="bi bi-file-earmark-x me-1"></i> No File Submitted
-                                    </span>
-                                </div>
-
-                                <!-- Grading Status Badge -->
-                                <div>
-                                    <span class="small text-muted d-block mb-1 d-md-none">Status:</span>
-                                    <span th:if="${sub.score != null}" class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-25 rounded-pill px-3 py-2">
-                                        <i class="bi bi-check-circle-fill me-1"></i> Graded (<span th:text="${sub.score}">90</span>)
-                                    </span>
-                                    <span th:if="${sub.score == null}" class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-25 rounded-pill px-3 py-2">
-                                        <i class="bi bi-exclamation-circle-fill me-1"></i> Pending Review
-                                    </span>
-                                </div>
-
-                                <!-- View/Grade Submission Trigger -->
-                                <div class="text-end">
-                                    <!-- Controller ၏ @GetMapping("/detail/{submissionID}") သို့ လှမ်းချိတ်ထားသည် -->
-                                    <!-- မှန်ကန်သော ပုံစံ (အရှေ့ဆုံးတွင် / ပါရမည်ဖြစ်ပြီး Variable Name ကွက်တိ တူရပါမည်) -->
-<a th:href="@{/teacher/submission/detail/{id}(id=${sub.submissionID})}" class="btn btn-outline-primary btn-sm rounded-2 w-100 w-md-auto px-4">
-    Grade / View <i class="bi bi-chevron-right ms-1"></i>
-</a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            
             <!-- 6. Grading Form Section -->
             <div class="row" th:if="${submission != null}">
                 <div class="col-12 col-xl-8">

@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalproject.Final.model.ExamBean;
 import com.finalproject.Final.model.ExamResultBean;
 
 @Repository
@@ -19,7 +21,7 @@ public class ExamResultRepository {
     }
 
 
-    public void saveResult(ExamResultBean bean) {
+    public void saveResult(ExamResultBean bean,String teacherID) {
 
         String sql = """
                 INSERT INTO exam_result
@@ -36,8 +38,7 @@ public class ExamResultRepository {
                 """;
 
 
-        String teacherID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
+      
 
         jdbcTemplate.update(sql,
                 UUID.randomUUID().toString(),
@@ -53,7 +54,7 @@ public class ExamResultRepository {
 
 
     // ဒီနေရာမှာ ထည့်မယ်
-    public void saveResults(List<ExamResultBean> list) {
+    public void saveResults(List<ExamResultBean> list,String teacherID) {
 
 
         for(ExamResultBean bean : list) {
@@ -71,13 +72,13 @@ public class ExamResultRepository {
                     bean.getUserID())) {
 
 
-                updateResult(bean);
+                updateResult(bean,teacherID);
 
 
             } else {
 
 
-                saveResult(bean);
+                saveResult(bean,teacherID);
 
 
             }
@@ -93,12 +94,23 @@ public class ExamResultRepository {
                     u.userID,
                     u.name
                 FROM exam e
+
                 JOIN enrollment en
                     ON e.courseID = en.courseID
+
                 JOIN user u
                     ON en.userID = u.userID
+
                 WHERE e.examID = ?
                 AND en.status = 'Active'
+
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM exam_result er
+                    WHERE er.examID = e.examID
+                    AND er.userID = u.userID
+                )
+
                 ORDER BY u.name
                 """;
 
@@ -108,8 +120,15 @@ public class ExamResultRepository {
             ExamResultBean bean = new ExamResultBean();
 
             bean.setExamID(examID);
-            bean.setUserID(rs.getString("userID"));
-            bean.setStudentName(rs.getString("name"));
+
+            bean.setUserID(
+                rs.getString("userID")
+            );
+
+            bean.setStudentName(
+                rs.getString("name")
+            );
+
 
             return bean;
 
@@ -135,35 +154,8 @@ public class ExamResultRepository {
 
         return count != null && count > 0;
     }
-    public void updateResult(ExamResultBean bean) {
-
-        String sql = """
-                UPDATE exam_result
-                SET
-                    score = ?,
-                    remarks = ?,
-                    gradedByID = ?,
-                    graded_at = ?
-                WHERE examID = ?
-                AND userID = ?
-                """;
-
-
-        String teacherID =
-            "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
-
-        jdbcTemplate.update(sql,
-
-                bean.getScore(),
-                bean.getRemarks(),
-                teacherID,
-                LocalDateTime.now(),
-
-                bean.getExamID(),
-                bean.getUserID()
-        );
-    }
+   
+   
     public List<ExamResultBean> getResultListByExam(String examID) {
 
         String sql = """
@@ -432,6 +424,91 @@ public class ExamResultRepository {
                 },
                 userID
         );
+    }
+    public ExamResultBean getExamResultById(String gradedByID) {
+        String sql = "SELECT er.exam_result_id, er.exam_id, er.user_id, u.name AS student_name, " +
+                     "er.score, er.remarks, er.graded_by_id, er.graded_at " +
+                     "FROM exam_result er " +
+                     "LEFT JOIN users u ON er.user_id = u.user_id " +
+                     "WHERE er.exam_result_id = ?";
+
+        try {
+            // queryForObject က Data မရှိရင် Exception ပစ်ပါတယ်
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+                ExamResultBean bean = new ExamResultBean();
+                bean.setExamResultID(rs.getString("exam_result_id"));
+                bean.setExamID(rs.getString("exam_id"));
+                bean.setUserID(rs.getString("user_id"));
+                bean.setStudentName(rs.getString("student_name"));
+                bean.setScore(rs.getBigDecimal("score"));
+                bean.setRemarks(rs.getString("remarks"));
+                bean.setGradedByID(rs.getString("graded_by_id"));
+                if (rs.getTimestamp("graded_at") != null) {
+                    bean.setGradedAt(rs.getTimestamp("graded_at").toLocalDateTime());
+                }
+                return bean;
+            }, gradedByID);
+        } catch (EmptyResultDataAccessException e) {
+            // Data ရှာမတွေ့ပါက Exception မတက်ဘဲ null သာ ပြန်ပေးမည်
+            return null; 
+        }
+    }
+    
+    public int updateResult(ExamResultBean examResult, String teacherId) {
+        String sql = "UPDATE exam_result SET score = ?, remarks = ?, gradedByID = ?, graded_at = NOW() WHERE examResultID = ?";
+        
+      
+        int rowsAffected = jdbcTemplate.update(
+            sql,
+            examResult.getScore(),
+            examResult.getRemarks(),
+            teacherId,
+            examResult.getExamResultID() // 🟢 WHERE examResultID = ?
+        );
+
+      
+        return rowsAffected;
+    }
+    public List<ExamBean> getCompletedExamListByCourse(String courseID) {
+
+        String sql = """
+                SELECT
+                    examID,
+                    courseID,
+                    createdByID,
+                    name,
+                    exam_type,
+                    max_score,
+                    weight_percent,
+                    exam_date,
+                    duration_minutes,
+                    status
+                FROM exam
+                WHERE courseID = ?
+                ORDER BY exam_date DESC
+                """;
+
+        return jdbcTemplate.query(sql, new Object[]{courseID}, (rs, rowNum) -> {
+
+            ExamBean exam = new ExamBean();
+
+            exam.setExamID(rs.getString("examID"));
+            exam.setCourseID(rs.getString("courseID"));
+            exam.setCreatedByID(rs.getString("createdByID"));
+            exam.setName(rs.getString("name"));
+            exam.setExamType(rs.getString("exam_type"));
+            exam.setMaxScore(rs.getBigDecimal("max_score"));
+            exam.setWeightPercent(rs.getBigDecimal("weight_percent"));
+            exam.setExamDate(rs.getTimestamp("exam_date").toLocalDateTime());
+            exam.setDurationMinutes(rs.getInt("duration_minutes"));
+            exam.setStatus(rs.getString("status"));
+
+            return exam;
+
+        })
+        .stream()
+        .filter(exam -> "Completed".equals(exam.getCurrentStatus()))
+        .toList();
     }
 
 }
