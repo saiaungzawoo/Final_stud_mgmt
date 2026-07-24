@@ -1,6 +1,8 @@
 package com.finalproject.Final.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.finalproject.Final.dto.AdminDashboardDTO;
+import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.service.AdminDashboardService;
 import com.finalproject.Final.service.CourseService;
 
@@ -63,11 +66,14 @@ public class AdminController {
 	public String courseList(Model model) {
 
 
-	    model.addAttribute(
-	            "courses",
-	            courseService.getAllCourses()
-	    );
-	    
+		List<CourseBean> courses =
+		        courseService.getAllCourses();
+
+		model.addAttribute(
+		        "courses",
+		        courses
+		);
+		
 	    model.addAttribute(
 	            "totalCourses",
 	            courseService.countCourses()
