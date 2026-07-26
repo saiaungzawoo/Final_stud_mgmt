@@ -67,7 +67,7 @@ public class AdminController {
 
 
 		List<CourseBean> courses =
-		        courseService.getAllCourses();
+		        courseService.getAllCoursesForAdmin();
 
 		model.addAttribute(
 		        "courses",
@@ -78,6 +78,22 @@ public class AdminController {
 	            "totalCourses",
 	            courseService.countCourses()
 	    );
+	    
+	    //for total courses
+	    AdminDashboardDTO dashboard =
+	            adminDashboardService.getDashboardData();
+
+
+
+	    model.addAttribute(
+	            "dashboard",
+	            dashboard
+	    );
+	    
+	    model.addAttribute(
+	            "archivedCourses",
+	            courseService.getArchivedCourses()
+	        );
 
 
 	    model.addAttribute(

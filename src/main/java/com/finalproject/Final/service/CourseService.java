@@ -17,6 +17,17 @@ public class CourseService {
     public List<CourseBean> getAllCourses() {
         return courseRepository.findAll();
     }
+    
+    public List<CourseBean> getAllCoursesForAdmin() {
+        return courseRepository.adminViewActiveCourseList();
+    }
+    
+    //admin 
+    public List<CourseBean> getArchivedCourses(){
+
+        return courseRepository.archivedCourseList();
+
+    }
 
     public CourseBean getById(String id) {
         return courseRepository.findById(id);
@@ -30,8 +41,9 @@ public class CourseService {
         courseRepository.update(c);
     }
 
-    public void deleteCourse(String id) {
-        courseRepository.delete(id);
+    //soft delete
+    public void deleteCourse(String id, String adminId) {
+        courseRepository.delete(id, adminId);
     }
     
     public void decreaseSeat(String courseId) {
@@ -59,6 +71,21 @@ public class CourseService {
     public int countCoursesByStatus(String status){
 
         return courseRepository.countByStatus(status);
+
+    }
+    
+   
+
+    public void restoreCourse(String courseId) {
+
+        courseRepository.restore(courseId);
+
+    }
+    
+    
+    public int countArchivedThisMonth(){
+
+        return courseRepository.countArchivedThisMonth();
 
     }
 }

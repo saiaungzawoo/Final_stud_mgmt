@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+    <title>Course Details</title>
+</head>
+
+<body>
+
+<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+<section th:fragment="section">
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold mb-1">Course Details</h3>
+            <p class="text-muted mb-0">
+                View complete information about this course.
+            </p>
+        </div>
+
+        <a th:href="@{/admin/courses}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Courses
+        </a>
+
+    </div>
+
+
+
+    <!-- Course Information -->
+
+    <div class="content-panel bg-white rounded-3 shadow-sm border p-4 mb-4">
+
+        <div class="d-flex align-items-center gap-2 mb-4">
+
+            <i class="bi bi-book text-primary"></i>
+
+            <h5 class="fw-bold mb-0">
+                Course Information
+            </h5>
+
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">Course Name</label>
+                <p class="fw-semibold mb-0"><span th:text="${course.name}"></span></p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">Teacher</label>
+                <p class="fw-semibold mb-0"><span th:text="${course.teacherName}"></span></p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">Category</label>
+                <p class="fw-semibold mb-0"><span th:text="${course.categoryName}"></span></p>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">Subcategory</label>
+                <p class="fw-semibold mb-0"><span th:text="${course.subcategoryName}"></span></p>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label text-muted">Description</label>
+
+                <p class="mb-0">
+                   <p th:text="${course.description}"></p>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Course Settings -->
+
+    <div class="content-panel bg-white rounded-3 shadow-sm border p-4 mb-4">
+
+        <div class="d-flex align-items-center gap-2 mb-4">
+
+            <i class="bi bi-gear text-primary"></i>
+
+            <h5 class="fw-bold mb-0">
+                Course Settings
+            </h5>
+
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-md-3">
+                <label class="form-label text-muted">Duration</label>
+                <p class="fw-semibold mb-0"><span th:text="${course.durationWeeks + ' Weeks'}"></span></p>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-muted">Fee</label>
+                <p class="fw-semibold mb-0"><span
+th:text="${'MMK ' + #numbers.formatDecimal(course.fee,1,'COMMA',2,'POINT')}">
+</span></p>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-muted">Level</label>
+                <p class="fw-semibold mb-0"><span th:text="${course.level}"></span></p>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-muted">Status</label>
+
+              <p>  <span class="badge text-bg-success" th:text="${course.status}">
+                   
+                </span></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Enrollment -->
+
+    <div class="content-panel bg-white rounded-3 shadow-sm border p-4 mb-4">
+
+        <div class="d-flex align-items-center gap-2 mb-4">
+
+            <i class="bi bi-people text-primary"></i>
+
+            <h5 class="fw-bold mb-0">
+                Enrollment
+            </h5>
+
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-md-4">
+
+                <label class="form-label text-muted">
+                    Total Seats
+                </label>
+
+                <p class="fw-semibold mb-0">
+                    
+<span th:text="${course.seatsTotal}"></span>
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label text-muted">
+                    Available Seats
+                </label>
+
+                <p class="fw-semibold mb-0">
+                    <span th:text="${course.seatsAvailable}"></span>
+
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label text-muted">
+                    Students Enrolled
+                </label>
+
+                <p class="fw-semibold mb-0" th:text="${course.seatsTotal - course.seatsAvailable}">>
+                    
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Payment -->
+
+    <div class="content-panel bg-white rounded-3 shadow-sm border p-4 mb-4">
+
+        <div class="d-flex align-items-center gap-2 mb-4">
+
+            <i class="bi bi-credit-card text-primary"></i>
+
+            <h5 class="fw-bold mb-0">
+                Payment Options
+            </h5>
+
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-md-6">
+
+                <label class="form-label text-muted">
+                    Installment Payment
+                </label>
+
+                <p class="fw-semibold text-success mb-0">
+                    <span
+th:text="${course.allowedInstallment == 1 ? 'Enabled' : 'Disabled'}">
+</span>
+                </p>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label text-muted">
+                    Scholarship
+                </label>
+
+                <p class="fw-semibold text-success mb-0">
+                    <span
+th:text="${course.allowedScholarship == 1 ? 'Enabled' : 'Disabled'}">
+</span>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Metadata -->
+
+    <div class="content-panel bg-white rounded-3 shadow-sm border p-4 mb-4">
+
+        <div class="d-flex align-items-center gap-2 mb-4">
+
+            <i class="bi bi-clock-history text-primary"></i>
+
+            <h5 class="fw-bold mb-0">
+                Record Information
+            </h5>
+
+        </div>
+
+        <div class="row gy-4">
+
+            <div class="col-md-4">
+
+                <label class="form-label text-muted">
+                    Created By
+                </label>
+
+                <p class="fw-semibold mb-0">
+                    <span th:text="${course.updatedAt}"></span>
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label text-muted">
+                    Created At
+                </label>
+
+                <p class="fw-semibold mb-0">
+                    <span th:text="${course.createdAt}"></span>
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label text-muted">
+                    Last Updated
+                </label>
+
+                <p class="fw-semibold mb-0">
+                    24 Jul 2026
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Buttons -->
+
+    <div class="d-flex justify-content-end gap-2">
+
+        <a th:href="@{/admin/courses/{id}/edit(id=${course.CourseId})}" class="btn btn-outline-warning">
+            <i class="bi bi-pencil me-1"></i>
+            Edit Course
+        </a>
+
+        <a th:href="@{/admin/courses}" class="btn btn-outline-secondary">
+            Back
+        </a>
+
+    </div>
+
+</div>
+
+</section>
+
+</div>
+
+</body>
+</html>

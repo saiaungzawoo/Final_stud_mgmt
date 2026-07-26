@@ -37,6 +37,10 @@ public class CourseBean {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    
+    private LocalDateTime deletedAt;
+
+    private String deletedByID;
 
     private String thumbnailPath;
     
@@ -46,4 +50,7 @@ public class CourseBean {
     
     private Integer seatsTotal;
     private Integer seatsAvailable;
+    
+    private Integer isActive;
+    
 }

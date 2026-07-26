@@ -21,15 +21,29 @@
 					th:href="@{/admin/courses/create}"> <i
 					class="bi bi-plus-circle me-1"></i> Create Course
 
+				</a> <a class="btn btn-outline-secondary"
+					th:href="@{/admin/courses/archive}"> <i class="bi bi-archive"></i>
+					Archived Courses
+
 				</a>
 
 			</div>
 
 			<div class="row g-3 mb-4">
+
 				<div class="col-sm-6 col-xl-3">
 					<div class="category-card">
 						<i class="bi bi-book"></i>
 						<h3>Total Courses</h3>
+						<p class="fs-3 fw-bold mb-0 text-dark"
+							th:text="${dashboard.totalCourses}">120</p>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-xl-3">
+					<div class="category-card">
+						<i class="bi bi-book"></i>
+						<h3>Active Courses</h3>
 						<p class="fs-3 fw-bold mb-0 text-dark" th:text="${totalCourses}">120</p>
 					</div>
 				</div>
@@ -53,9 +67,9 @@
 				<div class="col-sm-6 col-xl-3">
 					<div class="category-card">
 						<i class="bi bi-calendar-event"></i>
-						<h3>Scheduled Courses</h3>
+						<h3>Archived Courses</h3>
 						<p class="fs-3 fw-bold mb-0 text-dark"
-							th:text="${scheduledCourses}">60</p>
+							th:text="${#lists.size(archivedCourses)}">60</p>
 					</div>
 				</div>
 			</div>
@@ -135,14 +149,31 @@
 										</a> <a class="btn btn-sm btn-outline-warning" href="#"
 											th:href="@{/admin/courses/{id}/edit(id=${course.CourseId})}"
 											aria-label="Edit course"> <i class="bi bi-pencil"></i>
-										</a> <a class="btn btn-sm btn-outline-danger" href="#"
+										</a>
+
+
+										<form
+											th:action="@{/admin/courses/{id}/delete(id=${course.CourseId})}"
+											method="post" style="display: inline;">
+
+											<button type="submit" class="btn btn-sm btn-outline-danger"
+												onclick="return confirm('Are you sure you want to archive this course?');">
+
+												<i class="bi bi-trash"></i>
+
+											</button>
+
+										</form>
+
+										<!-- <a class="btn btn-sm btn-outline-danger" href="#"
 											th:href="@{/admin/courses/{id}/delete(id=${course.CourseId})}"
 											aria-label="Delete course"> <i class="bi bi-trash"></i>
-										</a> <a class="btn btn-sm btn-outline-success" href="#"
+										</a> -->
+										<!-- <a class="btn btn-sm btn-outline-success" href="#"
 											th:href="@{/admin/courses/{id}/schedule(id=${course.CourseId})}"
 											aria-label="Manage schedule"> <i
 											class="bi bi-calendar-event"></i>
-										</a>
+										</a> -->
 									</div>
 								</td>
 							</tr>

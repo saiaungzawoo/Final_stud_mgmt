@@ -1,6 +1,7 @@
 package com.finalproject.Final.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +19,7 @@ public class InstallmentRuleBean {
 	private String createdById;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	
+	private List<InstallmentRuleItemBean> items;
 	
 }
