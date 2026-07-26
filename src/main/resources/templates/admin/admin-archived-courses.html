@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+<title>Archived Courses</title>
+</head>
+
+
+<body>
+
+
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+
+		<section th:fragment="section">
+
+
+			<div class="container-fluid py-3">
+
+
+				<!-- Header -->
+
+				<div
+					class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+
+					<div>
+
+						<h3 class="fw-bold mb-1">Archived Courses</h3>
+
+						<p class="text-muted mb-0">View and restore courses that have
+							been removed from active management.</p>
+
+					</div>
+
+
+
+					<a class="btn btn-outline-secondary" th:href="@{/admin/courses}">
+
+						<i class="bi bi-arrow-left me-1"></i> Back to Courses
+
+					</a>
+
+
+				</div>
+
+
+
+
+
+
+				<!--  Statistics Cards -->
+
+
+				<div class="row g-3 mb-4">
+
+
+					<div class="col-sm-6 col-xl-4">
+
+						<div class="category-card">
+
+
+							<i class="bi bi-archive"></i>
+
+
+							<h3>Archived Courses</h3>
+
+
+							<p class="fs-3 fw-bold mb-0 text-dark"
+								th:text="${#lists.size(courses)}"></p>
+
+
+						</div>
+
+					</div>
+
+
+
+
+					<div class="col-sm-6 col-xl-4">
+
+
+						<div class="category-card">
+
+
+							<i class="bi bi-clock-history"></i>
+
+
+							<h3>Archived This Month</h3>
+
+
+							<p class="fs-3 fw-bold mb-0 text-dark"
+								th:text="${archivedThisMonth}"></p>
+
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+					<div class="col-sm-6 col-xl-4">
+
+
+						<div class="category-card">
+
+
+							<i class="bi bi-arrow-counterclockwise"></i>
+
+
+							<h3>Restorable Courses</h3>
+
+
+							<p class="fs-3 fw-bold mb-0 text-dark"
+								th:text="${#lists.size(courses)}"></p>
+
+
+						</div>
+
+
+					</div>
+
+
+				</div>
+
+
+
+
+
+
+
+				<!--     Archived Course Table -->
+
+
+				<div class="content-panel bg-white rounded-3 shadow-sm border p-3">
+
+
+					<div
+						class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 mb-4">
+
+
+						<h5 class="fw-bold mb-0">Archived Course List</h5>
+
+
+
+						<div class="input-group" style="max-width: 350px;">
+
+
+							<span class="input-group-text bg-white"> <i
+								class="bi bi-search"></i>
+
+							</span> <input type="search" class="form-control"
+								placeholder="Search archived courses...">
+
+
+						</div>
+
+
+
+					</div>
+
+
+
+
+
+
+
+					<div class="table-responsive">
+
+
+						<table class="table table-hover align-middle mb-0">
+
+
+							<thead class="table-light">
+
+
+								<tr>
+
+									<th>No.</th>
+
+									<th>Course Name</th>
+
+									<th>Category</th>
+
+									<th>Teacher</th>
+
+									<th>Fee</th>
+
+									<th>Original Status</th>
+
+									<th>Archived Date</th>
+
+									<th class="text-end">Actions</th>
+
+								</tr>
+
+
+							</thead>
+
+
+
+
+
+							<tbody>
+
+<tr th:each="course, iterStat : ${courses}">
+
+    <td th:text="${iterStat.count}">
+        1
+    </td>
+
+
+    <td class="fw-semibold"
+        th:text="${course.name}">
+        Java Programming
+    </td>
+
+
+    <td th:text="${course.categoryName}">
+        Programming
+    </td>
+
+
+    <td th:text="${course.teacherName}">
+        John Smith
+    </td>
+
+
+    <td th:text="${'MMK ' + #numbers.formatDecimal(course.fee,1,'COMMA',2,'POINT')}">
+        MMK 300,000
+    </td>
+
+
+    <!-- Original Status -->
+    <td>
+
+        <span th:if="${course.status == 'Open'}"
+              class="badge text-bg-success"
+              th:text="${course.status}">
+            Open
+        </span>
+
+
+        <span th:if="${course.status == 'Draft'}"
+              class="badge text-bg-secondary"
+              th:text="${course.status}">
+            Draft
+        </span>
+
+
+        <span th:if="${course.status == 'Completed'}"
+              class="badge text-bg-primary"
+              th:text="${course.status}">
+            Completed
+        </span>
+
+
+        <span th:if="${course.status == 'Cancelled'}"
+              class="badge text-bg-danger"
+              th:text="${course.status}">
+            Cancelled
+        </span>
+
+
+    </td>
+
+
+    <!-- Archived Date -->
+    <td th:text="${#temporals.format(course.deletedAt,'dd MMM yyyy')}">
+        25 July 2026
+    </td>
+
+
+
+    <td>
+
+        <div class="d-flex justify-content-end gap-2">
+
+
+            <!-- View -->
+            <a class="btn btn-sm btn-outline-primary"
+               th:href="@{/admin/courses/{id}(id=${course.CourseId})}">
+
+                <i class="bi bi-eye"></i>
+
+            </a>
+
+
+
+            <!-- Restore -->
+            <form th:action="@{/admin/courses/{id}/restore(id=${course.CourseId})}"
+                  method="post">
+
+                <button type="submit"
+                        class="btn btn-sm btn-outline-success"
+                        onclick="return confirm('Restore this course?');">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+    </td>
+
+
+</tr>
+
+
+
+<tr th:if="${#lists.isEmpty(courses)}">
+
+    <td colspan="8"
+        class="text-center text-muted py-5">
+
+        No archived courses found.
+
+    </td>
+
+</tr>
+
+
+</tbody>
+
+
+
+						</table>
+
+
+
+					</div>
+
+
+
+
+
+
+
+					<!-- Pagination -->
+
+
+
+					<div
+						class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-4">
+
+
+						<p class="text-muted mb-0">Showing archived course records</p>
+
+
+
+						<nav>
+
+
+							<ul class="pagination mb-0">
+
+
+								<li class="page-item disabled"><a class="page-link">
+										Previous </a></li>
+
+
+								<li class="page-item active"><a class="page-link"> 1 </a></li>
+
+
+								<li class="page-item"><a class="page-link"> 2 </a></li>
+
+
+								<li class="page-item"><a class="page-link"> Next </a></li>
+
+
+							</ul>
+
+
+						</nav>
+
+
+					</div>
+
+
+
+
+
+				</div>
+
+
+
+
+
+
+			</div>
+
+
+
+		</section>
+
+
+
+	</div>
+
+
+
+</body>
+
+</html>

@@ -26,6 +26,14 @@ public class InstallmentRuleItemService {
         return repository.findByRuleId(ruleId);
 
     }
+    
+    public void createItem(
+            InstallmentRuleItemBean item
+    ){
+
+        repository.save(item);
+
+    }
 
 
 }

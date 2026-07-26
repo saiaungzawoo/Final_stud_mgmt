@@ -248,4 +248,10 @@ public class EnrollmentService {
 
 	}
 
+	
+	public int countEnrolledStudents(String courseId) {
+
+	    return repo.countEnrolledStudents(courseId);
+
+	}
 }

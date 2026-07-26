@@ -1,6 +1,8 @@
 package com.finalproject.Final.controller;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,15 @@ public class CourseController {
 
         CourseBean course = courseService.getById(id);
         List<ScheduleBean> schedules = scheduleService.getByCourseId(id);
+        
+        //sort schedules
+        if (schedules != null) {
+            schedules = schedules.stream()
+                .sorted(Comparator.comparing(ScheduleBean::getScheduleDate)
+                          .thenComparing(ScheduleBean::getStartTime))
+                .collect(Collectors.toList());
+        }
+        
         
         if (course.getSeatsAvailable() == 0) {
             course.setStatus("FULL");
