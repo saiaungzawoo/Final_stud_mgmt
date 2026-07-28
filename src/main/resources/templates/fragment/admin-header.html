@@ -86,13 +86,16 @@
           <span class="d-none d-md-inline">Admin</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
-         <li>
+     <!--     <li>
     <a class="dropdown-item" 
        th:href="@{/dashboard/getbyid1(id='00ee5b4b-7a6f-11f1-8f4f-183d2d227d02')}">
         Profile
     </a>
-</li>
+</li> -->
+ <li><a class="dropdown-item" th:href="@{/student/admin/profile}">Profile</a></li>
+
           <li><a class="dropdown-item" th:href="@{/teacher/settings}">Settings</a></li>
+
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" th:href="@{/logout}">Logout</a></li>
         </ul>

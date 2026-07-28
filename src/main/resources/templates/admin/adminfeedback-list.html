@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback Management</title>
+
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+
+<body class="bg-light">
+
+
+<!-- Admin Header -->
+<div th:replace="~{fragment/admin-header :: adminHeader}"></div>
+
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragment/admin-sidebar :: adminSidebar}"></div>
+
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 p-4">
+
+
+        <div class="container-fluid">
+
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h3 class="fw-bold">
+                        <i class="bi bi-chat-left-text-fill text-primary"></i>
+                        Student Feedback List
+                    </h3>
+
+                    <p class="text-muted">
+                        View and manage student course feedback
+                    </p>
+                </div>
+
+            </div>
+
+
+
+            <!-- Feedback Table Card -->
+            <div class="card shadow-sm border-0 rounded-4">
+
+
+                <div class="card-body">
+
+
+                    <div class="table-responsive">
+
+
+                        <table class="table table-hover align-middle">
+
+
+                            <thead class="table-primary">
+
+                            <tr>
+
+                                <th>No</th>
+
+                                <th>Student</th>
+
+                                <th>Course</th>
+
+                                <th>Rating</th>
+
+                                <th>Comment</th>
+
+                                <th>Anonymous</th>
+
+                                <th>Date</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                            <tr th:each="feedback, stat : ${feedbackList}">
+
+
+                                <!-- No -->
+                                <td th:text="${stat.count}">
+                                    1
+                                </td>
+
+
+
+                                <!-- Student -->
+                                <td>
+
+                                    <span th:if="${feedback.isAnonymous == 1}"
+                                          class="badge bg-secondary">
+
+                                        Anonymous
+
+                                    </span>
+
+
+                                    <span th:if="${feedback.isAnonymous == 0}"
+                                          th:text="${feedback.userName}">
+                                        
+                                        Student Name
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- Course -->
+                                <td th:text="${feedback.courseName}">
+                                    Java Programming
+                                </td>
+
+
+
+                                <!-- Rating -->
+                                <td>
+
+                                    <span th:each="i : ${#numbers.sequence(1,5)}">
+
+                                        <i class="bi"
+                                           th:classappend="${i <= feedback.rating} ? 
+                                           'bi-star-fill text-warning' :
+                                           'bi-star text-secondary'">
+                                        </i>
+
+                                    </span>
+
+
+                                </td>
+
+
+
+
+                                <!-- Comment -->
+                                <td style="max-width:300px">
+
+                                    <span th:text="${feedback.comment}">
+                                        Good course
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- Anonymous -->
+
+                                <td>
+
+                                    <span th:if="${feedback.isAnonymous == 1}"
+                                          class="badge bg-success">
+
+                                        Yes
+
+                                    </span>
+
+
+                                    <span th:if="${feedback.isAnonymous == 0}"
+                                          class="badge bg-primary">
+
+                                        No
+
+                                    </span>
+
+
+                                </td>
+
+
+
+                                <!-- Date -->
+
+                                <td th:text="${feedback.createdAt}">
+                                    2026-07-26
+                                </td>
+
+
+
+                                <!-- Action -->
+
+                                <td>
+
+
+                                    <a th:href="@{/student/feedback/delete/{id}(id=${feedback.feedbackID})}"
+                                       class="btn btn-sm btn-danger rounded-pill"
+                                       onclick="return confirm('Delete this feedback?')">
+
+                                        <i class="bi bi-trash"></i>
+                                        Delete
+
+                                    </a>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+
+                            <!-- Empty Data -->
+
+                            <tr th:if="${#lists.isEmpty(feedbackList)}">
+
+                                <td colspan="8"
+                                    class="text-center text-muted py-4">
+
+                                    No feedback found
+
+                                </td>
+
+                            </tr>
+
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- Footer -->
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+
+</body>
+
+</html>
