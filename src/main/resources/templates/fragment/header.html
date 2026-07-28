@@ -146,17 +146,18 @@
             <form
               class="search-pill d-flex flex-grow-1 mb-3 mb-lg-0"
               role="search"
-              th:action="@{/courses/search}"
+              th:action="@{/courses/show}"
               method="get"
             >
               <i class="bi bi-search"></i>
 
-              <input
-                class="form-control"
-                type="search"
-                name="keyword"
-                placeholder="What do you want to learn?"
-              />
+               <input 
+            type="search"
+            name="keyword"
+            class="form-control"
+            placeholder="Search courses..."
+            th:value="${param.keyword}" 
+        >
 
               <button class="btn btn-dark" type="submit">Search</button>
             </form>
@@ -198,11 +199,11 @@
                     </a>
                   </li>
                   
-                  <li>
+                  <!-- <li>
                     <a class="dropdown-item" th:href="@{/student/my-enrollments}">
                      My Enrollments
                     </a>
-                  </li>
+                  </li> -->
                   
                   <!--  <li>
                     <a class="dropdown-item" th:href="@{/scholarship/my-applications}">

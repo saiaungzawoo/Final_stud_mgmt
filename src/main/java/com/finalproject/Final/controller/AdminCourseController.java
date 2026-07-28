@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finalproject.Final.dto.CourseCreateRequest;
@@ -558,11 +559,60 @@ public class AdminCourseController {
     
     
     @GetMapping("/archive")
-    public String archivedCourses(Model model) {
+    public String archivedCourses(
+    		 @RequestParam(required = false) String keyword,
+    	        @RequestParam(required = false) String status,
+    		
+    		Model model) {
+
+//        model.addAttribute(
+//            "courses",
+//            courseService.getArchivedCourses()
+//        );
+    	
+    	
+    	List<CourseBean> courses;
+
+
+        if((keyword != null && !keyword.isBlank())
+                || (status != null && !status.isBlank())) {
+
+
+            courses =
+                courseService.searchAndFilterArchivedCourses(
+                        keyword,
+                        status
+                );
+
+
+        } else {
+
+
+            courses =
+                courseService.getArchivedCourses();
+
+        }
+        
+        model.addAttribute(
+                "courses",
+                courses
+        );
+        
+        model.addAttribute(
+                "totalArchivedCourses",
+                courseService.countArchivedCourses()
+        );
+
 
         model.addAttribute(
-            "courses",
-            courseService.getArchivedCourses()
+                "keyword",
+                keyword
+        );
+
+
+        model.addAttribute(
+                "status",
+                status
         );
 
 

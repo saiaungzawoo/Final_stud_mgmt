@@ -311,4 +311,214 @@ public class CourseRepository {
 	    return jdbc.query(sql, mapper);
 
 	}
+	
+	public int countArchivedCourses(){
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM course
+	        WHERE is_active = 0
+	        """;
+
+
+	    return jdbc.queryForObject(
+	            sql,
+	            Integer.class
+	    );
+	}
+	
+	
+//	public List<CourseBean> searchAdminCourses(String keyword) {
+//
+//	    String sql = """
+//	        SELECT c.*,
+//	               sc.name AS subcategory_name,
+//	               cc.name AS category_name,
+//	               u.name AS teacher_name
+//	        FROM course c
+//	        JOIN subcategory sc 
+//	            ON c.subcategoryID = sc.subcategoryID
+//	        JOIN course_category cc 
+//	            ON c.courseCategoryID = cc.courseCategoryID
+//	        JOIN user u 
+//	            ON c.teacherID = u.userID
+//	        WHERE c.is_active = 1
+//	        AND c.name LIKE ?
+//	        ORDER BY c.created_at DESC
+//	        """;
+//
+//
+//	    return jdbc.query(
+//	            sql,
+//	            mapper,
+//	            "%" + keyword + "%"
+//	    );
+//	}
+	
+	
+	
+	public List<CourseBean> searchAndFilterCourses(
+	        String keyword,
+	        String status) {
+
+
+	    String sql = """
+	        SELECT c.*,
+	               sc.name AS subcategory_name,
+	               cc.name AS category_name,
+	               u.name AS teacher_name
+	        FROM course c
+	        JOIN subcategory sc
+	            ON c.subcategoryID = sc.subcategoryID
+	        JOIN course_category cc
+	            ON c.courseCategoryID = cc.courseCategoryID
+	        JOIN user u
+	            ON c.teacherID = u.userID
+	        WHERE c.is_active = 1
+	        """;
+
+
+	    List<Object> params = new ArrayList<>();
+
+
+
+	    if(keyword != null && !keyword.isBlank()) {
+
+	        sql += """
+	            AND c.name LIKE ?
+	            """;
+
+	        params.add("%" + keyword + "%");
+
+	    }
+
+
+
+	    if(status != null && !status.isBlank()) {
+
+	        sql += """
+	            AND c.status = ?
+	            """;
+
+	        params.add(status);
+
+	    }
+
+
+
+	    sql += """
+	        ORDER BY c.created_at DESC
+	        """;
+
+
+	    return jdbc.query(
+	            sql,
+	            mapper,
+	            params.toArray()
+	    );
+
+	}
+	
+	
+	public List<CourseBean> searchAndFilterArchivedCourses(
+	        String keyword,
+	        String status) {
+
+
+	    String sql = """
+	        SELECT c.*,
+	               sc.name AS subcategory_name,
+	               cc.name AS category_name,
+	               u.name AS teacher_name
+	        FROM course c
+
+	        JOIN subcategory sc
+	            ON c.subcategoryID = sc.subcategoryID
+
+	        JOIN course_category cc
+	            ON c.courseCategoryID = cc.courseCategoryID
+
+	        JOIN user u
+	            ON c.teacherID = u.userID
+
+	        WHERE c.is_active = 0
+	        """;
+
+
+	    List<Object> params = new ArrayList<>();
+
+
+
+	    if(keyword != null && !keyword.isBlank()) {
+
+
+	        sql += """
+	            AND c.name LIKE ?
+	            """;
+
+
+	        params.add(
+	            "%" + keyword + "%"
+	        );
+
+	    }
+
+
+
+	    if(status != null && !status.isBlank()) {
+
+
+	        sql += """
+	            AND c.status = ?
+	            """;
+
+
+	        params.add(status);
+
+	    }
+
+
+
+	    sql += """
+	        ORDER BY c.deleted_at DESC
+	        """;
+
+
+
+	    return jdbc.query(
+	            sql,
+	            mapper,
+	            params.toArray()
+	    );
+
+	}
+	
+	//student course search
+	public List<CourseBean> searchStudentCourses(String keyword) {
+
+	    String sql = """
+	        SELECT c.*,
+	               sc.name AS subcategory_name,
+	               cc.name AS category_name,
+	               u.name AS teacher_name
+	        FROM course c
+	        JOIN subcategory sc 
+	            ON c.subcategoryID = sc.subcategoryID
+	        JOIN course_category cc 
+	            ON c.courseCategoryID = cc.courseCategoryID
+	        JOIN user u 
+	            ON c.teacherID = u.userID
+	        WHERE c.is_active = 1
+	        AND c.status = 'Open'
+	        AND c.name LIKE ?
+	        ORDER BY c.created_at DESC
+	        """;
+
+
+	    return jdbc.query(
+	            sql,
+	            mapper,
+	            "%" + keyword + "%"
+	    );
+	}
 }

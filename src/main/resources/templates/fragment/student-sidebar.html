@@ -56,7 +56,9 @@
 <div class="d-flex" th:fragment="studentSidebar">
 
     <!-- SIDEBAR -->
-    <aside class="bg-white border-end vh-100 position-sticky top-0" style="width: 280px;">
+    <aside
+class="bg-white border-end position-sticky top-0"
+style="width:280px;height:100vh;overflow-y:auto;">
 
         <!-- PROFILE SECTION -->
         <div class="p-4 border-bottom text-center">
@@ -70,21 +72,28 @@
         </div>
 
         <!-- NAVIGATION -->
-        <nav class="p-3">
+        <nav class="p-2">
 
             <div class="nav flex-column gap-2">
 
-                <a th:href="@{#}"
+                <a th:href="@{/student/portal}"
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded bg-light">
                     <i class="bi bi-speedometer2"></i>
                     Dashboard
                 </a>
 
-                <a th:href="@{#}"
+                <a th:href="@{/student/courses}"
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
                     <i class="bi bi-book"></i>
                     My Courses
                 </a>
+                
+               
+                    <a class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded" th:href="@{/student/my-enrollments}">
+                    <i class="bi bi-book"></i>
+                     My Enrollments
+                    </a>
+                  
  <a th:href="@{/scholarship/my-applications}"
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
                     <i class="bi bi-file-earmark-text"></i>
@@ -131,7 +140,7 @@
                     Feedback
                 </a>
 
-                <hr>
+               
 
                 <a th:href="@{/logout}"
                    class="nav-link d-flex align-items-center gap-2 text-danger p-2 rounded">

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.ScheduleBean;
@@ -28,8 +29,34 @@ public class CourseController {
 
     // Show all courses
     @GetMapping("/show")
-    public String showCourses(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
+    public String showCourses(
+    		 @RequestParam(required = false) String keyword,
+    		Model model) {
+    	
+    	List<CourseBean> courses;
+
+
+        if(keyword != null && !keyword.isBlank()) {
+
+            courses =
+                courseService.searchStudentCourses(keyword);
+
+        }
+        else {
+
+            courses =
+                courseService.getAllCourses();
+
+        }
+
+
+        model.addAttribute(
+                "courses",
+                courses
+        );
+    	
+    	
+//        model.addAttribute("courses", courseService.getAllCourses());
         return "student/courses";
     }
 
