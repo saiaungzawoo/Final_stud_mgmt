@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragment/css :: css}"></head>
+
 <body class="bg-light">
 
 <header th:fragment="teacherHeader" class="teacher-header navbar navbar-expand-lg bg-white border-bottom px-3">
@@ -78,6 +79,19 @@
   
         <i class="bi bi-megaphone me-2"></i> Announcements
       </a>
+       <a class="nav-link text-white" th:href="@{/teacher/final-grade/list}">
+   
+  
+        <i class="bi bi-megaphone me-2"></i> final grade list
+      </a>
+       <a class="nav-link text-white" th:href="@{/teacher/certificate/list}">
+   
+  
+        <i class="bi bi-megaphone me-2"></i> Certificate
+      </a>
+      
+     
+      
        <a class="nav-link text-white" th:href="@{/teacher/final-grade}">
    
   
@@ -181,18 +195,65 @@ Exam Manangement
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>09:00 AM</td>
-                    <td>Batch A</td>
-                    <td>Web Development</td>
-                    <td><a th:href="@{/teacher/attendance}" class="btn btn-sm btn-outline-primary">Take Attendance</a></td>
-                  </tr>
-                  <tr>
-                    <td>01:00 PM</td>
-                    <td>Batch B</td>
-                    <td>Java Spring</td>
-                    <td><a th:href="@{/teacher/assignments}" class="btn btn-sm btn-outline-secondary">View Assignments</a></td>
-                  </tr>
+                 <tr th:each="schedule : ${todaySchedules}">
+
+
+<td>
+
+<span th:text="${schedule.startTime}">
+09:00
+</span>
+
+-
+
+<span th:text="${schedule.endTime}">
+11:00
+</span>
+
+</td>
+
+
+
+<td th:text="${schedule.courseName}">
+Web Development
+</td>
+
+
+
+<td th:text="${schedule.topic}">
+Topic
+</td>
+
+
+
+<td>
+
+<a th:href="@{/teacher/attendance/{id}(id=${schedule.scheduleId})}"
+class="btn btn-sm btn-outline-primary">
+
+Take Attendance
+
+</a>
+
+
+</td>
+
+
+</tr>
+
+
+<tr th:if="${#lists.isEmpty(todaySchedules)}">
+
+<td colspan="4"
+class="text-center text-muted">
+
+No class scheduled today
+
+</td>
+
+</tr>
+
+                
                 </tbody>
               </table>
             </div>
@@ -201,13 +262,54 @@ Exam Manangement
 
         <div class="col-lg-9">
           <div class="content-panel mb-4">
-            <h5 class="fw-bold mb-3">Recent Announcements</h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item px-0">Exam schedule updated</li>
-              <li class="list-group-item px-0">Project submission deadline reminder</li>
-              <li class="list-group-item px-0">New workshop added this week</li>
-            </ul>
-          </div>
+
+<h5 class="fw-bold mb-3">
+    Recent Announcements
+</h5>
+
+
+<ul class="list-group list-group-flush">
+
+
+<li class="list-group-item px-0"
+    th:each="a:${announcements}">
+
+
+    <div class="fw-bold"
+         th:text="${a.title}">
+        Exam schedule updated
+    </div>
+
+
+    <small class="text-muted">
+
+        <span th:text="${a.courseName}">
+            Web Development
+        </span>
+
+        |
+
+        <span th:text="${a.priority}">
+            High
+        </span>
+
+    </small>
+
+
+</li>
+
+
+<li class="list-group-item text-muted"
+    th:if="${#lists.isEmpty(announcements)}">
+
+    No announcements yet
+
+</li>
+
+
+</ul>
+
+</div>
 
           <div class="content-panel">
             <h5 class="fw-bold mb-3">Assignments To Check</h5>

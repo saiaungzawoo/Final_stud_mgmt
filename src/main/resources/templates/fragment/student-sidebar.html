@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -95,11 +95,13 @@ style="width:280px;height:100vh;overflow-y:auto;">
                     </a>
                   
  <a th:href="@{/scholarship/my-applications}"
-                   class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
-                    <i class="bi bi-file-earmark-text"></i>
-                   My Scholarships
-                </a>
+   class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
+    <i class="bi bi-mortarboard-fill"></i>
+    My Scholarships
+</a>
                 <a th:href="@{/student/submission/assignments}"
+
+                
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
                     <i class="bi bi-journal-text"></i>
                     Assignments
@@ -110,6 +112,7 @@ style="width:280px;height:100vh;overflow-y:auto;">
                     <i class="bi bi-journal-text"></i>
                     My Submissions
                 </a>
+
                 <a th:href="@{#}"
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
                     <i class="bi bi-calendar-check"></i>
@@ -128,13 +131,13 @@ style="width:280px;height:100vh;overflow-y:auto;">
                     Grades
                 </a>
 
-                <a th:href="@{#}"
+               <a href="/student/certificate/list"
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
                     <i class="bi bi-award"></i>
                     Certificates
                 </a>
 
-                <a th:href="@{#}"
+              <a th:href="@{/student/feedback/create}"
                    class="nav-link d-flex align-items-center gap-2 text-dark p-2 rounded">
                     <i class="bi bi-chat-left-text"></i>
                     Feedback

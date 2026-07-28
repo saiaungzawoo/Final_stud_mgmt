@@ -54,7 +54,7 @@
 
 
 
-                <a th:href="@{/attendance/list}"
+                <a th:href="@{/attendance/students}"
                    class="btn btn-outline-secondary">
 
                     <i class="bi bi-arrow-left"></i>
@@ -163,7 +163,7 @@
 
                                     </a>
   <a class="btn btn-success btn-sm"
-       th:href="@{/exam/result/student/{id}(id=${student.userID})}">
+      th:href="@{/teacher/exam-results/student/{id}(id=${student.userID})}">
 
 
         <i class="bi bi-clipboard-check"></i>
