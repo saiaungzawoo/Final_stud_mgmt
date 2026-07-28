@@ -144,19 +144,22 @@
 
         <i class="bi bi-x-circle"></i>
     </a>
-                                            <button type="button" class="btn btn-outline-warning btn-sm btn-action" title="Edit Exam"
-                                                    th:data-id="${exam.examID}"
-                                                    th:data-course="${exam.courseID}"
-                                                    th:data-name="${exam.name}"
-                                                    th:data-type="${exam.examType}"
-                                                    th:data-max="${exam.maxScore}"
-                                                    th:data-weight="${exam.weightPercent}"
-                                                    th:data-date="${#temporals.format(exam.examDate, 'yyyy-MM-dd''T''HH:mm')}"
-                                                    th:data-duration="${exam.durationMinutes}"
-                                                   
-                                                    onclick="populateEditModal(this)">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
+                                           <button type="button"
+        class="btn btn-outline-warning btn-sm btn-action"
+        title="Edit Exam"
+        th:disabled="${exam.status == 'Completed' || exam.status == 'Cancelled'}"
+        th:data-id="${exam.examID}"
+        th:data-course="${exam.courseID}"
+        th:data-name="${exam.name}"
+        th:data-type="${exam.examType}"
+        th:data-max="${exam.maxScore}"
+        th:data-weight="${exam.weightPercent}"
+        th:data-date="${#temporals.format(exam.examDate, 'yyyy-MM-dd''T''HH:mm')}"
+        th:data-duration="${exam.durationMinutes}"
+        onclick="populateEditModal(this)">
+
+    <i class="bi bi-pencil-square"></i>
+</button>
                                             
                                             <button type="button" class="btn btn-outline-danger btn-sm btn-action" title="Delete Exam"
                                                     th:data-id="${exam.examID}" th:data-name="${exam.name}" th:data-course="${exam.courseID}"
@@ -297,19 +300,19 @@
                             <label class="form-label fw-semibold">Duration Minutes</label>
                             <input type="number" class="form-control" th:field="*{durationMinutes}" id="edit_durationMinutes">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Status</label>
-                           <input type="text" 
-       class="form-control" 
-       th:value="*{status}" 
-       id="edit_status"
-       readonly>
-                        </div>
+                       
                     </div>
                 </div>
                 <div class="modal-footer bg-light border-0 py-3">
                     <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-warning px-4 fw-semibold text-dark"><i class="bi bi-check-circle me-2"></i>Update Exam</button>
+                  <button type="submit"
+        class="btn btn-warning px-4 fw-semibold text-dark"
+        id="updateExamBtn">
+
+    <i class="bi bi-check-circle me-2"></i>
+    Update Exam
+
+</button>
                 </div>
             </form>
         </div>
@@ -345,6 +348,7 @@
 
 <script autocomplete="off">
     function populateEditModal(btn) {
+    	
         document.getElementById('edit_examID').value = btn.getAttribute('data-id');
         document.getElementById('edit_courseID').value = btn.getAttribute('data-course');
         document.getElementById('edit_name').value = btn.getAttribute('data-name');

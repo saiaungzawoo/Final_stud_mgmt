@@ -40,6 +40,11 @@ public class FinalGradeBean {
 
     private LocalDateTime updatedAt;
 
+    // for display
+
+    private String studentName;
+    
+    private String courseName;
 
    
 }

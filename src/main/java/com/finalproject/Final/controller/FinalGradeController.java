@@ -59,6 +59,22 @@ public class FinalGradeController {
     ) {
 
 
+        if(finalGradeRepo.existsByEnrollmentID(
+                grade.getEnrollmentID())) {
+
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "This student final grade is already finalized!"
+            );
+
+
+            return "redirect:/teacher/final-grade/view/"
+                    + grade.getEnrollmentID();
+        }
+
+
+
         UserBean loginUser =
                 (UserBean) session.getAttribute("loginUser");
 
@@ -83,6 +99,18 @@ public class FinalGradeController {
         );
 
 
+        if(grade.getFinalScore() >= 60) {
+
+            grade.setStatus("Completed");
+
+        } else {
+
+            grade.setStatus("Failed");
+
+        }
+
+
+
         finalGradeRepo.saveFinalGrade(grade);
 
 
@@ -93,7 +121,8 @@ public class FinalGradeController {
         );
 
 
-        return "redirect:/teacher/final-grade";
+        return "redirect:/teacher/final-grade/view/"
+                + grade.getEnrollmentID();
     }
     // Final Grade Main Page
     @GetMapping
@@ -185,6 +214,45 @@ public class FinalGradeController {
 
 
         return "teacher/final-grade";
+    }
+    @GetMapping("/list")
+    public String finalGradeList(Model model){
+
+
+        model.addAttribute(
+                "finalGradeList",
+                finalGradeRepo.getAllFinalGrades()
+        );
+
+
+        return "admin/final-grade-list";
+
+    }
+    @GetMapping("/teacher-list")
+    public String teacherFinalGradeList(
+            Model model,
+            HttpSession session
+    ) {
+
+
+        UserBean loginUser =
+                (UserBean) session.getAttribute("loginUser");
+
+
+        String teacherID =
+                loginUser.getUserID();
+
+
+
+        model.addAttribute(
+                "finalGradeList",
+                finalGradeRepo.getAllFinalGrades()
+        );
+
+
+
+        return "teacher/final-grade-list";
+
     }
 
 }

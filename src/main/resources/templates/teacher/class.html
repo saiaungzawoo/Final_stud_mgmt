@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+</head>
+
+
+<body>
+
+
+<!-- Header -->
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}">
+</div>
+
+
+
+<div class="container-fluid">
+
+
+    <div class="row">
+
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+            </div>
+
+        </div>
+
+
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 p-4">
+
+
+            <h3 class="fw-bold mb-4">
+                Teacher Classes
+            </h3>
+
+
+
+            <!-- Search -->
+            <div class="mb-4">
+
+                <input type="text"
+       id="classSearch"
+       class="form-control"
+       placeholder="Search Class">
+
+            </div>
+
+
+
+
+            <!-- Class Cards -->
+            <div class="row">
+
+
+               <div class="col-md-4 mb-4 class-card"
+     th:each="c : ${classes}">
+
+                  <div class="card shadow-sm h-100 border-0 
+            transition"
+     style="transition:0.3s;"
+     onmouseover="this.style.transform='translateY(-5px)'"
+     onmouseout="this.style.transform='translateY(0)'">
+
+
+                        <div class="card-body">
+
+
+                           <h5 class="fw-bold class-name">
+
+    ☕
+
+    <span th:text="${c.name}">
+    </span>
+
+</h5>
+
+
+
+                            <hr>
+
+
+
+                            <p>
+                                <b>Level:</b>
+
+                                <span th:text="${c.level}">
+                                </span>
+
+                            </p>
+
+
+
+
+                            <p>
+
+                                <b>Students:</b>
+
+                                <span th:text="${c.studentCount}">
+                                </span>
+
+                            </p>
+
+
+
+
+                            <p>
+
+                               
+
+                               <p>
+    <b>📅 Schedule:</b>
+</p>
+
+
+<div class="border rounded p-2 bg-light">
+
+
+    <div th:each="schedule : ${#strings.arraySplit(c.scheduleInfo, ',')}">
+
+
+        <div class="mb-2">
+
+
+            <span class="badge bg-primary"
+                  th:text="${#strings.substringBefore(schedule,'|')}">
+            </span>
+
+
+            <span class="ms-2"
+                  th:text="${#strings.substringAfter(schedule,'|')}">
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+                            </p>
+
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- Footer -->
+<div th:replace="~{fragment/footer :: footer}">
+</div>
+
+
+
+
+<!-- JS -->
+<div th:replace="~{fragment/js :: js}">
+</div>
+
+
+
+</body>
+
+</html>

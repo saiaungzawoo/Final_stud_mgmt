@@ -49,10 +49,17 @@ public class DashbroadController {
 	              (UserBean) session.getAttribute("loginUser");
 
 
+	      if(loginUser == null) {
+	          return "redirect:/login";
+	      }
+
+
 	      String teacherID =
 	              loginUser.getUserID();
 
 
+
+	      // Dashboard Cards
 
 	      model.addAttribute(
 	              "classCount",
@@ -78,11 +85,17 @@ public class DashbroadController {
 	      );
 
 
+
+	      // Today Classes
+
 	      model.addAttribute(
 	              "todaySchedules",
 	              mRepo.getTodaySchedule(teacherID)
 	      );
 
+
+
+	      // Recent Announcements (AnnouncementBean List)
 
 	      model.addAttribute(
 	              "announcements",
@@ -90,9 +103,9 @@ public class DashbroadController {
 	      );
 
 
+
 	      return "teacher/teacher-dashboard";
 	  }
-
 	  @PostMapping("/update")
 	    public String updateUpload(
 	            @Valid @ModelAttribute("teacherObj") TeacherBean obj,

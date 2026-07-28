@@ -4,8 +4,6 @@
 <head th:replace="~{fragment/css :: css}">
     <!-- Custom Hover Lift Effect & UI Optimizations -->
     <style>
-    /* စာသားအရှည်ကြီးတွေကို ၃ ကြောင်းပဲပြပြီး အစက်ကလေးတွေ (...) ဖြတ်ရန် */
-
         .hover-lift {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -58,23 +56,35 @@
                     </div>
                 </div>
 
-                <!-- B. Course Section (Responsive Cards Grid) -->
-              <!-- B. Course Section (Responsive Cards Grid) -->
-<h5 class="fw-bold text-secondary mb-3"><i class="bi bi-book me-2"></i>Your Active Courses</h5>
-
-<div class="row g-4 mb-5">
-    <div class="col-md-6 col-xl-3" th:each="course : ${courseList}">
-        <a class="category-card" 
-           th:href="@{/announcement/list(courseID=${course.courseId})}"
-           th:classappend="${courseID == course.courseId} ? 'border border-primary border-2' : ''">
-            
-            <i class="bi bi-book text-primary"></i>
-            <h3 th:text="${course.name}">Course Title</h3>
-            <p th:text="${course.description}">Course description overview text goes here...</p>
-
-        </a>
+                <!-- SEARCH BAR SECTION -->
+              <!-- SEARCH BAR SECTION (Full Width - ညာဘက်အထိ အပြည့်) -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="input-group shadow-sm rounded-3 overflow-hidden">
+            <span class="input-group-text bg-white border-0 ps-3">
+                <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" id="courseSearch" class="form-control border-0 pe-3 py-2" placeholder="Search course by name..." onkeyup="filterCourses()">
+        </div>
     </div>
 </div>
+
+                <!-- B. Course Section (Responsive Cards Grid) -->
+                <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-book me-2"></i>Your Active Courses</h5>
+
+                <div class="row g-4 mb-5" id="courseCardContainer">
+                    <div class="col-md-6 col-xl-3 course-item" th:each="course : ${courseList}">
+                        <a class="category-card" 
+                           th:href="@{/announcement/list(courseID=${course.courseId})}"
+                           th:classappend="${courseID == course.courseId} ? 'border border-primary border-2' : ''">
+                            
+                            <i class="bi bi-book text-primary"></i>
+                            <h3 class="course-title" th:text="${course.name}">Course Title</h3>
+                            <p th:text="${course.description}">Course description overview text goes here...</p>
+
+                        </a>
+                    </div>
+                </div>
 
                 <!-- C. Announcement List Section -->
                 <div class="row" th:if="${courseID != null}">
@@ -114,19 +124,18 @@
                                                 </div>
 
                                                 <!-- Content Text Preview -->
-<!-- Content Text Preview (စာသားအစကိုပြပြီး ... ဖြတ်ရန် ပြောင်းလဲထားသည်) -->
-<!-- Content Text Preview -->
-<!-- text-pre-wrap ကို သေချာပေါက် ဖြုတ်ပေးရပါမယ်ဗျာ -->
-								<div th:text="${ann.content}" 
-								     style="display: -webkit-box !important; 
-								            -webkit-line-clamp: 1 !important; 
-								            -webkit-box-orient: vertical !important; 
-								            overflow: hidden !important; 
-								            text-overflow: ellipsis !important; 
-								            white-space: normal !important;
-								            color: #6c757d;" 
-								     class="mb-3">
-								</div>                                                <div class="d-flex flex-wrap gap-3 text-muted small">
+                                                <div th:text="${ann.content}" 
+                                                     style="display: -webkit-box !important; 
+                                                            -webkit-line-clamp: 1 !important; 
+                                                            -webkit-box-orient: vertical !important; 
+                                                            overflow: hidden !important; 
+                                                            text-overflow: ellipsis !important; 
+                                                            white-space: normal !important;
+                                                            color: #6c757d;" 
+                                                     class="mb-3">
+                                                </div>
+                                                
+                                                <div class="d-flex flex-wrap gap-3 text-muted small">
                                                     <div>
                                                         <i class="bi bi-calendar-check me-1"></i>
                                                         Publish: <span th:text="${#temporals.format(ann.publishDate, 'yyyy-MM-dd HH:mm')}">2026-07-20 10:00</span>
@@ -273,6 +282,25 @@
 
 <!-- Lightweight Dataset Parser Interactivity Scripts -->
 <script th:inline="javascript">
+    /* Search Filter Functionality */
+    function filterCourses() {
+        const input = document.getElementById('courseSearch');
+        const filter = input.value.toLowerCase();
+        const items = document.getElementsByClassName('course-item');
+
+        for (let i = 0; i < items.length; i++) {
+            const titleElement = items[i].querySelector('.course-title');
+            if (titleElement) {
+                const textValue = titleElement.textContent || titleElement.innerText;
+                if (textValue.toLowerCase().indexOf(filter) > -1) {
+                    items[i].style.display = "";
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+        }
+    }
+
     /* Get current globally scoped URL configuration layout properties */
     const selectedCourseID = /*[[${courseID}]]*/ '';
 
@@ -299,14 +327,13 @@
         const cId = btn.getAttribute('data-course');
         document.getElementById('formCourseID').value = cId;
         document.getElementById('formCourseSelect').value = cId;
-        document.getElementById('formCourseSelect').disabled = true; // Protect scope allocation mapping
+        document.getElementById('formCourseSelect').disabled = true;
 
         document.getElementById('title').value = btn.getAttribute('data-title');
         document.getElementById('content').value = btn.getAttribute('data-content');
         document.getElementById('targetType').value = btn.getAttribute('data-target');
         document.getElementById('priority').value = btn.getAttribute('data-priority');
         
-        // Parse raw ISO datetime standard safely to structure field context layout mapping
         let exp = btn.getAttribute('data-expiry');
         if (exp && exp.length >= 16) {
             document.getElementById('expiryDate').value = exp.substring(0, 16);

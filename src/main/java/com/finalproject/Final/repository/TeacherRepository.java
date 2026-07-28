@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalproject.Final.model.AnnouncementBean;
 import com.finalproject.Final.model.ScheduleBean;
 import com.finalproject.Final.model.TeacherBean;
 
@@ -390,31 +391,110 @@ public class TeacherRepository {
     // Recent Announcement
     // =========================
 
-    public List<String> getRecentAnnouncements(
-            String teacherID){
+    public List<AnnouncementBean> getRecentAnnouncements(String teacherID) {
 
 
-        String sql = """
+    	String sql = """
 
-        SELECT title
+    			SELECT
+    			    a.announcementID,
+    			    a.createdByID,
+    			    a.courseID,
+    			    c.name AS courseName,
+    			    a.title,
+    			    a.content,
+    			    a.target_type,
+    			    a.priority,
+    			    a.is_published,
+    			    a.publish_date,
+    			    a.expiry_date,
+    			    a.created_at,
+    			    a.updated_at
 
-        FROM announcement
+    			FROM announcement a
 
-        WHERE createdByID=?
+    			LEFT JOIN course c
+    			ON a.courseID = c.courseID
 
-        ORDER BY created_at DESC
+    			WHERE a.createdByID = ?
 
-        LIMIT 5
+    			ORDER BY a.created_at DESC
 
-        """;
+    			LIMIT 3
+
+    			""";
 
 
         return jdbc.query(
-                sql,
-                (rs,rowNum)
-                ->
-                rs.getString("title"),
-                teacherID
+            sql,
+            (rs,rowNum)->{
+
+
+                AnnouncementBean obj =
+                        new AnnouncementBean();
+
+
+                obj.setAnnouncementID(
+                    rs.getString("announcementID")
+                );
+
+
+                obj.setCreatedByID(
+                    rs.getString("createdByID")
+                );
+
+
+                obj.setCourseID(
+                    rs.getString("courseID")
+                );
+
+
+                obj.setCourseName(
+                    rs.getString("courseName")
+                );
+
+
+                obj.setTitle(
+                    rs.getString("title")
+                );
+
+
+                obj.setContent(
+                    rs.getString("content")
+                );
+
+
+                obj.setTargetType(
+                    rs.getString("target_type")
+                );
+
+
+                obj.setPriority(
+                    rs.getString("priority")
+                );
+
+
+                obj.setPublished(
+                    rs.getBoolean("is_published")
+                );
+
+
+                obj.setPublishDate(
+                    rs.getTimestamp("publish_date")
+                    .toLocalDateTime()
+                );
+
+
+                obj.setCreatedAt(
+                    rs.getTimestamp("created_at")
+                    .toLocalDateTime()
+                );
+
+
+                return obj;
+
+            },
+            teacherID
         );
 
     }
