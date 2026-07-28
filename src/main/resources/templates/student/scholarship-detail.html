@@ -1,215 +1,162 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragment/css :: css}"></head>
 <head>
+    <meta charset="UTF-8">
+    <title>Scholarship Detail</title>
+    <head th:replace="~{fragment/css :: css}"></head>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<title>Scholarship Detail</title>
+    <!-- CSS Animation & UI Styles -->
+    <style>
+        .detail-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+      /*  /*  /* Header သို့မဟုတ် Card တစ်ခုလုံးကို mouse ထိရင် Cap icon လှုပ်စေရန် */
+/*         .detail-card:hover .animated-icon {
+            animation: wiggle 0.5s ease-in-out infinite alternate;
+        } */ */ */
+        /* Buttons transition */
+        .hover-btn {
+            transition: transform 0.2s ease;
+        }
+        .hover-btn:hover:not([disabled]) {
+            transform: translateY(-2px);
+        }
 
+        @keyframes wiggle {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+    </style>
 </head>
-
-<body>
+<body class="bg-light">
 
 <div th:replace="~{fragment/header :: header}"></div>
 
-<!-- <div class="container mt-5">
-
-
-
-<div class="card shadow">
-
-
-
-<div class="card-body">
-
-
-
-<h2 th:text="${scholarship.scholarshipName}">
-</h2>
-
-
-<p>
-
-Description:
-
-<span th:text="${scholarship.description}">
-</span>
-
-</p>
-
-<p>
-
-Discount Type:
-
-<span th:text="${scholarship.discountType}">
-</span>
-
-</p>
-
-
-
-
-<p>
-
-Discount Value:
-
-<span th:text="${scholarship.discountValue}">
-</span>
-
-</p>
-
-
-<p>
-
-Maximum Recipients:
-
-<span th:text="${scholarship.maxRecipients}">
-</span>
-
-</p>
-
-
-<p>
-
-Deadline:
-
-<span th:text="${scholarship.applicationDeadline}">
-</span>
-
-</p>
-
-Login မဝင်ထားရင်
-<div th:if="${session.loginUser == null}">
-    <a th:href="@{/login}" class="btn btn-warning">
-        Login to Apply
-    </a>
-</div>
-
-
-
-Login ဝင်ထားရင်
-<div th:if="${session.loginUser != null}">
-    <a th:href="@{'/scholarship/apply/' + ${scholarship.scholarshipID}}"
-       class="btn btn-primary">
-        Apply Now
-    </a>
-</div>
-
-<a th:href="@{/scholarship/scholarships}"
-   class="btn btn-secondary">
-    Back
-</a>
-
-
-</div>
-
-
-</div>
-
-
-</div> -->
-
-
 <div class="container py-5">
-
     <div class="row justify-content-center">
-
         <div class="col-lg-8">
 
-            <div class="card shadow-lg border-0 rounded-4">
+            <!-- Detail Card -->
+            <div class="card shadow border-0 rounded-4 detail-card overflow-hidden">
 
                 <!-- Header -->
-                <div class="card-header bg-primary text-white text-center py-4">
-                    <h2 class="mb-0 fw-bold"
-                        th:text="${scholarship.scholarshipName}">
+                <div class="card-header bg-primary text-white text-center py-4 border-0">
+                    <div class="mb-2">
+                        <i class="bi bi-mortarboard-fill animated-icon d-inline-block fs-1"></i>
+                    </div>
+                    <h2 class="mb-0 fw-bold" th:text="${scholarship.scholarshipName}">
                         Scholarship Name
                     </h2>
                 </div>
 
-                <!-- Body -->
-                <div class="card-body p-4">
-
-                    <table class="table table-borderless">
-
-                        <tr>
-                            <th width="35%">📖 Description</th>
-                            <td th:text="${scholarship.description}"></td>
-                        </tr>
-
-                        <tr>
-                            <th>💰 Discount Type</th>
-                            <td>
-                                <span class="badge bg-info text-dark"
-                                      th:text="${scholarship.discountType}">
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th>🎁 Discount Value</th>
-                            <td>
-                                <span class="fw-bold text-success"
-                                      th:text="${scholarship.discountValue}">
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th>👨‍🎓 Maximum Recipients</th>
-                            <td th:text="${scholarship.maxRecipients}"></td>
-                        </tr>
-
-                        <tr>
-                            <th>📅 Application Deadline</th>
-                            <td class="text-danger fw-semibold"
-                                th:text="${scholarship.applicationDeadline}">
-                            </td>
-                        </tr>
-
-                    </table>
-
-                </div>
-
-                <!-- Footer -->
-                <div class="card-footer bg-light">
-
-                    <div class="d-flex justify-content-between">
-
-                        <a th:href="@{/scholarship/scholarships}"
-                           class="btn btn-outline-secondary">
-                            ← Back
-                        </a>
-
-                        <!-- Not Login -->
-                        <a th:if="${session.loginUser == null}"
-                           th:href="@{/login}"
-                           class="btn btn-warning">
-                            🔐 Login to Apply
-                        </a>
-
-                        <!-- Login -->
-                        <a th:if="${session.loginUser != null}"
-                           th:href="@{'/scholarship/apply/' + ${scholarship.scholarshipID}}"
-                           class="btn btn-success">
-                            ✅ Apply Now
-                        </a>
-
+                <!-- Body (Table-less Dashboard Layout) -->
+                <div class="card-body p-4 p-md-5">
+                    
+                    <!-- Description Block -->
+                    <div class="mb-4 bg-light p-4 rounded-3 border-start border-primary border-4">
+                        <h6 class="text-primary fw-bold mb-2">
+                            <i class="bi bi-info-circle-fill me-2"></i>Scholarship Description
+                        </h6>
+                        <p class="text-secondary mb-0 lh-base" th:text="${scholarship.description}">
+                            Description text here...
+                        </p>
                     </div>
 
+                    <!-- Info Grid Rows -->
+                    <div class="row g-4 text-dark">
+                        
+                        <!-- Discount Type -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 h-100 bg-white">
+                                <small class="text-muted d-block fw-semibold mb-1">
+                                    <i class="bi bi-tags me-1 text-primary"></i> Discount Type
+                                </small>
+                                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-1.5 rounded-pill fw-semibold" 
+                                      th:text="${scholarship.discountType}">
+                                    Percentage
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Discount Value -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 h-100 bg-white">
+                                <small class="text-muted d-block fw-semibold mb-1">
+                                    <i class="bi bi-currency-dollar me-1 text-success"></i> Discount Value
+                                </small>
+                                <span class="fs-5 fw-bold text-success" th:text="${scholarship.discountValue}">
+                                    100%
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Max Recipients -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 h-100 bg-white">
+                                <small class="text-muted d-block fw-semibold mb-1">
+                                    <i class="bi bi-people me-1 text-secondary"></i> Maximum Recipients
+                                </small>
+                                <span class="fw-bold" th:text="${scholarship.maxRecipients}">
+                                    50
+                                </span> <span class="text-muted small">students</span>
+                            </div>
+                        </div>
+
+                        <!-- Application Deadline -->
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 h-100 bg-white">
+                                <small class="text-muted d-block fw-semibold mb-1">
+                                    <i class="bi bi-calendar-x me-1 text-danger"></i> Application Deadline
+                                </small>
+                                <span class="text-danger fw-bold" th:text="${scholarship.applicationDeadline}">
+                                    2026-12-31
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-            </div>
+                <!-- Footer (Actions) -->
+                <div class="card-footer bg-white border-0 p-4 pt-0">
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <!-- Back Button -->
+                        <a th:href="@{/scholarship/scholarships}" class="btn btn-outline-secondary px-4 rounded-pill hover-btn">
+                            <i class="bi bi-arrow-left me-1"></i> Back
+                        </a>
+
+                        <!-- Action States -->
+                        <div>
+                            <!-- Case 1: User is logged in AND has NOT applied yet -->
+                            <a th:if="${session.loginUser != null and !applied}"
+                               th:href="@{/scholarship/apply/{id}(id=${scholarship.scholarshipID})}"
+                               class="btn btn-primary px-4 rounded-pill shadow-sm hover-btn">
+                                Apply Now <i class="bi bi-send-fill ms-1 small"></i>
+                            </a>
+
+                            <!-- Case 2: User is logged in AND has ALREADY applied -->
+                            <button th:if="${session.loginUser != null and applied}"
+                                    class="btn btn-success px-4 rounded-pill"
+                                    disabled>
+                                <i class="bi bi-check-circle-fill me-1"></i> Already Applied
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div> <!-- /card -->
 
         </div>
-
     </div>
-
 </div>
 
-
 <div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
 
-   <div th:replace="~{fragment/js :: js}"></div>
 </body>
-
 </html>

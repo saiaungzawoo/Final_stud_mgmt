@@ -178,6 +178,26 @@ if(deadline != null){
         });
 
     }
+    
+    //apply one 
+    public boolean hasApplied(String scholarshipID, String userID) {
+
+        String sql = """
+            SELECT COUNT(*)
+            FROM scholarship_application
+            WHERE scholarshipID = ?
+            AND userID = ?
+            """;
+
+        Integer count = jdbc.queryForObject(
+                sql,
+                Integer.class,
+                scholarshipID,
+                userID
+        );
+
+        return count != null && count > 0;
+    }
 }
 
        
