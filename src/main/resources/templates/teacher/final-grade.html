@@ -36,7 +36,16 @@
                 Final Grade Management
             </h3>
 
+<div th:if="${success}"
+     class="alert alert-success"
+     th:text="${success}">
+</div>
 
+
+<div th:if="${error}"
+     class="alert alert-danger"
+     th:text="${error}">
+</div>
 
             <!-- Course Select -->
             <div class="card mb-4">

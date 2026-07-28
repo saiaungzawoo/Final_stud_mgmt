@@ -116,6 +116,37 @@ public class ExamResultController {
         // 🟢 examId ပါဝင်သော Fresh URL သို့ Redirect လုပ်ပေးပါ
         return "redirect:/teacher/exam-results?examId=" + examResult.getExamID();
     }
-    
+    @GetMapping("/student/{userID}")
+    public String viewStudentExamResult(
+            @PathVariable String userID,
+            Model model,
+            HttpSession session
+    ) {
+
+
+        UserBean loginUser =
+                (UserBean) session.getAttribute("loginUser");
+
+
+        if(loginUser == null){
+            return "redirect:/login";
+        }
+
+
+
+        List<ExamResultBean> resultList =
+                examResultRepo.getResultByStudent(userID);
+
+
+
+        model.addAttribute(
+                "examResultList",
+                resultList
+        );
+
+
+        return "teacher/student-exam-result";
+
+    }
     
 }

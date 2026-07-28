@@ -414,4 +414,19 @@ public class ExamRepository {
 
         return jdbcTemplate.update(sql, status, examID);
     }
+ // Auto complete expired exams
+    public int updateExpiredExamStatus(){
+
+        String sql = """
+            UPDATE exam
+            SET status = 'Completed'
+            WHERE status IN ('Scheduled', 'In Progress')
+            AND DATE_ADD(
+                    exam_date,
+                    INTERVAL duration_minutes MINUTE
+                ) < NOW()
+            """;
+
+        return jdbcTemplate.update(sql);
+    }
 }

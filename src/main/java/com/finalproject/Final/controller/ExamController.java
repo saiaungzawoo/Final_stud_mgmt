@@ -38,6 +38,8 @@ public class ExamController {
 
  	    String teacherID = loginUser.getUserID();
  	    
+ 	   // Auto update expired exam status
+ 	    examRepo.updateExpiredExamStatus();
 
 	    // Standard UI reference list populations needed by the creation/edition modals on this same view
 	    model.addAttribute("courseList", examRepo.getTeacherCourses(teacherID));
@@ -109,4 +111,5 @@ public class ExamController {
 
 	    return "redirect:/exam/list?courseID=" + courseID;
 	}
+	
 }

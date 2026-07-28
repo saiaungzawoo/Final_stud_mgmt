@@ -422,4 +422,101 @@ public class FinalGradeRepository {
 
         return count != null && count > 0;
     }
+    public List<FinalGradeBean> getAllFinalGrades(){
+
+        String sql = """
+                
+                SELECT
+                    fg.finalGradeID,
+                    fg.enrollmentID,
+
+                    u.name AS studentName,
+                    c.name AS courseName,
+
+                    fg.assignment_total_score,
+                    fg.exam_total_score,
+                    fg.attendance_score,
+
+                    fg.final_score,
+                    fg.letter_grade,
+                    fg.status,
+
+                    fg.finalized_at
+
+                FROM final_grade fg
+
+                JOIN enrollment e
+                ON fg.enrollmentID = e.enrollmentID
+
+                JOIN user u
+                ON e.userID = u.userID
+
+                JOIN course c
+                ON e.courseID = c.courseID
+
+                ORDER BY fg.created_at DESC
+
+                """;
+
+
+        return jdbcTemplate.query(sql, (rs,rowNum)->{
+
+            FinalGradeBean bean = new FinalGradeBean();
+
+
+            bean.setFinalGradeID(
+                    rs.getString("finalGradeID"));
+
+            bean.setEnrollmentID(
+                    rs.getString("enrollmentID"));
+
+
+            bean.setStudentName(
+                    rs.getString("studentName"));
+
+            bean.setCourseName(
+                    rs.getString("courseName"));
+
+
+            bean.setAssignmentTotalScore(
+                    rs.getDouble("assignment_total_score"));
+
+            bean.setExamTotalScore(
+                    rs.getDouble("exam_total_score"));
+
+            bean.setAttendanceScore(
+                    rs.getDouble("attendance_score"));
+
+
+            bean.setFinalScore(
+                    rs.getDouble("final_score"));
+
+            bean.setLetterGrade(
+                    rs.getString("letter_grade"));
+
+            bean.setStatus(
+                    rs.getString("status"));
+
+
+            return bean;
+
+        });
+
+    }
+    public boolean existsByEnrollmentID(String enrollmentID){
+
+        String sql = """
+                SELECT COUNT(*)
+                FROM final_grade
+                WHERE enrollmentID = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                enrollmentID
+        );
+
+        return count > 0;
+    }
 }

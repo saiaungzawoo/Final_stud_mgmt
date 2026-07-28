@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="~{fragment/css :: css}"></head>
+<head th:replace="~{fragment/css :: css}">
+</head>
 
 
-<body class="bg-light">
+<body>
 
 
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}">
 </div>
 
 
+
 <div class="container-fluid">
+
 
 <div class="row">
 
-
-<!-- Sidebar -->
 
 <div class="col-md-3 col-lg-2 p-0">
 
@@ -30,41 +30,32 @@
 
 
 
-<!-- Main Content -->
+<main class="col-md-9 col-lg-10 p-4">
 
-<div class="col-md-9 col-lg-10">
+၊
+<h3 class="mb-4">
+    Student Exam Results
+</h3>
 
+ <a th:href="@{/attendance/students}"
+                   class="btn btn-outline-secondary">
 
-<div class="container mt-4">
+                    <i class="bi bi-arrow-left"></i>
+                    Back
 
-
-<div class="card shadow">
-
-
-<div class="card-header bg-primary text-white">
-
-
-<h4 class="mb-0">
-
-<i class="bi bi-clipboard-check me-2"></i>
-
-Exam Result
-
-</h4>
+                </a>
 
 
-</div>
-
+<div class="card">
 
 
 <div class="card-body">
 
 
+<table class="table table-bordered">
 
-<table class="table table-bordered table-hover">
 
-
-<thead class="table-dark">
+<thead>
 
 <tr>
 
@@ -78,9 +69,9 @@ Exam Result
 
 <th>Score</th>
 
-<th>Max Score</th>
-
 <th>Remarks</th>
+
+<th>Date</th>
 
 </tr>
 
@@ -91,45 +82,64 @@ Exam Result
 <tbody>
 
 
-<tr th:each="result, stat : ${results}">
+<tr th:each="result,stat:${examResultList}">
 
 
-<td th:text="${stat.count}"></td>
+<td th:text="${stat.count}">
+</td>
 
 
-<td th:text="${result.courseName}"></td>
+<td th:text="${result.courseName}">
+</td>
 
 
-<td th:text="${result.examName}"></td>
+<td th:text="${result.examName}">
+</td>
 
 
-<td th:text="${result.examType}"></td>
+<td th:text="${result.examType}">
+</td>
 
 
-<td th:text="${result.score}"></td>
+
+<td>
+
+<span th:text="${result.score}">
+</span>
+
+/
+
+<span th:text="${result.maxScore}">
+</span>
+
+</td>
 
 
-<td th:text="${result.maxScore}"></td>
+
+<td th:text="${result.remarks}">
+</td>
 
 
-<td th:text="${result.remarks}"></td>
+
+<td th:text="${result.gradedAt}">
+</td>
+
 
 
 </tr>
 
 
 
-<tr th:if="${#lists.isEmpty(results)}">
+<tr th:if="${#lists.isEmpty(examResultList)}">
 
 <td colspan="7"
-    class="text-center text-muted">
+    class="text-center">
 
-No exam result found.
+No Exam Result Found
 
 </td>
 
 </tr>
-
 
 
 </tbody>
@@ -138,24 +148,19 @@ No exam result found.
 </table>
 
 
-
 </div>
 
 
 </div>
 
 
-</div>
+</main>
 
 
 </div>
 
 
 </div>
-
-
-</div>
-
 
 
 <div th:replace="~{fragment/footer :: footer}">
@@ -164,7 +169,6 @@ No exam result found.
 
 <div th:replace="~{fragment/js :: js}">
 </div>
-
 
 
 </body>
