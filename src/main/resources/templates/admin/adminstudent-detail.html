@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -42,10 +41,11 @@
     </style>
 </head>
 <body class="bg-light">
- <!-- ADMIN HEADER -->
-            <header>
-                <div th:replace="~{fragment/admin-header :: adminHeader}"></div>
-            </header>
+    <!-- ADMIN HEADER -->
+    <header>
+        <div th:replace="~{fragment/admin-header :: adminHeader}"></div>
+    </header>
+
 <div class="container-fluid min-vh-100 p-0">
     <div class="row g-0 min-vh-100">
 
@@ -76,8 +76,6 @@
                 <span class="fw-semibold">Admin Panel</span>
             </div>
 
-           
-
             <!-- MAIN CONTENT SECTION -->
             <section class="container py-4 py-md-5 flex-grow-1">
                 <div class="row justify-content-center">
@@ -85,8 +83,8 @@
 
                         <!-- Back Button Link Upper Control -->
                         <div class="mb-4">
-                            <a th:href="@{/student/admin/students}" class="btn btn-outline-secondary px-4 py-2 rounded-pill hover-btn bg-white shadow-sm fw-semibold">
-                                <i class="bi bi-arrow-left me-1"></i> Back to Student List
+                            <a th:href="@{/student/admin/students}" class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm hover-btn fw-semibold w-100 w-sm-auto text-center">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Student Lists
                             </a>
                         </div>
 
@@ -105,13 +103,17 @@
                                     
                                     <!-- Left Column: Profile Image -->
                                     <div class="col-md-4 text-center">
-                                        <div class="mb-3">
-                                            <img th:if="${student.profileImage != null}" 
+                                        <div class="mb-3 d-flex justify-content-center">
+                                            <!-- ပုံရှိလျှင် ပုံပြမည် (Load မတက်ပါက onerror ဖြင့် hide လုပ်ပြီး placeholder ပြမည်) -->
+                                            <img th:if="${student.profileImage != null and !#strings.isEmpty(student.profileImage)}" 
                                                  th:src="@{${student.profileImage}}" 
+                                                 onerror="this.style.display='none'; document.getElementById('avatar-placeholder').style.display='inline-flex';"
                                                  width="150" height="150" 
                                                  class="rounded-circle border shadow-sm object-fit-cover" alt="Student Profile">
                                             
-                                            <div th:unless="${student.profileImage != null}" 
+                                            <!-- ပုံမရှိပါက သို့မဟုတ် Load မတက်ပါက Placeholder Icon ပြမည် -->
+                                            <div id="avatar-placeholder" 
+                                                 th:if="${student.profileImage == null or #strings.isEmpty(student.profileImage)}" 
                                                  class="rounded-circle profile-avatar-placeholder border shadow-sm">
                                                 <i class="bi bi-person text-secondary" style="font-size: 4.5rem;"></i>
                                             </div>
@@ -179,15 +181,15 @@
                 </div>
             </section>
 
-           
-
         </main> <!-- /main content col -->
     </div> <!-- /row -->
 </div> <!-- /container-fluid -->
- <!-- FOOTER -->
-            <footer class="mt-auto">
-                <div th:replace="~{fragment/footer :: footer}"></div>
-            </footer>
+
+<!-- FOOTER -->
+<footer class="mt-auto">
+    <div th:replace="~{fragment/footer :: footer}"></div>
+</footer>
+
 <div th:replace="~{fragment/js :: js}"></div>
 
 </body>

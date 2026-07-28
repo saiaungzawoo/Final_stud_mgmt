@@ -57,43 +57,46 @@ i= jdbc.update(
 	
 	@SuppressWarnings("deprecation")
 	public UserBean getLatestStudent() {
-		String studentRoleId = "3c2f4396-7a84-11f1-bfcb-b4b686e7f920";
-	   
-	    
+
 	    String sql = """
-	            SELECT *
-	            FROM user
-	            WHERE roleID = ?
-	            ORDER BY created_at DESC
+	            SELECT u.*
+	            FROM user u
+	            INNER JOIN role r ON u.roleID = r.roleID
+	            WHERE r.name = ?
+	            ORDER BY u.created_at DESC
 	            LIMIT 1
 	            """;
 
 	    return jdbc.queryForObject(sql,
-	            new Object[] { studentRoleId },
+	            new Object[]{"Student"},
 	            (rs, rowNum) -> {
 
 	                UserBean userObj = new UserBean();
 
 	                userObj.setUserID(rs.getString("userID"));
 	                userObj.setRoleID(rs.getString("roleID"));
-	                //SAI
-		            userObj.setUserCode(rs.getString("userCode"));
+	                userObj.setUserCode(rs.getString("userCode"));
 	                userObj.setName(rs.getString("name"));
 	                userObj.setEmail(rs.getString("email"));
 	                userObj.setPassword(rs.getString("password"));
 	                userObj.setPhoneNumber(rs.getString("phone_no"));
 	                userObj.setAddress(rs.getString("address"));
-	                userObj.setDob(rs.getDate("dob").toLocalDate());
+
+	                if (rs.getDate("dob") != null)
+	                    userObj.setDob(rs.getDate("dob").toLocalDate());
+
 	                userObj.setGender(rs.getString("gender"));
 	                userObj.setProfileImage(rs.getString("profile_image"));
 	                userObj.setIsActive(rs.getInt("is_active"));
-	                userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-	                userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+
+	                if (rs.getTimestamp("created_at") != null)
+	                    userObj.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+	                if (rs.getTimestamp("updated_at") != null)
+	                    userObj.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
 
 	                return userObj;
-	            }
-	          
-	    		);
+	            });
 	}
 	   
 	
@@ -206,7 +209,13 @@ i= jdbc.update(
 	        return null;
 	    }
 	}
+	
+	public String getRoleIdByName(String roleName) {
 
+	    String sql = "SELECT roleID FROM role WHERE name = ?";
+
+	    return jdbc.queryForObject(sql, String.class, roleName);
+	}
 	
 	public boolean existsByEmailAndNotUserId(String email, String userId) {
 
@@ -230,22 +239,145 @@ i= jdbc.update(
 	/**
      * Retrieves all users with the 'STUDENT' role. use for admin
      */
-    public List<UserBean> selectAllStudents() {
-        String sql = "SELECT * FROM user WHERE roleID ='3c2f4396-7a84-11f1-bfcb-b4b686e7f920' ORDER BY created_at DESC";
-        
-        return jdbc.query(sql, new BeanPropertyRowMapper<>(UserBean.class));
-    }
+	public List<UserBean> selectAllStudents() {
+
+	    String sql = """
+	            SELECT u.*
+	            FROM user u
+	            JOIN role r ON u.roleID = r.roleID
+	            WHERE r.name = 'Student'
+	            ORDER BY u.created_at DESC
+	            """;
+
+	    return jdbc.query(sql, (rs, rowNum) -> {
+
+	        UserBean user = new UserBean();
+
+	        user.setUserID(rs.getString("userID"));
+	        user.setRoleID(rs.getString("roleID"));
+	        user.setUserCode(rs.getString("userCode"));
+	        user.setName(rs.getString("name"));
+	        user.setEmail(rs.getString("email"));
+	        user.setPassword(rs.getString("password"));
+	        user.setPhoneNumber(rs.getString("phone_no"));
+	        user.setAddress(rs.getString("address"));
+
+	        if (rs.getDate("dob") != null) {
+	            user.setDob(rs.getDate("dob").toLocalDate());
+	        }
+
+	        user.setGender(rs.getString("gender"));
+	        user.setProfileImage(rs.getString("profile_image"));
+	        user.setIsActive(rs.getInt("is_active"));
+
+	        if (rs.getTimestamp("created_at") != null) {
+	            user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+	        }
+
+	        if (rs.getTimestamp("updated_at") != null) {
+	            user.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+	        }
+
+	        return user;
+	    });
+	}
 
     /**
      * Retrieves a single student details by user ID. use for admin
      */
-    public UserBean selectStudentById(String id) {
-        String sql = "SELECT * FROM user WHERE userID = ? AND roleID ='3c2f4396-7a84-11f1-bfcb-b4b686e7f920'";
-        
-        List<UserBean> students = jdbc.query(sql, new BeanPropertyRowMapper<>(UserBean.class), id);
-        
-        // Return student if found, or null if not found
-        return students.stream().findFirst().orElse(null);
+	
+	public UserBean selectStudentById(String id) {
+
+		String sql = """
+		        SELECT u.*
+		        FROM `user` u
+		        JOIN role r ON u.roleID = r.roleID
+		        WHERE u.userID = ?
+		        AND r.name = 'Student'
+		        """;
+
+	    List<UserBean> students = jdbc.query(sql, (rs, rowNum) -> {
+
+	        UserBean user = new UserBean();
+
+	        user.setUserID(rs.getString("userID"));
+	        user.setRoleID(rs.getString("roleID"));
+	        user.setName(rs.getString("name"));
+	        user.setEmail(rs.getString("email"));
+	        user.setPassword(rs.getString("password"));
+	        user.setPhoneNumber(rs.getString("phone_no"));
+	        user.setAddress(rs.getString("address"));
+
+	        if (rs.getDate("dob") != null) {
+	            user.setDob(rs.getDate("dob").toLocalDate());
+	        }
+
+	        user.setGender(rs.getString("gender"));
+	        user.setProfileImage(rs.getString("profile_image"));
+	        user.setIsActive(rs.getInt("is_active"));
+	        user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+	        if (rs.getTimestamp("updated_at") != null) {
+            	user.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+            }
+
+	        return user;
+	   }, id);
+
+	    return students.isEmpty() ? null : students.get(0);
+	}
+	
+	
+    //user for admin profile
+    @SuppressWarnings("deprecation")
+    public UserBean getAdminById(String userID) {
+
+        String sql = """
+                SELECT u.*
+                FROM user u
+                INNER JOIN role r
+                    ON u.roleID = r.roleID
+                WHERE u.userID = ?
+                AND r.name = 'Admin'
+                """;
+
+        try {
+
+            return jdbc.queryForObject(sql, new Object[]{userID}, (rs, rowNum) -> {
+
+                UserBean user = new UserBean();
+
+                user.setUserID(rs.getString("userID"));
+                user.setRoleID(rs.getString("roleID"));
+                user.setUserCode(rs.getString("userCode"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setPhoneNumber(rs.getString("phone_no"));
+                user.setAddress(rs.getString("address"));
+
+                if (rs.getDate("dob") != null) {
+                    user.setDob(rs.getDate("dob").toLocalDate());
+                }
+
+                user.setGender(rs.getString("gender"));
+                user.setProfileImage(rs.getString("profile_image"));
+                user.setIsActive(rs.getInt("is_active"));
+
+                if (rs.getTimestamp("created_at") != null) {
+                    user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                }
+
+                if (rs.getTimestamp("updated_at") != null) {
+                    user.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+                }
+
+                return user;
+            });
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
 	

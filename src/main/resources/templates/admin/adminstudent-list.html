@@ -146,18 +146,35 @@
                                     <tr th:each="student, stat : ${students}">
                                         <td class="ps-4 text-center fw-medium text-secondary" th:text="${stat.count}">1</td>
 
-                                        <!-- Profile Image -->
-                                        <td class="text-center">
+                                        <!-- <!-- Profile Image -->
+                                       <!--  <td class="text-center">
                                             <img th:if="${student.profileImage != null}" 
                                                  th:src="@{${student.profileImage}}" 
                                                  width="45" height="45" 
                                                  class="rounded-circle object-fit-cover border shadow-sm" alt="Student Profile">
+ -->
+<!-- Profile Image Column -->
+<td class="text-center">
+    <!-- ပုံရှိပါက ပုံပြမည် (Load မတက်ပါက onerror ဖြင့် hide လုပ်မည်) -->
+    <img th:if="${student.profileImage != null and !#strings.isEmpty(student.profileImage)}" 
+         th:src="@{${student.profileImage}}" 
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
+         width="45" height="45" 
+         class="rounded-circle object-fit-cover border shadow-sm" alt="Profile">
 
+    <!-- ပုံမရှိပါက သို့မဟုတ် Load မတက်ပါက Icon Placeholder ပြမည် -->
+    <div th:if="${student.profileImage == null or #strings.isEmpty(student.profileImage)}" 
+         class="rounded-circle profile-img-placeholder border shadow-sm mx-auto"
+         th:style="${student.profileImage != null and !#strings.isEmpty(student.profileImage)} ? 'display:none;' : ''">
+        <i class="bi bi-person-fill fs-5"></i>
+    </div>
+</td>
+<!-- 
                                             <div th:unless="${student.profileImage != null}" 
                                                  class="rounded-circle profile-img-placeholder border shadow-sm mx-auto">
                                                 <i class="bi bi-person-fill fs-5"></i>
                                             </div>
-                                        </td>
+                                        </td> -->
 
                                         <td class="fw-bold text-dark" th:text="${student.name}">Student Name</td>
                                         <td class="text-secondary small" th:text="${student.email}">student@email.com</td>

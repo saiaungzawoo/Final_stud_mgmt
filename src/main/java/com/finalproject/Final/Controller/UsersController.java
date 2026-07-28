@@ -52,9 +52,7 @@ public class UsersController {
      UserBean user = new UserBean();
         user.setGender("Male");   // Default selected
         m.addAttribute("userObj", user);
-     // m.addAttribute("userObj", new UserBean());
-      
-     // return "student_register";
+     
       return "student/student_register";
   }
   
@@ -63,7 +61,7 @@ public class UsersController {
      UserBean user = uRepo.getLatestStudent();
       m.addAttribute("userObj",user);
       
-     //return "success";
+  
      return "student/success";
   }
   
@@ -110,7 +108,7 @@ public class UsersController {
 
               m.addAttribute("error", "Invalid image file");
               return "student/student_register";
-              //return "student_register";
+            
           }
           
           BufferedImage image = ImageIO.read(photo.getInputStream());
@@ -118,7 +116,7 @@ public class UsersController {
               m.addAttribute("error",
                       "Invalid image file");
               return "student/student_register";
-             // return "student_register";
+            
               }
         String fileName = photo.getOriginalFilename();
  String path = "D:/upload/";
@@ -137,14 +135,17 @@ public class UsersController {
           m.addAttribute("emailError",
                   "Email already exists");
           return "student/student_register";
-          //return "student_register";
+         
       }
         
      // Generate UUID for user
         obj.setUserID(UUID.randomUUID().toString());
+     // Get Student Role ID from role table
+        String studentRoleId = uRepo.getRoleIdByName("Student");
+        obj.setRoleID(studentRoleId);
 
         // Student Role UUID (Replace with your actual Student role UUID)
-        obj.setRoleID("3c2f4396-7a84-11f1-bfcb-b4b686e7f920");
+       // obj.setRoleID("3c2f4396-7a84-11f1-bfcb-b4b686e7f920");
 
         obj.setIsActive(1);
 
@@ -159,7 +160,7 @@ public class UsersController {
         m.addAttribute("userObj", obj);
 
         return "student/success";
-        //return"success";
+       
     }
     
   @PostMapping("/update")
@@ -214,8 +215,7 @@ public class UsersController {
 
       // Email Duplicate Check
       UserBean emailUser = uRepo.getUserByEmail(userObj.getEmail());
-
-      if (uRepo.existsByEmailAndNotUserId(
+if (uRepo.existsByEmailAndNotUserId(
               userObj.getEmail(),
               userObj.getUserID())) {
 
@@ -324,9 +324,6 @@ public class UsersController {
       return "student/student_edit";
     //  return "student_edit";
   }
-  
-  
-
 
   @GetMapping("/profile")
   public String profile(HttpSession session, Model model) {
@@ -339,9 +336,7 @@ public class UsersController {
 
       // Database ထဲက latest data ပြန်ယူချင်ရင်
       UserBean userObj = uRepo.getUserByEmail(loginUser.getEmail());
-      
-      
-      model.addAttribute("userObj", userObj);
+   model.addAttribute("userObj", userObj);
 
      return "student/student-profile";
       //return "student-profile";
@@ -369,4 +364,157 @@ public class UsersController {
 
       return "admin/adminstudent-detail";
   }
+  
+  
+  //add
+  //admin profile
+  @GetMapping("/admin/profile")
+  public String adminProfile(HttpSession session, Model model) {
+
+      UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+      if (loginUser == null) {
+          return "redirect:/login";
+      }
+
+      UserBean admin = uRepo.getUserById(loginUser.getUserID());
+
+      model.addAttribute("adminObj", admin);
+
+      return "admin/admin-profile";
+  }
+  //admin profile edit 
+  @GetMapping("/admin/profile/edit")
+  public String editAdminProfile(HttpSession session, Model model) {
+
+      UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+      if (loginUser == null) {
+          return "redirect:/login";
+      }
+
+      UserBean admin = uRepo.getUserById(loginUser.getUserID());
+
+      model.addAttribute("adminObj", admin);
+
+      return "admin/adminprofile-edit";
+  }
+  
+  //admin profile update
+  @PostMapping("/admin/profile/update")
+  public String updateAdmin(
+           @ModelAttribute("adminObj") UserBean adminObj,
+          BindingResult result,
+          @RequestParam("photo") MultipartFile photo,
+          Model model,
+          HttpSession session) throws IOException {
+
+	// Password validation only if user enters a new password
+      if (adminObj.getPassword() != null && !adminObj.getPassword().isBlank()) {
+          String password = adminObj.getPassword();
+
+          if (password.length() < 6) {
+        	  result.rejectValue("password", "error.password",
+                      "Password must be at least 6 characters long.");
+          }
+
+          if (!password.matches(".*[A-Za-z].*")) {
+        	  result.rejectValue("password", "error.password",
+                      "Password must contain at least one letter.");
+          }
+
+          if (!password.matches(".*\\d.*")) {
+        	  result.rejectValue("password", "error.password",
+                      "Password must contain at least one number.");
+          }
+      }
+      if (result.hasErrors()) {
+          return "admin/adminprofile-edit";
+      }
+ UserBean oldAdmin = uRepo.getUserById(adminObj.getUserID());
+
+      if (oldAdmin == null) {
+          model.addAttribute("error", "Admin not found.");
+          return "admin/adminprofile-edit";
+      }
+
+      // Email duplicate
+      if (uRepo.existsByEmailAndNotUserId(
+              adminObj.getEmail(),
+              adminObj.getUserID())) {
+
+          model.addAttribute("emailError",
+                  "Email already exists.");
+
+          return "admin/adminprofile-edit";
+      }
+
+      // Upload image
+      if (photo != null && !photo.isEmpty()) {
+
+          long maxSize = 2 * 1024 * 1024;
+
+          if (photo.getSize() > maxSize) {
+              model.addAttribute("error",
+                      "Photo must not exceed 2 MB.");
+              return "admin/adminprofile-edit";
+          }
+
+          String type = photo.getContentType();
+
+          if (type == null ||
+                  !(type.equals("image/jpeg")
+                  || type.equals("image/png"))) {
+
+              model.addAttribute("error",
+                      "Only JPG and PNG are allowed.");
+
+              return "admin/adminprofile-edit";
+          }
+
+          String uploadDir = "D:/upload/";
+
+          File dir = new File(uploadDir);
+
+          if (!dir.exists()) {
+              dir.mkdirs();
+          }
+
+          String fileName =
+                  UUID.randomUUID() + "_" + photo.getOriginalFilename();
+
+          photo.transferTo(new File(dir, fileName));
+
+          adminObj.setProfileImage("/upload/" + fileName);
+
+      } else {
+
+          adminObj.setProfileImage(oldAdmin.getProfileImage());
+
+      }
+
+      // Password
+      if (adminObj.getPassword() == null ||
+              adminObj.getPassword().isBlank()) {
+
+          adminObj.setPassword(oldAdmin.getPassword());
+
+      } else {
+
+          adminObj.setPassword(
+                  passwordEncoder.encode(adminObj.getPassword()));
+      }
+
+      adminObj.setRoleID(oldAdmin.getRoleID());
+      adminObj.setCreatedAt(oldAdmin.getCreatedAt());
+      adminObj.setUpdatedAt(LocalDateTime.now());
+      adminObj.setIsActive(oldAdmin.getIsActive());
+
+      uRepo.updateUser(adminObj);
+
+      session.setAttribute("loginUser", adminObj);
+
+      return "redirect:/admin/profile";
+  }
+ 
 }
