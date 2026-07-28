@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}">
+</head>
+  <!-- Google Fonts (လက်မှတ် handwritten font များ) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- Fragment CSS -->
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <style>
+        .certificate-preview {
+            background: #f8fbff !important;
+            border: 10px solid #0d47a1 !important;
+            padding: 60px !important;
+            min-height: 600px;
+            position: relative;
+            box-shadow: 0 0 0 5px #90caf9, 0 0 0 10px #0d47a1 !important;
+        }
+
+        .certificate-preview:before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #1976d2;
+        }
+
+        .academy-name {
+            position: relative;
+            color: #0d47a1 !important;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 6px;
+        }
+
+        .certificate-title {
+            position: relative;
+            color: #1565c0 !important;
+            font-size: 48px !important;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+        .certificate-subtitle {
+            position: relative;
+            color: #333;
+            letter-spacing: 8px;
+            font-size: 24px;
+        }
+
+        .student-name {
+            position: relative;
+            color: #0d47a1 !important;
+            font-size: 55px !important;
+            font-family: Georgia, serif;
+            font-weight: bold;
+        }
+
+        .course-name {
+            position: relative;
+            color: #1976d2 !important;
+            font-size: 30px !important;
+            font-style: italic;
+        }
+
+        .info-box {
+            position: relative;
+            margin-top: 40px;
+        }
+
+        .info-box h4 {
+            color: #0d47a1;
+            font-size: 26px;
+        }
+        .col-md-6.text-center:first-child {
+
+    text-align: center !important;
+
+}
+
+        /* Fake Signature Style (လက်မှတ် အစစ်နှင့်တူအောင်) */
+       /* Fake Signature Style (လက်မှတ် အစစ်နှင့်တူအောင်) */
+.fake-signature {
+    font-family: 'Great Vibes', 'Dancing Script', cursive !important;
+    font-size: 38px !important;
+    font-weight: bold !important;
+    color: #0b3c5d !important; /* မင်ပြာရောင် Dark Ink Blue */
+    transform: rotate(-4deg);
+    display: inline-block;
+    margin-bottom: -5px;
+    line-height: 1.2;
+}
+
+/* Clean Signature Line */
+.signature-line {
+    width: 180px;
+    border-top: 1.5px solid #0d47a1 !important;
+    margin: 5px auto 0 auto !important;
+}
+    </style>
+<body>
+
+
+<!-- Header -->
+<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
+
+
+
+<div class="container-fluid px-2 px-md-4">
+
+    <div class="row g-3">
+
+
+        <!-- Sidebar -->
+        <div class="col-12 col-md-3 col-lg-2">
+
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
+            </div>
+
+        </div>
+
+
+
+        <!-- Content -->
+        <div class="col-12 col-md-9 col-lg-10">
+
+
+         <div class="card shadow ms-3">
+
+                <div class="card-header bg-primary text-white 
+                            d-flex flex-column flex-md-row 
+                            justify-content-between 
+                            align-items-md-center gap-2">
+
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-award me-2"></i>
+
+                        Generated Certificates
+
+                    </h5>
+
+
+
+                    <a th:href="@{/teacher/certificate/list}"
+                       class="btn btn-light btn-sm">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Generate Certificate
+
+                    </a>
+
+
+                </div>
+
+
+
+              <div class="card-body ps-5">
+
+  <div class="mb-3">
+
+        <input type="text"
+               id="certificateSearch"
+               class="form-control"
+               placeholder="Search Student or Course...">
+
+    </div>
+
+                    <!-- Responsive Table -->
+
+                   <div class="table-responsive">
+
+    <table class="table table-sm table-bordered table-hover">
+              <thead class="table-primary">
+
+
+                            <tr>
+
+                                <th>No</th>
+
+                                <th>Student</th>
+
+                                <th>Course</th>
+
+                                <th>Certificate No</th>
+
+                                <th>Grade</th>
+
+                                <th>Score</th>
+
+                                <th>Issue Date</th>
+
+                                <th>Action</th>
+
+
+                            </tr>
+
+
+                            </thead>
+
+
+
+                            <tbody>
+
+
+                           <tr class="certificate-row"
+    th:each="certificate, stat : ${certificateList}">
+
+                                <td th:text="${stat.count}">
+                                </td>
+
+
+                               <td class="certificate-text"
+    th:text="${certificate.studentName}">
+</td>
+
+                               <td class="certificate-text"
+    th:text="${certificate.courseName}">
+</td>
+
+                                <td th:text="${certificate.certificateNumber}">
+                                </td>
+
+
+                                <td>
+
+                                    <span class="badge bg-success"
+                                          th:text="${certificate.letterGrade}">
+                                    </span>
+
+                                </td>
+
+
+
+                                <td th:text="${certificate.finalScore}">
+                                </td>
+
+
+                                <td th:text="${certificate.issueDate}">
+                                </td>
+
+
+
+                                <td>
+
+
+                                    <div class="d-flex gap-1">
+
+
+                                           <button class="btn btn-primary btn-sm"
+                data-bs-toggle="modal"
+                th:data-bs-target="'#certificateModal'+${certificate.certificateID}">
+
+            <i class="bi bi-eye"></i>
+
+        </button>
+
+
+                                        <a class="btn btn-success btn-sm"
+                                           th:href="@{/teacher/certificate/download/{id}(id=${certificate.certificateID})}">
+
+
+                                            <i class="bi bi-download"></i>
+
+                                        </a>
+
+
+                                    </div>
+
+
+                                </td>
+
+<!-- Certificate Preview Modal -->
+
+<div class="modal fade"
+     th:id="'certificateModal'+${certificate.certificateID}"
+     tabindex="-1">
+
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Certificate Preview
+                </h5>
+
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+<div class="modal-body">
+
+
+    <div class="border p-5 text-center certificate-preview">
+
+
+        <h1 class="fw-bold text-primary">
+            ACE ACADEMY
+        </h1>
+
+
+        <h2 class="fw-bold">
+            CERTIFICATE OF COMPLETION
+        </h2>
+
+
+        <hr>
+
+
+        <p class="mt-4">
+            This certificate is proudly presented to
+        </p>
+
+
+        <h2 class="fw-bold text-primary"
+            th:text="${certificate.studentName}">
+            Student Name
+        </h2>
+
+
+
+        <p class="mt-3">
+            For successfully completing
+        </p>
+
+
+
+        <h3 class="fw-bold"
+            th:text="${certificate.courseName}">
+            Course Name
+        </h3>
+
+
+
+
+        <div class="row mt-5">
+
+
+            <div class="col-md-4">
+
+                <strong>
+                    Final Score
+                </strong>
+
+                <h5 th:text="${certificate.finalScore}">
+                </h5>
+
+            </div>
+
+
+
+            <div class="col-md-4">
+
+                <strong>
+                    Grade
+                </strong>
+
+                <h5 th:text="${certificate.letterGrade}">
+                </h5>
+
+            </div>
+
+
+
+            <div class="col-md-4">
+
+                <strong>
+                    Issue Date
+                </strong>
+
+                <h5 th:text="${certificate.issueDate}">
+                </h5>
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <div class="mt-4">
+
+            Certificate No :
+
+            <span class="fw-bold"
+                  th:text="${certificate.certificateNumber}">
+            </span>
+
+
+        </div>
+
+
+
+
+        <!-- Signature Area -->
+
+        <div class="row mt-5 align-items-end">
+
+
+
+            <!-- Teacher -->
+
+            <div class="col-md-6 text-center">
+
+
+                <p class="mb-1 fw-bold">
+                    Issued By
+                </p>
+
+
+                <div class="fake-signature">
+
+                    <span th:text="${certificate.issuedByName}">
+                        Teacher Name
+                    </span>
+
+                </div>
+
+
+
+                <div class="signature-line"></div>
+
+
+
+                <small class="text-muted">
+                    Instructor
+                </small>
+
+
+            </div>
+
+
+
+
+
+            <!-- Director -->
+
+            <div class="col-md-6 text-center">
+
+
+                <div class="fake-signature">
+                    A. Johnson
+                </div>
+
+
+
+                <div class="signature-line"></div>
+
+
+
+                <small class="text-muted">
+                    Director Signature
+                </small>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+</div>
+
+            <div class="modal-footer">
+
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+
+                <a class="btn btn-success"
+                   th:href="@{/teacher/certificate/download/{id}(id=${certificate.certificateID})}">
+
+                    Download PDF
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+                            </tr>
+
+
+
+                            <tr th:if="${#lists.isEmpty(certificateList)}">
+
+                                <td colspan="8"
+                                    class="text-center text-muted py-4">
+
+
+                                    <i class="bi bi-file-earmark-x fs-3"></i>
+
+                                    <br>
+
+                                    No Generated Certificate Found
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            </tbody>
+
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
+
+<div th:replace="~{fragment/js :: js}"></div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+
+    let search =
+    document.getElementById("certificateSearch");
+
+
+    if(search){
+
+
+        search.addEventListener("keyup", function(){
+
+
+            let keyword =
+            this.value.toLowerCase();
+
+
+
+            document.querySelectorAll(".certificate-row")
+            .forEach(function(row){
+
+
+                let text =
+                row.innerText.toLowerCase();
+
+
+
+                if(text.includes(keyword)){
+
+                    row.style.display="";
+
+                }else{
+
+                    row.style.display="none";
+
+                }
+
+
+            });
+
+
+        });
+
+
+    }
+
+
+});
+
+</script>
+</body>
+
+</html>

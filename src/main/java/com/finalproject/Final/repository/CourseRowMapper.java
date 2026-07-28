@@ -39,7 +39,16 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
 
 	    c.setAllowedInstallment(rs.getInt("allow_installment"));
 	    c.setAllowedScholarship(rs.getInt("allow_scholarship"));
+	    c.setIsActive(rs.getInt("is_active"));
+	    
+   
 
+
+	    	c.setDeletedByID(
+	    	    rs.getString("deletedByID")
+	    	);
+
+	    c.setCreatedBy(rs.getString("createdByID"));
 	    if (hasColumn(rs, "subcategory_name")) {
 	        c.setSubcategoryName(rs.getString("subcategory_name"));
 	    }
@@ -58,6 +67,10 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
 
 	    if (rs.getTimestamp("updated_at") != null) {
 	        c.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+	    }
+	    
+	    if (rs.getTimestamp("deleted_at") != null) {
+	        c.setDeletedAt(rs.getTimestamp("deleted_at").toLocalDateTime());
 	    }
 
 	    return c;

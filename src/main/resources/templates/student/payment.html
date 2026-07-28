@@ -180,7 +180,11 @@ MMK
 <input
     type="hidden"
     name="installmentRuleId"
-    th:value="${installmentRule.installmentRuleId}">       
+    th:value="${installmentRule.installmentRuleId}"> 
+    
+   <!--  th:value="${installmentRule != null ? installmentRule.installmentRuleId : ''}"  --> 
+    
+        
 
 
 

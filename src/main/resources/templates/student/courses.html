@@ -54,12 +54,13 @@
                     </div>
                     <div class="col-6">
                       <small class="text-muted d-block">Duration</small>
-                      <strong th:text="${course.durationWeeks}"></strong>
+                      <strong th:text="${course.durationWeeks} + ' weeks'" ></strong>
                     </div>
 
                     <div class="col-6 mt-2">
                       <small class="text-muted d-block">Fee</small>
-                      <strong th:text="'MMK ' + ${course.fee}"></strong>
+                      
+                      <strong th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')} + ' MMK'"></strong>
                     </div>
 
                     <div class="col-6 mt-2">
