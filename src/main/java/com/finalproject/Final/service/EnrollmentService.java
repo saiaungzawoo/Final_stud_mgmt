@@ -247,6 +247,20 @@ public class EnrollmentService {
 	    return repo.getEnrolledCourses(userId);
 
 	}
+	
+	public List<CourseBean> searchMyCourses(
+	        String userId,
+	        String keyword,
+	        String categoryId
+	){
+
+	    return repo.searchMyCourses(
+	            userId,
+	            keyword,
+	            categoryId
+	    );
+
+	}
 
 	
 	public int countEnrolledStudents(String courseId) {

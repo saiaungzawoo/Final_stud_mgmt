@@ -123,123 +123,108 @@
 
 								<hr>
 
-<div th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
+								<div th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
 
-    <h5 class="mb-3">Payment Progress</h5>
+									<h5 class="mb-3">Payment Progress</h5>
 
-    <table class="table table-borderless">
+									<table class="table table-borderless">
 
-        <tr>
-            <th>Course Fee</th>
-            <td>
-                MMK
-                <span th:text="${#numbers.formatDecimal(payment.courseFee,0,'COMMA',0,'POINT')}"></span>
-            </td>
-        </tr>
+										<tr>
+											<th>Course Fee</th>
+											<td>MMK <span
+												th:text="${#numbers.formatDecimal(payment.courseFee,0,'COMMA',0,'POINT')}"></span>
+											</td>
+										</tr>
 
-        <tr>
-            <th>Paid So Far</th>
-            <td>
-                MMK
-                <span th:text="${#numbers.formatDecimal(payment.totalPaid,0,'COMMA',0,'POINT')}"></span>
-            </td>
-        </tr>
+										<tr>
+											<th>Paid So Far</th>
+											<td>MMK <span
+												th:text="${#numbers.formatDecimal(payment.totalPaid,0,'COMMA',0,'POINT')}"></span>
+											</td>
+										</tr>
 
-        <tr>
-            <th>Remaining Balance</th>
-            <td>
-                MMK
-                <span th:text="${#numbers.formatDecimal(payment.remainingBalance,0,'COMMA',0,'POINT')}"></span>
-            </td>
-        </tr>
+										<tr>
+											<th>Remaining Balance</th>
+											<td>MMK <span
+												th:text="${#numbers.formatDecimal(payment.remainingBalance,0,'COMMA',0,'POINT')}"></span>
+											</td>
+										</tr>
 
-        <tr>
-            <th>Completed</th>
-            <td>
+										<tr>
+											<th>Completed</th>
+											<td><span th:text="${payment.completedInstallments}"></span>
 
-                <span th:text="${payment.completedInstallments}"></span>
+												/ <span th:text="${payment.totalInstallments}"></span>
 
-                /
+												Installments</td>
+										</tr>
 
-                <span th:text="${payment.totalInstallments}"></span>
+									</table>
 
-                Installments
+								</div>
 
-            </td>
-        </tr>
+								<div th:if="${payment.nextInstallmentNumber != null}">
 
-    </table>
+									<hr>
 
-</div>
+									<h5 class="mb-3">Next Installment</h5>
 
-<div th:if="${payment.nextInstallmentNumber != null}">
+									<table class="table table-borderless">
 
-    <hr>
+										<tr>
+											<th>Installment</th>
+											<td># <span th:text="${payment.nextInstallmentNumber}"></span>
 
-    <h5 class="mb-3">
-        Next Installment
-    </h5>
+											</td>
+										</tr>
 
-    <table class="table table-borderless">
+										<tr>
+											<th>Amount</th>
+											<td>MMK <span
+												th:text="${#numbers.formatDecimal(payment.nextInstallmentAmount,0,'COMMA',0,'POINT')}"></span>
 
-        <tr>
-            <th>Installment</th>
-            <td>
+											</td>
+										</tr>
 
-                #
-                <span th:text="${payment.nextInstallmentNumber}"></span>
+										<tr>
+											<th>Due Date</th>
+											<td th:text="${payment.nextDueDate}"></td>
+										</tr>
 
-            </td>
-        </tr>
+									</table>
 
-        <tr>
-            <th>Amount</th>
-            <td>
+								</div>
 
-                MMK
+								<div class="text-center text-muted small mt-4">
 
-                <span th:text="${#numbers.formatDecimal(payment.nextInstallmentAmount,0,'COMMA',0,'POINT')}"></span>
+									<span th:if="${payment.paymentTypeName == 'FULL_PAYMENT'}">
 
-            </td>
-        </tr>
+										Thank you for your payment. This course has been fully paid. </span>
 
-        <tr>
-            <th>Due Date</th>
-            <td th:text="${payment.nextDueDate}">
-            </td>
-        </tr>
+									<span th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
 
-    </table>
+										Thank you for your installment payment. Please complete the
+										remaining installments before their due dates. </span>
 
-</div>
+								</div>
 
-<div class="text-center text-muted small mt-4">
+								
 
-    <span
-    th:if="${payment.paymentTypeName == 'FULL_PAYMENT'}">
-
-        Thank you for your payment.
-        This course has been fully paid.
-
-    </span>
-
-    <span
-    th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
-
-        Thank you for your installment payment.
-        Please complete the remaining installments before their due dates.
-
-    </span>
-
-</div>
+							</div>
 
 						</div>
-
+						<div class="text-center mt-4">
+    <a th:href="@{/student/portal}" class="btn btn-primary">
+        Go to Student Portal
+    </a>
+</div>
 					</div>
+					
+						
 				</div>
-
-			</div>
+				
 		</section>
+		
 
 	</main>
 
