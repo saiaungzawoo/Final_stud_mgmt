@@ -18,7 +18,7 @@ public class CourseBean {
     private String name;
     private String description;
     
-    private int durationWeeks;
+    private Integer durationWeeks;
     
     private String subcategoryName;
     private String categoryName;	
@@ -37,13 +37,20 @@ public class CourseBean {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    
+    private LocalDateTime deletedAt;
+
+    private String deletedByID;
 
     private String thumbnailPath;
     
-    private int allowedInstallment;
+    private Integer allowedInstallment;
     
-    private int allowedScholarship;
+    private Integer allowedScholarship;
     
-    private int seatsTotal;
-    private int seatsAvailable;
+    private Integer seatsTotal;
+    private Integer seatsAvailable;
+    
+    private Integer isActive;
+    
 }

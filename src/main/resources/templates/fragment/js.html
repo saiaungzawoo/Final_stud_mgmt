@@ -2,4 +2,101 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="js">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+document.getElementById("classSearch")
+.addEventListener("keyup", function(){
+
+
+    let keyword = this.value.toLowerCase();
+
+
+    let cards = document.querySelectorAll(".class-card");
+
+
+    cards.forEach(function(card){
+
+
+        let name =
+        card.querySelector(".class-name")
+            .innerText
+            .toLowerCase();
+
+
+
+        if(name.includes(keyword)){
+
+            card.style.display="block";
+
+        }else{
+
+            card.style.display="none";
+
+        }
+
+
+    });
+
+
+});
+
+
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+
+    let searchBox = document.getElementById("courseSearch");
+
+
+    if(searchBox){
+
+
+        searchBox.addEventListener("keyup", function(){
+
+
+            let keyword = this.value.toLowerCase();
+
+
+
+            let cards = document.querySelectorAll(".course-card");
+
+
+
+            cards.forEach(function(card){
+
+
+                let name =
+                    card.querySelector(".course-name")
+                    .innerText
+                    .toLowerCase();
+
+
+
+                if(name.includes(keyword)){
+
+                    card.style.display = "";
+
+                }else{
+
+                    card.style.display = "none";
+
+                }
+
+
+            });
+
+
+        });
+
+
+    }
+
+
+});
+
+
+</script>
+
 </div>

@@ -24,6 +24,14 @@ public class InstallmentRuleService {
         return repository.findByCourseId(courseId);
 
     }
+    
+    public void createRule(
+            InstallmentRuleBean rule
+    ){
+
+        repository.save(rule);
+
+    }
 
 
 }

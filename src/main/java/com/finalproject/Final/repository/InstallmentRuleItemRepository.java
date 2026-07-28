@@ -44,6 +44,41 @@ public class InstallmentRuleItemRepository {
 
 
     }
+    
+    public void save(
+            InstallmentRuleItemBean item
+    ) {
+
+
+        String sql =
+        """
+        INSERT INTO installment_rule_item
+        (
+            installmentRuleItemID,
+            installmentRuleID,
+            installment_number,
+            amount,
+            due_date,
+            created_at
+        )
+        VALUES
+        (?, ?, ?, ?, ?, NOW())
+        """;
+
+
+        jdbc.update(
+            sql,
+
+            item.getInstallmentRuleItemId(),
+            item.getInstallmentRuleId(),
+            item.getInstallmentNumber(),
+            item.getAmount(),
+            item.getDueDate()
+
+        );
+
+
+    }
 
 
 }

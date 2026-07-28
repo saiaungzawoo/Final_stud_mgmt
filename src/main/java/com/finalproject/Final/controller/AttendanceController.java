@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.finalproject.Final.model.AttendanceBean;
 import com.finalproject.Final.model.AttendanceFormBean;
 import com.finalproject.Final.model.ScheduleBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.AttendanceRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -43,22 +46,28 @@ public class AttendanceController {
     }
     @PostMapping("/save")
     public String saveAttendance(
-            @ModelAttribute AttendanceFormBean attendanceForm) {
+            @ModelAttribute AttendanceFormBean attendanceForm,HttpSession session) {
     
+    	
+    	  UserBean loginUser =
+    	            (UserBean) session.getAttribute("loginUser");
 
-        for (AttendanceBean attendance : attendanceForm.getAttendances()) {
+    	    String teacherID = loginUser.getUserID();
 
-            attendance.setCheckInTime(LocalTime.now());
 
-            if(attendanceRepository.attendanceExists(
-                    attendance.getScheduleID(),
-                    attendance.getUserID())){
+    	    for (AttendanceBean attendance : attendanceForm.getAttendances()) {
 
-                attendanceRepository.updateAttendance(attendance);
+                attendance.setCheckInTime(LocalTime.now());
 
-            }else{
+                if(attendanceRepository.attendanceExists(
+                        attendance.getScheduleID(),
+                        attendance.getUserID())){
 
-                attendanceRepository.saveAttendance(attendance);
+                    attendanceRepository.updateAttendance(attendance,teacherID);
+
+                }else{
+
+                attendanceRepository.saveAttendance(attendance,teacherID);
 
             }
         }
@@ -66,10 +75,12 @@ public class AttendanceController {
         return "redirect:/attendance/list";
     }
     @GetMapping("/list")
-    public String attendanceHome(Model model) {
+    public String attendanceHome(Model model,HttpSession session) {
+    	
+    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
-        String teacherID = "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
-
+ 	    String teacherID = loginUser.getUserID();
+     
         model.addAttribute(
                 "courseList",
                 attendanceRepository.getTeacherCourses(teacherID)
@@ -158,10 +169,11 @@ public class AttendanceController {
 
     }
     @GetMapping("/students")
-    public String studentCourseList(Model model){
+    public String studentCourseList(Model model,HttpSession session){
 
-        String teacherID =
-        "00ee5b4b-7a6f-11f1-8f4f-183d2d227d02";
+    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+  	    String teacherID = loginUser.getUserID();
 
 
         model.addAttribute(

@@ -367,5 +367,22 @@ public class EnrollmentRepository {
 
 		return jdbc.query(sql, new CourseRowMapper(), userId);
 	}
+	
+	
+	public int countEnrolledStudents(String courseId) {
+
+	    String sql = """
+	        SELECT COUNT(*)
+	        FROM enrollment
+	        WHERE courseID = ?
+	        AND status IN ('Pending', 'Active', 'Completed')
+	        """;
+
+	    return jdbc.queryForObject(
+	            sql,
+	            Integer.class,
+	            courseId
+	    );
+	}
 
 }

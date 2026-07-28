@@ -40,6 +40,9 @@ public class LoginController {
             session.setAttribute("loginUser", user);
 
             session.setAttribute("userID", user.getUserID());
+            
+         // Session timeout 30 minutes
+            session.setMaxInactiveInterval(30 * 60);
 
 
             String role = user.getRoleName();
@@ -67,16 +70,7 @@ public class LoginController {
        
 
 
-//        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-//        	
-//        	//test
-////        	System.out.println("USER: " + user.getName());
-////        	System.out.println("ROLE: " + user.getRoleName());
-//
-//            session.setAttribute("loginUser", user);
-//            
-//            session.setAttribute("userID", user.getUserID());//use for scholarship
-//            return "redirect:/home";
+
         
        
   m.addAttribute("error", "Invalid email or password");
