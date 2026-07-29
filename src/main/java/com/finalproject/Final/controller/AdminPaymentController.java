@@ -9,12 +9,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.finalproject.Final.model.PaymentBean;
 import com.finalproject.Final.model.PaymentHistoryBean;
 import com.finalproject.Final.model.PaymentStatisticsBean;
 import com.finalproject.Final.service.PaymentService;
+
+
 
 
 @Controller
@@ -28,47 +31,48 @@ public class AdminPaymentController {
 
 
     @GetMapping
-    public String paymentManagement(Model model){
+    public String paymentManagement(
+    		@RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String paymentType,
+    		
+    		Model model){
+    	
+    	
 
 
-        List<PaymentBean> payments =
+//        List<PaymentBean> payments =
+//                paymentService.getAllPayments();
+        
+        List<PaymentBean> payments;
+
+
+
+        if(
+            (keyword == null || keyword.isBlank())
+            &&
+            (paymentType == null || paymentType.isBlank())
+        ){
+
+            payments =
                 paymentService.getAllPayments();
+
+        }
+        else{
+
+            payments =
+                paymentService.searchPayments(
+                        keyword,
+                        paymentType
+                );
+
+        }
         
         PaymentStatisticsBean stats =
                 paymentService.getPaymentStatistics();
         
-        //test
-//        System.out.println(payments.size());
-//
-//        for(PaymentBean p : payments){
-//
-//            System.out.println(
-//                p.getStudentName()
-//                +" | "
-//                +p.getCourseName()
-//                +" | "
-//                +p.getAmount()
-//            );
-//
-//        }
         
         
-        System.out.println(
-        	    "Collected: "
-        	    + stats.getCollectedAmount()
-        	);
-
-
-        	System.out.println(
-        	    "Outstanding: "
-        	    + stats.getOutstandingAmount()
-        	);
-
-
-        	System.out.println(
-        	    "Pending: "
-        	    + stats.getPendingPayment()
-        	);
+        
 
 
         model.addAttribute(
@@ -80,6 +84,18 @@ public class AdminPaymentController {
                 "stats",
                 stats
         );
+        
+        model.addAttribute(
+                "keyword",
+                keyword
+        );
+
+
+        model.addAttribute(
+                "paymentType",
+                paymentType
+        );
+
 
 
 
