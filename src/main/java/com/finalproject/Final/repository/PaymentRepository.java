@@ -1,5 +1,6 @@
 package com.finalproject.Final.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -378,6 +379,120 @@ public class PaymentRepository {
 	            new PaymentHistoryRowMapper(),
 	            enrollmentId
 	    );
+
+	}
+	
+	
+	public List<PaymentBean> searchPayments(
+	        String keyword,
+	        String paymentType
+	){
+
+	    StringBuilder sql = new StringBuilder("""
+	            
+	            SELECT
+	                p.*,
+
+	                pm.name AS paymentMethodName,
+	                pt.name AS paymentTypeName,
+
+	                u.name AS studentName,
+
+	                c.name AS courseName
+
+
+	            FROM payment p
+
+
+	            LEFT JOIN payment_method pm
+	            ON p.paymentMethodID = pm.paymentMethodID
+
+
+	            LEFT JOIN enrollment e
+	            ON p.enrollmentID = e.enrollmentID
+
+
+	            LEFT JOIN payment_type pt
+	            ON e.paymentTypeID = pt.paymentTypeID
+
+
+	            LEFT JOIN user u
+	            ON e.userID = u.userID
+
+
+	            LEFT JOIN course c
+	            ON e.courseID = c.courseID
+
+
+	            WHERE 1=1
+
+	            """
+	    );
+
+
+	    List<Object> params = new ArrayList<>();
+
+
+	    if(keyword != null && !keyword.trim().isEmpty()){
+
+
+	        sql.append("""
+	                
+	                AND (
+	                    p.transaction_reference LIKE ?
+	                    OR u.name LIKE ?
+	                    OR c.name LIKE ?
+	                )
+
+	                """
+	        );
+
+
+	        String search =
+	                "%" + keyword + "%";
+
+
+	        params.add(search);
+	        params.add(search);
+	        params.add(search);
+
+	    }
+
+
+
+	    if(paymentType != null 
+	            && !paymentType.trim().isEmpty()){
+
+
+	        sql.append("""
+	                
+	                AND pt.name = ?
+
+	                """
+	        );
+
+
+	        params.add(paymentType);
+
+	    }
+
+
+
+	    sql.append("""
+	            
+	            ORDER BY p.created_at DESC
+
+	            """
+	    );
+
+
+
+	    return jdbc.query(
+	            sql.toString(),
+	            new PaymentRowMapper(),
+	            params.toArray()
+	    );
+
 
 	}
 

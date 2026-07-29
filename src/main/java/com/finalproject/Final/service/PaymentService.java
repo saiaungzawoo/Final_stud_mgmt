@@ -339,6 +339,19 @@ public class PaymentService {
                 );
 
     }
+    
+    
+    public List<PaymentBean> searchPayments(
+            String keyword,
+            String paymentType
+    ){
+
+        return paymentRepository.searchPayments(
+                keyword,
+                paymentType
+        );
+
+    }
 
    
 

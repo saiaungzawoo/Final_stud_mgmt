@@ -5,415 +5,380 @@
 
 <body class="bg-light">
 
-<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
-   
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
 
 
 
 
 
-       
 
 
 
-        <!-- MAIN CONTENT -->
-       
 
 
-            <section class="section-pad">
+		<!-- MAIN CONTENT -->
 
 
-                <div class="container-xxl">
 
+		<section class="section-pad">
 
 
-                    <!-- PAGE HEADER -->
+			<div class="container-xxl">
 
-                    <div class="mb-4">
 
-                        <h2 class="fw-bold">
-                            Payment Management
-                        </h2>
 
-                        <p class="text-muted mb-0">
-                            View payment records and monitor student payment status.
-                        </p>
+				<!-- PAGE HEADER -->
 
-                    </div>
+				<div class="mb-4">
 
+					<h2 class="fw-bold">Payment Management</h2>
 
+					<p class="text-muted mb-0">View payment records and monitor
+						student payment status.</p>
 
+				</div>
 
-                    <!-- STATISTICS CARDS -->
 
-                    <div class="row g-4 mb-4">
 
 
-                        <!-- Collected Amount -->
+				<!-- STATISTICS CARDS -->
 
-                        <div class="col-md-4">
+				<div class="row g-4 mb-4">
 
-                            <div class="card border-0 shadow-sm h-100">
 
-                                <div class="card-body">
+					<!-- Collected Amount -->
 
+					<div class="col-md-4">
 
-                                    <div class="d-flex align-items-center">
+						<div class="card border-0 shadow-sm h-100">
 
+							<div class="card-body">
 
-                                        <div class="bg-success bg-opacity-10 rounded p-3 me-3">
 
-                                            <i class="bi bi-cash-stack text-success fs-2"></i>
+								<div class="d-flex align-items-center">
 
-                                        </div>
 
+									<div class="bg-success bg-opacity-10 rounded p-3 me-3">
 
-                                        <div>
+										<i class="bi bi-cash-stack text-success fs-2"></i>
 
-                                            <p class="text-muted mb-1">
-                                                Collected Amount
-                                            </p>
+									</div>
 
 
-                                            <h3 class="fw-bold mb-0"
-                                                th:text="${'MMK ' + #numbers.formatDecimal(stats.collectedAmount, 1, 'COMMA', 2, 'POINT')}">
-                                            </h3>
+									<div>
 
-                                        </div>
+										<p class="text-muted mb-1">Collected Amount</p>
 
 
-                                    </div>
+										<h3 class="fw-bold mb-0"
+											th:text="${'MMK ' + #numbers.formatDecimal(stats.collectedAmount, 1, 'COMMA', 2, 'POINT')}">
+										</h3>
 
+									</div>
 
-                                </div>
 
-                            </div>
+								</div>
 
 
-                        </div>
+							</div>
 
+						</div>
 
 
+					</div>
 
-                        <!-- Outstanding Amount -->
 
-                        <div class="col-md-4">
 
-                            <div class="card border-0 shadow-sm h-100">
 
+					<!-- Outstanding Amount -->
 
-                                <div class="card-body">
+					<div class="col-md-4">
 
+						<div class="card border-0 shadow-sm h-100">
 
-                                    <div class="d-flex align-items-center">
 
+							<div class="card-body">
 
-                                        <div class="bg-warning bg-opacity-10 rounded p-3 me-3">
 
-                                            <i class="bi bi-hourglass-split text-warning fs-2"></i>
+								<div class="d-flex align-items-center">
 
-                                        </div>
 
+									<div class="bg-warning bg-opacity-10 rounded p-3 me-3">
 
-                                        <div>
+										<i class="bi bi-hourglass-split text-warning fs-2"></i>
 
-                                            <p class="text-muted mb-1">
-                                                Outstanding Amount
-                                            </p>
+									</div>
 
 
-                                            <h3 class="fw-bold mb-0"
-                                                th:text="${'MMK ' + #numbers.formatDecimal(stats.outstandingAmount, 1, 'COMMA', 2, 'POINT')}">
-                                            </h3>
+									<div>
 
+										<p class="text-muted mb-1">Outstanding Amount</p>
 
-                                        </div>
 
+										<h3 class="fw-bold mb-0"
+											th:text="${'MMK ' + #numbers.formatDecimal(stats.outstandingAmount, 1, 'COMMA', 2, 'POINT')}">
+										</h3>
 
-                                    </div>
 
+									</div>
 
-                                </div>
 
+								</div>
 
-                            </div>
 
+							</div>
 
-                        </div>
 
+						</div>
 
 
+					</div>
 
-                        <!-- Pending Payment -->
 
-                        <div class="col-md-4">
 
 
-                            <div class="card border-0 shadow-sm h-100">
+					<!-- Pending Payment -->
 
+					<div class="col-md-4">
 
-                                <div class="card-body">
 
+						<div class="card border-0 shadow-sm h-100">
 
-                                    <div class="d-flex align-items-center">
 
+							<div class="card-body">
 
-                                        <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
 
-                                            <i class="bi bi-clock-history text-primary fs-2"></i>
+								<div class="d-flex align-items-center">
 
-                                        </div>
 
+									<div class="bg-primary bg-opacity-10 rounded p-3 me-3">
 
-                                        <div>
+										<i class="bi bi-clock-history text-primary fs-2"></i>
 
-                                            <p class="text-muted mb-1">
-                                                Pending Payment
-                                            </p>
+									</div>
 
 
-                                            <h3 class="fw-bold mb-0"
-                                                th:text="${stats.pendingPayment}">
-                                                0
-                                            </h3>
+									<div>
 
+										<p class="text-muted mb-1">Pending Payment</p>
 
-                                        </div>
 
+										<h3 class="fw-bold mb-0" th:text="${stats.pendingPayment}">
+											0</h3>
 
-                                    </div>
 
+									</div>
 
-                                </div>
 
+								</div>
 
-                            </div>
 
+							</div>
 
-                        </div>
 
+						</div>
 
 
-                    </div>
+					</div>
 
 
 
+				</div>
 
 
-                    <!-- PAYMENT LIST CARD -->
 
 
-                    <div class="card border-0 shadow-sm">
 
+				<!-- PAYMENT LIST CARD -->
 
-                        <div class="card-body">
 
+				<div class="card border-0 shadow-sm">
 
 
-                            <div class="d-flex justify-content-between align-items-center mb-4">
+					<div class="card-body">
 
 
-                                <h4 class="fw-bold mb-0">
-                                    Payment List
-                                </h4>
 
+						<div
+							class="d-flex justify-content-between align-items-center mb-4">
 
-                                <!-- Search later -->
 
-                                <div class="input-group w-auto">
+							<h4 class="fw-bold mb-0">Payment List</h4>
 
-                                    <input type="text"
-                                           class="form-control"
-                                           placeholder="Search payment">
 
+							<!-- Search later -->
 
-                                    <button class="btn btn-primary">
+							<form method="get" action="/admin/payment" class="d-flex gap-2">
 
-                                        <i class="bi bi-search"></i>
 
-                                    </button>
+								<div class="input-group w-auto">
 
 
-                                </div>
+									<input type="text" name="keyword" class="form-control"
+										placeholder="Search payment" th:value="${keyword}">
 
 
+									<button class="btn btn-primary">
 
-                            </div>
+										<i class="bi bi-search"></i>
 
+									</button>
 
 
+								</div>
 
 
-                            <div class="table-responsive">
 
+								<select name="paymentType" class="form-select">
 
-                                <table class="table table-hover align-middle">
 
+									<option value="">All Payment</option>
 
-                                    <thead class="table-light">
 
+									<option value="FULL_PAYMENT"
+										th:selected="${paymentType == 'FULL_PAYMENT'}">Full
+										Payment</option>
 
-                                        <tr>
 
-                                            <th>
-                                                Transaction ID
-                                            </th>
+									<option value="INSTALLMENT"
+										th:selected="${paymentType == 'INSTALLMENT'}">
 
+										Installment</option>
 
-                                            <th>
-                                                Student
-                                            </th>
 
+								</select>
 
-                                            <th>
-                                                Course
-                                            </th>
 
+							</form>
 
-                                            <th>
-                                                Payment Type
-                                            </th>
-                                            
-                                             <th>
-                                                Payment Method
-                                            </th>
 
 
-                                            <th>
-                                                Amount
-                                            </th>
+						</div>
 
 
-                                            <th>
-                                                Status
-                                            </th>
 
 
-                                            <th>
-                                                Date
-                                            </th>
 
+						<div class="table-responsive">
 
-                                            <th>
-                                                Action
-                                            </th>
 
+							<table class="table table-hover align-middle">
 
-                                        </tr>
 
+								<thead class="table-light">
 
-                                    </thead>
 
+									<tr>
 
+										<th>Transaction ID</th>
 
 
-                                    <tbody>
+										<th>Student</th>
 
 
-                                        <tr th:each="payment : ${payments}">
+										<th>Course</th>
 
 
-                                            <td th:text="${payment.transactionReference}">
-                                                TXN
-                                            </td>
+										<th>Payment Type</th>
 
+										<th>Payment Method</th>
 
-                                            <td th:text="${payment.studentName}">
-                                                Student
-                                            </td>
 
+										<th>Amount</th>
 
-                                            <td th:text="${payment.courseName}">
-                                                Course
-                                            </td>
 
+										<th>Status</th>
 
-                                            <td>
 
-                                                <span class="badge bg-primary"
-                                                      th:text="${payment.paymentTypeName}">
-                                                    Payment
-                                                </span>
+										<th>Date</th>
 
-                                            </td>
-                                            
-                                            <td th:text="${payment.paymentMethodName}">Method</td>
 
+										<th>Action</th>
 
-                                            <td th:text="${payment.amount} + ' MMK'">
-                                                0 MMK
-                                            </td>
 
+									</tr>
 
-                                            <td>
 
-                                                <span class="badge bg-success"
-                                                      th:text="${payment.status}">
-                                                    Success
-                                                </span>
+								</thead>
 
 
-                                            </td>
 
 
-                                            <td th:text="${payment.paymentDate}">
-                                                Date
-                                            </td>
+								<tbody>
 
 
-                                            <td>
+									<tr th:each="payment : ${payments}">
 
 
-                                                <a th:href="@{/admin/payment/detail/{id}(id=${payment.paymentId})}"
-                                                   class="btn btn-sm btn-outline-primary">
+										<td th:text="${payment.transactionReference}">TXN</td>
 
-                                                    View
 
-                                                </a>
+										<td th:text="${payment.studentName}">Student</td>
 
 
-                                            </td>
+										<td th:text="${payment.courseName}">Course</td>
 
 
-                                        </tr>
+										<td><span class="badge bg-primary"
+											th:text="${payment.paymentTypeName}"> Payment </span></td>
 
+										<td th:text="${payment.paymentMethodName}">Method</td>
 
 
+										<td th:text="${payment.amount} + ' MMK'">0 MMK</td>
 
 
-                                    </tbody>
+										<td><span class="badge bg-success"
+											th:text="${payment.status}"> Success </span></td>
 
 
-                                </table>
+										<td th:text="${payment.paymentDate}">Date</td>
 
 
-                            </div>
+										<td><a
+											th:href="@{/admin/payment/detail/{id}(id=${payment.paymentId})}"
+											class="btn btn-sm btn-outline-primary"> View </a></td>
 
 
+									</tr>
 
 
-                        </div>
 
 
-                    </div>
 
+								</tbody>
 
 
+							</table>
 
 
+						</div>
 
-                </div>
 
 
-            </section>
-            </div>
 
+					</div>
 
 
-      
+				</div>
 
 
-    
+
+
+
+
+			</div>
+
+
+		</section>
+	</div>
+
+
+
+
+
+
+
 
 
 </body>
