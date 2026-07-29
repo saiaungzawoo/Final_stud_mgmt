@@ -31,11 +31,13 @@ public class CourseCategoryRepository {
     
     public int countCoursesByCategory(String categoryId) {
 
-        String sql = """
-            SELECT COUNT(*)
-            FROM course
-            WHERE courseCategoryID = ?
-            """;
+    	 String sql = """
+    		        SELECT COUNT(*)
+    		        FROM course
+    		        WHERE courseCategoryID = ?
+    		        AND status = 'Open'
+    		        AND is_active = 1
+    		        """;
 
         return jdbc.queryForObject(sql, Integer.class, categoryId);
     }

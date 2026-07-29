@@ -3,6 +3,8 @@ package com.finalproject.Final.service;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import com.finalproject.Final.model.EnrollmentBean;
 import com.finalproject.Final.model.InstallmentPlanBean;
 import com.finalproject.Final.model.InstallmentRuleItemBean;
 import com.finalproject.Final.model.PaymentBean;
+import com.finalproject.Final.model.PaymentHistoryBean;
+import com.finalproject.Final.model.PaymentStatisticsBean;
 import com.finalproject.Final.model.PaymentTypeBean;
 
 import com.finalproject.Final.repository.EnrollmentRepository;
@@ -207,6 +211,14 @@ public class PaymentService {
                         next.getDueDate()
                 );
             }
+            
+            //for admin installment tracking
+            List<InstallmentPlanBean> plans =
+                    installmentPlanService.getByEnrollmentId(
+                            payment.getEnrollmentId()
+                    );
+
+            payment.setInstallmentPlans(plans);
         }
 
         return payment;
@@ -277,6 +289,54 @@ public class PaymentService {
 
 
         return paymentId;
+
+    }
+    
+    
+    //admin get all payment
+    public List<PaymentBean> getAllPayments(){
+
+        return paymentRepository.getAllPayments();
+
+    }
+    
+    //admin payment cards
+    public PaymentStatisticsBean getPaymentStatistics(){
+
+
+        PaymentStatisticsBean stats =
+                new PaymentStatisticsBean();
+
+
+        stats.setCollectedAmount(
+                paymentRepository.getCollectedAmount()
+        );
+
+
+        stats.setOutstandingAmount(
+                paymentRepository.getOutstandingAmount()
+        );
+
+
+        stats.setPendingPayment(
+                paymentRepository.getPendingPaymentCount()
+        );
+
+
+        return stats;
+
+    }
+    
+  //admin payment detail history
+    public List<PaymentHistoryBean> 
+    getPaymentHistory(
+            String enrollmentId
+    ){
+
+        return paymentRepository
+                .findPaymentHistoryByEnrollmentId(
+                        enrollmentId
+                );
 
     }
 

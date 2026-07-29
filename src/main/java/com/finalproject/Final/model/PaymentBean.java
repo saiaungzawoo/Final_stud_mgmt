@@ -3,6 +3,7 @@ package com.finalproject.Final.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,7 @@ public class PaymentBean {
 
     private LocalDate paymentDate;
 
-    private String transactionReference;
+    private String transactionReference; 
 
     private String status;
 
@@ -43,7 +44,7 @@ public class PaymentBean {
     private Integer installmentCount;
     
     private Double amountDue;
-    private Double paidAmount;
+    private Double paidAmount; //used
     private LocalDate dueDate;
 
     
@@ -63,6 +64,11 @@ public class PaymentBean {
     private Double nextInstallmentAmount;
 
     private LocalDate nextDueDate;
+    
+    private String courseName;
+    
+    
+    private List<InstallmentPlanBean> installmentPlans;
     
 	    
 
