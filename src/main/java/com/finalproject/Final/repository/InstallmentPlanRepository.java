@@ -18,12 +18,6 @@ public class InstallmentPlanRepository {
 
 	public void createPlan(String enrollmentId, InstallmentRuleItemBean item) {
 
-//		  System.out.println("INSERTING...");
-//		  System.out.println(enrollmentId);
-//		  System.out.println(item.getInstallmentRuleItemId());
-//		  System.out.println(item.getInstallmentNumber());
-//		  System.out.println(item.getAmount());
-//		  System.out.println(item.getDueDate());
 
 		String sql = """
 				INSERT INTO installment_plan
