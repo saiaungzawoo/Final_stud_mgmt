@@ -45,6 +45,10 @@ public class FinalGradeBean {
     private String studentName;
     
     private String courseName;
-
+//thiri
+    private String teacherName;
+    private String courseID;
+    private String teacherID;
+    private Integer studentCount;
    
 }
