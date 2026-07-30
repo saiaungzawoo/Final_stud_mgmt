@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.EnrollmentStatisticsBean;
 
 @Repository
 public class EnrollmentRepository {
@@ -331,11 +332,17 @@ public class EnrollmentRepository {
 	}
 
 	// UPDATE STATUS
-	public void updateStatus(String enrollmentId, String status) {
+	public void updateStatus(String enrollmentId, String status,  String reason) {
 
-		String sql = "UPDATE enrollment " + "SET status=?, updated_at=NOW() " + "WHERE enrollmentID=?";
+		String sql = """
+				UPDATE enrollment
+				SET status=?,
+				    status_reason=?,
+				    updated_at=NOW()
+				WHERE enrollmentID=?
+				""";
 
-		jdbc.update(sql, status, enrollmentId);
+		jdbc.update(sql, status, reason, enrollmentId);
 	}
 
 	// CHECK DUPLICATE ENROLLMENT
@@ -457,5 +464,342 @@ public class EnrollmentRepository {
 	            courseId
 	    );
 	}
+	
+	//admin enroll list
+//	public List<EnrollmentBean> getAllEnrollments(){
+//
+//
+//	    String sql = """
+//
+//	        SELECT
+//
+//	            e.*,
+//
+//	            u.name AS user_name,
+//
+//	            c.name AS course_title,
+//
+//
+//	            pt.name AS payment_type_name,
+//
+//
+//	            COALESCE(
+//	                SUM(DISTINCT p.amount),
+//	                0
+//	            )
+//	            AS total_paid,
+//
+//
+//	            (
+//	                e.final_fee -
+//	                COALESCE(
+//	                    SUM(DISTINCT p.amount),
+//	                    0
+//	                )
+//	            )
+//	            AS remaining_balance,
+//
+//
+//	            COUNT(
+//	                DISTINCT ip.installmentPlanID
+//	            )
+//	            AS total_installments,
+//
+//
+//	            COUNT(
+//	                DISTINCT CASE
+//	                    WHEN ip.status='Paid'
+//	                    THEN ip.installmentPlanID
+//	                END
+//	            )
+//	            AS completed_installments
+//
+//
+//
+//	        FROM enrollment e
+//
+//
+//
+//	        JOIN user u
+//
+//	            ON e.userID = u.userID
+//
+//
+//
+//	        JOIN course c
+//
+//	            ON e.courseID = c.courseID
+//
+//
+//
+//	        LEFT JOIN payment_type pt
+//
+//	            ON e.paymentTypeID = pt.paymentTypeID
+//
+//
+//
+//	        LEFT JOIN payment p
+//
+//	            ON e.enrollmentID = p.enrollmentID
+//
+//	            AND p.status='Success'
+//
+//
+//
+//	        LEFT JOIN installment_plan ip
+//
+//	            ON e.enrollmentID = ip.enrollmentID
+//
+//
+//
+//	        GROUP BY e.enrollmentID
+//
+//
+//
+//	        ORDER BY e.created_at DESC
+//
+//	        """;
+//
+//
+//
+//	    return jdbc.query(
+//	            sql,
+//	            new AdminEnrollmentRowMapper()
+//	    );
+//
+//	}
 
+	public List<EnrollmentBean> getAllEnrollments(){
+
+
+	    String sql = """
+
+	        SELECT
+
+	            e.*,
+
+	            u.name AS user_name,
+	            u.email AS user_email,
+
+	            c.name AS course_title,
+
+
+	            pt.name AS payment_type_name,
+
+
+	            COALESCE(pay.total_paid,0)
+	            AS total_paid,
+
+
+	            (
+	                e.final_fee -
+	                COALESCE(pay.total_paid,0)
+	            )
+	            AS remaining_balance,
+
+
+	            COALESCE(ins.total_installments,0)
+	            AS total_installments,
+
+
+	            COALESCE(ins.completed_installments,0)
+	            AS completed_installments
+
+
+
+	        FROM enrollment e
+
+
+
+	        JOIN user u
+
+	            ON e.userID = u.userID
+
+
+
+	        JOIN course c
+
+	            ON e.courseID = c.courseID
+
+
+
+	        LEFT JOIN payment_type pt
+
+	            ON e.paymentTypeID = pt.paymentTypeID
+
+
+
+
+	        /*
+	         PAYMENT SUMMARY
+	         */
+
+	        LEFT JOIN
+	        (
+
+	            SELECT
+
+	                enrollmentID,
+
+	                SUM(amount) AS total_paid
+
+
+	            FROM payment
+
+
+	            WHERE status='Success'
+
+
+	            GROUP BY enrollmentID
+
+
+	        ) pay
+
+
+	        ON e.enrollmentID = pay.enrollmentID
+
+
+
+
+	        /*
+	         INSTALLMENT SUMMARY
+	         */
+
+	        LEFT JOIN
+	        (
+
+	            SELECT
+
+	                enrollmentID,
+
+
+	                COUNT(installmentPlanID)
+	                AS total_installments,
+
+
+	                COUNT(
+	                    CASE
+	                        WHEN status='Paid'
+	                        THEN installmentPlanID
+	                    END
+	                )
+	                AS completed_installments
+
+
+
+	            FROM installment_plan
+
+
+	            GROUP BY enrollmentID
+
+
+	        ) ins
+
+
+	        ON e.enrollmentID = ins.enrollmentID
+
+
+
+
+	        ORDER BY e.created_at DESC
+
+
+	        """;
+
+
+
+	    return jdbc.query(
+	            sql,
+	            new AdminEnrollmentRowMapper()
+	    );
+
+	}
+	
+	public EnrollmentStatisticsBean getEnrollmentStatistics() {
+
+	    EnrollmentStatisticsBean stats =
+	            new EnrollmentStatisticsBean();
+
+	    /*
+	     Total enrollments
+	     */
+	    String totalSql = """
+	            SELECT COUNT(*)
+	            FROM enrollment
+	            """;
+
+	    stats.setTotalEnrollments(
+
+	            jdbc.queryForObject(
+	                    totalSql,
+	                    Integer.class
+	            )
+
+	    );
+
+
+
+	    /*
+	     Active students
+	     */
+	    String activeSql = """
+	            SELECT COUNT(*)
+	            FROM enrollment
+	            WHERE status='Active'
+	            """;
+
+	    stats.setActiveStudents(
+
+	            jdbc.queryForObject(
+	                    activeSql,
+	                    Integer.class
+	            )
+
+	    );
+
+
+
+	    /*
+	     Completed
+	     */
+	    String completedSql = """
+	            SELECT COUNT(*)
+	            FROM enrollment
+	            WHERE status='Completed'
+	            """;
+
+	    stats.setCompletedCourses(
+
+	            jdbc.queryForObject(
+	                    completedSql,
+	                    Integer.class
+	            )
+
+	    );
+
+
+
+	    /*
+	     Dropped
+	     */
+	    String droppedSql = """
+	            SELECT COUNT(*)
+	            FROM enrollment
+	            WHERE status='Dropped'
+	            """;
+
+	    stats.setDroppedStudents(
+
+	            jdbc.queryForObject(
+	                    droppedSql,
+	                    Integer.class
+	            )
+
+	    );
+
+	    return stats;
+
+	}
+	
+	
 }

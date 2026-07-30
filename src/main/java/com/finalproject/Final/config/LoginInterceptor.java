@@ -45,22 +45,81 @@ public class LoginInterceptor implements HandlerInterceptor {
 	    // PUBLIC URLS
 	    // =========================
 
-	    if(uri.equals("/")
-	            || uri.startsWith("/login")
-	            || uri.startsWith("/student")
-	            || uri.startsWith("/css")
-	            || uri.startsWith("/js")
-	            || uri.startsWith("/images")
-	            || uri.startsWith("/upload")
-	            || uri.startsWith("/courses/show")
-	            || uri.startsWith("/courses/")
-	            || uri.startsWith("/scholarship/")
-	            || uri.startsWith("/forgot-password")
-	            || uri.startsWith("/payment/test-outstanding")) {
+//	    if(uri.equals("/")
+//	            || uri.startsWith("/login")
+//	            || uri.startsWith("/student")
+//	            || uri.startsWith("/css")
+//	            || uri.startsWith("/js")
+//	            || uri.startsWith("/images")
+//	            || uri.startsWith("/upload")
+//	            || uri.startsWith("/courses/show")
+//	            || uri.startsWith("/courses/")
+//	            || uri.startsWith("/scholarship/")
+//	            || uri.startsWith("/forgot-password")
+//	            || uri.startsWith("/payment/test-outstanding")) {
+//
+//	        return true;
+//
+//	    }
+	    
+	    
+	 // =========================
+	 // HOME PAGE
+	 // =========================
 
-	        return true;
+	 if(uri.equals("/")) {
 
-	    }
+
+	     if(user != null) {
+
+	         String role = user.getRoleName();
+
+
+	         if("Admin".equals(role)) {
+
+	             response.sendRedirect("/admin/dashboard");
+	             return false;
+
+	         }
+
+
+	         if("Teacher".equals(role)) {
+
+	             response.sendRedirect("/dashboard/dashboard-teacher");
+	             return false;
+
+	         }
+
+
+	         
+
+	     }
+
+
+	     return true; // guest can see public home page
+
+	 }
+
+
+
+	 // =========================
+	 // PUBLIC URLS
+	 // =========================
+
+	 if(uri.startsWith("/login")
+	         || uri.startsWith("/css")
+	         || uri.startsWith("/js")
+	         || uri.startsWith("/images")
+	         || uri.startsWith("/upload")
+	         || uri.startsWith("/courses/show")
+	         || uri.startsWith("/courses/")
+	         || uri.startsWith("/scholarship/")
+	         || uri.startsWith("/forgot-password")
+	         || uri.startsWith("/payment/test-outstanding")) {
+
+	     return true;
+
+	 }
 
 
 

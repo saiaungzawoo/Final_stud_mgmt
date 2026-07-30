@@ -72,7 +72,7 @@
       <a class="nav-link text-white" th:href="@{/admin/courses}">
         <i class="bi bi-megaphone me-2"></i> Courses
       </a>
-      <a class="nav-link text-white" th:href="@{/}">
+      <a class="nav-link text-white" th:href="@{/admin/enrollment}">
         <i class="bi bi-clipboard-check me-2"></i> Enrollment
       </a>
       <!-- <a class="nav-link text-white" th:href="@{/}">
@@ -101,6 +101,12 @@
       <!-- <a class="nav-link text-white" th:href="@{/schedule/list-course}">
         <i class="bi bi-calendar-event me-2"></i> Settings
       </a> -->
+      
+      <a th:href="@{/logout}"
+                  class="nav-link text-white">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </a>
     </nav>
   </div>
 </aside>
