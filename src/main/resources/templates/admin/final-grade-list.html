@@ -1,395 +1,236 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-
 <head th:replace="~{fragment/css :: css}"></head>
-
 
 <body>
 
-
-<!-- Header -->
-<div th:replace="~{teacher/teacher-dashboard :: teacherHeader}">
-</div>
-
-
+<div th:replace="~{fragment/admin-header :: adminHeader}"></div>
 
 <div class="container-fluid">
 
     <div class="row">
 
-
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{fragment/admin-sidebar :: adminSidebar}"></div>
+        </div>
 
-            <div th:replace="~{teacher/teacher-dashboard :: sidebar}">
-            </div>
+        <!-- Main -->
+        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+
+    <h2 class="fw-bold mb-3 text-dark">
+        <i class="bi bi-award-fill text-primary"></i>
+        Final Grade Management
+    </h2>
+
+
+    <!-- Course List -->
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h5 class="fw-bold mb-0">
+                Course List
+            </h5>
+        </div>
+
+
+        <div class="card-body px-4">
+
+            <table class="table align-middle table-hover">
+
+                <thead>
+
+                <tr class="text-secondary small">
+
+                    <th>NO</th>
+                    <th>COURSE</th>
+                    <th>TEACHER</th>
+                    <th>ACTION</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr th:each="course,stat : ${courseList}">
+
+                    <td th:text="${stat.count}"></td>
+
+                    <td class="fw-semibold"
+                        th:text="${course.courseName}">
+                    </td>
+
+
+                    <td th:text="${course.teacherName}">
+                    </td>
+
+
+                    <td>
+
+                        <a class="btn btn-primary rounded-pill px-3 btn-sm"
+                           th:href="@{/admin/final-grade(courseId=${course.courseID})}">
+
+                            <i class="bi bi-eye"></i>
+                            View Grades
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- Final Grade List -->
+
+
+    <div class="card shadow-sm border-0 rounded-4"
+         th:if="${gradeList != null}">
+
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-0">
+                Student Final Grades
+            </h5>
 
         </div>
 
 
+        <div class="card-body px-4">
+
+
+            <table class="table align-middle table-hover">
+
+
+                <thead>
+
+                <tr class="text-secondary small">
+
+                    <th>NO</th>
+                    <th>STUDENT</th>
+                    <th>COURSE</th>
+                    <th>SCORE</th>
+                    <th>GRADE</th>
+                    <th>STATUS</th>
+                    <th>FINALIZED DATE</th>
+
+
+                </tr>
+
+                </thead>
 
 
 
-        <!-- Main Content -->
-
-        <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
+                <tbody>
 
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+                <tr th:each="grade,stat:${gradeList}">
 
 
-                <div>
-
-                    <h2 class="fw-bold">
-                        Final Grade Management
-                    </h2>
+                    <td th:text="${stat.count}"></td>
 
 
-                    <p class="text-muted mb-0">
-                        View all students' final grades and results.
-                    </p>
-
-                </div>
+                    <td class="fw-semibold"
+                        th:text="${grade.studentName}">
+                    </td>
 
 
-            </div>
+                    <td th:text="${grade.courseName}">
+                    </td>
+
+
+                    <td>
+
+                        <span class="fw-bold text-primary"
+                              th:text="${grade.finalScore}">
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="badge rounded-pill bg-primary px-3"
+                              th:text="${grade.letterGrade}">
+                        </span>
+
+                    </td>
 
 
 
+                    <td>
 
 
-            <!-- Summary Cards -->
-<div class="row g-4 mb-4">
+                        <span class="badge rounded-pill bg-success px-3"
+                              th:if="${grade.status=='Completed'}">
+
+                            <i class="bi bi-check-circle"></i>
+                            Completed
+
+                        </span>
 
 
-    <div class="col-md-6 col-xl-3">
 
-        <a class="category-card" href="#">
+                        <span class="badge rounded-pill bg-danger px-3"
+                              th:if="${grade.status=='Failed'}">
 
-            <i class="bi bi-award text-primary"></i>
+                            Failed
 
-            <h3>
-                Total Final Grades
-            </h3>
+                        </span>
 
-            <p th:text="${#lists.size(finalGradeList)}">
-                0
-            </p>
 
-        </a>
+                    </td>
+
+
+
+                    <td>
+                        <span th:if="${grade.finalizedAt != null}"
+                              th:text="${#temporals.format(grade.finalizedAt,'yyyy-MM-dd HH:mm')}">
+                        </span>
+
+                        <span th:if="${grade.finalizedAt == null}"
+                              class="text-muted">
+                            Not finalized
+                        </span>
+                    </td>
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
 
     </div>
 
 
-
-
-    <div class="col-md-6 col-xl-3">
-
-        <a class="category-card" href="#">
-
-            <i class="bi bi-check-circle text-success"></i>
-
-            <h3>
-                Completed
-            </h3>
-
-            <p th:text="${#lists.size(finalGradeList.?[status == 'Completed'])}">
-                0
-            </p>
-
-        </a>
-
+</main>
     </div>
 
-
-
-
-
-    <div class="col-md-6 col-xl-3">
-
-        <a class="category-card" href="#">
-
-            <i class="bi bi-x-circle text-danger"></i>
-
-            <h3>
-                Failed
-            </h3>
-
-            <p th:text="${#lists.size(finalGradeList.?[status == 'Failed'])}">
-                0
-            </p>
-
-        </a>
-
-    </div>
-
-
 </div>
 
-
-
-            <!-- Table -->
-
-
-            <div class="card shadow-sm border-0">
-
-
-                <div class="card-body">
-
-
-                    <div class="d-flex justify-content-between mb-3">
-
-
-                        <h5 class="fw-bold">
-                            Student Final Grade List
-                        </h5>
-
-
-
-                        <input type="text"
-                               id="searchInput"
-                               class="form-control w-25"
-                               placeholder="Search student...">
-
-
-                    </div>
-
-
-
-
-
-
-
-                    <div class="table-responsive">
-
-
-                        <table class="table table-hover align-middle"
-                               id="gradeTable">
-
-
-                            <thead class="table-dark">
-
-                            <tr>
-
-                                <th>No</th>
-
-                                <th>Student</th>
-
-                                <th>Course</th>
-
-                                <th>Assignment</th>
-
-                                <th>Exam</th>
-
-                                <th>Attendance</th>
-
-                                <th>Final Score</th>
-
-                                <th>Grade</th>
-
-                                <th>Status</th>
-
-                            </tr>
-
-                            </thead>
-
-
-
-
-
-                            <tbody>
-
-
-                            <tr th:each="grade, stat : ${finalGradeList}">
-
-
-                                <td th:text="${stat.count}">
-                                    1
-                                </td>
-
-
-
-                                <td th:text="${grade.studentName}">
-                                    Student
-                                </td>
-
-
-
-
-                                <td th:text="${grade.courseName}">
-                                    Course
-                                </td>
-
-
-
-
-                                <td th:text="${grade.assignmentTotalScore}">
-                                    0
-                                </td>
-
-
-
-
-                                <td th:text="${grade.examTotalScore}">
-                                    0
-                                </td>
-
-
-
-
-                                <td th:text="${grade.attendanceScore}">
-                                    0
-                                </td>
-
-
-
-
-                                <td>
-
-                                    <span class="fw-bold"
-                                          th:text="${grade.finalScore}">
-                                    </span>
-
-                                </td>
-
-
-
-
-
-                                <td>
-
-                                    <span class="badge bg-primary"
-                                          th:text="${grade.letterGrade}">
-                                    </span>
-
-                                </td>
-
-
-
-
-
-                                <td>
-
-
-                                    <span th:if="${grade.status == 'Completed'}"
-                                          class="badge bg-success"
-                                          th:text="${grade.status}">
-                                    </span>
-
-
-
-                                    <span th:if="${grade.status == 'Failed'}"
-                                          class="badge bg-danger"
-                                          th:text="${grade.status}">
-                                    </span>
-
-
-
-
-                                    <span th:if="${grade.status == 'In Progress'}"
-                                          class="badge bg-warning text-dark"
-                                          th:text="${grade.status}">
-                                    </span>
-
-
-
-                                </td>
-
-
-
-                            </tr>
-
-
-
-
-
-
-                            <tr th:if="${#lists.isEmpty(finalGradeList)}">
-
-                                <td colspan="9"
-                                    class="text-center text-muted">
-
-                                    No final grade records found.
-
-                                </td>
-
-                            </tr>
-
-
-
-
-                            </tbody>
-
-
-                        </table>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
-
-
-        </main>
-
-
-    </div>
-
-
-</div>
-
-
-
-
-
-<!-- Footer -->
-
-<div th:replace="~{fragment/footer :: footer}">
-</div>
-
-
-
-
-<!-- JS -->
-
-<div th:replace="~{fragment/js :: js}">
-</div>
-
-
-
-
-<script>
-
-document.getElementById("searchInput")
-.addEventListener("keyup", function(){
-
-    let keyword = this.value.toLowerCase();
-
-    let rows = document.querySelectorAll("#gradeTable tbody tr");
-
-
-    rows.forEach(row=>{
-
-        row.style.display =
-        row.innerText.toLowerCase().includes(keyword)
-        ? ""
-        : "none";
-
-    });
-
-});
-
-</script>
-
-
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/js :: js}"></div>
 
 </body>
-
 </html>

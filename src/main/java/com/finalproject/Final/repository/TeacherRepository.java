@@ -552,7 +552,13 @@ public class TeacherRepository {
         );
 
     }
+    
+//thiri
+    public String getRoleIdByName(String roleName) {
 
+        String sql = "SELECT roleID FROM role WHERE name = ?";
 
+        return jdbc.queryForObject(sql, String.class, roleName);
+    }
 
 }
