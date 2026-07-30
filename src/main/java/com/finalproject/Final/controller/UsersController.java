@@ -306,24 +306,40 @@ if (uRepo.existsByEmailAndNotUserId(
       } else {
           userObj.setPassword(passwordEncoder.encode(userObj.getPassword()));
       }
+      uRepo.updateUser(userObj);
 
+     
       // Update User
       uRepo.updateUser(userObj);
       return "student/student-profile";
       //return "student-profile";
     
   }
-  
   @GetMapping("/update")
-  public String update(Model m) {
-     UserBean user = uRepo.getLatestStudent();
-      m.addAttribute("userObj", user);
-      
-      
-     // return "success";
+  public String update(HttpSession session, Model model) {
+
+      UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
+      if (loginUser == null) {
+          return "redirect:/login";
+      }
+
+      UserBean user = uRepo.getUserById(loginUser.getUserID());
+
+      model.addAttribute("userObj", user);
+
       return "student/student_edit";
-    //  return "student_edit";
   }
+//  @GetMapping("/update")
+//  public String update(Model m) {
+//     UserBean user = uRepo.getLatestStudent();
+//      m.addAttribute("userObj", user);
+//      
+//      
+//     // return "success";
+//      return "student/student_edit";
+//    //  return "student_edit";
+//  }
 
   @GetMapping("/profile")
   public String profile(HttpSession session, Model model) {
@@ -514,7 +530,7 @@ if (uRepo.existsByEmailAndNotUserId(
 
       session.setAttribute("loginUser", adminObj);
 
-      return "redirect:/admin/profile";
+      return "redirect:/student/admin/profile";
   }
  
 }
