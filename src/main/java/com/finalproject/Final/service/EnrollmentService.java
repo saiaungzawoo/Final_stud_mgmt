@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.finalproject.Final.dto.EnrollmentDTO;
 import com.finalproject.Final.model.CourseBean;
 import com.finalproject.Final.model.EnrollmentBean;
+import com.finalproject.Final.model.EnrollmentStatisticsBean;
 import com.finalproject.Final.model.InstallmentPlanBean;
 import com.finalproject.Final.model.PaymentTypeBean;
 import com.finalproject.Final.repository.CourseRepository;
@@ -76,11 +77,11 @@ public class EnrollmentService {
 		return repo.findById(id);
 	}
 
-	public void confirmEnrollment(String id) {
-
-		repo.updateStatus(id, "Active");
-
-	}
+//	public void confirmEnrollment(String id) {
+//
+//		repo.updateStatus(id, "Active");
+//
+//	}
 	
 	public void updateInstallmentRule(
 	        String enrollmentId,
@@ -266,6 +267,33 @@ public class EnrollmentService {
 	public int countEnrolledStudents(String courseId) {
 
 	    return repo.countEnrolledStudents(courseId);
+
+	}
+	
+	public List<EnrollmentBean> getAllEnrollments(){
+
+	    return repo.getAllEnrollments();
+
+	}
+	
+	public EnrollmentStatisticsBean getEnrollmentStatistics() {
+
+	    return repo.getEnrollmentStatistics();
+
+	}
+	
+	
+	public void updateEnrollmentStatus(
+	        String enrollmentId,
+	        String status, 
+	        String reason
+	){
+
+	    repo.updateStatus(
+	            enrollmentId,
+	            status, 
+	            reason
+	    );
 
 	}
 }
