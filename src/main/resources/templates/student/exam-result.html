@@ -98,7 +98,7 @@
                                             <div class="p-2 bg-primary-subtle text-primary rounded-3 d-inline-flex align-items-center justify-content-center">
                                                 <i class="bi bi-file-earmark-check fs-6"></i>
                                             </div>
-                                            <span class="fw-bold text-dark" th:text="${res.name}">Midterm Exam</span>
+                                            <span class="fw-bold text-dark" th:text="${res.examName}">Midterm Exam</span>
                                         </div>
                                     </td>
 
@@ -111,7 +111,7 @@
 
                                     <!-- Obtained Score / Max Score -->
                                     <td class="py-3 px-3 text-center">
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 rounded-pill fw-bold fs-6" th:text="${res.obtainedScore}">
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 rounded-pill fw-bold fs-6" th:text="${res.maxScore}">
                                             85
                                         </span>
                                         <span class="text-muted small fw-semibold mx-1">/</span>

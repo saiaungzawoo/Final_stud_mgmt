@@ -1,5 +1,6 @@
 package com.finalproject.Final.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -518,5 +519,90 @@ public class FinalGradeRepository {
         );
 
         return count > 0;
+    }
+    //use for admin view  add thiri
+    public List<FinalGradeBean> getAllCourses() {
+
+        String sql = """
+            SELECT
+                c.courseID,
+                c.name,
+                c.teacherID,
+                u.name AS teacherName,
+                COUNT(e.enrollmentID) AS studentCount
+            FROM course c
+            LEFT JOIN user u
+                ON c.teacherID = u.userID
+            LEFT JOIN enrollment e
+                ON c.courseID = e.courseID
+                AND e.status = 'Active'
+            GROUP BY
+                c.courseID,
+                c.name,
+                c.teacherID,
+                u.name
+            ORDER BY c.name
+            """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+           FinalGradeBean bean = new FinalGradeBean();
+
+            bean.setCourseID(rs.getString("courseID"));
+            bean.setCourseName(rs.getString("name"));
+            bean.setTeacherID(rs.getString("teacherID"));
+            bean.setTeacherName(rs.getString("teacherName"));
+            bean.setStudentCount(rs.getInt("studentCount"));
+
+            return bean;
+        });
+    }
+   public List<FinalGradeBean> getFinalGradesByCourse(String courseId) {
+
+        String sql = """
+            SELECT
+                fg.finalGradeID,
+                fg.final_score,
+                fg.letter_grade,
+                fg.status,
+                fg.finalized_at,
+
+                u.name AS studentName,
+                c.name AS courseName
+
+            FROM final_grade fg
+
+            JOIN enrollment e
+                ON fg.enrollmentID = e.enrollmentID
+
+            JOIN user u
+                ON e.userID = u.userID
+
+            JOIN course c
+                ON e.courseID = c.courseID
+
+            WHERE c.courseID = ?
+
+            ORDER BY u.name
+            """;
+
+        return jdbcTemplate.query(sql,(rs,row)->{
+
+            FinalGradeBean bean = new FinalGradeBean();
+
+            bean.setFinalGradeID(rs.getString("finalGradeID"));
+            bean.setStudentName(rs.getString("studentName"));
+            bean.setCourseName(rs.getString("courseName"));
+            bean.setFinalScore(rs.getDouble("final_score"));
+            bean.setLetterGrade(rs.getString("letter_grade"));
+            bean.setStatus(rs.getString("status"));
+            Timestamp ts = rs.getTimestamp("finalized_at");
+
+            if (ts != null) {
+                bean.setFinalizedAt(ts.toLocalDateTime());
+            }
+            return bean;
+
+        },courseId);
     }
 }
