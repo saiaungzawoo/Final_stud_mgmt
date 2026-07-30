@@ -41,6 +41,9 @@ public class TeacherController {
 		return new ModelAndView("admin/create-teacher","userObj",new TeacherBean());
 		
 	}
+	
+	
+	
 	@PostMapping("/teacherRegister")
 	public String teacherRegister(@Valid @ModelAttribute("userObj") TeacherBean obj,   BindingResult result,  MultipartFile file,Model m) throws IllegalStateException, IOException {
 
@@ -109,9 +112,12 @@ String fileName = file.getOriginalFilename();
 
         // UUID role ID ထည့်
         obj.setUserID(UUID.randomUUID().toString());
-
+        
+        
+        String teacherRoleId = mRepo.getRoleIdByName("Teacher");
+        obj.setRoleID(teacherRoleId);
        // obj.setRoleID("00ec67a1-7a6f-11f1-8f4f-183d2d227d02");//Lin Pyae Nyein
-        obj.setRoleID("3c2f3f12-7a84-11f1-bfcb-b4b686e7f920");//Thiri Thwe
+       // obj.setRoleID("3c2f3f12-7a84-11f1-bfcb-b4b686e7f920");//Thiri Thwe
         obj.setIsActive(1);
 
 
