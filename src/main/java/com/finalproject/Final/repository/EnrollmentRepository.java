@@ -1,6 +1,7 @@
 package com.finalproject.Final.repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -366,6 +367,78 @@ public class EnrollmentRepository {
 				"WHERE e.userID = ? " + "AND e.status = 'Active'";
 
 		return jdbc.query(sql, new CourseRowMapper(), userId);
+	}
+	
+	//search enrolled courses
+	public List<CourseBean> searchMyCourses(
+	        String userId,
+	        String keyword,
+	        String categoryId
+	) {
+
+	    String sql = """
+	        SELECT 
+	            c.*,
+	            cat.name AS category_name,
+	            sub.name AS subcategory_name,
+	            u.name AS teacher_name
+
+	        FROM enrollment e
+
+	        JOIN course c
+	            ON e.courseID = c.courseID
+
+	        LEFT JOIN course_category cat
+	            ON c.courseCategoryID = cat.courseCategoryID
+
+	        LEFT JOIN subcategory sub
+	            ON c.subcategoryID = sub.subcategoryID
+
+	        LEFT JOIN user u
+	            ON c.teacherID = u.userID
+
+	        WHERE e.userID = ?
+	        AND e.status = 'Active'
+	        """;
+
+
+	   
+		List<Object> params = new ArrayList<>();
+
+	    params.add(userId);
+
+
+	    if(keyword != null && !keyword.isBlank()) {
+
+	        sql += """
+	            AND c.name LIKE ?
+	            """;
+
+	        params.add("%" + keyword + "%");
+	    }
+
+
+	    if(categoryId != null && !categoryId.isBlank()) {
+
+	        sql += """
+	            AND c.courseCategoryID = ?
+	            """;
+
+	        params.add(categoryId);
+	    }
+
+
+	    sql += """
+	        ORDER BY c.created_at DESC
+	        """;
+
+
+	    return jdbc.query(
+	            sql,
+	            new CourseRowMapper(),
+	            params.toArray()
+	    );
+
 	}
 	
 	

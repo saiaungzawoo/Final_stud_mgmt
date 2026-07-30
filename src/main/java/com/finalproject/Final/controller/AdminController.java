@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.finalproject.Final.dto.AdminDashboardDTO;
 import com.finalproject.Final.model.CourseBean;
@@ -63,16 +64,43 @@ public class AdminController {
 
 	//21.7.26
 	@GetMapping("/courses")
-	public String courseList(Model model) {
+	public String courseList( @RequestParam(required = false) String keyword,
+			 @RequestParam(required = false) String status,
+			Model model) {
 
 
-		List<CourseBean> courses =
+//		List<CourseBean> courses =
+//		        courseService.getAllCoursesForAdmin();
+		
+		List<CourseBean> courses;
+
+
+		if((keyword != null && !keyword.isBlank()) 
+		        || (status != null && !status.isBlank())) {
+
+
+		    courses =
+		        courseService.searchAndFilterCourses(keyword, status);
+
+
+		}
+		else {
+
+
+		    courses =
 		        courseService.getAllCoursesForAdmin();
+
+
+		}
 
 		model.addAttribute(
 		        "courses",
 		        courses
 		);
+		
+		model.addAttribute("keyword", keyword);
+
+		model.addAttribute("status", status);
 		
 	    model.addAttribute(
 	            "totalCourses",

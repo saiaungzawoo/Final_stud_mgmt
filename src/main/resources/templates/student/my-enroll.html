@@ -5,14 +5,22 @@
 
 <body>
 
-	<div th:replace="~{fragment/header :: header}"></div>
+	<!-- <div th:replace="~{fragment/header :: header}"></div> -->
+	<div th:replace="~{fragment/student-header :: studentHeader}"></div>
 
 
-	<main>
+	<div class="d-flex">
 
-		<section class="section-pad bg-light">
+    <!-- SIDEBAR -->
+    <div th:replace="~{fragment/student-sidebar :: studentSidebar}"></div>
 
-			<div class="container-xxl">
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow-1 bg-light">
+
+        <section class="section-pad">
+
+            <div class="container-fluid">
 
 
 				<div class="section-heading">
@@ -354,6 +362,7 @@
 		</section>
 
 	</main>
+	</div>
 
 
 

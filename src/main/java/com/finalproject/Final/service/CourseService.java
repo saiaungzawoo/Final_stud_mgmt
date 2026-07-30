@@ -88,4 +88,48 @@ public class CourseService {
         return courseRepository.countArchivedThisMonth();
 
     }
+    
+    public int countArchivedCourses(){
+
+        return courseRepository.countArchivedCourses();
+
+    }
+    
+    
+//    public List<CourseBean> searchAdminCourses(String keyword){
+//
+//        return courseRepository.searchAdminCourses(keyword);
+//
+//    }
+    
+    public List<CourseBean> searchAndFilterCourses(
+            String keyword,
+            String status) {
+
+        return courseRepository.searchAndFilterCourses(
+                keyword,
+                status
+        );
+
+    }
+    
+    
+    public List<CourseBean> searchAndFilterArchivedCourses(
+            String keyword,
+            String status) {
+
+
+        return courseRepository.searchAndFilterArchivedCourses(
+                keyword,
+                status
+        );
+
+    }
+    
+    
+    public List<CourseBean> searchStudentCourses(String keyword){
+
+        return courseRepository.searchStudentCourses(keyword);
+
+    }
 }

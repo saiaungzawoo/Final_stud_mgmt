@@ -23,7 +23,18 @@ public class PaymentRowMapper implements RowMapper<PaymentBean> {
         	);
         p.setPaymentTypeName(rs.getString("paymentTypeName"));
         
+        
+        
+        try {
+            p.setCourseFee(
+                    rs.getDouble("courseFee")
+            );
+        } catch (SQLException ignored) {}
+        
         p.setStudentName(rs.getString("studentName"));
+        p.setCourseName(
+                rs.getString("courseName")
+        );
         
         try {
             p.setInstallmentNumber(
@@ -39,11 +50,40 @@ public class PaymentRowMapper implements RowMapper<PaymentBean> {
             p.setAmountDue(
                     rs.getDouble("amount_due"));
         } catch (SQLException ignored) {}
+        
+        
+//        try {
+//            p.setPaidAmount(
+//                    rs.getDouble("totalPaidAmount"));
+//        } catch (SQLException ignored) {}
 
+//        p.setPaidAmount(
+//                rs.getDouble("totalPaidAmount"));
+        
+        
         try {
-            p.setPaidAmount(
-                    rs.getDouble("paid_amount"));
-        } catch (SQLException ignored) {}
+
+            double paid = rs.getDouble("totalPaidAmount");
+
+            p.setPaidAmount(paid);
+
+        } catch (SQLException ignored) {
+
+        }
+        
+     ;
+        
+        if (p.getCourseFee() != null && p.getPaidAmount() != null) {
+
+            p.setRemainingBalance(
+                    p.getCourseFee() - p.getPaidAmount()
+            );
+
+        } else {
+
+            p.setRemainingBalance(0.0);
+
+        }
 
         try {
             if (rs.getDate("due_date") != null) {

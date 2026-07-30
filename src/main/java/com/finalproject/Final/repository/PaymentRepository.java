@@ -1,5 +1,6 @@
 package com.finalproject.Final.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.finalproject.Final.model.PaymentBean;
+import com.finalproject.Final.model.PaymentHistoryBean;
 
 @Repository
 public class PaymentRepository {
@@ -16,7 +18,7 @@ public class PaymentRepository {
 	private JdbcTemplate jdbc;
 
 	// Save Payment
-	//for full payment
+	// for full payment
 	public String savePayment(String enrollmentId, String paymentMethodId, Double amount) {
 
 		String paymentId = UUID.randomUUID().toString();
@@ -89,22 +91,130 @@ public class PaymentRepository {
 	}
 
 	// Find payment by UUID
+//	public PaymentBean getById(String paymentID) {
+//
+//		String sql = """
+//				    SELECT
+//				    p.*,
+//
+//				    pm.name AS paymentMethodName,
+//				    pt.name AS paymentTypeName,
+//				    u.name AS studentName,
+//
+//				    ip.installment_number,
+//				    ip.amount_due,
+//				    ip.paid_amount,
+//				    ip.due_date,
+//
+//				    ir.installment_count
+//
+//				FROM payment p
+//
+//				LEFT JOIN payment_method pm
+//				ON p.paymentMethodID = pm.paymentMethodID
+//
+//				LEFT JOIN enrollment e
+//				ON p.enrollmentID = e.enrollmentID
+//
+//				LEFT JOIN payment_type pt
+//				ON e.paymentTypeID = pt.paymentTypeID
+//
+//				LEFT JOIN user u
+//				ON e.userID = u.userID
+//
+//				LEFT JOIN installment_plan ip
+//				ON p.installmentPlanID = ip.installmentPlanID
+//
+//				LEFT JOIN installment_rule_item iri
+//				ON ip.installmentRuleItemID = iri.installmentRuleItemID
+//
+//				LEFT JOIN installment_rule ir
+//				ON iri.installmentRuleID = ir.installmentRuleID
+//
+//				WHERE p.paymentID = ?
+//
+//				        		""";
+//
+//		List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), paymentID);
+//
+//		return list.isEmpty() ? null : list.get(0);
+//	}
+
+	// new fixed
 	public PaymentBean getById(String paymentID) {
 
 		String sql = """
-				        	SELECT
+					        SELECT
+					            p.*,
+
+					            pm.name AS paymentMethodName,
+					            pt.name AS paymentTypeName,
+					            u.name AS studentName,
+					            c.name AS courseName,
+					            c.fee AS courseFee,
+
+					            (
+				    SELECT COALESCE(SUM(pay.amount),0)
+				    FROM payment pay
+				    WHERE pay.enrollmentID = p.enrollmentID
+				    AND pay.status = 'Success'
+				) AS totalPaidAmount,
+
+					            ip.installment_number,
+					            ip.amount_due,
+					            ip.paid_amount,
+					            ip.due_date,
+
+					            ir.installment_count
+
+					        FROM payment p
+
+					        LEFT JOIN payment_method pm
+					            ON p.paymentMethodID = pm.paymentMethodID
+
+					        LEFT JOIN enrollment e
+					            ON p.enrollmentID = e.enrollmentID
+
+					        LEFT JOIN course c
+					            ON e.courseID = c.courseID
+
+					        LEFT JOIN payment_type pt
+					            ON e.paymentTypeID = pt.paymentTypeID
+
+					        LEFT JOIN user u
+					            ON e.userID = u.userID
+
+					        LEFT JOIN installment_plan ip
+					            ON p.installmentPlanID = ip.installmentPlanID
+
+					        LEFT JOIN installment_rule_item iri
+					            ON ip.installmentRuleItemID = iri.installmentRuleItemID
+
+					        LEFT JOIN installment_rule ir
+					            ON iri.installmentRuleID = ir.installmentRuleID
+
+					        WHERE p.paymentID = ?
+					        """;
+
+		List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), paymentID);
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+
+	// Admin - get all payments
+	// Admin payment list
+	public List<PaymentBean> getAllPayments() {
+
+		String sql = """
+				SELECT
 				    p.*,
 
 				    pm.name AS paymentMethodName,
 				    pt.name AS paymentTypeName,
+
 				    u.name AS studentName,
 
-				    ip.installment_number,
-				    ip.amount_due,
-				    ip.paid_amount,
-				    ip.due_date,
-
-				    ir.installment_count
+				    c.name AS courseName
 
 				FROM payment p
 
@@ -120,22 +230,270 @@ public class PaymentRepository {
 				LEFT JOIN user u
 				ON e.userID = u.userID
 
-				LEFT JOIN installment_plan ip
-				ON p.installmentPlanID = ip.installmentPlanID
+				LEFT JOIN course c
+				ON e.courseID = c.courseID
 
-				LEFT JOIN installment_rule_item iri
-				ON ip.installmentRuleItemID = iri.installmentRuleItemID
+				ORDER BY p.created_at DESC
+				""";
 
-				LEFT JOIN installment_rule ir
-				ON iri.installmentRuleID = ir.installmentRuleID
+		return jdbc.query(sql, new PaymentRowMapper());
 
-				WHERE p.paymentID = ?
+	}
 
-				        		""";
+	// admin payment
+	public Double getCollectedAmount() {
 
-		List<PaymentBean> list = jdbc.query(sql, new PaymentRowMapper(), paymentID);
+		String sql = """
+				SELECT COALESCE(SUM(amount),0)
+				FROM payment
+				WHERE status = 'Success'
+				""";
 
-		return list.isEmpty() ? null : list.get(0);
+		return jdbc.queryForObject(sql, Double.class);
+
+	}
+
+	// installment plan pedning count
+	public Integer getPendingPaymentCount() {
+
+		String sql = """
+				SELECT COUNT(*)
+				FROM installment_plan
+				WHERE status = 'Pending'
+				""";
+
+		return jdbc.queryForObject(sql, Integer.class);
+
+	}
+
+	public Double getOutstandingAmount() {
+
+		String sql = """
+
+				SELECT COALESCE(SUM(outstanding),0)
+
+				FROM
+				(
+
+				    /*
+				     FULL PAYMENT
+				     */
+				    SELECT
+				        (
+				            e.final_fee -
+				            COALESCE(
+				                SUM(p.amount),
+				                0
+				            )
+				        ) AS outstanding
+
+
+				    FROM enrollment e
+
+
+				    LEFT JOIN payment p
+				    ON e.enrollmentID = p.enrollmentID
+				    AND p.status='Success'
+
+
+				    WHERE e.paymentTypeID IN
+				    (
+				        SELECT paymentTypeID
+				        FROM payment_type
+				        WHERE name='FULL_PAYMENT'
+				    )
+
+
+				    GROUP BY e.enrollmentID
+
+
+
+				    UNION ALL
+
+
+
+				    /*
+				     INSTALLMENT
+				     */
+				    SELECT
+
+				        SUM(
+				            ip.amount_due -
+				            ip.paid_amount
+				        )
+
+				        AS outstanding
+
+
+				    FROM installment_plan ip
+
+
+				    WHERE ip.status <> 'Paid'
+
+
+				) temp
+
+
+				""";
+
+		return jdbc.queryForObject(sql, Double.class);
+
+	}
+	
+	//admin payment detail history
+	public List<PaymentHistoryBean> 
+	findPaymentHistoryByEnrollmentId(
+	        String enrollmentId
+	){
+
+	    String sql = """
+	            SELECT
+
+	                p.paymentID,
+	                p.amount,
+	                p.payment_date,
+	                p.transaction_reference,
+	                p.status,
+
+	                pm.name AS paymentMethodName
+
+
+	            FROM payment p
+
+
+	            LEFT JOIN payment_method pm
+
+	            ON p.paymentMethodID = pm.paymentMethodID
+
+
+	            WHERE p.enrollmentID = ?
+
+
+	            ORDER BY p.created_at DESC
+
+	            """;
+
+
+	    return jdbc.query(
+	            sql,
+	            new PaymentHistoryRowMapper(),
+	            enrollmentId
+	    );
+
+	}
+	
+	
+	public List<PaymentBean> searchPayments(
+	        String keyword,
+	        String paymentType
+	){
+
+	    StringBuilder sql = new StringBuilder("""
+	            
+	            SELECT
+	                p.*,
+
+	                pm.name AS paymentMethodName,
+	                pt.name AS paymentTypeName,
+
+	                u.name AS studentName,
+
+	                c.name AS courseName
+
+
+	            FROM payment p
+
+
+	            LEFT JOIN payment_method pm
+	            ON p.paymentMethodID = pm.paymentMethodID
+
+
+	            LEFT JOIN enrollment e
+	            ON p.enrollmentID = e.enrollmentID
+
+
+	            LEFT JOIN payment_type pt
+	            ON e.paymentTypeID = pt.paymentTypeID
+
+
+	            LEFT JOIN user u
+	            ON e.userID = u.userID
+
+
+	            LEFT JOIN course c
+	            ON e.courseID = c.courseID
+
+
+	            WHERE 1=1
+
+	            """
+	    );
+
+
+	    List<Object> params = new ArrayList<>();
+
+
+	    if(keyword != null && !keyword.trim().isEmpty()){
+
+
+	        sql.append("""
+	                
+	                AND (
+	                    p.transaction_reference LIKE ?
+	                    OR u.name LIKE ?
+	                    OR c.name LIKE ?
+	                )
+
+	                """
+	        );
+
+
+	        String search =
+	                "%" + keyword + "%";
+
+
+	        params.add(search);
+	        params.add(search);
+	        params.add(search);
+
+	    }
+
+
+
+	    if(paymentType != null 
+	            && !paymentType.trim().isEmpty()){
+
+
+	        sql.append("""
+	                
+	                AND pt.name = ?
+
+	                """
+	        );
+
+
+	        params.add(paymentType);
+
+	    }
+
+
+
+	    sql.append("""
+	            
+	            ORDER BY p.created_at DESC
+
+	            """
+	    );
+
+
+
+	    return jdbc.query(
+	            sql.toString(),
+	            new PaymentRowMapper(),
+	            params.toArray()
+	    );
+
+
 	}
 
 }

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body class="bg-light">
+
+	<!-- HEADER -->
+	<div th:replace="~{fragment/student-header :: studentHeader}"></div>
+
+	<div class="d-flex">
+
+		<!-- SIDEBAR -->
+		<div th:replace="~{fragment/student-sidebar :: studentSidebar}"></div>
+
+		<!-- MAIN CONTENT -->
+		<main class="flex-grow-1 bg-light">
+
+			<section class="section-pad">
+
+				<div class="container-fluid">
+
+					<!-- Breadcrumb -->
+					<nav class="mb-4">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a th:href="@{/student/portal}">
+									Dashboard </a></li>
+
+							<li class="breadcrumb-item"><a th:href="@{/student/courses}">
+									My Courses </a></li>
+
+							<li class="breadcrumb-item active">Java Programming</li>
+						</ol>
+					</nav>
+
+					<!-- COURSE HEADER -->
+					<div class="card border-0 shadow-sm mb-4">
+
+						<div class="card-body">
+
+							<h2 class="fw-bold mb-3" th:text="${course.name}">Java
+								Programming</h2>
+
+
+							<p class="text-muted mb-3">
+
+								<i class="bi bi-person-fill me-2"></i> <span
+									th:text="${course.teacherName}"> John Smith </span>
+
+							</p>
+
+							<div class="d-flex flex-wrap gap-2">
+
+								<span class="badge bg-primary" th:text="${course.level}">
+									Beginner </span> <span class="badge bg-success"
+									th:text="${course.status}"> Open </span> <span
+									class="badge bg-secondary"
+									th:text="${course.durationWeeks + ' Weeks'}"> 8 Weeks </span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- COURSE OVERVIEW -->
+					<div class="card border-0 shadow-sm mb-4">
+
+						<div class="card-body">
+
+							<h4 class="fw-bold mb-3">Course Overview</h4>
+
+							<p th:text="${course.description}"></p>
+
+						</div>
+
+					</div>
+
+					<div class="row g-4">
+
+						<!-- COURSE INFORMATION -->
+						<div class="col-lg-6">
+
+							<div class="card border-0 shadow-sm h-100">
+
+								<div class="card-body">
+
+									<h4 class="fw-bold mb-4">Course Information</h4>
+
+									<table class="table table-borderless align-middle mb-0">
+
+										<tr>
+											<th width="35%">Category</th>
+											<td th:text="${course.categoryName}"></td>
+										<tr>
+											<th>Subcategory</th>
+											<td th:text="${course.subcategoryName}"></td>
+										</tr>
+
+										<tr>
+											<th>Teacher</th>
+											<td th:text="${course.teacherName}">John Smith</td>
+										</tr>
+
+										<tr>
+											<th>Duration</th>
+											<td th:text="${course.durationWeeks + ' Weeks'}"></td>
+										</tr>
+
+										<tr>
+											<th>Level</th>
+											<td th:text="${course.level}"></td>
+										</tr>
+
+										<tr>
+											<th>Status</th>
+											<td><span class="badge bg-success"
+												th:text="${course.status}"> Open </span></td>
+
+
+										</tr>
+
+									</table>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<!-- UPCOMING SCHEDULE -->
+						<div class="col-lg-6">
+
+							<div class="card border-0 shadow-sm h-100">
+
+								<div class="card-body">
+
+									<h4 class="fw-bold mb-4">Upcoming Schedule</h4>
+
+									<div class="table-responsive">
+
+										<table class="table table-hover align-middle">
+
+											<thead class="table-light">
+
+												<tr>
+
+													<th>Date</th>
+													<th>Time</th>
+													<th>Room</th>
+
+												</tr>
+
+											</thead>
+
+											<tbody>
+
+												<tr th:each="schedule : ${schedules}">
+
+													<td th:text="${schedule.scheduleDate}"></td>
+
+													<td><span th:text="${schedule.startTime}"></span> - <span
+														th:text="${schedule.endTime}"></span></td>
+
+													<td th:text="${schedule.room}"></td>
+
+												</tr>
+
+
+												<tr th:if="${#lists.isEmpty(schedules)}">
+
+													<td colspan="3" class="text-center text-muted">No
+														upcoming schedule available.</td>
+
+												</tr>
+
+											</tbody>
+
+										</table>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</section>
+
+		</main>
+
+	</div>
+
+	<div th:replace="~{fragment/footer :: footer}"></div>
+	<div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+</html>

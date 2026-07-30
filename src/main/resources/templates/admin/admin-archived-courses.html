@@ -67,7 +67,7 @@
 
 
 							<p class="fs-3 fw-bold mb-0 text-dark"
-								th:text="${#lists.size(courses)}"></p>
+								th:text="${totalArchivedCourses}"></p>
 
 
 						</div>
@@ -146,17 +146,71 @@
 
 
 
-						<div class="input-group" style="max-width: 350px;">
+						<form th:action="@{/admin/courses/archive}" method="get">
+
+    <div class="d-flex flex-column flex-md-row gap-2">
 
 
-							<span class="input-group-text bg-white"> <i
-								class="bi bi-search"></i>
+        <!-- Search -->
+        <div class="input-group" style="width: 350px;">
 
-							</span> <input type="search" class="form-control"
-								placeholder="Search archived courses...">
+            <span class="input-group-text bg-white">
+                <i class="bi bi-search"></i>
+            </span>
 
 
-						</div>
+            <input type="search"
+                   class="form-control"
+                   name="keyword"
+                   placeholder="Search archived courses..."
+                   th:value="${keyword}">
+
+        </div>
+
+
+
+        <!-- Status Filter -->
+        <select class="form-select"
+                name="status"
+                onchange="this.form.submit()">
+
+
+            <option value=""
+                    th:selected="${status == null}">
+                All Status
+            </option>
+
+
+            <option value="Open"
+                    th:selected="${status == 'Open'}">
+                Open
+            </option>
+
+
+            <option value="Draft"
+                    th:selected="${status == 'Draft'}">
+                Draft
+            </option>
+
+
+            <option value="Completed"
+                    th:selected="${status == 'Completed'}">
+                Completed
+            </option>
+
+
+            <option value="Cancelled"
+                    th:selected="${status == 'Cancelled'}">
+                Cancelled
+            </option>
+
+
+        </select>
+
+
+    </div>
+
+</form>
 
 
 

@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+
+<body class="bg-light">
+
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+
+		<!-- MAIN CONTENT -->
+
+
+
+		<section class="section-pad">
+
+
+			<div class="container-fluid">
+
+
+
+				<!-- PAGE HEADER -->
+
+				<div class="mb-4">
+
+
+					<h2 class="fw-bold">Payment Detail</h2>
+
+
+					<a href="/admin/payment" class="btn btn-outline-primary btn-sm">
+
+						<i class="bi bi-arrow-left"></i> Back to Payment List
+
+					</a>
+
+
+				</div>
+
+
+
+
+
+
+				<div class="row g-4">
+
+
+
+
+
+					<!-- PAYMENT SUMMARY -->
+
+					<div class="col-lg-6">
+
+
+						<div class="card border-0 shadow-sm h-100">
+
+
+							<div class="card-body">
+
+
+
+								<h4 class="fw-bold mb-4">Payment Summary</h4>
+
+
+
+								<div class="mb-3">
+
+
+									<p class="text-muted mb-1">Student</p>
+
+									<h6 class="mb-1">
+
+										<span th:text="${payment.studentName}"></span>
+									</h6>
+
+
+								</div>
+
+
+
+
+								<div class="mb-3">
+
+
+									<p class="text-muted mb-1">Course</p>
+
+
+									<h6 class="mb-1">
+
+										<span th:text="${payment.courseName}"></span>
+									</h6>
+
+
+								</div>
+
+
+
+
+								<div class="mb-3">
+
+
+									<p class="text-muted mb-1">Payment Type</p>
+
+
+									<span class="badge bg-info"
+										th:text="${payment.paymentTypeName}"> </span>
+
+
+								</div>
+
+
+
+
+
+								<div class="mb-4">
+
+
+									<p class="text-muted mb-1">Status</p>
+
+
+									<p class="mb-3">
+
+
+										<span class="badge"
+											th:classappend="${payment.status == 'Success'} ? ' bg-success' : ' bg-warning text-dark'"
+											th:text="${payment.status}"> </span>
+									</p>
+
+
+								</div>
+
+
+
+
+
+								<hr>
+
+
+
+
+								<div class="d-flex justify-content-between mb-3">
+
+
+									<span class="text-muted"> Total Course Fee </span>
+
+
+									<p class="d-flex justify-content-between">
+
+
+										<strong
+											th:text="${'MMK ' + #numbers.formatDecimal(payment.courseFee,1,'COMMA',2,'POINT')}">
+										</strong>
+									</p>
+
+
+								</div>
+
+
+
+
+								<div class="d-flex justify-content-between mb-3">
+
+
+									<span class="text-muted"> Paid Amount </span>
+
+
+									<p class="d-flex justify-content-between">
+
+
+										<strong
+											th:text="${'MMK ' + #numbers.formatDecimal(payment.paidAmount,1,'COMMA',2,'POINT')}">
+										</strong>
+									</p>
+
+
+								</div>
+
+
+
+
+
+								<div class="d-flex justify-content-between">
+
+
+									<span class="text-muted"> Remaining Balance </span>
+
+
+									<p class="d-flex justify-content-between mb-0">
+
+
+										<strong
+											th:text="${'MMK ' + #numbers.formatDecimal(payment.remainingBalance,1,'COMMA',2,'POINT')}">
+										</strong>
+									</p>
+
+
+								</div>
+
+
+								<div th:if="${payment.paymentTypeName == 'INSTALLMENT'}">
+
+									<hr>
+
+									<p class="d-flex justify-content-between mb-0">
+
+										<span>Installments Completed</span> <strong> <span
+											th:text="${payment.completedInstallments}"></span> / <span
+											th:text="${payment.totalInstallments}"></span>
+
+										</strong>
+
+									</p>
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+
+
+					<!-- LATEST TRANSACTION -->
+
+
+					<div class="col-lg-6">
+
+
+						<div class="card border-0 shadow-sm h-100">
+
+
+							<div class="card-body">
+
+
+								<h4 class="fw-bold mb-4">Latest Transaction</h4>
+
+
+
+
+								<div class="mb-3">
+
+    <p class="text-muted mb-1">Transaction Reference</p>
+
+    <h6 th:text="${payment.transactionReference}">
+        TXN-ABC12345
+    </h6>
+
+</div>
+
+
+
+
+
+								<div class="mb-3">
+
+									<p class="text-muted mb-1">Payment Method</p>
+
+									<h6 th:text="${payment.paymentMethodName}">
+   
+</h6>
+
+								</div>
+
+
+
+
+
+								<div class="mb-3">
+
+
+									<p class="text-muted mb-1">Amount</p>
+
+
+									<h6 th:text="${'MMK ' + #numbers.formatDecimal(payment.amount,1,'COMMA',2,'POINT')}">
+   
+</h6>
+
+
+								</div>
+
+
+
+
+
+								<div class="mb-3">
+
+
+									<p class="text-muted mb-1">Payment Date</p>
+
+
+								<h6 th:text="${payment.paymentDate}">
+    
+</h6>
+
+
+								</div>
+
+
+
+
+
+								<div>
+
+
+									<p class="text-muted mb-1">Status</p>
+
+
+								<span class="badge"
+      th:classappend="${payment.status == 'Success'} ? ' bg-success' : ' bg-warning text-dark'"
+      th:text="${payment.status}">
+    
+</span>
+
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+
+
+					<!-- INSTALLMENT SCHEDULE -->
+
+
+					<div class="col-12">
+
+
+						<div class="card border-0 shadow-sm">
+
+
+							<div class="card-body">
+
+
+								<h4 class="fw-bold mb-4">Installment Schedule</h4>
+
+
+
+								<div class="table-responsive">
+
+
+									<table class="table table-hover align-middle">
+
+
+										<thead class="table-light">
+
+
+											<tr>
+
+
+												<th>No</th>
+
+
+												<th>Amount</th>
+
+
+												<th>Due Date</th>
+
+
+												<th>Status</th>
+
+
+												<th>Paid Date</th>
+
+
+											</tr>
+
+
+										</thead>
+
+
+
+										<tbody>
+
+<tr th:each="plan : ${payment.installmentPlans}">
+
+
+    <td th:text="${plan.installmentNumber}">
+        1
+    </td>
+
+
+    <td>
+        <span th:text="${'MMK ' + #numbers.formatDecimal(plan.amountDue,1,'COMMA',2,'POINT')}">
+        </span>
+    </td>
+
+
+    <td th:text="${plan.dueDate}">
+        28 July 2026
+    </td>
+
+
+    <td>
+
+        <span class="badge"
+              th:classappend="${plan.status == 'Paid'} 
+                    ? ' bg-success' 
+                    : ' bg-warning text-dark'"
+              th:text="${plan.status}">
+            
+        </span>
+
+    </td>
+
+
+    <td>
+
+        <span th:if="${plan.paidAt != null}"
+              th:text="${plan.paidAt.toLocalDate()}">
+        </span>
+
+
+        <span th:if="${plan.paidAt == null}">
+            -
+        </span>
+
+    </td>
+
+
+</tr>
+
+
+</tbody>
+
+
+									</table>
+
+
+								</div>
+
+
+							</div>
+
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+
+
+
+
+					<!-- PAYMENT HISTORY -->
+
+
+					<div class="col-12">
+
+
+						<div class="card border-0 shadow-sm">
+
+
+							<div class="card-body">
+
+
+								<h4 class="fw-bold mb-4">Payment History</h4>
+
+
+
+
+
+								<div class="table-responsive">
+
+
+									<table class="table table-hover align-middle">
+
+
+										<thead class="table-light">
+
+
+											<tr>
+
+
+												<th>Date</th>
+
+
+												<th>Amount</th>
+
+
+												<th>Payment Method</th>
+
+
+												<th>Status</th>
+
+
+											</tr>
+
+
+										</thead>
+
+
+
+										<tbody>
+
+
+<tr th:each="history : ${paymentHistory}">
+
+
+    <td th:text="${history.paymentDate}">
+        28 July 2026
+    </td>
+
+
+    <td>
+        <span
+        th:text="${'MMK ' + #numbers.formatDecimal(history.amount,1,'COMMA',2,'POINT')}">
+        </span>
+    </td>
+
+
+    <td th:text="${history.paymentMethodName}">
+        KBZ Pay
+    </td>
+
+
+    <td>
+
+
+        <span class="badge"
+              th:classappend="${history.status == 'Success'} 
+              ? ' bg-success' 
+              : ' bg-warning text-dark'"
+              th:text="${history.status}">
+            Success
+        </span>
+
+
+    </td>
+
+
+</tr>
+
+
+</tbody>
+
+
+
+									</table>
+
+
+								</div>
+
+
+
+							</div>
+
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+				</div>
+
+
+
+
+
+			</div>
+
+
+		</section>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+</html>
