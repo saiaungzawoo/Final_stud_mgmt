@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.finalproject.Final.model.ScholarshipApplicationBean;
 import com.finalproject.Final.model.ScholarshipBean;
+import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.ScholarshipApplicationRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -39,12 +40,17 @@ public class ScholarshipsControllerAdmin {
             Model model,
             HttpSession session) {
 
+    	
+    	 // Login Admin
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+
         if (result.hasErrors()) {
             model.addAttribute("courses", sArepo.getAllCourseNa()); 
             return "admin/create-scholarship";
         }
 
         scholarship.setScholarshipID(java.util.UUID.randomUUID().toString());
+        scholarship.setCreatedByUserID(loginUser.getUserID());   // <-- Admin ID
         scholarship.setCreatedAt(LocalDateTime.now());
         scholarship.setUpdatedAt(LocalDateTime.now());
 
