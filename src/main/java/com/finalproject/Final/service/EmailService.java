@@ -1,54 +1,73 @@
 package com.finalproject.Final.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
 
 
 @Service
 public class EmailService {
 
 
-    @Autowired
-    private JavaMailSender mailSender;
-    /**
-     * Send OTP email
-     */
-    public void sendOtp(String toEmail, String otp) {
+
+    private final JavaMailSender mailSender;
 
 
-        SimpleMailMessage message = new SimpleMailMessage();
+
+    public EmailService(
+            JavaMailSender mailSender
+    ){
+
+        this.mailSender = mailSender;
+
+    }
 
 
-        message.setTo(toEmail);
+
+
+
+
+    public void sendOtp(
+            String email,
+            String otp
+    ){
+
+
+
+        SimpleMailMessage message =
+                new SimpleMailMessage();
+
+
+
+        message.setTo(email);
 
 
         message.setSubject(
-                "Student Management System - OTP Verification"
+                "Password Reset OTP"
         );
+
 
 
         message.setText(
-                """
-                Hello,
 
-                Your OTP Code is:
+                "Your OTP Code is : "
+                + otp
+                + "\n\n"
+                + "This OTP is valid for 1 minute."
+                + "\n\n"
+                + "If you did not request this, please ignore this email."
 
-                %s
-
-                This OTP is valid for 5 minutes only.
-                If you did not request this OTP, please ignore this email.
-
-                Please do not share this code with anyone.
-
-                Thank you,
-                Student Management System
-                """.formatted(otp)
         );
+
+
 
         mailSender.send(message);
 
+
     }
+
+
 
 }

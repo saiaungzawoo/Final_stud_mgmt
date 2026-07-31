@@ -1,10 +1,15 @@
 package com.finalproject.Final.service;
+
+
 import java.security.SecureRandom;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.UserRepository;
+
 
 
 @Service
@@ -26,7 +31,7 @@ public class ForgotPasswordService {
             UserRepository userRepository,
             EmailService emailService,
             PasswordEncoder passwordEncoder
-    ) {
+    ){
 
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -37,8 +42,11 @@ public class ForgotPasswordService {
 
 
 
+    // =========================
     // Send OTP
-    public boolean sendOtp(String email) {
+    // =========================
+
+    public boolean sendOtp(String email){
 
 
         UserBean user =
@@ -46,14 +54,16 @@ public class ForgotPasswordService {
 
 
 
-        if(user == null) {
+        if(user == null){
 
             return false;
+
         }
 
 
 
-        String otp = generateOtp();
+        String otp =
+                generateOtp();
 
 
 
@@ -70,6 +80,7 @@ public class ForgotPasswordService {
         );
 
 
+
         return true;
 
     }
@@ -78,11 +89,16 @@ public class ForgotPasswordService {
 
 
 
-    // Verify OTP Only
-    public String verifyOtp(
+
+
+    // =========================
+    // Verify OTP
+    // =========================
+
+    public boolean verifyOtp(
             String email,
             String otp
-    ) {
+    ){
 
 
         UserBean user =
@@ -90,35 +106,34 @@ public class ForgotPasswordService {
 
 
 
-        if(user == null) {
+        if(user == null){
 
-            return "Email not found.";
+            return false;
+
+        }
+
+
+
+        if(user.getOtpCode() == null){
+
+            return false;
 
         }
 
 
 
 
-        if(user.getOtpCode() == null) {
-
-            return "OTP expired.";
-
-        }
+        if(!user.getOtpCode().equals(otp)){
 
 
-
-
-
-        if(!user.getOtpCode().equals(otp)) {
-
-
-            return "Invalid OTP.";
+            return false;
 
         }
 
 
 
-        return "SUCCESS";
+        return true;
+
 
     }
 
@@ -127,15 +142,20 @@ public class ForgotPasswordService {
 
 
 
-    // Update Password Only
-    public String updatePassword(
+
+
+    // =========================
+    // Update Password
+    // =========================
+
+    public boolean updatePassword(
             String email,
             String newPassword
-    ) {
+    ){
 
 
 
-        String encodedPassword =
+        String encodePassword =
                 passwordEncoder.encode(newPassword);
 
 
@@ -143,24 +163,25 @@ public class ForgotPasswordService {
         int result =
                 userRepository.updatePassword(
                         email,
-                        encodedPassword
+                        encodePassword
                 );
 
 
 
-        if(result > 0) {
+        if(result > 0){
 
 
             userRepository.clearOtpCode(email);
 
 
-            return "SUCCESS";
+            return true;
 
         }
 
 
 
-        return "Password update failed.";
+        return false;
+
 
     }
 
@@ -170,8 +191,11 @@ public class ForgotPasswordService {
 
 
 
+    // =========================
     // Generate OTP
-    private String generateOtp() {
+    // =========================
+
+    private String generateOtp(){
 
 
         int otp =
@@ -181,6 +205,7 @@ public class ForgotPasswordService {
 
 
         return String.valueOf(otp);
+
 
     }
 

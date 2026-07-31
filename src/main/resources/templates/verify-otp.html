@@ -2,258 +2,279 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <title>Verify OTP</title>
 
-<title>Verify OTP</title>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
 
-<th:block th:replace="~{fragment/css :: css}"></th:block>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
 
+        .auth-card {
+            border: none;
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 20px 25px rgba(0,0,0,.08);
+        }
+
+        .auth-header-icon {
+            width: 60px;
+            height: 60px;
+            background: #e0e7ff;
+            color: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            font-size: 24px;
+        }
+
+        .otp-input {
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 24px;
+            letter-spacing: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .otp-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99,102,241,.15);
+            outline: none;
+        }
+
+        .btn-verify {
+            background: #4f46e5;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        .btn-verify:hover {
+            background: #4338ca;
+        }
+
+        .timer-badge {
+            background: #fef2f2;
+            color: #ef4444;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        .resend-btn {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    background: #4f46e5;
+    color: white;
+}
+
+.resend-btn:hover {
+    background: #4338ca;
+}
+
+        .alert {
+            border-radius: 10px;
+        }
+    </style>
 </head>
-
 
 <body>
 
-
 <div th:replace="~{fragment/header :: header}"></div>
 
+<div class="container my-auto py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
 
-<div class="container mt-5">
+            <div class="card auth-card p-4">
 
+                <div class="text-center mb-4">
 
-<div class="row justify-content-center">
+                    <div class="auth-header-icon mb-3">
+                        🔒
+                    </div>
 
-<div class="col-md-6">
+                    <h3 class="fw-bold">Verify OTP</h3>
 
+                    <p class="text-muted">
+                        Enter the verification code sent to your email
+                    </p>
 
-<div class="card shadow">
+                </div>
 
+                <div th:if="${message}" class="alert alert-success">
+                    <span th:text="${message}"></span>
+                </div>
 
-<div class="card-header text-center">
+                <div th:if="${error}" class="alert alert-danger">
+                    <span th:text="${error}"></span>
+                </div>
 
-<h3>
-Verify OTP
-</h3>
+                <!-- VERIFY FORM -->
+                <form th:action="@{/verify-otp}"
+                      method="post"
+                      onsubmit="return validateOtp();">
 
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            OTP Code
+                        </label>
+
+                        <input
+                                type="text"
+                                id="otp"
+                                name="otp"
+                                maxlength="6"
+                                class="form-control otp-input"
+                                placeholder="••••••"
+                                autocomplete="off"
+                                required>
+
+                        <div id="otpError"
+                             class="text-danger text-center mt-2"
+                             style="display:none;">
+                        </div>
+
+                    </div>
+
+                    <button
+                            type="submit"
+                            id="verifyBtn"
+                            class="btn btn-primary btn-verify w-100">
+                        Verify OTP
+                    </button>
+
+                </form>
+
+                <!-- TIMER -->
+
+                <div class="text-center mt-4">
+
+                    <span class="text-muted">
+                        Time Remaining :
+                    </span>
+
+                    <span id="timer"
+                          class="timer-badge">
+                        05:00
+                    </span>
+
+                </div>
+
+                <!-- RESEND FORM -->
+
+                <form
+                        id="resendForm"
+                        th:action="@{/forgot-password/resend}"
+                        method="post"
+                        style="display:none;"
+                        class="mt-4">
+
+                    <button
+                            type="submit"
+                            class="resend-btn">
+                        Resend OTP
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
 </div>
+<script th:inline="javascript">
 
+    // OTP Expire Time
+    let expireTime = /*[[${expireTime}]]*/ 0;
 
+    const timerElement = document.getElementById("timer");
+    const verifyBtn = document.getElementById("verifyBtn");
+    const resendForm = document.getElementById("resendForm");
 
-<div class="card-body">
+    let interval = setInterval(updateTimer, 1000);
+    updateTimer();
 
+    function updateTimer() {
 
+        const now = new Date().getTime();
+        const distance = expireTime - now;
 
-<div th:if="${error}"
-     class="alert alert-danger"
-     th:text="${error}">
-</div>
+        if (distance <= 0) {
 
+            clearInterval(interval);
 
+            timerElement.innerHTML = "Expired";
 
-<!-- Verify OTP Form -->
+            verifyBtn.style.display = "none";
+            resendForm.style.display = "block";
 
-<form th:action="@{/verify-otp}"
-      method="post">
+            return;
+        }
 
+        let minutes = Math.floor(distance / 1000 / 60);
+        let seconds = Math.floor((distance / 1000) % 60);
 
-<label>
-OTP Code
-</label>
+        minutes = String(minutes).padStart(2, '0');
+        seconds = String(seconds).padStart(2, '0');
 
-<input type="text"
-       name="otp"
-       maxlength="6"
-       inputmode="numeric"
-       class="form-control"
-       placeholder="Enter 6 digit OTP"
-       required>
-
-
-
-
-<br>
-
-
-
-<div class="text-center text-danger">
-
-OTP expires in
-
-<b id="timer">
-00:30
-</b>
-
-</div>
-
-
-
-<br>
-
-
-
-<button type="submit"
-        class="btn btn-success w-100">
-
-Verify OTP
-
-</button>
-
-
-</form>
-
-
-
-
-<!-- Resend OTP Form -->
-
-<form th:action="@{/forgot-password/resend}"
-      method="post"
-      class="text-center mt-3">
-
-
-<input type="hidden"
-       name="email"
-       th:value="${session.email}">
-
-
-
-<button type="submit"
-        id="resendBtn"
-        class="btn btn-link"
-        disabled>
-
-Resend OTP
-
-</button>
-
-
-</form>
-
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-<script>
-
-let time = 30;
-
-let verifyBtn = document.querySelector("button[type='submit']");
-let otpInput = document.querySelector("input[name='otp']");
-
-
-// OTP input validation
-otpInput.addEventListener("input", function(){
-
-    this.value = this.value.replace(/[^0-9]/g, "");
-
-
-    if(this.value.length > 6){
-
-        this.value = this.value.substring(0,6);
-
+        timerElement.innerHTML = minutes + ":" + seconds;
     }
 
-});
+    // OTP Validation
+    function validateOtp() {
 
+        let otp = document.getElementById("otp").value.trim();
+        let error = document.getElementById("otpError");
 
-// Timer
-let timer = setInterval(function(){
+        error.style.display = "none";
 
+        if (otp === "") {
+            error.innerHTML = "Please enter OTP.";
+            error.style.display = "block";
+            return false;
+        }
 
-    let min = Math.floor(time / 60);
+        // Only Number
+        if (!/^[0-9]+$/.test(otp)) {
+            error.innerHTML = "Only numbers are allowed.";
+            error.style.display = "block";
+            return false;
+        }
 
-    let sec = time % 60;
+        // Only 6 Digits
+        if (otp.length !== 6) {
+            error.innerHTML = "Only 6 numbers are allowed.";
+            error.style.display = "block";
+            return false;
+        }
 
-
-    document.getElementById("timer").innerHTML =
-        min + ":" + (sec < 10 ? "0" : "") + sec;
-
-
-
-    time--;
-
-
-    if(time < 0){
-
-
-        clearInterval(timer);
-
-
-        document.getElementById("timer")
-        .innerHTML = "Expired";
-
-
-        otpInput.disabled = true;
-
-
-        verifyBtn.disabled = true;
-
-
-        document.getElementById("resendBtn")
-        .disabled = false;
-
-
+        return true;
     }
 
+    // ရိုက်နေတုန်း Error Message ပဲဖျောက်မယ်
+    document.getElementById("otp").addEventListener("input", function () {
 
-},1000);
+        document.getElementById("otpError").style.display = "none";
 
-
-
-// Submit validation
-
-document.querySelector("form")
-.addEventListener("submit", function(e){
-
-
-    let otp = otpInput.value.trim();
-
-
-
-    if(otp.length !== 6){
-
-
-        e.preventDefault();
-
-
-        alert("OTP Code must be 6 digits");
-
-
-        return false;
-
-    }
-
-
-
-    if(isNaN(otp)){
-
-
-        e.preventDefault();
-
-
-        alert("Only numbers are allowed");
-
-
-        return false;
-
-    }
-
-
-
-});
+    });
 
 </script>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+
 </body>
 </html>
