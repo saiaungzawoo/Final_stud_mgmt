@@ -115,7 +115,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 	         || uri.startsWith("/courses/")
 	         || uri.startsWith("/scholarship/")
 	         || uri.startsWith("/forgot-password")
-	         || uri.startsWith("/payment/test-outstanding")) {
+	         || uri.startsWith("/payment/test-outstanding")
+	         || uri.startsWith("/student")) {
 
 	     return true;
 
@@ -146,7 +147,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 	    // ADMIN AREA
 	    // =========================
 
-	    if(uri.startsWith("/admin")) {
+	    if(uri.startsWith("/admin")  || uri.startsWith("/student/admin")) {
 
 
 	        if("Admin".equals(role)) {
