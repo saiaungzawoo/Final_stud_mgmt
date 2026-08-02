@@ -150,6 +150,7 @@ public class PaymentRepository {
 					            pm.name AS paymentMethodName,
 					            pt.name AS paymentTypeName,
 					            u.name AS studentName,
+					            c.courseID AS courseId,
 					            c.name AS courseName,
 					            c.fee AS courseFee,
 
@@ -181,7 +182,7 @@ public class PaymentRepository {
 					        LEFT JOIN payment_type pt
 					            ON e.paymentTypeID = pt.paymentTypeID
 
-					        LEFT JOIN user u
+					        LEFT JOIN `user` u
 					            ON e.userID = u.userID
 
 					        LEFT JOIN installment_plan ip
