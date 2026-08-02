@@ -10,190 +10,200 @@ import com.finalproject.Final.model.ScheduleBean;
 
 @Repository
 public class ScheduleRepository {
-	
+
 	@Autowired
 	private JdbcTemplate jdbc;
-	
+
 	public List<ScheduleBean> findByCourseId(String courseId) {
 
-	    String sql =
-	        "SELECT * FROM schedule WHERE courseID = ?";
+		String sql = "SELECT * FROM schedule WHERE courseID = ?";
 
-	    return jdbc.query(sql, new ScheduleRowMapper(), courseId);
+		return jdbc.query(sql, new ScheduleRowMapper(), courseId);
 	}
-	public int getDurationWeeks(String courseId){
 
-	    String sql = """
-	            SELECT duration_weeks
-	            FROM course
-	            WHERE courseID=?
-	            """;
+	public int getDurationWeeks(String courseId) {
 
-	    return jdbc.queryForObject(sql, Integer.class, courseId);
+		String sql = """
+				SELECT duration_weeks
+				FROM course
+				WHERE courseID=?
+				""";
 
-	}
-	public void insertSchedule(ScheduleBean obj){
-
-	    String sql = """
-	            INSERT INTO schedule
-	            (
-	            scheduleID,
-	            courseID,
-	            schedule_date,
-	            start_time,
-	            end_time,
-	            room,
-	            topic,
-	            status
-	            )
-	            VALUES
-	            (?,?,?,?,?,?,?,?)
-	            """;
-
-	    jdbc.update(sql,
-
-	            obj.getScheduleId(),
-	            obj.getCourseId(),
-	            obj.getScheduleDate(),
-	            obj.getStartTime(),
-	            obj.getEndTime(),
-	            obj.getRoom(),
-	            obj.getTopic(),
-	            obj.getStatus());
+		return jdbc.queryForObject(sql, Integer.class, courseId);
 
 	}
-	public List<ScheduleBean> findAllSchedule(){
 
-	    String sql = """
-	            SELECT *
-	            FROM schedule
-	            ORDER BY schedule_date ASC
-	            """;
+	public void insertSchedule(ScheduleBean obj) {
 
-	    return jdbc.query(sql, new ScheduleRowMapper());
+		String sql = """
+				INSERT INTO schedule
+				(
+				scheduleID,
+				courseID,
+				schedule_date,
+				start_time,
+				end_time,
+				room,
+				topic,
+				status
+				)
+				VALUES
+				(?,?,?,?,?,?,?,?)
+				""";
 
-	}
-	public List<ScheduleBean> findScheduleByCourse(String courseId){
+		jdbc.update(sql,
 
-	    String sql = """
-	            SELECT *
-	            FROM schedule
-	            WHERE courseID=?
-	            ORDER BY schedule_date
-	            """;
-
-
-	    return jdbc.query(
-	            sql,
-	            new ScheduleRowMapper(),
-	            courseId
-	    );
+				obj.getScheduleId(), obj.getCourseId(), obj.getScheduleDate(), obj.getStartTime(), obj.getEndTime(),
+				obj.getRoom(), obj.getTopic(), obj.getStatus());
 
 	}
-	public boolean scheduleExists(String courseID){
 
-	    String sql = """
-	            SELECT COUNT(*)
-	            FROM schedule
-	            WHERE courseID=?
-	            """;
+	public List<ScheduleBean> findAllSchedule() {
 
-	    Integer count = jdbc.queryForObject(
-	            sql,
-	            Integer.class,
-	            courseID);
+		String sql = """
+				SELECT *
+				FROM schedule
+				ORDER BY schedule_date ASC
+				""";
 
-	    return count != null && count > 0;
+		return jdbc.query(sql, new ScheduleRowMapper());
 
 	}
-	public boolean attendanceExistsByCourse(String courseID){
 
-	    String sql = """
-	            SELECT COUNT(*)
-	            FROM attendance a
-	            JOIN schedule s
-	            ON a.scheduleID=s.scheduleID
-	            WHERE s.courseID=?
-	            """;
+	public List<ScheduleBean> findScheduleByCourse(String courseId) {
 
-	    Integer count = jdbc.queryForObject(
-	            sql,
-	            Integer.class,
-	            courseID);
+		String sql = """
+				SELECT *
+				FROM schedule
+				WHERE courseID=?
+				ORDER BY schedule_date
+				""";
 
-	    return count != null && count > 0;
+		return jdbc.query(sql, new ScheduleRowMapper(), courseId);
 
 	}
-	public int deleteScheduleByCourse(String courseID){
 
-	    String sql = """
-	            DELETE
-	            FROM schedule
-	            WHERE courseID=?
-	            """;
+	public boolean scheduleExists(String courseID) {
 
-	    return jdbc.update(sql, courseID);
+		String sql = """
+				SELECT COUNT(*)
+				FROM schedule
+				WHERE courseID=?
+				""";
+
+		Integer count = jdbc.queryForObject(sql, Integer.class, courseID);
+
+		return count != null && count > 0;
 
 	}
-	public ScheduleBean getFirstSchedule(String courseId){
 
-	    String sql = """
-	            SELECT *
-	            FROM schedule
-	            WHERE courseID=?
-	            ORDER BY schedule_date
-	            LIMIT 1
-	            """;
+	public boolean attendanceExistsByCourse(String courseID) {
 
-	    return jdbc.queryForObject(
-	            sql,
-	            new ScheduleRowMapper(),
-	            courseId
-	    );
+		String sql = """
+				SELECT COUNT(*)
+				FROM attendance a
+				JOIN schedule s
+				ON a.scheduleID=s.scheduleID
+				WHERE s.courseID=?
+				""";
+
+		Integer count = jdbc.queryForObject(sql, Integer.class, courseID);
+
+		return count != null && count > 0;
+
 	}
-	public List<String> getRepeatDays(String courseID){
+
+	public int deleteScheduleByCourse(String courseID) {
+
+		String sql = """
+				DELETE
+				FROM schedule
+				WHERE courseID=?
+				""";
+
+		return jdbc.update(sql, courseID);
+
+	}
+
+//	public ScheduleBean getFirstSchedule(String courseId) {
+//
+//		String sql = """
+//				SELECT *
+//				FROM schedule
+//				WHERE courseID=?
+//				ORDER BY schedule_date
+//				LIMIT 1
+//				""";
+//
+//		return jdbc.queryForObject(sql, new ScheduleRowMapper(), courseId);
+//	}
+	
+	
+	//sai
+	public ScheduleBean getFirstSchedule(String courseId) {
 
 	    String sql = """
-	        SELECT DISTINCT DAYNAME(schedule_date) AS dayName
+	        SELECT *
 	        FROM schedule
 	        WHERE courseID=?
+	        ORDER BY schedule_date
+	        LIMIT 1
 	        """;
+
+	    List<ScheduleBean> list =
+	            jdbc.query(sql, new ScheduleRowMapper(), courseId);
+
+	    if(list.isEmpty()) {
+	        return null;
+	    }
+
+	    return list.get(0);
+	}
+
+	// sai
+	public List<String> getRepeatDays(String courseID) {
+
+	    String sql = """
+	            SELECT DAYNAME(schedule_date) AS dayName
+	            FROM schedule
+	            WHERE courseID=?
+	            GROUP BY DAYNAME(schedule_date), DAYOFWEEK(schedule_date)
+	            ORDER BY DAYOFWEEK(schedule_date)
+	            """;
 
 	    return jdbc.query(
 	            sql,
-	            (rs,rowNum)->rs.getString("dayName").toUpperCase(),
+	            (rs, rowNum) -> rs.getString("dayName").toUpperCase(),
 	            courseID
 	    );
 	}
-	public String getTopicPrefix(String courseId){
 
-	    String sql = """
-	            SELECT topic
-	            FROM schedule
-	            WHERE courseID=?
-	            ORDER BY schedule_date
-	            LIMIT 1
-	            """;
+	public String getTopicPrefix(String courseId) {
 
-	    String topic = jdbc.queryForObject(
-	            sql,
-	            String.class,
-	            courseId
-	    );
+		String sql = """
+				SELECT topic
+				FROM schedule
+				WHERE courseID=?
+				ORDER BY schedule_date
+				LIMIT 1
+				""";
 
-	    if(topic==null){
-	        return "";
-	    }
+		String topic = jdbc.queryForObject(sql, String.class, courseId);
 
-	    return topic.replaceAll("\\s+\\d+$","");
+		if (topic == null) {
+			return "";
+		}
+
+		return topic.replaceAll("\\s+\\d+$", "");
 	}
-	public int updateTopic(String scheduleId, String topic) {
-	    String sql = """
-	            UPDATE schedule
-	            SET topic = ?
-	            WHERE scheduleID = ?
-	            """;
 
-	    return jdbc.update(sql, topic, scheduleId);
+	public int updateTopic(String scheduleId, String topic) {
+		String sql = """
+				UPDATE schedule
+				SET topic = ?
+				WHERE scheduleID = ?
+				""";
+
+		return jdbc.update(sql, topic, scheduleId);
 	}
 }

@@ -19,5 +19,23 @@ public class ScheduleService {
         return scheduleRepository.findByCourseId(courseId);
 
     }
+    
+    
+    //sai
+    public ScheduleBean getCourseScheduleSummary(String courseId) {
+
+        ScheduleBean schedule =
+                scheduleRepository.getFirstSchedule(courseId);
+
+        if(schedule == null) {
+            return null;
+        }
+
+        schedule.setRepeatDays(
+                scheduleRepository.getRepeatDays(courseId)
+        );
+
+        return schedule;
+    }
 
 }

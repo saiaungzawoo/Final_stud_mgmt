@@ -49,9 +49,10 @@
 												th:text="${course.status}"> </span>
 										</div>
 
-										<div class="fs-2 fw-bold" th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')} + ' MMK'">
+										<div class="fs-2 fw-bold"
+											th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')} + ' MMK'">
 											0</div>
-											
+
 
 										<p class="text-muted mb-0">Course fee</p>
 									</div>
@@ -102,21 +103,56 @@
 									<table class="table table-hover border">
 										<thead>
 											<tr>
-												<th>Day</th>
-												<th>Start</th>
-												<th>End</th>
+												<th>First Day of Class</th>
+												<th>Start Time</th>
+												<th>End Time</th>
 												<th>Room</th>
+												<th>Days</th>
 											</tr>
 										</thead>
 
 										<tbody>
-											<tr th:each="s : ${schedules}">
-												<td th:text="${#temporals.format(s.scheduleDate, 'dd-MM-yyyy')}"></td>
-												<td th:text="${#temporals.format(s.startTime,'hh:mm a')}"></td>
-												<td th:text="${#temporals.format(s.endTime,'hh:mm a')}"></td>
-												<td th:text="${s.room}"></td>
-											</tr>
-										</tbody>
+
+<tr th:if="${schedule != null}">
+
+<td th:text="${#temporals.format(schedule.scheduleDate,'dd-MM-yyyy')}"></td>
+
+<td th:text="${#temporals.format(schedule.startTime,'hh:mm a')}"></td>
+
+<td th:text="${#temporals.format(schedule.endTime,'hh:mm a')}"></td>
+
+<td th:text="${schedule.room}"></td>
+
+
+<td>
+
+<span th:each="day, stat : ${schedule.repeatDays}">
+
+    <span th:text="${day}"></span>
+
+    <span th:if="${!stat.last}">
+        ,
+    </span>
+
+</span>
+
+</td>
+
+</tr>
+
+
+<tr th:if="${schedule == null}">
+
+<td colspan="5" class="text-center text-muted">
+
+    Schedule will be announced soon.
+
+</td>
+
+</tr>
+
+
+</tbody>
 									</table>
 								</div>
 
@@ -143,8 +179,9 @@
 									</div>
 
 									<div class="d-flex justify-content-between">
-										<span>Fee</span> <strong th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')} + ' MMK'"></strong>
-										
+										<span>Fee</span> <strong
+											th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')} + ' MMK'"></strong>
+
 									</div>
 
 									<!-- ENROLL BUTTON -->
