@@ -57,6 +57,11 @@ public class EnrollmentController {
 
         List<ScheduleBean> schedules =
                 scheduleService.getByCourseId(courseId);
+        
+        ScheduleBean schedule =
+                scheduleService.getCourseScheduleSummary(courseId);
+
+        model.addAttribute("schedule", schedule);
 
         model.addAttribute("student", student);
         model.addAttribute("course", course);

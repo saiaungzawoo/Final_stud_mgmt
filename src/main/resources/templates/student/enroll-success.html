@@ -232,6 +232,19 @@
 	<div th:replace="~{fragment/js :: js}"></div>
 
 
+<script th:inline="javascript">
+
+window.onload = function(){
+
+    let paymentId =
+        /*[[${payment.paymentId}]]*/ "";
+
+    window.location.href =
+        "/receipt/download/" + paymentId;
+
+};
+
+</script>
 
 </body>
 </html>

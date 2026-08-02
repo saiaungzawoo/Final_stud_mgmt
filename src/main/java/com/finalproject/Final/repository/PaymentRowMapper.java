@@ -110,6 +110,12 @@ public class PaymentRowMapper implements RowMapper<PaymentBean> {
         if (rs.getTimestamp("updated_at") != null) {
             p.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
         }
+        
+       
+        
+        p.setCourseId(
+        	    rs.getString("courseId")
+        	);
 
         return p;
     }
