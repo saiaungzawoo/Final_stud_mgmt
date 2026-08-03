@@ -228,7 +228,7 @@ public class PaymentRepository {
 				LEFT JOIN payment_type pt
 				ON e.paymentTypeID = pt.paymentTypeID
 
-				LEFT JOIN user u
+				LEFT JOIN `user` u
 				ON e.userID = u.userID
 
 				LEFT JOIN course c

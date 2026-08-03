@@ -113,9 +113,10 @@ public class PaymentRowMapper implements RowMapper<PaymentBean> {
         
        
         
-        p.setCourseId(
-        	    rs.getString("courseId")
-        	);
+        try {
+            p.setCourseId(rs.getString("courseId"));
+        } catch (SQLException ignored) {
+        }
 
         return p;
     }

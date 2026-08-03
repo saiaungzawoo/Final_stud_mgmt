@@ -117,9 +117,18 @@
 
                             </div>
 
-                            <div class="col-md-8"
-     th:text="${detail.enrollmentDate}">
-    Enrollment Date
+                            <div class="col-md-8">
+
+    <span th:if="${detail.enrollmentDate != null}"
+          th:text="${detail.enrollmentDate}">
+    </span>
+
+
+    <span th:if="${detail.enrollmentDate == null}"
+          class="text-danger">
+        Not confirmed yet
+    </span>
+
 </div>
 
                         </div>
@@ -317,12 +326,43 @@
 
     <!-- Full Payment -->
 
-    <span th:if="${!detail.installmentPayment}"
+    <!-- <span th:if="${!detail.installmentPayment}"
           class="text-success fw-semibold">
 
         Completed
 
-    </span>
+    </span> -->
+    <!-- Full Payment - Paid -->
+
+<span th:if="${!detail.installmentPayment 
+              and detail.paymentStatus == 'Fully Paid'}"
+      class="text-success fw-semibold">
+
+    Completed
+
+</span>
+
+
+<!-- Full Payment - Unpaid -->
+
+<span th:if="${!detail.installmentPayment 
+              and detail.paymentStatus == 'Unpaid'}"
+      class="text-danger fw-semibold">
+
+    Unpaid
+
+</span>
+
+
+<!-- Full Payment - Partial -->
+
+<span th:if="${!detail.installmentPayment 
+              and detail.paymentStatus == 'Partial'}"
+      class="text-warning fw-semibold">
+
+    Partial
+
+</span>
 
 
 
@@ -457,66 +497,85 @@
 
                 <!-- Timeline -->
 
-                <div class="card border-0 shadow-sm">
+                <!-- Timeline -->
 
-                    <div class="card-header bg-white">
+<div class="card border-0 shadow-sm">
 
-                        <h5 class="fw-bold mb-0">
+    <div class="card-header bg-white">
 
-                            Timeline
+        <h5 class="fw-bold mb-0">
+            Timeline
+        </h5>
 
-                        </h5>
+    </div>
 
-                    </div>
 
-                    <div class="card-body">
+    <div class="card-body">
 
-                        <div class="border-start border-3 ps-3 mb-4">
 
-                            <h6 class="fw-semibold mb-1">
+        <!-- Enrollment Created -->
 
-                                Enrollment Created
+        <div class="border-start border-3 ps-3 mb-4">
 
-                            </h6>
+            <h6 class="fw-semibold mb-1">
+                Enrollment Created
+            </h6>
 
-                            <small class="text-muted"
-       th:text="${detail.enrollmentDate}">
-</small>
+            <small class="text-muted"
+                   th:text="${detail.enrollmentDate}">
+            </small>
 
-                        </div>
+        </div>
 
-                        <div class="border-start border-3 border-success ps-3 mb-4">
 
-                            <h6 class="fw-semibold mb-1">
 
-                                Payment Completed
+        <!-- Payment Completed -->
 
-                            </h6>
+        <div class="border-start border-3 border-success ps-3 mb-4"
+             th:if="${detail.paymentStatus == 'Fully Paid'}">
 
-                           <small class="text-muted"
-       th:text="${detail.paymentDate}">
-</small>
 
-                        </div>
+            <h6 class="fw-semibold mb-1">
 
-                        <div class="border-start border-3 border-primary ps-3">
+                Payment Completed
 
-    <h6 class="fw-semibold mb-1">
+            </h6>
 
-        Enrollment Activated
 
-    </h6>
+            <small class="text-muted"
+                   th:text="${detail.paymentDate}">
+            </small>
 
-    <small class="text-muted"
-           th:text="${detail.updatedAt}">
 
-    </small>
+        </div>
+
+
+
+        <!-- Enrollment Activated -->
+
+        <div class="border-start border-3 border-primary ps-3"
+             th:if="${detail.enrollmentStatus == 'Active'
+                      or detail.enrollmentStatus == 'Completed'}">
+
+
+            <h6 class="fw-semibold mb-1">
+
+                Enrollment Activated
+
+            </h6>
+
+
+            <small class="text-muted"
+                   th:text="${detail.updatedAt}">
+            </small>
+
+
+        </div>
+
+
+    </div>
 
 </div>
-
-                    </div>
-
-                </div>
 
             </div>
 
