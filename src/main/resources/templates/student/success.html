@@ -105,7 +105,10 @@
                         <div class="col-sm-6">
                             <div class="p-3 border rounded-3 bg-light-subtle">
                                 <small class="text-muted d-block fw-semibold mb-1">Date of Birth</small>
-                                <span class="fw-medium" th:text="${userObj.dob}">01-01-2000</span>
+                                <!-- <span class="fw-medium" th:text="${userObj.dob}">01-01-2000</span> -->
+                                 <input class="form-control rounded-3 p-2.5 bg-light text-dark fw-medium border-0"
+                                   th:value="${#temporals.format(userObj.dob,'dd MMM yyyy')}"
+                                  >
                             </div>
                         </div>
 
@@ -131,8 +134,8 @@
 
                     <!-- Action Button -->
                     <div class="text-center">
-                        <a th:href="@{/student/register}" class="btn btn-success px-4 py-2 rounded-pill shadow-sm hover-btn">
-                            <i class="bi bi-person-plus-fill me-1"></i> Register Another User
+                        <a th:href="@{/login}" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm hover-btn">
+                            <i class="bi bi-person-plus-fill me-1"></i> Sign In
                         </a>
                     </div>
 

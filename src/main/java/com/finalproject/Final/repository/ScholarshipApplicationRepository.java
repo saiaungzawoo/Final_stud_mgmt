@@ -19,48 +19,61 @@ public class ScholarshipApplicationRepository {
 	
 	
 	 // Insert for admin
-    public int insert(ScholarshipBean obj){
+	public int insert(ScholarshipBean obj){
 
-        String sql =
-        """
-        INSERT INTO scholarship
-        (
-        scholarshipID,
-        courseID,
-        name,
-        description,
-        discount_type,
-        discount_value,
-        max_recipients,
-        application_deadline,
-        is_active,
-        createdByID,
-        created_at,
-        updated_at
-        )
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
-        """;
+	    String sql =
+	    """
+	    INSERT INTO scholarship
+	    (
+	        scholarshipID,
+	        courseID,
+	        name,
+	        description,
+	        discount_type,
+	        discount_value,
+	        max_recipients,
+	        application_deadline,
+	        is_active,
+	        createdByID,
+	        created_at,
+	        updated_at
+	    )
+	    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+	    """;
 
+	    int result = jdbc.update(
 
-        return jdbc.update(sql,
+	        sql,
 
-        obj.getScholarshipID(),
-        obj.getCourseID(),
-        obj.getScholarshipName(),
-        obj.getDescription(),
-        obj.getDiscountType(),
-        obj.getDiscountValue(),
-        obj.getMaxRecipients(),
-        obj.getApplicationDeadline(),
-        obj.getIsActive(),
-        obj.getCreatedByUserID(),
-        obj.getCreatedAt(),
-        obj.getUpdatedAt()
+	        obj.getScholarshipID(),
+	        obj.getCourseID(),
+	        obj.getScholarshipName(),
+	        obj.getDescription(),
+	        obj.getDiscountType(),
+	        obj.getDiscountValue(),
+	        obj.getMaxRecipients(),
+	        obj.getApplicationDeadline(),
+	        obj.getIsActive(),
+	        obj.getCreatedByUserID(),
+	        obj.getCreatedAt(),
+	        obj.getUpdatedAt()
 
-        );
+	    );
 
-    }
+	    // Scholarship Create Success
+	    if (result > 0) {
 
+	        String updateSql = """
+	            UPDATE course
+	            SET allow_scholarship = 1
+	            WHERE courseID = ?
+	            """;
+
+	        jdbc.update(updateSql, obj.getCourseID());
+	    }
+
+	    return result;
+	}
 
 
 	

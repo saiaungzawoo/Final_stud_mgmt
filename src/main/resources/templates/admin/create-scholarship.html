@@ -159,14 +159,23 @@
                                         </div>
 
                                         <!-- Deadline -->
-                                        <div class="col-12 col-md-6">
-                                            <label class="form-label fw-semibold text-dark mb-2">
-                                                <i class="bi bi-calendar-x me-1 text-primary"></i> Application Deadline
-                                            </label>
-                                            <input type="date" class="form-control rounded-3 p-2.5" th:field="*{applicationDeadline}">
-                                            <div class="text-danger small mt-1" th:errors="*{applicationDeadline}"></div>
-                                        </div>
+<div class="col-12 col-md-6">
+    <label class="form-label fw-semibold text-dark mb-2">
+        <i class="bi bi-calendar-x me-1 text-primary"></i>
+        Application Deadline
+    </label>
 
+    <input type="date"
+           class="form-control rounded-3 p-2.5"
+           th:field="*{applicationDeadline}">
+
+    <small class="text-muted"
+           th:text="${#temporals.format(applicationDeadline,'dd-MM-yyyy')}">
+    </small>
+
+    <div class="text-danger small mt-1"
+         th:errors="*{applicationDeadline}"></div>
+</div>
                                         <!-- Status -->
                                         <div class="col-12">
                                             <label class="form-label fw-semibold text-dark mb-2">
