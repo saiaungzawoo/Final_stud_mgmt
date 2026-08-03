@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
 
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 <body>
 
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
@@ -31,7 +34,7 @@
                 </div>
 
                 <a th:href="@{/attendance/list}"
-                   class="btn btn-outline-secondary">
+                   class="btn btn-primary ">
 
                     <i class="bi bi-arrow-left"></i>
                     Back

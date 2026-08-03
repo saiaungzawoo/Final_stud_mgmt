@@ -1,4 +1,4 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -48,14 +48,14 @@ public class AttendanceController {
     public String saveAttendance(
             @ModelAttribute AttendanceFormBean attendanceForm,HttpSession session) {
     
-    	
-    	  UserBean loginUser =
-    	            (UserBean) session.getAttribute("loginUser");
+      
+        UserBean loginUser =
+                  (UserBean) session.getAttribute("loginUser");
 
-    	    String teacherID = loginUser.getUserID();
+          String teacherID = loginUser.getUserID();
 
 
-    	    for (AttendanceBean attendance : attendanceForm.getAttendances()) {
+          for (AttendanceBean attendance : attendanceForm.getAttendances()) {
 
                 attendance.setCheckInTime(LocalTime.now());
 
@@ -76,10 +76,10 @@ public class AttendanceController {
     }
     @GetMapping("/list")
     public String attendanceHome(Model model,HttpSession session) {
-    	
-    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+      
+       UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
- 	    String teacherID = loginUser.getUserID();
+       String teacherID = loginUser.getUserID();
      
         model.addAttribute(
                 "courseList",
@@ -111,7 +111,12 @@ public class AttendanceController {
         form.setAttendances(
                 attendanceRepository.getStudentList(courseID, scheduleID)
         );
+        boolean exists = attendanceRepository
+                .attendanceExistsBySchedule(scheduleID);
 
+        form.setUpdateMode(exists);
+        
+        model.addAttribute("courseID", courseID);
         model.addAttribute("attendanceForm", form);
 
         return "teacher/attendance";
@@ -123,8 +128,7 @@ public class AttendanceController {
 
         List<ScheduleBean> scheduleList =
                 attendanceRepository.getScheduleByCourse(courseID);
-
-        model.addAttribute("courseID", courseID);
+ model.addAttribute("courseID", courseID);
         model.addAttribute("scheduleList", scheduleList);
 
         return "teacher/attendance-calendar";
@@ -151,7 +155,7 @@ public class AttendanceController {
             @PathVariable String courseID,
             Model model){
 
-    	 System.out.println("Course ID = " + courseID);
+       System.out.println("Course ID = " + courseID);
         model.addAttribute(
             "studentList",
             attendanceRepository
@@ -171,9 +175,9 @@ public class AttendanceController {
     @GetMapping("/students")
     public String studentCourseList(Model model,HttpSession session){
 
-    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+       UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
-  	    String teacherID = loginUser.getUserID();
+        String teacherID = loginUser.getUserID();
 
 
         model.addAttribute(

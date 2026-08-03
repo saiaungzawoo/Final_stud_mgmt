@@ -75,7 +75,7 @@ public class ScheduleController {
         }
 
         model.addAttribute("schedule", bean);
-
+        model.addAttribute("scheduleList", scheduleRepo.findScheduleByCourse(courseID));
         return "teacher/schedule-generate";
     }
 
@@ -113,8 +113,7 @@ public class ScheduleController {
                     "error",
                     "Attendance has already been recorded for this course. Schedule cannot be updated."
             );
-
-            return "redirect:/schedule/generate/" + bean.getCourseId();
+ return "redirect:/schedule/generate/" + bean.getCourseId();
         }
 
         // အထက်ပါ စည်းကမ်းချက်များနှင့် ငြိစွန်းခြင်း မရှိမှသာ ဖျက်ပြီး အသစ် ပြန် Generate လုပ်မည်
@@ -187,20 +186,22 @@ public class ScheduleController {
 
         String courseId = obj.getCourseId();
         int weeks = scheduleRepo.getDurationWeeks(courseId);
-        LocalDate currentDate = obj.getStartDate();
+        LocalDate baseStartDate = obj.getStartDate();
 
         for (int week = 0; week < weeks; week++) {
+            // ဒီအပတ်ရဲ့ စတင်မယ့် ရက်စွဲ
+            LocalDate weekStartDate = baseStartDate.plusWeeks(week);
 
             for (String day : obj.getRepeatDays()) {
-
                 DayOfWeek targetDay = DayOfWeek.valueOf(day);
+                LocalDate currentDate = weekStartDate;
 
+                // targetDay မရောက်မချင်း ရှေ့ကို တိုးမည်
                 while (currentDate.getDayOfWeek() != targetDay) {
                     currentDate = currentDate.plusDays(1);
                 }
 
                 ScheduleBean schedule = new ScheduleBean();
-
                 schedule.setScheduleId(UUID.randomUUID().toString());
                 schedule.setCourseId(courseId);
                 schedule.setScheduleDate(currentDate);
@@ -209,13 +210,8 @@ public class ScheduleController {
                 schedule.setRoom(obj.getRoom());
                 schedule.setTopic(""); // Blank Topic
                 schedule.setStatus("Scheduled");
-
-                scheduleRepo.insertSchedule(schedule);
-
-                currentDate = currentDate.plusDays(1);
+ scheduleRepo.insertSchedule(schedule);
             }
-
-            currentDate = obj.getStartDate().plusWeeks(week + 1);
         }
     }
 }

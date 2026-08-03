@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Attendance Calendar</title>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
 
-    <head th:replace="~{fragment/css :: css}"></head>
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.css" rel="stylesheet">
 
@@ -43,8 +43,17 @@
             <div class="col">
                 <h2 class="fw-bold">Attendance Calendar</h2>
             </div>
+              <div class="text-end mb-3">
+        
+      <a th:href="@{/attendance/list}" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+            
+            </div>
         </div>
-
+        
+      
+            
         <div class="row justify-content-center">
             <div class="col-12">
 
@@ -283,11 +292,7 @@ if(eventDate.getTime() !== today.getTime()){
 
 
 }
-
-
-
-
-window.location.href = info.event.url;
+ window.location.href = info.event.url;
 
 
 

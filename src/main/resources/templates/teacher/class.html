@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}">
-</head>
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
 
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 
 <body>
 
@@ -72,7 +74,7 @@
 
                            <h5 class="fw-bold class-name">
 
-    ☕
+    ☕️
 
     <span th:text="${c.name}">
     </span>

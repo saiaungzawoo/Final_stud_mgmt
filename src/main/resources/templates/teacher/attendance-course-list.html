@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 
 <body>
 
@@ -39,8 +43,9 @@
 
        <div class="row g-4">
 
-    <div class="col-md-6 col-lg-4 col-xl-3 "
-         th:each="course : ${courseList}">
+   <div class="col-12 col-md-6 col-lg-4"
+     th:each="course : ${courseList}">
+       
      <a class="category-card text-decoration-none d-block h-100 p-3"
            th:href="@{/attendance/calendar/{courseID}(courseID=${course.courseId})}">
           <!--  th:href="@{/attendance/schedule/{courseID}(courseID=${course.courseId})}" -->

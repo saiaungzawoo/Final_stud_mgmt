@@ -1,4 +1,4 @@
-:root {
+ :root {
   --ink: #1f2933;
   --muted: #64748b;
   --line: #d9e2ec;
@@ -240,8 +240,7 @@ a {
   top: 22px;
   right: -22px;
 }
-
-.bottom-card {
+ .bottom-card {
   bottom: 24px;
   left: -26px;
 }
@@ -500,8 +499,7 @@ a {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-
-@media (max-width: 991.98px) {
+ @media (max-width: 991.98px) {
   .hero-section {
     min-height: auto;
     padding-top: 3rem;
@@ -753,13 +751,10 @@ a {
     grid-template-columns: 3fr 1fr 1fr 1fr 1.5fr 1.5fr 90px !important;
     align-items: center !important;
 }
-
-.announcement-actions {
+ .announcement-actions {
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
     align-items: center !important;
     gap: 8px !important;
 }
-
-

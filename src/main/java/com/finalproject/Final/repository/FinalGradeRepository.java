@@ -1,4 +1,4 @@
-package com.finalproject.Final.repository;
+ package com.finalproject.Final.repository;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -118,7 +118,7 @@ public class FinalGradeRepository {
 
 
         return result 
-        		!= null ? result : 0.0;
+            != null ? result : 0.0;
     }
     public Double calculateExamScore(String enrollmentId) {
 
@@ -152,8 +152,7 @@ public class FinalGradeRepository {
         return result != null ? result : 0.0;
     }
     public Double calculateAttendanceScore(String enrollmentId) {
-
-        String sql = """
+String sql = """
                 SELECT
                     (
                         SUM(
@@ -319,8 +318,7 @@ public class FinalGradeRepository {
                     bean.setDurationWeeks(
                             rs.getInt("duration_weeks")
                     );
-
-                    bean.setFee(
+ bean.setFee(
                             rs.getDouble("fee")
                     );
 
@@ -347,8 +345,94 @@ public class FinalGradeRepository {
         );
     }
     public FinalGradeBean calculateFinalGrade(String enrollmentId) {
+      System.out.println("SEARCH ENROLLMENT ID = " + enrollmentId);
+
+        String sql = """
+                SELECT
+                    finalGradeID,
+                    enrollmentID,
+                    assignment_total_score,
+                    exam_total_score,
+                    attendance_score,
+                    final_score,
+                    letter_grade,
+                    status,
+                    remarks,
+                    finalizedByID,
+                    finalized_at
+
+                FROM final_grade
+
+                WHERE enrollmentID = ?
+                """;
+       
+
+        List<FinalGradeBean> list =
+                jdbcTemplate.query(sql, (rs,rowNum)->{
+               
+
+            FinalGradeBean bean = new FinalGradeBean();
 
 
+            bean.setFinalGradeID(
+                    rs.getString("finalGradeID")
+            );
+
+            bean.setEnrollmentID(
+                    rs.getString("enrollmentID")
+            );
+
+
+            bean.setAssignmentTotalScore(
+                    rs.getDouble("assignment_total_score")
+            );
+
+
+            bean.setExamTotalScore(
+                    rs.getDouble("exam_total_score")
+            );
+
+
+            bean.setAttendanceScore(
+                    rs.getDouble("attendance_score")
+            );
+
+
+            bean.setFinalScore(
+                    rs.getDouble("final_score")
+            );
+
+
+            bean.setLetterGrade(
+                    rs.getString("letter_grade")
+            );
+
+
+            bean.setStatus(
+                    rs.getString("status")
+            );
+
+
+            bean.setRemarks(
+                    rs.getString("remarks")
+            );
+
+
+            return bean;
+
+
+        }, enrollmentId);
+
+
+
+        // Finalize လုပ်ပြီးသားရှိရင် database data ပြန်ပေး
+        if(!list.isEmpty()) {
+            return list.get(0);
+        }
+
+       System.out.println("FINAL GRADE COUNT = " + list.size());
+
+        // မ finalize ရသေးရင် calculate လုပ်
         Double assignmentScore =
                 calculateAssignmentScore(enrollmentId);
 
@@ -376,27 +460,17 @@ public class FinalGradeRepository {
 
         bean.setEnrollmentID(enrollmentId);
 
-        bean.setAssignmentTotalScore(
-                assignmentScore
-        );
+        bean.setAssignmentTotalScore(assignmentScore);
 
-        bean.setExamTotalScore(
-                examScore
-        );
+        bean.setExamTotalScore(examScore);
 
-        bean.setAttendanceScore(
-                attendanceScore
-        );
+        bean.setAttendanceScore(attendanceScore);
 
-        bean.setFinalScore(
-                finalScore
-        );
-
+        bean.setFinalScore(finalScore);
 
         bean.setLetterGrade(
                 generateLetterGrade(finalScore)
         );
-
 
         bean.setStatus(
                 generateStatus(finalScore)
@@ -424,8 +498,7 @@ public class FinalGradeRepository {
         return count != null && count > 0;
     }
     public List<FinalGradeBean> getAllFinalGrades(){
-
-        String sql = """
+String sql = """
                 
                 SELECT
                     fg.finalGradeID,
@@ -585,8 +658,7 @@ public class FinalGradeRepository {
 
             ORDER BY u.name
             """;
-
-        return jdbcTemplate.query(sql,(rs,row)->{
+ return jdbcTemplate.query(sql,(rs,row)->{
 
             FinalGradeBean bean = new FinalGradeBean();
 
