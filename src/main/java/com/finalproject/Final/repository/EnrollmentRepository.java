@@ -20,153 +20,83 @@ public class EnrollmentRepository {
 	private JdbcTemplate jdbc;
 
 	// CREATE ENROLLMENT
-	public String save(
-	        String userId,
-	        String courseId,
-	        LocalDate date,
-	        Double originalFee,
-	        Double finalFee
-	) {
+	public String save(String userId, String courseId, LocalDate date, Double originalFee, Double finalFee) {
 
-	    String enrollmentId = UUID.randomUUID().toString();
+		String enrollmentId = UUID.randomUUID().toString();
 
-	    String sql =
-	        "INSERT INTO enrollment "
-	        +
-	        "(enrollmentID,userID,courseID,"
-	        +
-	        "paymentTypeID,installmentRuleID,scholarshipApplicationID,"
-	        +
-	        "enrollment_date,"
-	        +
-	        "original_fee,"
-	        +
-	        "discount_amount,"
-	        +
-	        "final_fee,"
-	        +
-	        "payment_status,"
-	        +
-	        "status,"
-	        +
-	        "created_at,"
-	        +
-	        "updated_at)"
-	        +
-	        " VALUES "
-	        +
-	        "(?,?,?,NULL,NULL,NULL,?,?,?,?,"
-	        +
-	        "'Unpaid',"
-	        +
-	        "'Pending',"
-	        +
-	        "NOW(),NOW())";
+		String sql = "INSERT INTO enrollment " + "(enrollmentID,userID,courseID,"
+				+ "paymentTypeID,installmentRuleID,scholarshipApplicationID," + "enrollment_date," + "original_fee,"
+				+ "discount_amount," + "final_fee," + "payment_status," + "status," + "created_at," + "updated_at)"
+				+ " VALUES " + "(?,?,?,NULL,NULL,NULL,NULL,?,?,?," + "'Unpaid'," + "'Pending'," + "NOW(),NOW())";
 
+		jdbc.update(sql, enrollmentId, userId, courseId,
 
-	    jdbc.update(
-	        sql,
-	        enrollmentId,
-	        userId,
-	        courseId,
-	        date,
-	        originalFee,
-	        0.0,
-	        finalFee
-	    );
+				originalFee, 0.0, finalFee);
 
-
-	    return enrollmentId;
+		return enrollmentId;
 	}
-	
-	public void updateInstallmentRule(
-	        String enrollmentId,
-	        String installmentRuleId
-	){
 
-	    String sql =
-	            """
-	            UPDATE enrollment
-	            SET installmentRuleID = ?,
-	                updated_at = NOW()
-	            WHERE enrollmentID = ?
-	            """;
+	public void updateInstallmentRule(String enrollmentId, String installmentRuleId) {
 
-	    jdbc.update(
-	            sql,
-	            installmentRuleId,
-	            enrollmentId
-	    );
+		String sql = """
+				UPDATE enrollment
+				SET installmentRuleID = ?,
+				    updated_at = NOW()
+				WHERE enrollmentID = ?
+				""";
+
+		jdbc.update(sql, installmentRuleId, enrollmentId);
 
 	}
-	
-	public void updatePartialPaymentStatus(
-	        String enrollmentId
-	){
 
-	    String sql = """
-	        UPDATE enrollment
-	        SET
-	            payment_status='Partial',
-	            status='Active',
-	            updated_at=NOW()
-	        WHERE enrollmentID=?
-	        """;
+	public void updatePartialPaymentStatus(String enrollmentId) {
 
-	    jdbc.update(sql, enrollmentId);
+		String sql = """
+				UPDATE enrollment
+				SET
+				    payment_status='Partial',
+				    status='Active',
+				     enrollment_date=CURRENT_DATE,
+				    updated_at=NOW()
+				WHERE enrollmentID=?
+				""";
+
+		jdbc.update(sql, enrollmentId);
 
 	}
-	
-	
-	
+
 	public EnrollmentBean findByUserAndCourse(String userId, String courseId) {
 
-	    String sql = "SELECT *\r\n"
-	    		+ "	        FROM enrollment\r\n"
-	    		+ "	        WHERE userID = ?\r\n"
-	    		+ "	        AND courseID = ?";
+		String sql = "SELECT *\r\n" + "	        FROM enrollment\r\n" + "	        WHERE userID = ?\r\n"
+				+ "	        AND courseID = ?";
 
-	    List<EnrollmentBean> list =
-	            jdbc.query(sql, new EnrollmentRowMapper(), userId, courseId);
+		List<EnrollmentBean> list = jdbc.query(sql, new EnrollmentRowMapper(), userId, courseId);
 
-	    return list.isEmpty() ? null : list.get(0);
+		return list.isEmpty() ? null : list.get(0);
 	}
-	
-	public void updatePaymentType(
-	        String enrollmentId,
-	        String paymentTypeId
-	) {
 
-	    String sql =
-	            "UPDATE enrollment "
-	          + "SET paymentTypeID=?, "
-	          + "updated_at=NOW() "
-	          + "WHERE enrollmentID=?";
+	public void updatePaymentType(String enrollmentId, String paymentTypeId) {
 
+		String sql = "UPDATE enrollment " + "SET paymentTypeID=?, " + "updated_at=NOW() " + "WHERE enrollmentID=?";
 
-	    jdbc.update(
-	            sql,
-	            paymentTypeId,
-	            enrollmentId
-	    );
+		jdbc.update(sql, paymentTypeId, enrollmentId);
 	}
-	
-	public void updatePaymentStatus(
-			String enrollmentId
-			){
 
-			String sql ="UPDATE enrollment\r\n"
-					+ "			SET \r\n"
-					+ "			payment_status='Fully Paid',\r\n"
-					+ "			status='Active',\r\n"
-					+ "			updated_at=NOW()\r\n"
-					+ "			WHERE enrollmentID=?";
-			
+	public void updatePaymentStatus(String enrollmentId) {
 
+		String sql = """
+				UPDATE enrollment
+				SET
+				payment_status='Fully Paid',
+				status='Active',
+				enrollment_date=CURRENT_DATE,
+				updated_at=NOW()
+				WHERE enrollmentID=?
+									""";
 
-			jdbc.update(sql,enrollmentId);
+		jdbc.update(sql, enrollmentId);
 
-			}
+	}
 
 	// FIND BY ID
 	public EnrollmentBean findById(String enrollmentId) {
@@ -176,7 +106,7 @@ public class EnrollmentRepository {
 		return jdbc.queryForObject(sql, new EnrollmentRowMapper(), enrollmentId);
 	}
 
-	//dont delete
+	// dont delete
 	// FIND ENROLLMENTS BY USER
 //	public List<EnrollmentBean> findByUser(String userId) {
 //
@@ -221,7 +151,7 @@ public class EnrollmentRepository {
 //	            new EnrollmentRowMapper(),
 //	            userId);
 //	}
-	
+
 //	public List<EnrollmentBean> findByUser(String userId) {
 //
 //		String sql = """
@@ -303,36 +233,33 @@ public class EnrollmentRepository {
 //		);
 //
 //		}
-	
+
 	public List<EnrollmentBean> findByUser(String userId) {
 
-	    String sql = """
-	        SELECT
-	            e.*,
-	            c.name AS course_title,
-	            u.name AS teacher_name
-	        FROM enrollment e
+		String sql = """
+				SELECT
+				    e.*,
+				    c.name AS course_title,
+				    u.name AS teacher_name
+				FROM enrollment e
 
-	        JOIN course c
-	            ON e.courseID = c.courseID
+				JOIN course c
+				    ON e.courseID = c.courseID
 
-	        LEFT JOIN user u
-	            ON c.teacherID = u.userID
+				LEFT JOIN user u
+				    ON c.teacherID = u.userID
 
-	        WHERE e.userID = ?
+				WHERE e.userID = ?
 
-	        ORDER BY e.created_at DESC
-	        """;
+				ORDER BY e.created_at DESC
+				""";
 
-	    return jdbc.query(
-	            sql,
-	            new EnrollmentRowMapper(),
-	            userId);
+		return jdbc.query(sql, new EnrollmentRowMapper(), userId);
 
 	}
 
 	// UPDATE STATUS
-	public void updateStatus(String enrollmentId, String status,  String reason) {
+	public void updateStatus(String enrollmentId, String status, String reason) {
 
 		String sql = """
 				UPDATE enrollment
@@ -375,97 +302,78 @@ public class EnrollmentRepository {
 
 		return jdbc.query(sql, new CourseRowMapper(), userId);
 	}
-	
-	//search enrolled courses
-	public List<CourseBean> searchMyCourses(
-	        String userId,
-	        String keyword,
-	        String categoryId
-	) {
 
-	    String sql = """
-	        SELECT 
-	            c.*,
-	            cat.name AS category_name,
-	            sub.name AS subcategory_name,
-	            u.name AS teacher_name
+	// search enrolled courses
+	public List<CourseBean> searchMyCourses(String userId, String keyword, String categoryId) {
 
-	        FROM enrollment e
+		String sql = """
+				SELECT
+				    c.*,
+				    cat.name AS category_name,
+				    sub.name AS subcategory_name,
+				    u.name AS teacher_name
 
-	        JOIN course c
-	            ON e.courseID = c.courseID
+				FROM enrollment e
 
-	        LEFT JOIN course_category cat
-	            ON c.courseCategoryID = cat.courseCategoryID
+				JOIN course c
+				    ON e.courseID = c.courseID
 
-	        LEFT JOIN subcategory sub
-	            ON c.subcategoryID = sub.subcategoryID
+				LEFT JOIN course_category cat
+				    ON c.courseCategoryID = cat.courseCategoryID
 
-	        LEFT JOIN user u
-	            ON c.teacherID = u.userID
+				LEFT JOIN subcategory sub
+				    ON c.subcategoryID = sub.subcategoryID
 
-	        WHERE e.userID = ?
-	        AND e.status = 'Active'
-	        """;
+				LEFT JOIN user u
+				    ON c.teacherID = u.userID
 
+				WHERE e.userID = ?
+				AND e.status = 'Active'
+				""";
 
-	   
 		List<Object> params = new ArrayList<>();
 
-	    params.add(userId);
+		params.add(userId);
 
+		if (keyword != null && !keyword.isBlank()) {
 
-	    if(keyword != null && !keyword.isBlank()) {
+			sql += """
+					AND c.name LIKE ?
+					""";
 
-	        sql += """
-	            AND c.name LIKE ?
-	            """;
+			params.add("%" + keyword + "%");
+		}
 
-	        params.add("%" + keyword + "%");
-	    }
+		if (categoryId != null && !categoryId.isBlank()) {
 
+			sql += """
+					AND c.courseCategoryID = ?
+					""";
 
-	    if(categoryId != null && !categoryId.isBlank()) {
+			params.add(categoryId);
+		}
 
-	        sql += """
-	            AND c.courseCategoryID = ?
-	            """;
+		sql += """
+				ORDER BY c.created_at DESC
+				""";
 
-	        params.add(categoryId);
-	    }
-
-
-	    sql += """
-	        ORDER BY c.created_at DESC
-	        """;
-
-
-	    return jdbc.query(
-	            sql,
-	            new CourseRowMapper(),
-	            params.toArray()
-	    );
+		return jdbc.query(sql, new CourseRowMapper(), params.toArray());
 
 	}
-	
-	
+
 	public int countEnrolledStudents(String courseId) {
 
-	    String sql = """
-	        SELECT COUNT(*)
-	        FROM enrollment
-	        WHERE courseID = ?
-	        AND status IN ('Pending', 'Active', 'Completed')
-	        """;
+		String sql = """
+				SELECT COUNT(*)
+				FROM enrollment
+				WHERE courseID = ?
+				AND status IN ('Pending', 'Active', 'Completed')
+				""";
 
-	    return jdbc.queryForObject(
-	            sql,
-	            Integer.class,
-	            courseId
-	    );
+		return jdbc.queryForObject(sql, Integer.class, courseId);
 	}
-	
-	//admin enroll list
+
+	// admin enroll list
 //	public List<EnrollmentBean> getAllEnrollments(){
 //
 //
@@ -569,10 +477,220 @@ public class EnrollmentRepository {
 //
 //	}
 
-	public List<EnrollmentBean> getAllEnrollments(){
+	public List<EnrollmentBean> getAllEnrollments() {
+
+		String sql = """
+
+				SELECT
+
+				    e.*,
+
+				    u.name AS user_name,
+				    u.email AS user_email,
+
+				    c.name AS course_title,
 
 
-	    String sql = """
+				    pt.name AS payment_type_name,
+
+
+				    COALESCE(pay.total_paid,0)
+				    AS total_paid,
+
+
+				    (
+				        e.final_fee -
+				        COALESCE(pay.total_paid,0)
+				    )
+				    AS remaining_balance,
+
+
+				    COALESCE(ins.total_installments,0)
+				    AS total_installments,
+
+
+				    COALESCE(ins.completed_installments,0)
+				    AS completed_installments
+
+
+
+				FROM enrollment e
+
+
+
+				JOIN user u
+
+				    ON e.userID = u.userID
+
+
+
+				JOIN course c
+
+				    ON e.courseID = c.courseID
+
+
+
+				LEFT JOIN payment_type pt
+
+				    ON e.paymentTypeID = pt.paymentTypeID
+
+
+
+
+				/*
+				 PAYMENT SUMMARY
+				 */
+
+				LEFT JOIN
+				(
+
+				    SELECT
+
+				        enrollmentID,
+
+				        SUM(amount) AS total_paid
+
+
+				    FROM payment
+
+
+				    WHERE status='Success'
+
+
+				    GROUP BY enrollmentID
+
+
+				) pay
+
+
+				ON e.enrollmentID = pay.enrollmentID
+
+
+
+
+				/*
+				 INSTALLMENT SUMMARY
+				 */
+
+				LEFT JOIN
+				(
+
+				    SELECT
+
+				        enrollmentID,
+
+
+				        COUNT(installmentPlanID)
+				        AS total_installments,
+
+
+				        COUNT(
+				            CASE
+				                WHEN status='Paid'
+				                THEN installmentPlanID
+				            END
+				        )
+				        AS completed_installments
+
+
+
+				    FROM installment_plan
+
+
+				    GROUP BY enrollmentID
+
+
+				) ins
+
+
+				ON e.enrollmentID = ins.enrollmentID
+
+
+
+
+				ORDER BY e.created_at DESC
+
+
+				""";
+
+		return jdbc.query(sql, new AdminEnrollmentRowMapper());
+
+	}
+
+	public EnrollmentStatisticsBean getEnrollmentStatistics() {
+
+		EnrollmentStatisticsBean stats = new EnrollmentStatisticsBean();
+
+		/*
+		 * Total enrollments
+		 */
+		String totalSql = """
+				SELECT COUNT(*)
+				FROM enrollment
+				""";
+
+		stats.setTotalEnrollments(
+
+				jdbc.queryForObject(totalSql, Integer.class)
+
+		);
+
+		/*
+		 * Active students
+		 */
+		String activeSql = """
+				SELECT COUNT(*)
+				FROM enrollment
+				WHERE status='Active'
+				""";
+
+		stats.setActiveStudents(
+
+				jdbc.queryForObject(activeSql, Integer.class)
+
+		);
+
+		/*
+		 * Completed
+		 */
+		String completedSql = """
+				SELECT COUNT(*)
+				FROM enrollment
+				WHERE status='Completed'
+				""";
+
+		stats.setCompletedCourses(
+
+				jdbc.queryForObject(completedSql, Integer.class)
+
+		);
+
+		/*
+		 * Dropped
+		 */
+		String droppedSql = """
+				SELECT COUNT(*)
+				FROM enrollment
+				WHERE status='Dropped'
+				""";
+
+		stats.setDroppedStudents(
+
+				jdbc.queryForObject(droppedSql, Integer.class)
+
+		);
+
+		return stats;
+
+	}
+	
+	public List<EnrollmentBean> searchEnrollments(
+	        String keyword,
+	        String status,
+	        String paymentStatus
+	) {
+
+	    StringBuilder sql = new StringBuilder("""
 
 	        SELECT
 
@@ -582,9 +700,6 @@ public class EnrollmentRepository {
 	            u.email AS user_email,
 
 	            c.name AS course_title,
-
-
-	            pt.name AS payment_type_name,
 
 
 	            COALESCE(pay.total_paid,0)
@@ -606,72 +721,40 @@ public class EnrollmentRepository {
 	            AS completed_installments
 
 
-
 	        FROM enrollment e
 
 
-
 	        JOIN user u
-
 	            ON e.userID = u.userID
 
 
-
 	        JOIN course c
-
 	            ON e.courseID = c.courseID
 
 
-
-	        LEFT JOIN payment_type pt
-
-	            ON e.paymentTypeID = pt.paymentTypeID
-
-
-
-
-	        /*
-	         PAYMENT SUMMARY
-	         */
-
 	        LEFT JOIN
 	        (
-
 	            SELECT
-
 	                enrollmentID,
-
 	                SUM(amount) AS total_paid
-
 
 	            FROM payment
 
-
 	            WHERE status='Success'
-
 
 	            GROUP BY enrollmentID
 
-
 	        ) pay
-
 
 	        ON e.enrollmentID = pay.enrollmentID
 
 
 
-
-	        /*
-	         INSTALLMENT SUMMARY
-	         */
-
 	        LEFT JOIN
 	        (
-
 	            SELECT
 
 	                enrollmentID,
-
 
 	                COUNT(installmentPlanID)
 	                AS total_installments,
@@ -686,120 +769,82 @@ public class EnrollmentRepository {
 	                AS completed_installments
 
 
-
 	            FROM installment_plan
-
 
 	            GROUP BY enrollmentID
 
-
 	        ) ins
-
 
 	        ON e.enrollmentID = ins.enrollmentID
 
 
+	        WHERE 1=1
+
+	        """);
 
 
+	    List<Object> params = new ArrayList<>();
+
+
+
+	    // Search student or course
+	    if(keyword != null && !keyword.isBlank()) {
+
+	        sql.append("""
+	            AND (
+	                u.name LIKE ?
+	                OR c.name LIKE ?
+	            )
+	            """);
+
+
+	        String search = "%" + keyword + "%";
+
+	        params.add(search);
+	        params.add(search);
+
+	    }
+
+
+
+	    // Enrollment status filter
+	    if(status != null && !status.isBlank()) {
+
+	        sql.append("""
+	            AND e.status = ?
+	            """);
+
+	        params.add(status);
+
+	    }
+
+
+
+	    // Payment status filter
+	    if(paymentStatus != null && !paymentStatus.isBlank()) {
+
+	        sql.append("""
+	            AND e.payment_status = ?
+	            """);
+
+	        params.add(paymentStatus);
+
+	    }
+
+
+
+	    sql.append("""
 	        ORDER BY e.created_at DESC
-
-
-	        """;
+	        """);
 
 
 
 	    return jdbc.query(
-	            sql,
-	            new AdminEnrollmentRowMapper()
+	            sql.toString(),
+	            new AdminEnrollmentRowMapper(),
+	            params.toArray()
 	    );
 
 	}
-	
-	public EnrollmentStatisticsBean getEnrollmentStatistics() {
 
-	    EnrollmentStatisticsBean stats =
-	            new EnrollmentStatisticsBean();
-
-	    /*
-	     Total enrollments
-	     */
-	    String totalSql = """
-	            SELECT COUNT(*)
-	            FROM enrollment
-	            """;
-
-	    stats.setTotalEnrollments(
-
-	            jdbc.queryForObject(
-	                    totalSql,
-	                    Integer.class
-	            )
-
-	    );
-
-
-
-	    /*
-	     Active students
-	     */
-	    String activeSql = """
-	            SELECT COUNT(*)
-	            FROM enrollment
-	            WHERE status='Active'
-	            """;
-
-	    stats.setActiveStudents(
-
-	            jdbc.queryForObject(
-	                    activeSql,
-	                    Integer.class
-	            )
-
-	    );
-
-
-
-	    /*
-	     Completed
-	     */
-	    String completedSql = """
-	            SELECT COUNT(*)
-	            FROM enrollment
-	            WHERE status='Completed'
-	            """;
-
-	    stats.setCompletedCourses(
-
-	            jdbc.queryForObject(
-	                    completedSql,
-	                    Integer.class
-	            )
-
-	    );
-
-
-
-	    /*
-	     Dropped
-	     */
-	    String droppedSql = """
-	            SELECT COUNT(*)
-	            FROM enrollment
-	            WHERE status='Dropped'
-	            """;
-
-	    stats.setDroppedStudents(
-
-	            jdbc.queryForObject(
-	                    droppedSql,
-	                    Integer.class
-	            )
-
-	    );
-
-	    return stats;
-
-	}
-	
-	
 }

@@ -296,4 +296,19 @@ public class EnrollmentService {
 	    );
 
 	}
+	
+	
+	public List<EnrollmentBean> searchEnrollments(
+	        String keyword,
+	        String status,
+	        String paymentStatus
+	){
+
+	    return repo.searchEnrollments(
+	            keyword,
+	            status,
+	            paymentStatus
+	    );
+
+	}
 }

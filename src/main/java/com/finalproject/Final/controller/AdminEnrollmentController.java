@@ -34,12 +34,42 @@ public class AdminEnrollmentController {
 
 
     @GetMapping
-    public String enrollmentManagement(Model model){
+    public String enrollmentManagement(
+    		  @RequestParam(required = false) String keyword,
+    	        @RequestParam(required = false) String status,
+    	        @RequestParam(required = false) String paymentStatus,
+    		Model model){
 
 
 
-        List<EnrollmentBean> enrollments =
-                enrollmentService.getAllEnrollments();
+//        List<EnrollmentBean> enrollments =
+//                enrollmentService.getAllEnrollments();
+    	
+    	List<EnrollmentBean> enrollments;
+
+
+        if(
+            (keyword == null || keyword.isBlank())
+            &&
+            (status == null || status.isBlank())
+            &&
+            (paymentStatus == null || paymentStatus.isBlank())
+        ){
+
+            enrollments =
+                    enrollmentService.getAllEnrollments();
+
+        } else {
+
+
+            enrollments =
+                    enrollmentService.searchEnrollments(
+                            keyword,
+                            status,
+                            paymentStatus
+                    );
+
+        }
         
         
         EnrollmentStatisticsBean stats =

@@ -232,8 +232,14 @@
 
 									<div class="input-group">
 
-										<input type="text" class="form-control" name="keyword"
-											placeholder="Search student or course">
+										<!-- <input type="text" class="form-control" name="keyword"
+											placeholder="Search student or course"> -->
+											
+									<input type="text"
+    class="form-control"
+    name="keyword"
+    placeholder="Search student or course"
+    th:value="${param.keyword}">		
 
 										<button class="btn btn-primary">
 
@@ -252,21 +258,46 @@
 								<div class="col-lg-3">
 
 									<label class="form-label fw-semibold"> Enrollment
-										Status </label> <select class="form-select" name="status">
+										Status </label> 
+										<select class="form-select" name="status">
 
-										<option value="">All Status</option>
+    <option value=""
+        th:selected="${param.status == null or param.status == ''}">
+        All Status
+    </option>
 
-										<option>Pending</option>
 
-										<option>Active</option>
+    <option value="Pending"
+        th:selected="${param.status == 'Pending'}">
+        Pending
+    </option>
 
-										<option>Completed</option>
 
-										<option>Dropped</option>
+    <option value="Active"
+        th:selected="${param.status == 'Active'}">
+        Active
+    </option>
 
-										<option>Cancelled</option>
 
-									</select>
+    <option value="Completed"
+        th:selected="${param.status == 'Completed'}">
+        Completed
+    </option>
+
+
+    <option value="Dropped"
+        th:selected="${param.status == 'Dropped'}">
+        Dropped
+    </option>
+
+
+    <option value="Cancelled"
+        th:selected="${param.status == 'Cancelled'}">
+        Cancelled
+    </option>
+
+
+</select>
 
 								</div>
 
@@ -280,15 +311,32 @@
 
 									<select class="form-select" name="paymentStatus">
 
-										<option value="">All Payment Status</option>
 
-										<option>Unpaid</option>
+    <option value=""
+        th:selected="${param.paymentStatus == null or param.paymentStatus == ''}">
+        All Payment Status
+    </option>
 
-										<option>Partial</option>
 
-										<option>Fully Paid</option>
+    <option value="Unpaid"
+        th:selected="${param.paymentStatus == 'Unpaid'}">
+        Unpaid
+    </option>
 
-									</select>
+
+    <option value="Partial"
+        th:selected="${param.paymentStatus == 'Partial'}">
+        Partial
+    </option>
+
+
+    <option value="Fully Paid"
+        th:selected="${param.paymentStatus == 'Fully Paid'}">
+        Fully Paid
+    </option>
+
+
+</select>
 
 								</div>
 
