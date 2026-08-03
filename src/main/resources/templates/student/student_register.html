@@ -82,17 +82,32 @@
                             </div>
 
                             <!-- Password -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-dark mb-2">
-                                    <i class="bi bi-key me-1 text-primary"></i> Password*
-                                </label>
-                                <input type="password" th:field="*{password}" placeholder="Enter password" class="form-control rounded-3 p-2.5">
-                                <div class="text-muted-emphasis small mt-1" style="font-size: 0.8rem;">
-                                    <i class="bi bi-info-circle small"></i> Must be at least 6 characters with 1 letter & 1 number.
-                                </div>
-                                <div class="text-danger small mt-1" th:errors="*{password}"></div>
-                            </div>
+<div class="col-md-6">
+    <label class="form-label fw-semibold text-dark mb-2">
+        <i class="bi bi-key me-1 text-primary"></i> Password*
+    </label>
 
+    <div class="input-group">
+        <input type="password"
+               id="password"
+               th:field="*{password}"
+               placeholder="Enter password"
+               class="form-control rounded-start">
+
+        <span class="input-group-text bg-white"
+              id="togglePassword"
+              style="cursor:pointer;">
+            <i class="bi bi-eye" id="eyeIcon"></i>
+        </span>
+    </div>
+
+    <div class="text-muted-emphasis small mt-1" style="font-size:0.8rem;">
+        <i class="bi bi-info-circle small"></i>
+        Must be at least 6 characters with 1 letter &amp; 1 number.
+    </div>
+
+    <div class="text-danger small mt-1" th:errors="*{password}"></div>
+</div>
                             <!-- Phone Number -->
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold text-dark mb-2">
@@ -192,6 +207,28 @@
 
 <div th:replace="~{fragment/footer :: footer}"></div>
 <div th:replace="~{fragment/js :: js}"></div>
-   
+
+<!-- Script ကို ဒီနေရာမှာ ထည့် -->
+<script>
+    const password = document.getElementById("password");
+    const toggle = document.getElementById("togglePassword");
+    const icon = document.getElementById("eyeIcon");
+
+    toggle.addEventListener("click", function () {
+
+        if (password.type === "password") {
+            password.type = "text";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        } else {
+            password.type = "password";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        }
+
+    });
+
+
+</script>
 </body>
 </html>
