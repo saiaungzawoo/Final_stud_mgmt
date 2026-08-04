@@ -79,13 +79,19 @@
 </div>
 
                         <!-- Room -->
-                        <div class="mb-3">
-                            <label class="form-label">Room</label>
-                            <input type="text"
-                                   class="form-control"
-                                   th:field="*{room}"
-                                   placeholder="Room Number">
-                        </div>
+                       <div class="mb-3">
+    <label class="form-label">Room</label>
+
+    <input type="text"
+           class="form-control"
+           th:field="*{room}"
+           placeholder="Room Number">
+
+    <div class="text-danger"
+         th:if="${#fields.hasErrors('room')}"
+         th:errors="*{room}">
+    </div>
+</div>
  <!-- Repeat Days -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Repeat Days</label>
@@ -98,6 +104,12 @@
                                 <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="SATURDAY"><label class="ms-1">Saturday</label></div>
                                 <div class="col-md-3"><input class="form-check-input" type="checkbox" th:field="*{repeatDays}" value="SUNDAY"><label class="ms-1">Sunday</label></div>
                             </div>
+                            
+                            <div class="text-danger"
+    								 th:if="${#fields.hasErrors('repeatDays')}"
+     									th:errors="*{repeatDays}">
+							</div>
+							
                         </div>
 
                        <div class="text-end">
@@ -269,9 +281,20 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalScheduleId').value = eventObj.id;
     
     // Date (YYYY-MM-DD)
-    var dateStr = eventObj.start ? eventObj.start.toISOString().split('T')[0] : '';
-    document.getElementById('modalScheduleDate').innerText = dateStr;
-    
+    // Date (DD-MM-YYYY)
+var dateStr = '';
+
+if (eventObj.start) {
+    let date = eventObj.start;
+
+    let day = String(date.getDate()).padStart(2, '0');
+    let month = String(date.getMonth() + 1).padStart(2, '0');
+    let year = date.getFullYear();
+
+    dateStr = `${day}-${month}-${year}`;
+}
+
+document.getElementById('modalScheduleDate').innerText = dateStr;
     // Time & Room (Start Time - End Time)
     var timeRange = eventObj.extendedProps.timeRange || '';
     var room = eventObj.extendedProps.room ? ' (' + eventObj.extendedProps.room + ')' : '';

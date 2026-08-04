@@ -121,7 +121,7 @@
                                     <td class="text-secondary small">
                                         <i class="bi bi-calendar3 me-1 text-muted"></i>
                                         <!-- Utilizes explicit temporal processing for Java LocalDateTime objects -->
-                                        <span th:text="${#temporals.format(exam.examDate, 'yyyy-MM-dd HH:mm')}">Date String</span>
+                                        <span th:text="${#temporals.format(exam.examDate, 'dd-MM-yyyy HH:mm')}">Date String</span>
                                     </td>
                                     <td>
                                         <i class="bi bi-clock me-1 text-muted"></i>
@@ -353,8 +353,14 @@
         document.getElementById('edit_examType').value = btn.getAttribute('data-type');
         document.getElementById('edit_maxScore').value = btn.getAttribute('data-max');
         document.getElementById('edit_weightPercent').value = btn.getAttribute('data-weight');
-        document.getElementById('edit_examDate').value = btn.getAttribute('data-date');
-        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
+        
+        let examDate = btn.getAttribute('data-date');
+
+        if (examDate) {
+            examDate = examDate.substring(0,16);
+        }
+
+        document.getElementById('edit_examDate').value = examDate;        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
         
         
         new bootstrap.Modal(document.getElementById('editExamModal')).show();

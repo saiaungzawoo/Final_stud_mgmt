@@ -140,11 +140,11 @@
                                                 <div class="d-flex flex-wrap gap-3 text-muted small">
                                                     <div>
                                                         <i class="bi bi-calendar-check me-1"></i>
-                                                        Publish: <span th:text="${#temporals.format(ann.publishDate, 'yyyy-MM-dd HH:mm')}">2026-07-20 10:00</span>
+                                                        Publish: <span th:text="${#temporals.format(ann.publishDate, 'dd-MM-yyyy HH:mm')}">2026-07-20 10:00</span>
                                                     </div>
                                                     <div th:if="${ann.expiryDate != null}">
                                                         <i class="bi bi-calendar-x me-1"></i>
-                                                        Expires: <span th:text="${#temporals.format(ann.expiryDate, 'yyyy-MM-dd HH:mm')}">2026-07-25 18:00</span>
+                                                        Expires: <span th:text="${#temporals.format(ann.expiryDate, 'dd-MM-yyyy HH:mm')}">2026-07-25 18:00</span>
                                                     </div>
                                                 </div>
                                             </div>
