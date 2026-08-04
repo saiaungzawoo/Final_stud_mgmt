@@ -66,9 +66,13 @@ public class PaymentBean {
     private LocalDate nextDueDate;
     
     private String courseName;
+    private String courseId;
     
     
     private List<InstallmentPlanBean> installmentPlans;
+    
+    
+    private Integer receiptDownloaded;
     
 	    
 

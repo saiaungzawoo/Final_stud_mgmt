@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body class="bg-light">
+
+	<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+		<section class="section-pad">
+
+			<div class="container-fluid">
+
+				<!-- ===================================================== -->
+				<!-- PAGE HEADER -->
+				<!-- ===================================================== -->
+
+				<div class="d-flex justify-content-between align-items-center mb-4">
+
+					<div>
+
+						<h2 class="fw-bold mb-1">Enrollment Management</h2>
+
+						<p class="text-muted mb-0">Manage student enrollments and
+							monitor enrollment status.</p>
+
+					</div>
+
+				</div>
+
+
+
+
+
+				<!-- ===================================================== -->
+				<!-- STATISTICS -->
+				<!-- ===================================================== -->
+
+				<div class="row g-4 mb-4" >
+
+					<!-- Total Enrollments -->
+
+					<div class="col-lg-3 col-md-6">
+
+						<div class="card border-0 shadow-sm h-100">
+
+							<div class="card-body">
+
+								<div class="d-flex justify-content-between">
+
+									<div>
+    <div style="min-height:48px;">
+        <p class="text-muted mb-2">
+           Total Enrollments
+        </p>
+    </div>
+
+    <h3 class="fw-bold mb-0">
+        <span th:text="${stats.totalEnrollments}"></span>
+    </h3>
+</div>
+
+									<div
+										class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
+										style="width: 60px; height: 60px;">
+
+										<i class="bi bi-person-check-fill fs-3 text-primary"></i>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+
+
+					<!-- Active Students -->
+
+					<div class="col-lg-3 col-md-6">
+
+						<div class="card border-0 shadow-sm h-100">
+
+							<div class="card-body">
+
+								<div class="d-flex justify-content-between">
+
+									<div>
+    <div style="min-height:48px;">
+        <p class="text-muted mb-2">
+            Active Students
+        </p>
+    </div>
+
+    <h3 class="fw-bold mb-0">
+        <span th:text="${stats.activeStudents}"></span>
+    </h3>
+</div>
+
+									<div
+										class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center"
+										style="width: 60px; height: 60px;">
+
+										<i class="bi bi-check-circle-fill fs-3 text-success"></i>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+
+
+					<!-- Completed Courses -->
+
+					<div class="col-lg-3 col-md-6">
+
+						<div class="card border-0 shadow-sm h-100">
+
+							<div class="card-body">
+
+								<div class="d-flex justify-content-between">
+
+									<div>
+    <div style="min-height:48px;">
+        <p class="text-muted mb-2">
+            Completed Courses
+        </p>
+    </div>
+
+    <h3 class="fw-bold mb-0">
+        <span th:text="${stats.completedCourses}"></span>
+    </h3>
+</div>
+
+									<div
+										class="rounded-circle bg-info bg-opacity-10 d-flex align-items-center justify-content-center"
+										style="width: 60px; height: 60px;">
+
+										<i class="bi bi-award-fill fs-3 text-info"></i>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+
+
+					<!-- Dropped Students -->
+
+					<div class="col-lg-3 col-md-6">
+
+						<div class="card border-0 shadow-sm h-100">
+
+							<div class="card-body">
+
+								<div class="d-flex justify-content-between">
+
+									<div>
+
+										<p class="text-muted mb-2">Dropped Students</p>
+
+										<h3 class="fw-bold mb-0"
+    th:text="${stats.droppedStudents}">
+    0
+</h3>
+
+									</div>
+
+									<div
+										class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center"
+										style="width: 60px; height: 60px;">
+
+										<i class="bi bi-person-dash-fill fs-3 text-danger"></i>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+
+
+
+
+				<!-- ===================================================== -->
+				<!-- ENROLLMENT LIST -->
+				<!-- ===================================================== -->
+
+				<div class="card border-0 shadow-sm">
+
+					<div class="card-body">
+
+						<div
+							class="d-flex justify-content-between align-items-center mb-4">
+
+							<h4 class="fw-bold mb-0">Enrollment List</h4>
+
+						</div>
+
+
+
+						<!-- SEARCH + FILTER -->
+
+						<form method="get">
+
+							<div class="row g-3 align-items-end mb-4">
+
+								<!-- Search -->
+
+								<div class="col-lg-5">
+
+									<label class="form-label fw-semibold"> Search </label>
+
+									<div class="input-group">
+
+										<!-- <input type="text" class="form-control" name="keyword"
+											placeholder="Search student or course"> -->
+											
+									<input type="text"
+    class="form-control"
+    name="keyword"
+    placeholder="Search student or course"
+    th:value="${param.keyword}">		
+
+										<button class="btn btn-primary">
+
+											<i class="bi bi-search"></i>
+
+										</button>
+
+									</div>
+
+								</div>
+
+
+
+								<!-- Enrollment Status -->
+
+								<div class="col-lg-3">
+
+									<label class="form-label fw-semibold"> Enrollment
+										Status </label> 
+										<select class="form-select" name="status">
+
+    <option value=""
+        th:selected="${param.status == null or param.status == ''}">
+        All Status
+    </option>
+
+
+    <option value="Pending"
+        th:selected="${param.status == 'Pending'}">
+        Pending
+    </option>
+
+
+    <option value="Active"
+        th:selected="${param.status == 'Active'}">
+        Active
+    </option>
+
+
+    <option value="Completed"
+        th:selected="${param.status == 'Completed'}">
+        Completed
+    </option>
+
+
+    <option value="Dropped"
+        th:selected="${param.status == 'Dropped'}">
+        Dropped
+    </option>
+
+
+    <option value="Cancelled"
+        th:selected="${param.status == 'Cancelled'}">
+        Cancelled
+    </option>
+
+
+</select>
+
+								</div>
+
+
+
+								<!-- Payment Status -->
+
+								<div class="col-lg-3">
+
+									<label class="form-label fw-semibold"> Payment Status </label>
+
+									<select class="form-select" name="paymentStatus">
+
+
+    <option value=""
+        th:selected="${param.paymentStatus == null or param.paymentStatus == ''}">
+        All Payment Status
+    </option>
+
+
+    <option value="Unpaid"
+        th:selected="${param.paymentStatus == 'Unpaid'}">
+        Unpaid
+    </option>
+
+
+    <option value="Partial"
+        th:selected="${param.paymentStatus == 'Partial'}">
+        Partial
+    </option>
+
+
+    <option value="Fully Paid"
+        th:selected="${param.paymentStatus == 'Fully Paid'}">
+        Fully Paid
+    </option>
+
+
+</select>
+
+								</div>
+
+
+
+								<!-- Filter Button -->
+
+								<div class="col-lg-1">
+
+									<button class="btn btn-outline-primary w-102">Filter</button>
+
+								</div>
+
+							</div>
+
+						</form>
+
+						<!-- ===================================================== -->
+						<!-- ENROLLMENT TABLE -->
+						<!-- ===================================================== -->
+
+						<div class="table-responsive">
+
+							<table class="table table-hover align-middle">
+
+								<thead class="table-light">
+
+									<tr>
+
+										<th>No</th>
+
+										<th>Student</th>
+
+										<th>Course</th>
+
+										<th>Enrollment Date</th>
+
+										<th>Payment</th>
+
+										<th>Progress</th>
+
+										<th>Status</th>
+
+										<th>Action</th>
+
+									</tr>
+
+								</thead>
+
+
+
+								<tbody>
+
+									<tr th:each="enrollment, stat : ${enrollments}">
+
+
+										<!-- Number -->
+
+										<td th:text="${stat.count}">1</td>
+
+
+
+										<!-- Student -->
+
+										<td>
+
+											<div>
+
+												<h6 class="mb-0" th:text="${enrollment.username}">
+													Student Name</h6>
+
+
+												<small class="text-muted" th:text="${enrollment.email}">
+													student@email.com </small>
+
+											</div>
+
+										</td>
+
+
+
+										<!-- Course -->
+
+										<td>
+
+											<h6 class="mb-0" th:text="${enrollment.courseTitle}">
+												Course Name</h6>
+
+										</td>
+
+
+
+										<!-- Enrollment Date -->
+
+										<td th:text="${enrollment.enrollmentDate}">Date</td>
+
+
+
+										<!-- Payment Status -->
+
+										<td><span class="badge bg-success"
+											th:if="${enrollment.paymentStatus == 'Fully Paid'}">
+
+												Fully Paid </span> <span class="badge bg-warning text-dark"
+											th:if="${enrollment.paymentStatus == 'Partial'}">
+
+												Partial </span> <span class="badge bg-danger"
+											th:if="${enrollment.paymentStatus == 'Unpaid'}">
+
+												Unpaid </span></td>
+
+
+
+										<!-- Progress -->
+
+										<td>
+											<!-- Installment progress --> <span
+											th:if="${enrollment.totalInstallments != null 
+              and enrollment.totalInstallments > 0}"
+											class="fw-semibold"
+											th:text="${enrollment.completedInstallments 
+              + ' / ' 
+              + enrollment.totalInstallments
+              + ' Installments'}">
+
+										</span> <!-- Full payment --> <span
+											th:if="${enrollment.paymentStatus == 'Fully Paid'
+              and (enrollment.totalInstallments == null
+              or enrollment.totalInstallments == 0)}"
+											class="fw-semibold"> Completed </span> <!-- Unpaid full payment -->
+
+											<span
+											th:if="${enrollment.paymentStatus != 'Fully Paid'
+              and (enrollment.totalInstallments == null
+              or enrollment.totalInstallments == 0)}"
+											class="fw-semibold"> - </span>
+										</td>
+
+
+
+
+										<!-- Enrollment Status -->
+
+										<td><span class="badge bg-success"
+											th:if="${enrollment.status == 'Active'}"
+											th:text="${enrollment.status}"> </span> <span
+											class="badge bg-secondary"
+											th:if="${enrollment.status == 'Completed'}"
+											th:text="${enrollment.status}"> </span> <span
+											class="badge bg-danger"
+											th:if="${enrollment.status == 'Dropped'
+                    or enrollment.status == 'Cancelled'}"
+											th:text="${enrollment.status}"> </span> <span
+											class="badge bg-warning text-dark"
+											th:if="${enrollment.status == 'Pending'}"
+											th:text="${enrollment.status}"> </span></td>
+
+
+
+
+										<!-- Action -->
+
+										<td><a th:href="@{/admin/enrollment/detail/{id}(id=${enrollment.enrollmentId})}"
+class="btn btn-sm btn-outline-primary">
+
+<i class="bi bi-eye"></i>
+View
+
+</a></td>
+
+
+
+									</tr>
+
+
+								</tbody>
+
+
+							</table>
+
+
+						</div>
+
+
+
+
+
+						<!-- ===================================================== -->
+						<!-- PAGINATION -->
+						<!-- ===================================================== -->
+
+						<div
+							class="d-flex justify-content-between align-items-center mt-4">
+
+
+							<p class="text-muted mb-0">Showing 1 - 10 of 186 enrollments
+
+							</p>
+
+
+
+							<nav>
+
+								<ul class="pagination mb-0">
+
+
+									<li class="page-item disabled"><a class="page-link">
+
+											Previous </a></li>
+
+
+									<li class="page-item active"><a class="page-link"> 1 </a>
+
+									</li>
+
+
+									<li class="page-item"><a class="page-link"> 2 </a></li>
+
+
+									<li class="page-item"><a class="page-link"> 3 </a></li>
+
+
+									<li class="page-item"><a class="page-link"> Next </a></li>
+
+
+								</ul>
+
+
+							</nav>
+
+
+						</div>
+
+
+					</div>
+
+				</div>
+
+
+			</div>
+
+
+		</section>
+
+
+	</div>
+
+
+</body>
+
+
+</html>

@@ -30,6 +30,7 @@ public class EnrollmentBean {
 	// JOIN FIELD
     private String courseTitle;
     private String username;
+    private String email;
     
     
     private String teacherName;

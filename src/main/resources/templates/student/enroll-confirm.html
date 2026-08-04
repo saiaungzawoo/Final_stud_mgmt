@@ -67,22 +67,47 @@
                         </strong>
                       </div>
 
-                      <!-- SCHEDULE SUMMARY (simple version) -->
-                      <div class="col-sm-6">
-                        <small class="text-muted d-block mb-1">
-                          Schedule Summary
-                        </small>
-                        <strong class="fs-6">
-                          <span th:if="${schedules != null}">
-                            <span th:each="s : ${schedules}">
-                              <span th:text="${s.scheduleDate}"></span> (<span
-                                th:text="${#temporals.format(s.startTime,'hh:mm a')}"
-                              ></span>
-                              - <span th:text="${#temporals.format(s.endTime,'hh:mm a')}"></span>) <br />
-                            </span>
-                          </span>
-                        </strong>
-                      </div>
+                     <!-- SCHEDULE SUMMARY -->
+<div class="col-sm-6">
+    <small class="text-muted d-block mb-1">
+        Schedule Summary
+    </small>
+
+    <strong class="fs-6">
+
+        <span th:if="${schedule != null}">
+
+            <span th:text="${#temporals.format(schedule.scheduleDate,'dd-MM-yyyy')}"></span>
+
+            (
+            <span th:text="${#temporals.format(schedule.startTime,'hh:mm a')}"></span>
+
+            -
+            
+            <span th:text="${#temporals.format(schedule.endTime,'hh:mm a')}"></span>
+            )
+
+            <br>
+
+            <span th:each="day, stat : ${schedule.repeatDays}">
+
+                <span th:text="${day}"></span>
+
+                <span th:if="${!stat.last}">
+                    ,
+                </span>
+
+            </span>
+
+        </span>
+
+
+        <span th:if="${schedule == null}">
+            Schedule will be announced soon.
+        </span>
+
+    </strong>
+</div>
                     </div>
                   </div>
 

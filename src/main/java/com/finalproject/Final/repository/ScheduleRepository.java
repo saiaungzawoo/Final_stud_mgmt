@@ -31,8 +31,8 @@ public class ScheduleRepository {
 
       return jdbc.queryForObject(sql, Integer.class, courseId);
 
-  }
-  public void insertSchedule(ScheduleBean obj){
+	}
+	public void insertSchedule(ScheduleBean obj){
 
       String sql = """
               INSERT INTO schedule
@@ -72,8 +72,8 @@ public class ScheduleRepository {
 
       return jdbc.query(sql, new ScheduleRowMapper());
 
-  }
-  public List<ScheduleBean> findScheduleByCourse(String courseId){
+	}
+	public List<ScheduleBean> findScheduleByCourse(String courseId){
 
       String sql = """
               SELECT *
@@ -184,14 +184,14 @@ public class ScheduleRepository {
           return "";
       }
 
-      return topic.replaceAll("\\s+\\d+$","");
-  }
-  public int updateTopic(String scheduleId, String topic) {
-      String sql = """
-              UPDATE schedule
-              SET topic = ?
-              WHERE scheduleID = ?
-              """;
+	    return topic.replaceAll("\\s+\\d+$","");
+	}
+	public int updateTopic(String scheduleId, String topic) {
+	    String sql = """
+	            UPDATE schedule
+	            SET topic = ?
+	            WHERE scheduleID = ?
+	            """;
 
       return jdbc.update(sql, topic, scheduleId);
   }

@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragment/css :: css}"></head>
+
+<body class="bg-light">
+
+<div th:replace="~{layout/admin-layout :: layout(~{::section})}">
+
+<section class="section-pad">
+
+    <div class="container-fluid">
+
+        <!-- ========================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ========================================= -->
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h2 class="fw-bold mb-1">
+                    Enrollment Detail
+                </h2>
+
+                <p class="text-muted mb-0">
+                    View enrollment information and manage enrollment status.
+                </p>
+
+            </div>
+
+            <div>
+
+                <a th:href="@{/admin/enrollment}"
+                   class="btn btn-outline-secondary me-2">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Back
+
+                </a>
+
+                <button
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#statusModal">
+
+                    <i class="bi bi-pencil-square"></i>
+                    Change Status
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row g-4">
+
+            <!-- ========================================= -->
+            <!-- LEFT COLUMN -->
+            <!-- ========================================= -->
+
+            <div class="col-lg-8">
+
+                <!-- Student Information -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white">
+
+                        <h5 class="fw-bold mb-0">
+
+                            Student Information
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Student Name
+
+                            </div>
+
+                           <div class="col-md-8"
+     th:text="${detail.studentName}">
+    
+</div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Email
+
+                            </div>
+
+                            <div class="col-md-8"
+     th:text="${detail.studentEmail}">
+    Email
+</div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Enrollment Date
+
+                            </div>
+
+                            <div class="col-md-8">
+
+    <span th:if="${detail.enrollmentDate != null}"
+          th:text="${detail.enrollmentDate}">
+    </span>
+
+
+    <span th:if="${detail.enrollmentDate == null}"
+          class="text-danger">
+        Not confirmed yet
+    </span>
+
+</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Course Information -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white">
+
+                        <h5 class="fw-bold mb-0">
+
+                            Course Information
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Course
+
+                            </div>
+
+                            <div class="col-md-8"
+     th:text="${detail.courseName}">
+    Course Name
+</div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Teacher
+
+                            </div>
+
+                           <div class="col-md-8">
+
+    <span th:text="${detail.teacherName}">
+        Teacher Name
+    </span>
+
+    <br>
+
+    <small class="text-muted"
+           th:text="${detail.teacherEmail}">
+        teacher@email.com
+    </small>
+
+</div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Original Fee
+
+                            </div>
+
+                            <div class="col-md-8"
+     th:text="${detail.originalFee + ' MMK'}">
+
+    Original Fee
+
+</div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Discount
+
+                            </div>
+
+                            <div class="col-md-8"
+     th:text="${detail.discountAmount + ' MMK'}">
+
+    Discount
+
+</div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 fw-semibold">
+
+                                Final Fee
+
+                            </div>
+
+                            <div class="col-md-8 fw-bold text-primary"
+     th:text="${detail.finalFee + ' MMK'}">
+
+    Final Fee
+
+</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Payment Summary -->
+
+                <!-- Payment Summary -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            Payment Summary
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div class="row mb-3">
+
+            <div class="col-md-4 fw-semibold">
+                Payment Type
+            </div>
+
+            <div class="col-md-8"
+                 th:text="${detail.paymentType}">
+                Payment Type
+            </div>
+
+        </div>
+
+
+
+        <div class="row mb-3">
+
+            <div class="col-md-4 fw-semibold">
+                Amount Paid
+            </div>
+
+            <div class="col-md-8 text-success fw-semibold"
+                 th:text="${detail.totalPaid + ' MMK'}">
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row mb-3">
+
+            <div class="col-md-4 fw-semibold">
+                Remaining Balance
+            </div>
+
+            <div class="col-md-8"
+                 th:text="${detail.remainingBalance + ' MMK'}">
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-md-4 fw-semibold">
+                Progress
+            </div>
+
+            <div class="col-md-8">
+
+
+    <!-- Full Payment -->
+
+    <!-- <span th:if="${!detail.installmentPayment}"
+          class="text-success fw-semibold">
+
+        Completed
+
+    </span> -->
+    <!-- Full Payment - Paid -->
+
+<span th:if="${!detail.installmentPayment 
+              and detail.paymentStatus == 'Fully Paid'}"
+      class="text-success fw-semibold">
+
+    Completed
+
+</span>
+
+
+<!-- Full Payment - Unpaid -->
+
+<span th:if="${!detail.installmentPayment 
+              and detail.paymentStatus == 'Unpaid'}"
+      class="text-danger fw-semibold">
+
+    Unpaid
+
+</span>
+
+
+<!-- Full Payment - Partial -->
+
+<span th:if="${!detail.installmentPayment 
+              and detail.paymentStatus == 'Partial'}"
+      class="text-warning fw-semibold">
+
+    Partial
+
+</span>
+
+
+
+    <!-- Installment Payment -->
+
+    <span th:if="${detail.installmentPayment}"
+          th:text="${detail.completedInstallments 
+          + '/' 
+          + detail.totalInstallments
+          + ' Installments Completed'}">
+
+    </span>
+
+
+</div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+                </div>
+
+          
+
+
+
+            <!-- ========================================= -->
+            <!-- RIGHT COLUMN -->
+            <!-- ========================================= -->
+
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white">
+
+                        <h5 class="fw-bold mb-0">
+
+                            Enrollment Status
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="mb-4">
+
+                            <small class="text-muted">
+
+                                Enrollment Status
+
+                            </small>
+
+                            <br>
+
+                            <span class="badge fs-6 mt-2"
+      th:classappend="${detail.enrollmentStatus == 'Cancelled' 
+                       or detail.enrollmentStatus == 'Dropped'} 
+                       ? ' bg-danger' 
+                       : ' bg-success'"
+      th:text="${detail.enrollmentStatus}">
+
+    Active
+
+</span>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <small class="text-muted">
+
+                                Payment Status
+
+                            </small>
+
+                            <br>
+
+                            <span class="badge fs-6 mt-2"
+      th:classappend="${detail.paymentStatus == 'Unpaid'} 
+                      ? ' bg-danger' 
+                      : ' bg-success'"
+      th:text="${detail.paymentStatus}">
+
+    Fully Paid
+
+</span>
+
+                        </div>
+
+                        <div>
+
+    <small class="text-muted">
+
+        Last Updated
+
+    </small>
+
+    <br>
+
+    <span th:text="${detail.updatedAt}">
+
+        Last Updated
+
+    </span>
+
+</div>
+
+ <!-- Status Reason -->
+        <div th:if="${detail.statusReason != null}">
+
+            <small class="text-muted">
+                Status Change Reason
+            </small>
+
+            <p class="mb-0 mt-2"
+               th:text="${detail.statusReason}">
+                Student requested withdrawal
+            </p>
+
+        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Timeline -->
+
+                <!-- Timeline -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white">
+
+        <h5 class="fw-bold mb-0">
+            Timeline
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <!-- Enrollment Created -->
+
+        <div class="border-start border-3 ps-3 mb-4">
+
+            <h6 class="fw-semibold mb-1">
+                Enrollment Created
+            </h6>
+
+            <small class="text-muted"
+                   th:text="${detail.enrollmentDate}">
+            </small>
+
+        </div>
+
+
+
+        <!-- Payment Completed -->
+
+        <div class="border-start border-3 border-success ps-3 mb-4"
+             th:if="${detail.paymentStatus == 'Fully Paid'}">
+
+
+            <h6 class="fw-semibold mb-1">
+
+                Payment Completed
+
+            </h6>
+
+
+            <small class="text-muted"
+                   th:text="${detail.paymentDate}">
+            </small>
+
+
+        </div>
+
+
+
+        <!-- Enrollment Activated -->
+
+        <div class="border-start border-3 border-primary ps-3"
+             th:if="${detail.enrollmentStatus == 'Active'
+                      or detail.enrollmentStatus == 'Completed'}">
+
+
+            <h6 class="fw-semibold mb-1">
+
+                Enrollment Activated
+
+            </h6>
+
+
+            <small class="text-muted"
+                   th:text="${detail.updatedAt}">
+            </small>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+<!-- ========================================= -->
+<!-- CHANGE STATUS MODAL -->
+<!-- ========================================= -->
+
+<div class="modal fade"
+     id="statusModal"
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+       <div class="modal-content">
+
+<form th:action="@{/admin/enrollment/update-status}"
+      method="post">
+      
+      <input type="hidden"
+       name="enrollmentId"
+       th:value="${detail.enrollmentId}">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Change Enrollment Status
+
+                </h5>
+
+                <button
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Current Status
+
+                    </label>
+
+                   <input
+type="text"
+class="form-control"
+th:value="${detail.enrollmentStatus}"
+readonly>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        New Status
+
+                    </label>
+
+                    <select class="form-select"
+        name="status">
+
+
+<option value="Active">
+    Active
+</option>
+
+
+<option value="Completed">
+    Completed
+</option>
+
+
+<option value="Dropped">
+    Dropped
+</option>
+
+
+<option value="Cancelled">
+    Cancelled
+</option>
+
+
+</select>
+
+
+                </div>
+
+               <div class="mb-3">
+
+    <label class="form-label">
+
+        Reason (Optional)
+
+    </label>
+
+
+    <textarea
+            class="form-control"
+            name="reason"
+            rows="3"
+            placeholder="Enter reason for changing status..."></textarea>
+
+
+</div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+ </form>
+        </div>
+       
+        
+       
+        
+
+    </div>
+
+</div>
+</section>
+</div>
+
+<div th:replace="~{fragment/js :: js}"></div>
+</body>
+
+</html>
