@@ -86,65 +86,156 @@ Your enrollment will be confirmed after successful payment.
 <!-- Course Summary -->
 
 
+<!-- Course Summary -->
+
 <div class="category-card mb-4">
 
+    <div class="row g-4">
 
-<div class="row g-4">
+        <!-- Course Name -->
+        <div class="col-sm-7">
 
+            <small class="text-muted d-block mb-1">
+                Course Name
+            </small>
 
+            <strong class="fs-5"
+                    th:text="${course.name}">
+                Course Name
+            </strong>
 
-<div class="col-sm-7">
-
-
-<small class="text-muted d-block mb-1">
-
-Course Name
-
-</small>
-
-
-<strong class="fs-5"
-        th:text="${course.name}">
-
-Course Name
-
-</strong>
+        </div>
 
 
-</div>
+        <!-- Course Fee -->
+        <div class="col-sm-5">
+
+            <small class="text-muted d-block mb-1">
+                Course Fee
+            </small>
+
+
+            <strong class="fs-5 text-primary">
+
+                MMK
+
+                <span th:text="${#numbers.formatDecimal(
+                    course.fee,
+                    0,
+                    'COMMA',
+                    0,
+                    'POINT')}">
+                    0
+                </span>
+
+            </strong>
+
+        </div>
+
+
+
+        <!-- Scholarship Discount -->
+        <div class="col-12"
+             th:if="${enrollment.discountedAmount != null 
+                     and enrollment.discountedAmount > 0}">
+
+
+            <hr>
+
+
+            <small class="text-muted d-block mb-1">
+                Scholarship Applied
+            </small>
+            <p>
+    Type: <span th:text="${enrollment.scholarshipType}"></span>
+</p>
+            
+
+
+            <!-- Scholarship Name -->
+            <strong class="d-block text-success mb-2"
+                    th:text="${enrollment.scholarshipName}">
+                Scholarship Name
+            </strong>
+
+
+
+            <!-- Percentage Scholarship -->
+            <div th:if="${enrollment.scholarshipType == 'Percentage'}"
+                 class="d-flex justify-content-between align-items-center">
+
+
+                <span class="fw-semibold text-success">
+
+                    Discount:
+
+                    <span th:text="${#numbers.formatDecimal(
+                        enrollment.scholarshipValue,
+                        0,
+                        'COMMA',
+                        0,
+                        'POINT')}">
+                    </span>
+
+                    %
+
+                </span>
+
+
+
+                <strong class="text-success">
+
+                    - MMK
+
+                    <span th:text="${#numbers.formatDecimal(
+                        enrollment.discountedAmount,
+                        0,
+                        'COMMA',
+                        0,
+                        'POINT')}">
+                    </span>
+
+                </strong>
+
+
+            </div>
 
 
 
 
-
-<div class="col-sm-5">
-
-
-<small class="text-muted d-block mb-1">
-
-Course Fee
-
-</small>
+            <!-- Fixed Amount Scholarship -->
+            <div th:if="${enrollment.scholarshipType == 'Fixed Amount'}"
+                 class="d-flex justify-content-between align-items-center">
 
 
-<strong class="fs-5 text-primary">
-
-MMK
-
-<span th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')}">
-
-0
-
-</span>
+                <span class="fw-semibold text-success">
+                    Discount
+                </span>
 
 
-</strong>
+
+                <strong class="text-success">
+
+                    - MMK
+
+                    <span th:text="${#numbers.formatDecimal(
+                        enrollment.discountedAmount,
+                        0,
+                        'COMMA',
+                        0,
+                        'POINT')}">
+                    </span>
+
+                </strong>
 
 
-</div>
+            </div>
 
 
-</div>
+        </div>
+
+
+    </div>
 
 
 </div>
@@ -175,7 +266,7 @@ MMK
 <input type="hidden"
        id="paymentAmount"
        name="amount"
-       th:value="${course.fee}">
+       th:value="${enrollment.finalFee}">
        
 <input
     type="hidden"
@@ -382,7 +473,7 @@ Payment Amount
 
 MMK
 
-<span id="displayAmount" th:text="${#numbers.formatDecimal(course.fee, 0, 'COMMA', 0, 'POINT')}"
+<span id="displayAmount" th:text="${#numbers.formatDecimal(enrollment.finalFee,0,'COMMA',0,'POINT')}"
       >
 
 0
@@ -718,7 +809,7 @@ function changePayment(element){
 
 
         let fullAmount =
-            [[${course.fee}]];
+        	 [[${enrollment.finalFee}]];
 
 
 

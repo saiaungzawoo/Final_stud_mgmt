@@ -46,6 +46,14 @@ public class EnrollmentBean {
     private Integer completedInstallments;
 
     private List<InstallmentPlanBean> installmentPlans;
+    
+    //discount_type
+    private String scholarshipType;
+    
+    
+    private String scholarshipName;
+    
+    private Double scholarshipValue;
 	
 
 	
