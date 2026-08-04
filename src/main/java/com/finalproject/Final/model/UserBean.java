@@ -73,6 +73,7 @@ public class UserBean {
   private String phoneNumber;
   
   
+  private String otpCode;
   @NotBlank(message="Address is required")
   private String address;
   

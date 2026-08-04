@@ -1,6 +1,8 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragment/css :: css}"></head>
+<link rel="stylesheet" th:href="@{/css/teacher.css}">
+
 
 <body class="bg-light">
 
@@ -18,18 +20,11 @@
       SkillForge Teacher
     </a>
 
-    <form class="d-none d-md-flex ms-auto me-3" role="search">
-      <div class="input-group">
-        <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-        <input class="form-control" type="search" placeholder="Search classes, students...">
-      </div>
-    </form>
-
     <div class="d-flex align-items-center gap-2">
-      <a th:href="@{/teacher/announcements}" class="btn btn-light position-relative">
+      <a th:href="@{/announcement/list}" class="btn btn-light position-relative">
         <i class="bi bi-bell"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          3
+        <span class="position-absolute top-0 start-100">
+          
         </span>
       </a>
 
@@ -41,12 +36,12 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
          <li>
-    <a class="dropdown-item" 
-       th:href="@{/dashboard/getbyid1(id='00ee5b4b-7a6f-11f1-8f4f-183d2d227d02')}">
-        Profile
-    </a>
+   <a class="dropdown-item"
+   th:href="@{/dashboard/getbyid1(id=${session.loginUser.userID})}">
+    Profile
+</a>
 </li>
-          <li><a class="dropdown-item" th:href="@{/teacher/settings}">Settings</a></li>
+       
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" th:href="@{/logout}">Logout</a></li>
         </ul>
@@ -75,64 +70,44 @@
         <i class="bi bi-calendar-check me-2"></i> Attendance
       </a>
       <a class="nav-link text-white" th:href="@{/announcement/list}">
-   
-  
         <i class="bi bi-megaphone me-2"></i> Announcements
       </a>
-      <!--  <a class="nav-link text-white" th:href="@{/teacher/final-grade/list}">
-   
-  
-        <i class="bi bi-megaphone me-2"></i> final grade list
-      </a> -->
-       <a class="nav-link text-white" th:href="@{/teacher/certificate/list}">
-   
-  
-        <i class="bi bi-megaphone me-2"></i> Certificate
-      </a>
-      
      
-      
-       <a class="nav-link text-white" th:href="@{/teacher/final-grade}">
-   
-  
-        <i class="bi bi-megaphone me-2"></i> Final grade
+      <a class="nav-link text-white" th:href="@{/teacher/certificate/list}">
+        <i class="bi bi-patch-check me-2"></i> Certificate
+      </a>
+      <a class="nav-link text-white" th:href="@{/teacher/final-grade}">
+        <i class="bi bi-card-checklist me-2"></i> Final Grade
       </a>
       <a class="nav-link text-white" th:href="@{/assignment/list}">
         <i class="bi bi-clipboard-check me-2"></i> Assignments
       </a> 
-      <a class="nav-link text-white"
-						th:href="@{/teacher/exam-results}">
-						<i class="bi bi-inbox me-2"></i> Exam Result				
-	</a>
-		<a class="nav-link text-white" th:href="@{/attendance/students}">
-    <i class="bi bi-people me-2"></i> Students
-</a>
+      <a class="nav-link text-white" th:href="@{/teacher/exam-results}">
+        <i class="bi bi-inbox me-2"></i> Exam Result
+      </a>
+      <a class="nav-link text-white" th:href="@{/attendance/students}">
+        <i class="bi bi-people me-2"></i> Students
+      </a>
       <a class="nav-link text-white" th:href="@{/schedule/list-course}">
         <i class="bi bi-calendar-event me-2"></i> Schedule
       </a>
-       <a class="nav-link text-white" th:href="@{/exam/list}">
-        <i class="bi bi-clipboard-check me-2"></i>
-Exam Manangement
+      <a class="nav-link text-white" th:href="@{/exam/list}">
+        <i class="bi bi-file-earmark-text me-2"></i> Exam Management
       </a>
-      
-       <a class="nav-link text-white" th:href="@{/teacher/submission/dashboard}">
-    <i class="bi bi-people me-2"></i> Submission
-</a>
-
+      <a class="nav-link text-white" th:href="@{/teacher/submission/dashboard}">
+        <i class="bi bi-upload me-2"></i> Submission
+      </a>
     </nav>
   </div>
 </aside>
-
-  <main class="teacher-main">
+ <main class="teacher-main">
     <div class="container-fluid py-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h3 class="fw-bold mb-1">Teacher Dashboard</h3>
           <p class="text-muted mb-0">View your classes, attendance, announcements and assignments.</p>
         </div>
-        <a th:href="@{/teacher/announcements/create}" class="btn btn-primary">
-          <i class="bi bi-plus-circle me-1"></i> New Announcement
-        </a>
+      
       </div>
 
      
@@ -181,16 +156,17 @@ Exam Manangement
          
 
       <div class="row g-4">
-        <div class="col-lg-20">
-          <div class="content-panel">
+       <div class="col-12">
+        <div class="content-panel">
             <h5 class="fw-bold mb-3">Today Classes</h5>
+
             <div class="table-responsive">
               <table class="table align-middle">
                 <thead>
                   <tr>
                     <th>Time</th>
-                    <th>Class</th>
                     <th>Course</th>
+                    <th>Class</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -220,16 +196,13 @@ Web Development
 
 
 
-<td th:text="${schedule.topic}">
-Topic
-</td>
-
+<td th:text="${schedule.room}"></td>
 
 
 <td>
 
-<a th:href="@{/teacher/attendance/{id}(id=${schedule.scheduleId})}"
-class="btn btn-sm btn-outline-primary">
+<a th:href="@{/attendance/list}"
+class="btn btn-sm btn-primary">
 
 Take Attendance
 
@@ -260,12 +233,12 @@ No class scheduled today
           </div>
         </div>
 
-        <div class="col-lg-9">
-          <div class="content-panel mb-4">
+      <div class="col-12">
+        <div class="content-panel mb-4">
 
-<h5 class="fw-bold mb-3">
-    Recent Announcements
-</h5>
+            <h5 class="fw-bold mb-4">
+                Recent Announcements
+            </h5>
 
 
 <ul class="list-group list-group-flush">
@@ -311,11 +284,7 @@ No class scheduled today
 
 </div>
 
-          <div class="content-panel">
-            <h5 class="fw-bold mb-3">Assignments To Check</h5>
-            <p class="mb-2">Portfolio Project <span class="badge bg-warning text-dark">9 pending</span></p>
-            <p class="mb-0">Spring CRUD Task <span class="badge bg-danger">5 pending</span></p>
-          </div>
+        
         </div>
       </div>
     </div>

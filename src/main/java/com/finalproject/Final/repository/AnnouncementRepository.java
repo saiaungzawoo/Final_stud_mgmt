@@ -1,4 +1,5 @@
-package com.finalproject.Final.repository;
+
+ package com.finalproject.Final.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,6 +54,11 @@ public class AnnouncementRepository {
     // Save Announcement
     public void saveAnnouncement(AnnouncementBean bean) {
 
+        String announcementID = UUID.randomUUID().toString();
+
+        bean.setAnnouncementID(announcementID);
+
+
         String sql = """
                 INSERT INTO announcement
                 (
@@ -73,7 +79,7 @@ public class AnnouncementRepository {
 
         jdbcTemplate.update(sql,
 
-                UUID.randomUUID().toString(),
+                announcementID,
 
                 bean.getCreatedByID(),
 
@@ -153,8 +159,7 @@ public class AnnouncementRepository {
             bean.setTargetType(
                     rs.getString("target_type")
             );
-
-            bean.setPriority(
+ bean.setPriority(
                     rs.getString("priority")
             );
 
@@ -294,8 +299,7 @@ public class AnnouncementRepository {
         );
     }
     public List<AnnouncementBean> getAnnouncementsByCourse(String courseID) {
-
-        String sql = """
+ String sql = """
             SELECT 
                 a.announcementID,
                 a.createdByID,
@@ -376,6 +380,15 @@ public class AnnouncementRepository {
 
             return bean;
         }, courseID);
+    }
+    public void deleteAnnouncement(String announcementID) {
+
+        String sql = """
+                DELETE FROM announcement
+                WHERE announcementID = ?
+                """;
+
+        jdbcTemplate.update(sql, announcementID);
     }
  
 }

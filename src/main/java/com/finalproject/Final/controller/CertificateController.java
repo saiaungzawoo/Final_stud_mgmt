@@ -1,4 +1,4 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -204,9 +204,7 @@ public class CertificateController {
         certificate.setFinalScore(
                 finalGradeData.getFinalScore()
         );
-
-
-        certificate.setLetterGrade(
+ certificate.setLetterGrade(
                 finalGradeData.getLetterGrade()
         );
         certificate.setStudentName(
@@ -287,7 +285,7 @@ public class CertificateController {
         return "teacher/certificate-view";
 
     }
-	
+  
     @GetMapping("/download/{certificateID}")
     public ResponseEntity<Resource> downloadCertificate(
             @PathVariable String certificateID
@@ -337,18 +335,18 @@ public class CertificateController {
 
     }
     @GetMapping("/generated")
-	  public String generatedCertificateList(
-	          Model model
-	  ){
+    public String generatedCertificateList(
+            Model model
+    ){
 
-	      model.addAttribute(
-	          "certificateList",
-	          certificateRepo.getGeneratedCertificateList()
-	      );
+        model.addAttribute(
+            "certificateList",
+            certificateRepo.getGeneratedCertificateList()
+        );
 
 
-	      return "teacher/generated-certificate-list";
-	  }
-	  
-	 
+        return "teacher/generated-certificate-list";
+    }
+    
+   
 }

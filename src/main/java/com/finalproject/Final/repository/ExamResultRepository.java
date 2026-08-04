@@ -1,4 +1,5 @@
-package com.finalproject.Final.repository;
+
+ package com.finalproject.Final.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -182,8 +183,7 @@ public class ExamResultRepository {
 
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-
-            ExamResultBean bean = new ExamResultBean();
+ ExamResultBean bean = new ExamResultBean();
 
 
             bean.setExamResultID(
@@ -310,7 +310,7 @@ public class ExamResultRepository {
 
                 },
                 examResultID       
-        		);
+            );
     }
     public List<ExamResultBean> getResultByStudent(String userID) {
 
@@ -371,9 +371,7 @@ public class ExamResultRepository {
                     bean.setUserID(
                             rs.getString("userID")
                     );
-
-
-                    bean.setScore(
+ bean.setScore(
                             rs.getBigDecimal("score")
                     );
 
@@ -491,8 +489,7 @@ public class ExamResultRepository {
         return jdbcTemplate.query(sql, new Object[]{courseID}, (rs, rowNum) -> {
 
             ExamBean exam = new ExamBean();
-
-            exam.setExamID(rs.getString("examID"));
+exam.setExamID(rs.getString("examID"));
             exam.setCourseID(rs.getString("courseID"));
             exam.setCreatedByID(rs.getString("createdByID"));
             exam.setName(rs.getString("name"));

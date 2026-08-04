@@ -1,4 +1,4 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -54,10 +54,11 @@ public class FinalGradeController {
     @PostMapping("/finalize")
     public String finalizeGrade(
             @ModelAttribute FinalGradeBean grade,
+            @RequestParam String courseId,
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
-
+      System.out.println("SAVE REMARKS = " + grade.getRemarks());
 
         if(finalGradeRepo.existsByEnrollmentID(
                 grade.getEnrollmentID())) {
@@ -70,7 +71,9 @@ public class FinalGradeController {
 
 
             return "redirect:/teacher/final-grade/view/"
-                    + grade.getEnrollmentID();
+            + grade.getEnrollmentID()
+            + "?courseId="
+            + courseId;
         }
 
 
@@ -185,19 +188,27 @@ public class FinalGradeController {
     @GetMapping("/view/{enrollmentId}")
     public String viewFinalGrade(
             @PathVariable String enrollmentId,
+
+            @RequestParam(value="courseId", required=false) String courseId,
             Model model,
             HttpSession session
     ) {
+      FinalGradeBean test =
+              finalGradeRepo.calculateFinalGrade(enrollmentId);
+ System.out.println("STATUS = " + test.getStatus());
+      System.out.println("REMARKS = " + test.getRemarks());
+    
 
-
+      model.addAttribute(
+              "grade",
+              test
+      );
         UserBean loginUser =
                 (UserBean) session.getAttribute("loginUser");
 
 
-
         String teacherId =
                 loginUser.getUserID();
-
 
 
         model.addAttribute(
@@ -206,11 +217,28 @@ public class FinalGradeController {
         );
 
 
-
         model.addAttribute(
                 "grade",
                 finalGradeRepo.calculateFinalGrade(enrollmentId)
         );
+        model.addAttribute(
+              "isFinalized",
+              finalGradeRepo.existsByEnrollmentID(enrollmentId)
+          );
+
+
+        if(courseId != null && !courseId.isEmpty()) {
+
+            model.addAttribute(
+                    "selectedCourse",
+                    courseId
+            );
+
+            model.addAttribute(
+                    "studentList",
+                    finalGradeRepo.getStudentByCourse(courseId)
+            );
+        }
 
 
         return "teacher/final-grade";
@@ -256,4 +284,3 @@ public class FinalGradeController {
     }
 
 }
-

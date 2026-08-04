@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}">
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
 </head>
-
 
 <body>
 
@@ -106,7 +107,8 @@
 
                 <div class="card-body">
 
-
+  
+        
                     <table class="table table-bordered">
 
 
@@ -139,7 +141,7 @@
                                 <td>
 
                                     <a class="btn btn-primary btn-sm"
-                                       th:href="@{/teacher/final-grade/view/{id}(id=${student.enrollmentId})}">
+                                       th:href="@{/teacher/final-grade/view/{id}(id=${student.enrollmentId} ,courseId=${selectedCourse} )}">
                                         View Result
                                     </a>
 
@@ -168,6 +170,8 @@
 
             <!-- Result Preview -->
 
+
+
             <div class="card"
                  th:if="${grade != null}">
 
@@ -180,13 +184,19 @@
 
                 <div class="card-body">
 
+  <p>
+        Status:
+        <span th:text="${grade.status}"></span>
+    </p>
+
 
                     <form th:action="@{/teacher/final-grade/finalize}"
                           method="post">
 
-
-
-                        <input type="hidden"
+<input type="hidden"
+       name="courseId"
+       th:value="${selectedCourse}">
+ <input type="hidden"
                                name="enrollmentID"
                                th:value="${grade.enrollmentID}">
 
@@ -308,21 +318,17 @@
                                 Remarks
                             </label>
 
-
-                            <textarea class="form-control"
-                                      name="remarks"
-                                      rows="3"></textarea>
-
-
+<textarea class="form-control"
+          name="remarks"
+          rows="3"
+          th:text="${grade.remarks}">
+</textarea>
                         </div>
 
-
-
-                        <button class="btn btn-success mt-3">
-                            Finalize Result
-                        </button>
-
-
+<button class="btn btn-success mt-3"
+        th:if="${!isFinalized}">
+    Finalize Result
+</button>
 
                     </form>
 

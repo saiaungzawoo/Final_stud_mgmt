@@ -48,7 +48,7 @@ public class ExamResultController {
         model.addAttribute("courses", courses);
 //exam list
         if (courseId != null && !courseId.trim().isEmpty()) {
-        	List<ExamBean> exams = examResultRepo.getCompletedExamListByCourse(courseId);
+          List<ExamBean> exams = examResultRepo.getCompletedExamListByCourse(courseId);
             model.addAttribute("exams", exams);
             model.addAttribute("selectedCourseId", courseId);
         }
@@ -80,10 +80,9 @@ public class ExamResultController {
 
         return "teacher/exam-result-dashboard";
     }
-
-    /**
-     * 2. Grade / Create Exam Result (New Student Grade)
-     */
+	/*
+	 * / 2. Grade / Create Exam Result (New Student Grade)
+	 **/
     @PostMapping("/save")
     public String saveResults(@ModelAttribute("form") ExamResultFormBean form, HttpSession session) {
         UserBean loginUser = (UserBean) session.getAttribute("loginUser");
@@ -98,9 +97,9 @@ public class ExamResultController {
         
         return "redirect:/teacher/exam-results?examId=" + form.getExamID();
     }
-    /**
-     * 3. Update Existing Exam Result (Modal Form Submit)
-     */
+	/*
+	 * / 3. Update Existing Exam Result (Modal Form Submit)
+	 */
     @PostMapping("/update")
     public String updateResult(@Valid @ModelAttribute("examResult") ExamResultBean examResult,
                                BindingResult bindingResult,

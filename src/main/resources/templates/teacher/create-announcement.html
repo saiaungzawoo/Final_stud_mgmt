@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
 
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 <body class="bg-light">
 
 
@@ -160,9 +163,7 @@
                                 <option value="High">
                                     High
                                 </option>
-
-
-                                <option value="Urgent">
+ <option value="Urgent">
                                     Urgent
                                 </option>
 

@@ -1,4 +1,4 @@
-package com.finalproject.Final.repository;
+ package com.finalproject.Final.repository;
 
 import java.util.List;
 import java.util.UUID;
@@ -189,8 +189,7 @@ public class ExamRepository {
 
 
         }, teacherID);
-
-    }
+ }
     public List<ExamBean> getExamListByCourse(String courseID) {
 
         String sql = """
@@ -372,8 +371,7 @@ public class ExamRepository {
 
     }
     public int updateExam(ExamBean bean){
-
-        String sql = """
+String sql = """
                 UPDATE exam
                 SET
                     courseID=?,
@@ -430,3 +428,4 @@ public class ExamRepository {
         return jdbcTemplate.update(sql);
     }
 }
+

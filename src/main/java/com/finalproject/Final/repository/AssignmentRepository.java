@@ -1,4 +1,4 @@
-package com.finalproject.Final.repository;
+ package com.finalproject.Final.repository;
 
 import java.util.List;
 
@@ -42,7 +42,10 @@ public class AssignmentRepository {
 
     }
     public int saveAssignment(AssignmentBean obj){
-
+      System.out.println("INSERT ASSIGNMENT");
+      System.out.println(obj.getAssignmentID());
+      System.out.println(obj.getStatus());
+      System.out.println(obj.getTitle());
         String sql = """
                 INSERT INTO assignment
                 (
@@ -72,6 +75,7 @@ public class AssignmentRepository {
                 obj.getWeightPercent(),
                 obj.getDueDate(),
                 obj.getStatus().name()
+                
         );
 
     }
@@ -135,8 +139,7 @@ public class AssignmentRepository {
             obj.setAssignmentID(rs.getString("assignmentID"));
             obj.setCourseID(rs.getString("courseID"));
             obj.setCreatedByID(rs.getString("createdByID"));
-
-            obj.setTitle(rs.getString("title"));
+ obj.setTitle(rs.getString("title"));
             obj.setDescription(rs.getString("description"));
 
             obj.setMaxScore(rs.getBigDecimal("max_score"));
@@ -296,6 +299,17 @@ public class AssignmentRepository {
                 """;
 
         return jdbc.update(sql);
+    }
+    public int publishAssignment(String assignmentID) {
+
+        String sql = """
+                UPDATE assignment
+                SET status='Published'
+                WHERE assignmentID=?
+                AND status='Draft'
+                """;
+
+        return jdbc.update(sql, assignmentID);
     }
 
 }

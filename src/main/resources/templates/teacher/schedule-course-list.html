@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
-
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 <body>
 
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
@@ -32,7 +34,7 @@
 
             <div class="row g-4">
 
-                <div class="col-md-6 col-xl-3"
+               <div class="col-12 col-md-6 col-lg-4"
                      th:each="course : ${courseList}">
 
                     <a class="category-card"
