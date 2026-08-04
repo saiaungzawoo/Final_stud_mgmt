@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Announcement Detail</title>
+
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+</head>
+
+
+<body>
+
+
+<!-- Header -->
+        <div th:replace="~{fragment/student-header :: studentHeader}"></div>
+<!-- SIDEBAR -->
+    <div th:replace="~{fragment/student-sidebar :: studentSidebar}"></div>
+
+
+<div class="container mt-5 mb-5">
+
+
+    <div class="card shadow">
+
+
+        <div class="card-body">
+
+
+            <h2 class="mb-3"
+                th:text="${announcement.title}">
+                Announcement Title
+            </h2>
+
+
+
+            <div class="mb-3">
+
+                <span class="badge bg-warning text-dark"
+                      th:text="${announcement.priority}">
+                    Priority
+                </span>
+
+            </div>
+
+
+
+            <p class="text-muted">
+
+                Published Date :
+
+                <span th:text="${#temporals.format(
+                    announcement.publishDate,
+                    'dd-MM-yyyy HH:mm')}">
+                </span>
+
+            </p>
+
+
+
+            <hr>
+
+
+
+            <p class="fs-5"
+               style="white-space: pre-line;"
+               th:text="${announcement.content}">
+                Announcement Content
+            </p>
+
+
+
+            <hr>
+
+
+
+            <a th:href="@{/announcement/student}"
+               class="btn btn-primary">
+
+                ← Back to Announcements
+
+            </a>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- Footer -->
+<th:block th:replace="~{fragment/footer :: footer}"></th:block>
+ <!-- JavaScript Fragment -->
+    <div th:replace="~{fragment/js :: js}"></div>
+
+
+
+</body>
+
+</html>
