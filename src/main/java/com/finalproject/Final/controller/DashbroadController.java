@@ -1,4 +1,4 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,217 +27,213 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/dashboard")
 public class DashbroadController {
-	 @Autowired
-	    private TeacherRepository mRepo;
-	 @Autowired
-	    private PasswordEncoder passwordEncoder;
-	
-	
-	  @GetMapping("/getbyid1")
-	    public ModelAndView getByTeacherId( @RequestParam("id") String userID) {
-	        TeacherBean obj = mRepo.getByTeacherId(userID);
-	        return new ModelAndView("teacher/teacher-profile","teacherObj", obj );
+   @Autowired
+      private TeacherRepository mRepo;
+   @Autowired
+      private PasswordEncoder passwordEncoder;
+  
+  
+    @GetMapping("/getbyid1")
+      public ModelAndView getByTeacherId( @RequestParam("id") String userID) {
+          TeacherBean obj = mRepo.getByTeacherId(userID);
+          return new ModelAndView("teacher/teacher-profile","teacherObj", obj );
 
-	    }
-	  @GetMapping("/dashboard-teacher")
-	  public String teacherdashboard(
-	          Model model,
-	          HttpSession session) {
+      }
+    @GetMapping("/dashboard-teacher")
+    public String teacherdashboard(
+            Model model,
+            HttpSession session) {
 
 
-	      UserBean loginUser =
-	              (UserBean) session.getAttribute("loginUser");
+        UserBean loginUser =
+                (UserBean) session.getAttribute("loginUser");
 
 
-	      if(loginUser == null) {
-	          return "redirect:/login";
-	      }
+        if(loginUser == null) {
+            return "redirect:/login";
+        }
 
 
-	      String teacherID =
-	              loginUser.getUserID();
+        String teacherID =
+                loginUser.getUserID();
 
 
 
-	      // Dashboard Cards
+        // Dashboard Cards
 
-	      model.addAttribute(
-	              "classCount",
-	              mRepo.countClasses(teacherID)
-	      );
+        model.addAttribute(
+                "classCount",
+                mRepo.countClasses(teacherID)
+        );
 
 
-	      model.addAttribute(
-	              "attendancePercent",
-	              mRepo.todayAttendancePercent(teacherID)
-	      );
+        model.addAttribute(
+                "attendancePercent",
+                mRepo.todayAttendancePercent(teacherID)
+        );
 
 
-	      model.addAttribute(
-	              "assignmentCount",
-	              mRepo.countAssignments(teacherID)
-	      );
+        model.addAttribute(
+                "assignmentCount",
+                mRepo.countAssignments(teacherID)
+        );
 
 
-	      model.addAttribute(
-	              "pendingCount",
-	              mRepo.countPendingSubmission(teacherID)
-	      );
+        model.addAttribute(
+                "pendingCount",
+                mRepo.countPendingSubmission(teacherID)
+        );
 
 
 
-	      // Today Classes
+        // Today Classes
 
-	      model.addAttribute(
-	              "todaySchedules",
-	              mRepo.getTodaySchedule(teacherID)
-	      );
+        model.addAttribute(
+                "todaySchedules",
+                mRepo.getTodaySchedule(teacherID)
+        );
 
 
 
-	      // Recent Announcements (AnnouncementBean List)
+        // Recent Announcements (AnnouncementBean List)
 
-	      model.addAttribute(
-	              "announcements",
-	              mRepo.getRecentAnnouncements(teacherID)
-	      );
+        model.addAttribute(
+                "announcements",
+                mRepo.getRecentAnnouncements(teacherID)
+        );
 
 
 
-	      return "teacher/teacher-dashboard";
-	  }
-	  @PostMapping("/update")
-	    public String updateUpload(
-	            @Valid @ModelAttribute("teacherObj") TeacherBean obj,
-	            BindingResult result,
-	            @RequestParam("file") MultipartFile file,
-	            Model m) throws IOException {
+        return "teacher/teacher-dashboard";
+    }
+    @PostMapping("/update")
+      public String updateUpload(
+              @Valid @ModelAttribute("teacherObj") TeacherBean obj,
+              BindingResult result,
+              @RequestParam("file") MultipartFile file,
+              Model m) throws IOException {
 
 
 
-	        if(result.hasErrors()) {
+          if(result.hasErrors()) {
 
-	            return "teacher/teacher-edit";
-	        }
+              return "teacher/teacher-edit";
+          }
 
 
 
-	        TeacherBean oldObj =
-	                mRepo.getByTeacherId(
-	                        obj.getUserID()
-	                );
+          TeacherBean oldObj =
+                  mRepo.getByTeacherId(
+                          obj.getUserID()
+                  );
 
 
 
 
-	        if(file != null && !file.isEmpty()) {
+          if(file != null && !file.isEmpty()) {
 
 
 
-	            long maxSize =
-	                    2 * 1024 * 1024;
+              long maxSize =
+                      2 * 1024 * 1024;
 
 
 
-	            if(file.getSize() > maxSize) {
+              if(file.getSize() > maxSize) {
 
-	                m.addAttribute(
-	                    "fileError",
-	                    "File size must be less than 2MB"
-	                );
+                  m.addAttribute(
+                      "fileError",
+                      "File size must be less than 2MB"
+                  );
 
-	                return "teacher/teacher-edit";
-	            }
+                  return "teacher/teacher-edit";
+              }
 
 
 
-	            String contentType =
-	                    file.getContentType();
+              String contentType =
+                      file.getContentType();
 
 
 
-	            if(contentType == null ||
-	                    !contentType.startsWith("image/")) {
+              if(contentType == null ||
+                      !contentType.startsWith("image/")) {
 
 
-	                m.addAttribute(
-	                    "fileError",
-	                    "Only image files allowed"
-	                );
+                  m.addAttribute(
+                      "fileError",
+                      "Only image files allowed"
+                  );
 
 
-	                return "teacher/teacher-edit";
-	            }
+                  return "teacher/teacher-edit";
+              }
+ if(oldObj.getProfileImage()!=null) {
 
+                  Files.deleteIfExists(
+                      Paths.get(oldObj.getProfileImage())
+                  );
+              }
 
 
 
-	            if(oldObj.getProfileImage()!=null) {
+              String fileName =
+                      file.getOriginalFilename();
 
-	                Files.deleteIfExists(
-	                    Paths.get(oldObj.getProfileImage())
-	                );
-	            }
 
 
+              file.transferTo(
+                      Paths.get("uploads/" + fileName)
+              );
 
-	            String fileName =
-	                    file.getOriginalFilename();
 
 
+              obj.setProfileImage(
+                      "uploads/" + fileName
+              );
 
-	            file.transferTo(
-	                    Paths.get("uploads/" + fileName)
-	            );
 
 
+          }else {
 
-	            obj.setProfileImage(
-	                    "uploads/" + fileName
-	            );
 
+              obj.setProfileImage(
+                      oldObj.getProfileImage()
+              );
 
+          }
 
-	        }else {
 
 
-	            obj.setProfileImage(
-	                    oldObj.getProfileImage()
-	            );
 
-	        }
+          if(obj.getPassword()!=null &&
+                  !obj.getPassword().isBlank()) {
 
 
+              obj.setPassword(
+                  passwordEncoder.encode(
+                      obj.getPassword()
+                  )
+              );
 
+          }else {
 
-	        if(obj.getPassword()!=null &&
-	                !obj.getPassword().isBlank()) {
 
+              obj.setPassword(
+                  oldObj.getPassword()
+              );
+          }
 
-	            obj.setPassword(
-	                passwordEncoder.encode(
-	                    obj.getPassword()
-	                )
-	            );
 
-	        }else {
 
 
-	            obj.setPassword(
-	                oldObj.getPassword()
-	            );
-	        }
+          mRepo.updateUpload(obj);
 
 
 
+          return "redirect:/dashboard/dashboard-teacher";
 
-	        mRepo.updateUpload(obj);
-
-
-
-	        return "redirect:/dashboard/dashboard-teacher";
-
-	    }
-	    
+      }
+      
 
 }

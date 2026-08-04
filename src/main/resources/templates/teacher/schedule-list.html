@@ -1,8 +1,10 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
-
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 <body>
 
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
@@ -94,8 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Schedule ID is missing!');
                 return;
             }
-
-            const btn = this;
+const btn = this;
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
 

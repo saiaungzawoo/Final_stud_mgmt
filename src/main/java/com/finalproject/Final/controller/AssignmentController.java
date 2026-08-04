@@ -1,4 +1,4 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +33,16 @@ public class AssignmentController {
     public String assignmentDashboard(
             @RequestParam(value = "courseID", required = false) String courseID,
             Model model,HttpSession session) {
-    	
-    	 UserBean loginUser = (UserBean) session.getAttribute("loginUser");
-    	 String teacherID = loginUser.getUserID();
-    	 
-    	 assignmentRepo.updateClosedAssignments();
- 	    
-    	 if (!model.containsAttribute("assignment")) {
-    		    AssignmentBean bean = new AssignmentBean();
-    		    model.addAttribute("assignment", bean);
-    		}
+      
+       UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+       String teacherID = loginUser.getUserID();
+       
+       assignmentRepo.updateClosedAssignments();
+       
+       if (!model.containsAttribute("assignment")) {
+            AssignmentBean bean = new AssignmentBean();
+            model.addAttribute("assignment", bean);
+        }
 
         if (courseID != null && !courseID.isEmpty()) {
             model.addAttribute("assignmentList", assignmentRepo.getAssignmentListByCourse(courseID));
@@ -52,11 +52,7 @@ public class AssignmentController {
 
 
         model.addAttribute("courseList", assignmentRepo.getTeacherCourses(teacherID));
-        model.addAttribute("statusList", 
-                new AssignmentStatus[]{
-                    AssignmentStatus.Draft,
-                    AssignmentStatus.Published
-                });
+    
         return "teacher/assignment-dashboard"; //  Single-page HTML Name
     }
 
@@ -66,6 +62,11 @@ public class AssignmentController {
             @Valid @ModelAttribute("assignment") AssignmentBean bean,
             BindingResult result,HttpSession session,
             RedirectAttributes redirectAttributes) {
+        System.out.println("SAVE METHOD START");
+          System.out.println("TITLE = " + bean.getTitle());
+          System.out.println("COURSE = " + bean.getCourseID());
+          System.out.println("DUE DATE = " + bean.getDueDate());
+
 
         // validation input error 
         if (result.hasErrors()) {
@@ -80,9 +81,10 @@ public class AssignmentController {
         }
         
         UserBean loginUser = (UserBean) session.getAttribute("loginUser");
-   	 String teacherID = loginUser.getUserID();
-	    
+      String teacherID = loginUser.getUserID();
+      
         bean.setCreatedByID(teacherID ); // Teacher ID 
+        bean.setStatus(AssignmentStatus.Draft);
         assignmentRepo.saveAssignment(bean); // DB 
 
         return "redirect:/assignment/list?courseID=" + bean.getCourseID();
@@ -91,8 +93,8 @@ public class AssignmentController {
    
     @PostMapping("/update")
     public String updateAssignment(@ModelAttribute("assignment") AssignmentBean bean,HttpSession session) {
-    	  UserBean loginUser = (UserBean) session.getAttribute("loginUser");
-    	   	 String teacherID = loginUser.getUserID();
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+            String teacherID = loginUser.getUserID();
         bean.setCreatedByID(teacherID);
         
         assignmentRepo.updateAssignment(bean); // DB ထဲမှာ သွားပြင်မယ်
@@ -107,10 +109,17 @@ public class AssignmentController {
     public String redirectOldSelect() {
         return "redirect:/assignment/list";
     }
-
-    @GetMapping("/create")
+@GetMapping("/create")
     public String redirectOldCreate() {
         return "redirect:/assignment/list";
     }
-    
+    @PostMapping("/publish")
+    public String publishAssignment(
+            @RequestParam("assignmentID") String assignmentID,
+            @RequestParam("courseID") String courseID) {
+
+        assignmentRepo.publishAssignment(assignmentID);
+
+        return "redirect:/assignment/list?courseID=" + courseID;
+    }
 }

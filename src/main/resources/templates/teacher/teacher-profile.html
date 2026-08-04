@@ -1,22 +1,29 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}"></head>
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
+</head>
 <body>
 
 <div th:replace="~{teacher/teacher-dashboard :: teacherHeader}"></div>
 <div class="container-fluid mt-5">
-
     <div class="row">
-<div class="container mt-5">
-        <!-- Main Content -->
-        <main class="col-md-9 col-lg-10">
 
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 p-0">
+            <div th:replace="~{teacher/teacher-dashboard :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 col-lg-10 p-4">
+<div class="text-end mb-3">
             <a th:href="@{/dashboard/dashboard-teacher}" 
-               class="btn btn-outline-secondary mb-3">
+               class="btn btn-primary">
                 <i class="bi bi-arrow-left"></i> Back
             </a>
-
+</div>
 
             <div class="card shadow">
 
@@ -116,8 +123,7 @@
                         </div>
 
                         <div class="mb-3">
-
-                            <label>
+ <label>
                                 Date of Birth
                             </label>
 
@@ -174,7 +180,7 @@
 
                         </div>
                         
-                        <button type="submit" class="btn btn-success">                               
+                        <button type="submit" class="btn btn-primary">                               
                             Update Teacher
                         </button>
 
@@ -188,9 +194,9 @@
         </div>
        </div>
       </main>      
-   		 </div>
-			</div>
- 				</div>
+        </div>
+      </div>
+         
 
 
 

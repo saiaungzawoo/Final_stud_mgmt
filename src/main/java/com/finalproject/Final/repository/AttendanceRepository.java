@@ -1,4 +1,4 @@
-package com.finalproject.Final.repository;
+ package com.finalproject.Final.repository;
 
 import java.util.List;
 
@@ -19,29 +19,45 @@ public class AttendanceRepository {
     public List<AttendanceBean> getStudentList(String courseID,String scheduleID){
 
         String sql="""
-                SELECT
-                u.userID,
-                u.name
-                FROM enrollment e
-                JOIN user u
-                ON e.userID=u.userID
-                WHERE e.courseID=?
-                AND e.status='Active'
-                ORDER BY u.name
+               SELECT
+    u.userID,
+    u.name,
+    a.status,
+    a.remarks
+FROM enrollment e
+JOIN user u
+    ON e.userID = u.userID
+LEFT JOIN attendance a
+    ON a.userID = u.userID
+    AND a.scheduleID = ?
+WHERE e.courseID = ?
+AND e.status = 'Active'
+ORDER BY u.name
                 """;
 
         return jdbcTemplate.query(sql,(rs,rowNum)->{
 
-            AttendanceBean obj=new AttendanceBean();
+            AttendanceBean obj = new AttendanceBean();
 
             obj.setUserID(rs.getString("userID"));
             obj.setStudentName(rs.getString("name"));
             obj.setScheduleID(scheduleID);
 
+            String status = rs.getString("status");
+
+            if(status != null) {
+                obj.setStatus(
+                    AttendanceBean.AttendanceStatus.valueOf(status)
+                );
+            }
+
+            obj.setRemarks(
+                rs.getString("remarks")
+            );
+
             return obj;
 
-        },courseID);
-
+        }, scheduleID, courseID);
     }
     public int saveAttendance(AttendanceBean obj,String teacherID) {
 
@@ -131,8 +147,7 @@ public class AttendanceRepository {
                 ON s.scheduleID = a.scheduleID
 
                 WHERE s.courseID=?
-
-                GROUP BY 
+ GROUP BY 
                     s.scheduleID,
                     s.courseID,
                     s.schedule_date,
@@ -325,9 +340,7 @@ public class AttendanceRepository {
 
 
             obj.setStudentName(rs.getString("topic"));
-
-
-            obj.setStatus(
+ obj.setStatus(
                 AttendanceStatus.valueOf(
                     rs.getString("status")
                 )
@@ -409,5 +422,21 @@ public class AttendanceRepository {
             courseID
         );
 
+    }
+    public boolean attendanceExistsBySchedule(String scheduleID){
+
+        String sql = """
+                SELECT COUNT(*)
+                FROM attendance
+                WHERE scheduleID=?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                scheduleID
+        );
+
+        return count != null && count > 0;
     }
 }

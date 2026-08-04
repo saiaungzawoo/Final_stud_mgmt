@@ -1,8 +1,15 @@
-package com.finalproject.Final.controller;
+ package com.finalproject.Final.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.finalproject.Final.model.AnnouncementRecipientBean;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,37 +18,42 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalproject.Final.model.AnnouncementBean;
 import com.finalproject.Final.model.UserBean;
 import com.finalproject.Final.repository.AnnouncementRepository;
 
 import jakarta.servlet.http.HttpSession;
-
+import com.finalproject.Final.repository.AnnouncementRecipientRepository;
 @Controller
 @RequestMapping("/announcement")
 public class AnnouncementController {
 
     private final AnnouncementRepository announcementRepo;
-    
+    private final AnnouncementRecipientRepository recipientRepo;
    
 
-    public AnnouncementController(AnnouncementRepository announcementRepo) {
+    public AnnouncementController(
+            AnnouncementRepository announcementRepo,
+            AnnouncementRecipientRepository recipientRepo) {
+
         this.announcementRepo = announcementRepo;
+        this.recipientRepo = recipientRepo;
     }
 
-    /**
-     * ၁။ အဓိက Dashboard Page (Course list ပြခြင်းနှင့် ရွေးချယ်ထားသော Course ၏ Announcement list တွဲပြခြင်း)
-     * URL: /announcement/list
-     */
+	/*
+	 * / ၁။ အဓိက Dashboard Page (Course list ပြခြင်းနှင့် ရွေးချယ်ထားသော Course ၏
+	 * Announcement list တွဲပြခြင်း) URL: /announcement/list
+	 */
     @GetMapping("/list")
     public String announcementDashboard(
             @RequestParam(value = "courseID", required = false) String courseID,
             Model model ,HttpSession session) {
-    	
-    	  UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+      
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
-    	    String teacherID = loginUser.getUserID();
+          String teacherID = loginUser.getUserID();
 
         //  Course List Grid Card
         model.addAttribute("courseList", announcementRepo.getTeacherCourses(teacherID));
@@ -65,24 +77,110 @@ public class AnnouncementController {
         return "teacher/announcement-dashboard"; 
     }
 
-    /**
-     * ၂။ Announcement အသစ်ဆောက်ခြင်းနှင့် တည်းဖြတ်ခြင်း (Save / Update Endpoint)
-     * URL: /announcement/save
-     */
+	/*
+	 * ၂။ Announcement အသစ်ဆောက်ခြင်းနှင့် တည်းဖြတ်ခြင်း (Save / Update Endpoint)
+	 * URL: /announcement/save
+	 */
+   
     @PostMapping("/save")
     public String saveAnnouncement(@ModelAttribute("announcement") AnnouncementBean bean,HttpSession session) {
-    	  UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
 
-  	    String teacherID = loginUser.getUserID();
+        String teacherID = loginUser.getUserID();
         bean.setCreatedByID(teacherID);
-
+        System.out.println("TARGET TYPE = " + bean.getTargetType());
       
         if (bean.getAnnouncementID() == null || bean.getAnnouncementID().isEmpty()) {
+
             bean.setAnnouncementID(java.util.UUID.randomUUID().toString());
+
             bean.setPublishDate(LocalDateTime.now());
+
+            // 1. Save announcement
             announcementRepo.saveAnnouncement(bean);
-        } else {
+
+
+            // 2. Find target users
+            List<String> userIDs = null;
+
+
+            switch(bean.getTargetType()) {
+
+                case "ALL":
+                    userIDs = recipientRepo.getAllUserIDs();
+                    break;
+
+
+                case "ALL_STUDENTS":
+                    userIDs = recipientRepo.getStudentIDs();
+                    break;
+                		case "ALL_TEACHERS":
+                    userIDs = recipientRepo.getTeacherIDs();
+                    break;
+            }
+
+
+            // 3. Save recipients
+            if(userIDs != null) {
+
+                for(String userID : userIDs) {
+                     System.out.println("RECIPIENT USER = " + userID);
+                    AnnouncementRecipientBean recipient =
+                            new AnnouncementRecipientBean();
+
+                    recipient.setAnnouncementID(
+                            bean.getAnnouncementID()
+                    );
+
+                    recipient.setUserID(userID);
+
+
+                    recipientRepo.saveRecipient(recipient);
+                }
+            }
+
+
+        }
+        else {
+
+            // 1. Update announcement
             announcementRepo.updateAnnouncement(bean);
+
+            // 2. Delete old recipients
+            recipientRepo.deleteByAnnouncementID(bean.getAnnouncementID());
+
+            // 3. Get new recipients
+            List<String> userIDs = null;
+
+            switch (bean.getTargetType()) {
+
+                case "ALL":
+                    userIDs = recipientRepo.getAllUserIDs();
+                    break;
+
+                case "ALL_STUDENTS":
+                    userIDs = recipientRepo.getStudentIDs();
+                    break;
+
+                case "ALL_TEACHERS":
+                    userIDs = recipientRepo.getTeacherIDs();
+                    break;
+            }
+
+            // 4. Insert new recipients
+            if (userIDs != null) {
+
+                for (String userID : userIDs) {
+
+                    AnnouncementRecipientBean recipient =
+                            new AnnouncementRecipientBean();
+
+                    recipient.setAnnouncementID(bean.getAnnouncementID());
+                    recipient.setUserID(userID);
+
+                    recipientRepo.saveRecipient(recipient);
+                }
+            }
         }
 
         return "redirect:/announcement/list?courseID=" + bean.getCourseID();
@@ -106,4 +204,65 @@ public class AnnouncementController {
     public String redirectOldCreate(@PathVariable("courseID") String courseID) {
         return "redirect:/announcement/list?courseID=" + courseID;
     }
-}
+    @PostMapping("/delete")
+    public String deleteAnnouncement(
+            @RequestParam String announcementID,
+            @RequestParam String courseID) {
+
+        // 1. Delete recipients
+        recipientRepo.deleteByAnnouncementID(announcementID);
+
+        // 2. Delete announcement
+        announcementRepo.deleteAnnouncement(announcementID);
+
+        return "redirect:/announcement/list?courseID=" + courseID;
+    }
+    @GetMapping("/status/{announcementID}")
+    public String announcementStatus(
+            @PathVariable String announcementID,
+            Model model) {
+
+
+        List<AnnouncementRecipientBean> recipientList =
+                recipientRepo.getRecipientStatus(announcementID);
+
+
+        model.addAttribute(
+                "recipientList",
+                recipientList
+        );
+
+        model.addAttribute(
+                "announcementID",
+                announcementID
+        );
+
+
+        return "teacher/announcement-status";
+    }
+    @GetMapping("/status/data/{id}")
+    @ResponseBody
+    public ResponseEntity<List<Map<String,Object>>> getStatusData(
+            @PathVariable("id") String id) {
+
+
+        List<AnnouncementRecipientBean> list =
+                recipientRepo.getRecipientStatus(id);
+
+
+        List<Map<String,Object>> result = new ArrayList<>();
+
+
+        for(AnnouncementRecipientBean r : list){
+Map<String,Object> map = new HashMap<>();
+
+            map.put("userName", r.getUserName());
+            map.put("read", r.isReadStatus());
+            map.put("acknowledged", r.isAcknowledged());
+
+            result.add(map);
+        }
+
+
+        return ResponseEntity.ok(result);
+    }}

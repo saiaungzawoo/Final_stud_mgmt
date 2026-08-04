@@ -1,4 +1,4 @@
-package com.finalproject.Final.repository;
+ package com.finalproject.Final.repository;
 
 
 import java.time.LocalDate;
@@ -54,7 +54,7 @@ public class CertificateRepository {
             ON fg.enrollmentID = e.enrollmentID
 
 
-            JOIN `user` u
+            JOIN user u
             ON e.userID = u.userID
 
 
@@ -216,9 +216,7 @@ public class CertificateRepository {
                         Integer.class,
                         finalGradeID
                 );
-
-
-        return count > 0;
+return count > 0;
 
     }
 
@@ -424,9 +422,7 @@ public class CertificateRepository {
                     bean.setCertificateID(
                             rs.getString("certificateID")
                     );
-
-
-                    bean.setStudentName(
+ bean.setStudentName(
                             rs.getString("studentName")
                     );
 
@@ -628,8 +624,7 @@ public class CertificateRepository {
 
 
         String sql = """
-
-            SELECT
+ SELECT
 
                 c.certificateID,
                 c.certificate_number,
@@ -658,7 +653,7 @@ public class CertificateRepository {
             ON c.enrollmentID = e.enrollmentID
 
 
-            JOIN `user` student
+            JOIN user student
             ON e.userID = student.userID
 
 
@@ -666,7 +661,7 @@ public class CertificateRepository {
             ON e.courseID = co.courseID
 
 
-            LEFT JOIN `user` issuer
+            LEFT JOIN user issuer
             ON c.issuedByID = issuer.userID
 
 
@@ -768,7 +763,7 @@ public class CertificateRepository {
             ON fg.enrollmentID = e.enrollmentID
 
 
-            JOIN `user` u
+            JOIN user u
             ON e.userID = u.userID
 
 
@@ -836,9 +831,7 @@ public class CertificateRepository {
 
                 fg.final_score,
                 fg.letter_grade,
-
-
-                u.name AS studentName,
+ u.name AS studentName,
 
 
                 co.name AS courseName,
@@ -945,8 +938,8 @@ public class CertificateRepository {
                             rs.getString("issuedByName")
                     );
                     System.out.println(
-                    	    "Issued By Name >>> " + bean.getIssuedByName()
-                    	);
+                          "Issued By Name >>> " + bean.getIssuedByName()
+                      );
 
 
                     return bean;

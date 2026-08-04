@@ -15,33 +15,33 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExamResultBean {
-	 private String examResultID;
+   private String examResultID;
 
-	    private String examID;
+      private String examID;
 
-	    private String userID;
+      private String userID;
 
-	    private String studentName;
-	    @NotNull(message = "Score is required")
-	    @DecimalMin(
-	        value = "0.0",
-	        message = "Score cannot be negative"
-	    )
-	    private BigDecimal score;
+      private String studentName;
+      @NotNull(message = "Score is required")
+      @DecimalMin(
+          value = "0.0",
+          message = "Score cannot be negative"
+      )
+      private BigDecimal score;
 
-	    private String remarks;
+      private String remarks;
 
-	    private String gradedByID;
+      private String gradedByID;
 
-	    private LocalDateTime gradedAt;
+      private LocalDateTime gradedAt;
 
-	    private LocalDateTime createdAt;
-	    // For View Result
-	    private String examName;
+      private LocalDateTime createdAt;
+      // For View Result
+      private String examName;
 
-	    private String courseName;
+      private String courseName;
 
-	    private BigDecimal maxScore;
+      private BigDecimal maxScore;
 
-	    private String examType;
+      private String examType;
 }

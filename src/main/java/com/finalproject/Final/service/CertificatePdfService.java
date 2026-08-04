@@ -1,4 +1,4 @@
-package com.finalproject.Final.service;
+ package com.finalproject.Final.service;
 
 import java.awt.Color;
 import java.io.File;
@@ -68,9 +68,13 @@ public class CertificatePdfService {
             // ✒️ Custom Great Vibes Cursive Signature Font Setup
             Font signatureFont;
             try {
-                String fontPath = "src/main/resources/fonts/GreatVibes-Regular.ttf";
-                BaseFont customBase = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                signatureFont = new Font(customBase, 26, Font.NORMAL, inkBlue);
+              BaseFont customBase = BaseFont.createFont(
+                      "src/main/resources/fonts/GreatVibes-Regular.ttf",
+                       BaseFont.IDENTITY_H,
+                      BaseFont.EMBEDDED
+              );
+
+              signatureFont = new Font(customBase, 38, Font.NORMAL, inkBlue);
             } catch (Exception e) {
                 // Fallback Font if TTF file is missing
                 signatureFont = new Font(Font.TIMES_ROMAN, 20, Font.BOLDITALIC, inkBlue);
@@ -95,8 +99,7 @@ public class CertificatePdfService {
             Paragraph student = new Paragraph(certificate.getStudentName(), studentFont);
             student.setAlignment(Element.ALIGN_CENTER);
             document.add(student);
-
-            // Completion Line
+ // Completion Line
             Paragraph p2 = new Paragraph("For successfully completing", normalFont);
             p2.setAlignment(Element.ALIGN_CENTER);
             document.add(p2);
@@ -184,8 +187,7 @@ public class CertificatePdfService {
             directorCell.addElement(fakeDirectorSig);
             directorCell.addElement(sigLine2);
             directorCell.addElement(directorLbl);
-
-            signatureTable.addCell(teacherCell);
+ signatureTable.addCell(teacherCell);
             signatureTable.addCell(directorCell);
 
             document.add(signatureTable);

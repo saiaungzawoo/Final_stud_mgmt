@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragment/css :: css}">
- 
-   
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/teacher.css}">
 </head>
-
 
 <body>
 
@@ -87,8 +86,7 @@
                                    th:field="*{room}"
                                    placeholder="Room Number">
                         </div>
-
-                        <!-- Repeat Days -->
+ <!-- Repeat Days -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Repeat Days</label>
                             <div class="row g-2">
@@ -106,7 +104,7 @@
     <!-- Start Date ရောက်ပြီးပါက Update Button ကို ပိတ် (Disable) ထားမည် -->
     <th:block th:if="${isUpdate}">
         <button type="submit" 
-                class="btn btn-warning" 
+                class="btn btn-primary" 
                 th:disabled="${schedule.startDate != null and !schedule.startDate.isAfter(T(java.time.LocalDate).now())}">
             <i class="bi bi-pencil-square"></i> Update Schedule
         </button>
@@ -142,8 +140,7 @@
         </main>
     </div>
 </div>
-
-<!-- TOPIC INPUT MODAL -->
+ <!-- TOPIC INPUT MODAL -->
 <div class="modal fade" id="topicModal" tabindex="-1" aria-labelledby="topicModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow">
@@ -188,7 +185,25 @@
 <!-- FullCalendar 6.1.10 JS CDN -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
-<script>
+<script th:inline="javascript">
+const schedules = /*[[${scheduleList}]]*/ [];
+
+let events = schedules.map(function(schedule){
+ return{
+        id: schedule.scheduleId,
+        title: schedule.topic || "(No Topic)",
+        start: schedule.scheduleDate,
+
+        extendedProps:{
+            startTime: schedule.startTime,
+            endTime: schedule.endTime,
+            timeRange: schedule.startTime + " - " + schedule.endTime,
+            room: schedule.room,
+            rawTopic: schedule.topic
+        }
+    };
+
+});
 document.addEventListener('DOMContentLoaded', function() {
     
     var calendarEl = document.getElementById('calendar');
@@ -197,6 +212,43 @@ document.addEventListener('DOMContentLoaded', function() {
     if (calendarEl && courseId) {
         
         var calendar = new FullCalendar.Calendar(calendarEl, {
+          eventContent:function(arg){
+
+              let time =
+                  arg.event.extendedProps.startTime
+                  + " - "
+                  + arg.event.extendedProps.endTime;
+
+
+              let room =
+                  arg.event.extendedProps.room;
+
+
+              return {
+
+                  html:`
+
+                  <div class="schedule-box">
+
+                      <div class="schedule-time">
+                          <i class="bi bi-clock"></i>
+                          ${time}
+                      </div>
+
+                      <div class="schedule-topic">
+                          ${arg.event.title}
+                      </div>
+
+                      <div class="schedule-room">
+                          ${room ? "Room "+room : ""}
+                      </div>
+
+                  </div>
+
+                  `
+              };
+
+          },
             initialView: 'dayGridMonth',
             height: 450,
             width:150,
@@ -206,8 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 right: 'dayGridMonth,timeGridWeek'
             },
             
-            // AJAX ဖြင့် JSON Event များ ဆွဲယူမည်
-            events: '/schedule/events/' + courseId,
+           
+            events: events,
             
             // Event Box ကို Click နှိပ်လျှင် Modal ပေါ်မည်
          eventClick: function(info) {
@@ -248,8 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var params = new URLSearchParams();
             params.append('scheduleId', scheduleId);
             params.append('topic', topicValue);
-
-            fetch('/schedule/update-topic', {
+ fetch('/schedule/update-topic', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
