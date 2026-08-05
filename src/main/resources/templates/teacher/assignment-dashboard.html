@@ -248,6 +248,8 @@
                 <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Assignment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
+            
             <form th:action="@{/assignment/update}" method="post">
                 <div class="modal-body p-4">
                     <input type="hidden" id="editAssignmentID" name="assignmentID">
@@ -291,6 +293,8 @@
                     <button type="submit" class="btn btn-primary px-4 text-white fw-bold rounded-3">Update</button>
                 </div>
             </form>
+            
+            
         </div>
     </div>
 </div>
