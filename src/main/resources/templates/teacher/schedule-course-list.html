@@ -21,6 +21,11 @@
         <!-- Main Content -->
         <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
 
+   <input type="text"
+           id="courseSearch"
+           class="form-control"
+           placeholder="Search Course...">
+            
             <div class="d-flex justify-content-between align-items-center mb-4">
 
                 <div>
@@ -31,6 +36,8 @@
                 </div>
 
             </div>
+            
+          
 
             <div class="row g-4">
 
@@ -42,7 +49,9 @@
 
                         <i class="bi bi-calendar-event text-primary"></i>
 
-                        <h3 th:text="${course.name}"></h3>
+                      <h3 class="course-name"
+   							 th:text="${course.name}">
+						</h3>
 
                         <p th:text="${course.description}"></p>
 
@@ -62,6 +71,35 @@
 
 <div th:replace="~{fragment/js :: js}"></div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("courseSearch");
+
+    searchInput.addEventListener("keyup", function () {
+
+        const keyword = this.value.toLowerCase();
+
+        const cards = document.querySelectorAll(".col-12.col-md-6.col-lg-4");
+
+        cards.forEach(card => {
+
+            const courseName = card.querySelector(".course-name")
+                                   .textContent
+                                   .toLowerCase();
+
+            if (courseName.includes(keyword)) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
+</script>
 </body>
 
 </html>

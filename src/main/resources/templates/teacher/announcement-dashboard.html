@@ -84,8 +84,10 @@
                             
                             <i class="bi bi-book text-primary"></i>
                             <h3 class="course-title" th:text="${course.name}">Course Title</h3>
-                            <p th:text="${course.description}">Course description overview text goes here...</p>
-
+                            
+								<p class="course-description"
+								   th:text="${course.description}">
+								</p>
                         </a>
                     </div>
                 </div>

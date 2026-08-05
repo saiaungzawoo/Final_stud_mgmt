@@ -95,6 +95,12 @@
                 </div>
             </div>
  <!-- Dynamic Evaluation Table Workspace Interface Shell Block Grid -->
+ <div class="mb-3">
+    <input type="text"
+           id="examSearch"
+           class="form-control"
+           placeholder="Search Exam Name...">
+</div>
             <div class="card custom-card">
                 <div class="card-body p-0">
                     
@@ -376,6 +382,36 @@
         
         new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
     }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("examSearch");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+
+        const keyword = this.value.toLowerCase();
+
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+
+            // Exam Name က ဒုတိယ Column (index = 1)
+            const examName = row.cells[1].innerText.toLowerCase();
+
+            if (examName.includes(keyword)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
 </script>
 </body>
 </html>
