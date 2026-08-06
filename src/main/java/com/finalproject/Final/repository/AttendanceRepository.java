@@ -319,8 +319,10 @@ ORDER BY u.name
                 s.topic,
                 s.start_time,
                 s.end_time,
+                s.topic,
                 a.status,
                 a.remarks
+                
 
             FROM attendance a
 
@@ -338,9 +340,9 @@ ORDER BY u.name
 
             AttendanceBean obj = new AttendanceBean();
 
-
-            obj.setStudentName(rs.getString("topic"));
- obj.setStatus(
+            obj.setTopic(rs.getString("topic"));
+            
+            obj.setStatus(
                 AttendanceStatus.valueOf(
                     rs.getString("status")
                 )

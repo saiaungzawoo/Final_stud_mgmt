@@ -559,6 +559,48 @@ public void rejectPendingApplications(String scholarshipID,
     );
 }
 
+
+//sai
+//for course discount who have schlarship approved
+public ScholarshipBean findApprovedScholarship(String userId, String courseId){
+
+    String sql = """
+        SELECT 
+            s.discount_type,
+            s.discount_value
+        FROM scholarship_application sa
+        JOIN scholarship s
+        ON sa.scholarshipID = s.scholarshipID
+        WHERE sa.userID = ?
+        AND s.courseID = ?
+        AND sa.status = 'Approved'
+        """;
+
+
+    List<ScholarshipBean> list =
+            jdbc.query(sql,
+            (rs,rowNum)->{
+
+                ScholarshipBean obj = new ScholarshipBean();
+
+                obj.setDiscountType(
+                    rs.getString("discount_type")
+                );
+
+                obj.setDiscountValue(
+                    rs.getString("discount_value")
+                );
+
+                return obj;
+
+            },
+            userId,
+            courseId);
+
+
+    return list.isEmpty() ? null : list.get(0);
+}
+
 }
   
 

@@ -95,6 +95,12 @@
                 </div>
             </div>
  <!-- Dynamic Evaluation Table Workspace Interface Shell Block Grid -->
+ <div class="mb-3">
+    <input type="text"
+           id="examSearch"
+           class="form-control"
+           placeholder="Search Exam Name...">
+</div>
             <div class="card custom-card">
                 <div class="card-body p-0">
                     
@@ -121,7 +127,7 @@
                                     <td class="text-secondary small">
                                         <i class="bi bi-calendar3 me-1 text-muted"></i>
                                         <!-- Utilizes explicit temporal processing for Java LocalDateTime objects -->
-                                        <span th:text="${#temporals.format(exam.examDate, 'yyyy-MM-dd HH:mm')}">Date String</span>
+                                        <span th:text="${#temporals.format(exam.examDate, 'dd-MM-yyyy HH:mm')}">Date String</span>
                                     </td>
                                     <td>
                                         <i class="bi bi-clock me-1 text-muted"></i>
@@ -371,8 +377,14 @@
         document.getElementById('edit_examType').value = btn.getAttribute('data-type');
         document.getElementById('edit_maxScore').value = btn.getAttribute('data-max');
         document.getElementById('edit_weightPercent').value = btn.getAttribute('data-weight');
-        document.getElementById('edit_examDate').value = btn.getAttribute('data-date');
-        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
+        
+        let examDate = btn.getAttribute('data-date');
+
+        if (examDate) {
+            examDate = examDate.substring(0,16);
+        }
+
+        document.getElementById('edit_examDate').value = examDate;        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
         
         
         new bootstrap.Modal(document.getElementById('editExamModal')).show();
@@ -388,6 +400,36 @@
         
         new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
     }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("examSearch");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+
+        const keyword = this.value.toLowerCase();
+
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+
+            // Exam Name က ဒုတိယ Column (index = 1)
+            const examName = row.cells[1].innerText.toLowerCase();
+
+            if (examName.includes(keyword)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
 </script>
 </body>
 </html>
