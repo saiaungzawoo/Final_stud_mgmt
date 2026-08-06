@@ -2,8 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="~{fragment/css :: css}">
-<title>Edit Course</title>
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 

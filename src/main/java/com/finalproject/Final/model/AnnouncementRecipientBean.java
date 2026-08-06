@@ -19,7 +19,7 @@ public class AnnouncementRecipientBean {
 
     private String userID;
 
-    private boolean readStatus;
+    private boolean read;
 
     private LocalDateTime readAt;
 

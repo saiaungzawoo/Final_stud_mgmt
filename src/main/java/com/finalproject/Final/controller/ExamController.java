@@ -90,8 +90,32 @@ public class ExamController {
   }
 
   @PostMapping("/update")
-  public String updateExam(@ModelAttribute("exam") ExamBean bean) {
+  public String updateExam(
+          @Valid @ModelAttribute("exam") ExamBean bean,
+          BindingResult result,
+          Model model,
+          HttpSession session) {
+
+      UserBean loginUser = (UserBean) session.getAttribute("loginUser");
+      String teacherID = loginUser.getUserID();
+
+      if (result.hasErrors()) {
+
+          model.addAttribute("courseList", examRepo.getTeacherCourses(teacherID));
+          model.addAttribute("examTypeList", new String[]{"Quiz", "Midterm", "Final", "Practical"});
+          model.addAttribute("statusList", new String[]{"Scheduled", "In Progress", "Completed", "Cancelled"});
+
+          model.addAttribute("examList",
+                  examRepo.getExamListByCourse(bean.getCourseID()));
+
+          // Validation error ဖြစ်ရင် Edit Modal ကိုပြန်ဖွင့်ဖို
+          model.addAttribute("openEditModal", true);
+
+          return "teacher/exam-list";
+      }
+
       examRepo.updateExam(bean);
+
       return "redirect:/exam/list?courseID=" + bean.getCourseID();
   }
  // Delete configuration path directly receiving requests from the dashboard UI prompt module
