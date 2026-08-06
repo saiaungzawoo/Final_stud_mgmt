@@ -7,45 +7,16 @@
     <title>Edit Teacher - Admin Dashboard</title>
 
     <!-- Global CSS Fragment -->
-    <th:block th:replace="~{fragment/css :: css}"></th:block>
+<th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 
     <!-- Bootstrap Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
     <!-- Custom Admin Layout Styles -->
-    <style>
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        .main-wrapper {
-            min-height: 100vh;
-        }
-
-        .form-card {
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid #e2e8f0;
-        }
-
-        .hover-btn {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .hover-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .profile-img-preview {
-            width: 160px;
-            height: 160px;
-            object-fit: cover;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+  
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -98,24 +69,31 @@
 
                             <div class="row g-4">
 
-                                <!-- Photo Column -->
-                                <div class="col-lg-4 text-center d-flex flex-column align-items-center border-end-lg pe-lg-4">
-                                    <label class="form-label fw-semibold text-secondary mb-3">Profile Photo</label>
+                                <!-- Profile Photo Column နေရာတွင် ပြင်ရန် -->
+<div class="col-lg-4 text-center d-flex flex-column align-items-center border-end-lg pe-lg-4">
+    <label class="form-label fw-semibold text-secondary mb-3">Profile Photo</label>
 
-                                    <div class="mb-3">
-                                        <img th:if="*{profileImage != null}" th:src="@{'/' + *{profileImage}}" class="rounded-circle profile-img-preview" alt="Teacher Photo">
-                                        
-                                        <div th:unless="*{profileImage != null}" class="rounded-circle profile-img-preview bg-light text-muted d-flex align-items-center justify-content-center mx-auto border">
-                                            <i class="bi bi-person fs-1"></i>
-                                        </div>
-                                    </div>
+    <div class="mb-3">
+        <!-- Image အကျယ်ကို 150px fixed သတ်မှတ်ခြင်း -->
+        <img th:if="*{profileImage != null}" 
+             th:src="@{'/' + *{profileImage}}" 
+             class="rounded-circle profile-img-preview border shadow-sm" 
+             style="width: 150px; height: 150px; object-fit: cover;" 
+             alt="Teacher Photo">
+        
+        <!-- Default Icon အကျယ်ကို 150px fixed သတ်မှတ်ခြင်း -->
+        <div th:unless="*{profileImage != null}" 
+             class="rounded-circle profile-img-preview bg-light text-muted d-flex align-items-center justify-content-center mx-auto border shadow-sm" 
+             style="width: 150px; height: 150px;">
+            <i class="bi bi-person fs-1"></i>
+        </div>
+    </div>
 
-                                    <div class="w-100 mt-2">
-                                        <label for="fileUpload" class="form-label small text-muted">Upload New Photo</label>
-                                        <input type="file" id="fileUpload" class="form-control rounded-3" name="file" accept="image/*">
-                                    </div>
-                                </div>
-
+    <div class="w-100 mt-2">
+        <label for="fileUpload" class="form-label small text-muted">Upload New Photo</label>
+        <input type="file" id="fileUpload" class="form-control rounded-3" name="file" accept="image/*">
+    </div>
+</div>
                                 <!-- Information Fields Column -->
                                 <div class="col-lg-8">
                                     <div class="row g-3">
