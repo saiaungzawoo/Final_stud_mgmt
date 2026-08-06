@@ -143,11 +143,11 @@
                                 <td>
 
 
-                                    <a th:href="@{/attendance/student/{id}(id=${student.userID})}"
-                                       class="text-decoration-none fw-semibold"
-                                       th:text="${student.studentName}">
-
-                                    </a>
+                                <a th:href="@{/attendance/student/{courseID}/{id}
+(courseID=${courseID}, id=${student.userID})}"
+class="text-decoration-none fw-semibold"
+th:text="${student.studentName}">
+</a>
 
 
                                 </td>
@@ -159,9 +159,9 @@
                                 <td class="text-center">
 
 
-                                    <a class="btn btn-primary btn-sm"
-                                       th:href="@{/attendance/student/{id}(id=${student.userID})}">
-
+                                  <a class="btn btn-primary btn-sm"
+   th:href="@{/attendance/student/{courseID}/{id}
+(courseID=${courseID},id=${student.userID})}">
 
                                         <i class="bi bi-calendar-check"></i>
 
@@ -169,8 +169,9 @@
 
 
                                     </a>
-  <a class="btn btn-success btn-sm"
-      th:href="@{/teacher/exam-results/student/{id}(id=${student.userID})}">
+ <a class="btn btn-success btn-sm"
+   th:href="@{/teacher/exam-results/student/{courseID}/{id}
+   (courseID=${courseID}, id=${student.userID})}">
 
 
         <i class="bi bi-clipboard-check"></i>
