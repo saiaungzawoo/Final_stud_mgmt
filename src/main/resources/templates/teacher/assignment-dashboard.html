@@ -146,22 +146,22 @@
                                                 </form>
 
                                                 <!-- Edit Button -->
-                                                <button th:if="${asg.status.name() != 'Closed'}"
-                                                        type="button"
-                                                        class="btn btn-outline-secondary btn-sm"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editModal"
-                                                        th:data-id="${asg.assignmentID}"
-                                                        th:data-course="${asg.courseID}"
-                                                        th:data-title="${asg.title}"
-                                                        th:data-desc="${asg.description}"
-                                                        th:data-max="${asg.maxScore}"
-                                                        th:data-weight="${asg.weightPercent}"
-                                                        th:data-date="${asg.dueDate}"
-                                                        th:data-status="${asg.status}"
-                                                        onclick="populateEditModal(this)">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
+                                              <button type="button"
+        class="btn btn-outline-secondary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#editModal"
+        th:data-id="${asg.assignmentID}"
+        th:data-course="${asg.courseID}"
+        th:data-title="${asg.title}"
+        th:data-desc="${asg.description}"
+        th:data-max="${asg.maxScore}"
+        th:data-weight="${asg.weightPercent}"
+        th:data-date="${asg.dueDate}"
+        th:data-status="${asg.status}"
+        th:disabled="${asg.status.name() == 'Closed'}"
+        onclick="populateEditModal(this)">
+    <i class="bi bi-pencil-square"></i>
+</button>
 
                                                 <!-- Delete Button -->
                                             
