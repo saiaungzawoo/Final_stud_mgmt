@@ -193,6 +193,17 @@
         <span th:text="${grade.status}"></span>
     </p>
 
+<div th:if="${grade.finalizedAt != null}"
+     class="alert alert-success d-flex align-items-center mb-3">
+
+    <i class="bi bi-check-circle-fill me-2"></i>
+
+    <div>
+        <strong>Result Finalized</strong><br>
+        This student's final result has already been finalized and cannot be finalized again.
+    </div>
+
+</div>
 
                     <form th:action="@{/teacher/final-grade/finalize}"
                           method="post">
@@ -329,8 +340,9 @@
 </textarea>
                         </div>
 
-<button class="btn btn-success mt-3"
-        th:if="${!isFinalized}">
+<button type="submit"
+        class="btn btn-primary"
+        th:disabled="${grade.finalizedAt != null}">
     Finalize Result
 </button>
 
