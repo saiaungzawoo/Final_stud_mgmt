@@ -20,18 +20,66 @@ public class EnrollmentRepository {
 	private JdbcTemplate jdbc;
 
 	// CREATE ENROLLMENT
-	public String save(String userId, String courseId, LocalDate date, Double originalFee, Double finalFee) {
+	public String save(
+	        String userId,
+	        String courseId,
+	        LocalDate date,
+	        Double originalFee,
+	        Double discountAmount,
+	        Double finalFee, 
+	        String scholarshipApplicationId
+	) {
 
 		String enrollmentId = UUID.randomUUID().toString();
 
-		String sql = "INSERT INTO enrollment " + "(enrollmentID,userID,courseID,"
-				+ "paymentTypeID,installmentRuleID,scholarshipApplicationID," + "enrollment_date," + "original_fee,"
-				+ "discount_amount," + "final_fee," + "payment_status," + "status," + "created_at," + "updated_at)"
-				+ " VALUES " + "(?,?,?,NULL,NULL,NULL,NULL,?,?,?," + "'Unpaid'," + "'Pending'," + "NOW(),NOW())";
+		  String sql = """
+		            INSERT INTO enrollment
+		            (
+		                enrollmentID,
+		                userID,
+		                courseID,
+		                paymentTypeID,
+		                installmentRuleID,
+		                scholarshipApplicationID,
+		                enrollment_date,
+		                original_fee,
+		                discount_amount,
+		                final_fee,
+		                payment_status,
+		                status,
+		                created_at,
+		                updated_at
+		            )
+		            VALUES
+		            (
+		                ?,
+		                ?,
+		                ?,
+		                NULL,
+		                NULL,
+		                ?,
+		                NULL,
+		                ?,
+		                ?,
+		                ?,
+		                'Unpaid',
+		                'Pending',
+		                NOW(),
+		                NOW()
+		            )
+		            """;
 
-		jdbc.update(sql, enrollmentId, userId, courseId,
 
-				originalFee, 0.0, finalFee);
+		    jdbc.update(
+		            sql,
+		            enrollmentId,
+		            userId,
+		            courseId,
+		            scholarshipApplicationId,
+		            originalFee,
+		            discountAmount,
+		            finalFee
+		    );
 
 		return enrollmentId;
 	}
@@ -99,11 +147,42 @@ public class EnrollmentRepository {
 	}
 
 	// FIND BY ID
+//	public EnrollmentBean findById(String enrollmentId) {
+//
+//		String sql = "SELECT * FROM enrollment WHERE enrollmentID = ?";
+//
+//		return jdbc.queryForObject(sql, new EnrollmentRowMapper(), enrollmentId);
+//	}
+	// FIND BY ID
+	// FIND BY ID
 	public EnrollmentBean findById(String enrollmentId) {
 
-		String sql = "SELECT * FROM enrollment WHERE enrollmentID = ?";
+	    String sql = """
+	        SELECT 
+	            e.*,
 
-		return jdbc.queryForObject(sql, new EnrollmentRowMapper(), enrollmentId);
+	            s.name AS scholarship_name,
+	            s.discount_type AS scholarship_type,
+	             s.discount_value AS scholarship_value
+
+	        FROM enrollment e
+
+	       LEFT JOIN scholarship_application sa
+    ON e.scholarshipApplicationID = sa.scholarshipApplicationID
+    AND sa.status = 'Approved'
+
+	        LEFT JOIN scholarship s
+	            ON sa.scholarshipID = s.scholarshipID
+
+	        WHERE e.enrollmentID = ?
+	        """;
+
+
+	    return jdbc.queryForObject(
+	            sql,
+	            new EnrollmentRowMapper(),
+	            enrollmentId
+	    );
 	}
 
 	// dont delete

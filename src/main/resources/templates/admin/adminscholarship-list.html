@@ -9,64 +9,14 @@
     <!-- Global CSS Fragment -->
     <th:block th:replace="~{fragment/css :: css}"></th:block>
     
+    
+     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    
     <!-- Bootstrap Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <!-- CSS Animation & UI Styles -->
-    <style>
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        .main-wrapper {
-            min-height: 100vh;
-        }
-
-        .management-card {
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid #e2e8f0;
-        }
-        .management-card:hover {
-            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08) !important;
-        }
-
-        /* Header Title Icon Hover Animation */
-        .title-area:hover .animated-icon {
-            animation: wiggle 0.4s ease-in-out infinite alternate;
-        }
-
-        /* Action Buttons Hover Effect */
-        .hover-btn {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .hover-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        /* Table Row Styling */
-        .table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-        .table tbody tr:hover {
-            background-color: #f1f5f9 !important;
-        }
-        .table-responsive {
-            white-space: nowrap;
-        }
-
-        .label-title {
-            font-size: 0.75rem;
-            letter-spacing: 0.03em;
-        }
-
-        @keyframes wiggle {
-            0% { transform: rotate(-8deg); }
-            100% { transform: rotate(8deg); }
-        }
-    </style>
+    
 </head>
 <body class="d-flex flex-column min-vh-100">
 

@@ -181,7 +181,7 @@ public class AnnouncementRecipientRepository {
             );
 
 
-            bean.setReadStatus(
+            bean.setRead(
                     rs.getBoolean("is_read")
             );
 
@@ -195,4 +195,18 @@ public class AnnouncementRecipientRepository {
 
         }, announcementID);
     }
+    
+    public int markAsRead(String announcementID, String userID) {
+
+        String sql = """
+                UPDATE announcement_recipient
+                SET is_read = 1,
+                    read_at = NOW()
+                WHERE announcementID = ?
+                AND userID = ?
+                """;
+
+        return jdbcTemplate.update(sql, announcementID, userID);
+    }
+        
 }
