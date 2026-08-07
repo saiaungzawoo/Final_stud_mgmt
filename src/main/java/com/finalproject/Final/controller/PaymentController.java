@@ -65,6 +65,13 @@ public class PaymentController {
 
         EnrollmentBean enrollment =
                 enrollmentService.getById(id);
+        
+        
+        //new
+        model.addAttribute(
+                "scholarshipType",
+                enrollment.getScholarshipType()
+        );
 
         CourseBean course =
                 courseRepo.findById(

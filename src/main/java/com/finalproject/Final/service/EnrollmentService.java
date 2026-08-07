@@ -32,44 +32,234 @@ public class EnrollmentService {
 	
 	@Autowired
 	private CourseService courseService;
+	
+	@Autowired
+	private ScholarshipDiscountService scholarshipDiscountService;
 
+//	public String createEnrollment(String userId, String courseId) {
+//
+//		   // Prevent duplicate enrollment
+//	    EnrollmentBean existing =
+//	            repo.findByUserAndCourse(userId, courseId);
+//
+//	    if (existing != null) {
+//	    	  throw new RuntimeException("You are already enrolled in this course.");
+//	    }
+//	    
+//	    // Check if the course is already full
+//	    if (courseService.getSeatsAvailable(courseId) <= 0) {
+//	        throw new RuntimeException("Course is full.");
+//	    }
+//
+//	    CourseBean course = cRepo.findById(courseId);
+//	    
+//	    Double originalFee = course.getFee();
+//	    
+////	    Double discount =
+////	            scholarshipDiscountService
+////	            .getApprovedDiscount(userId, courseId);
+//	    
+////	    Double finalFee =
+////	            originalFee - discount;
+//	    
+////	    if(finalFee < 0){
+////	        finalFee = 0.0;
+////	    }
+//
+////	    Double fee = course.getFee();
+////	    String enrollmentId = repo.save(
+////	            userId,
+////	            courseId,
+////	            LocalDate.now(),
+////	            originalFee,
+////	            discount,
+////	            finalFee
+////	    );
+//	    
+//	    Double fee = course.getFee();
+//
+//
+//	 // calculate scholarship discount
+//	 Double discountAmount =
+//	         scholarshipDiscountService.getDiscountAmount(
+//	                 userId,
+//	                 courseId,
+//	                 fee
+//	         );
+//
+//
+//	 // final amount after discount
+//	 Double finalFee =
+//	         fee - discountAmount;
+//
+//
+//
+//	 String enrollmentId = repo.save(
+//	         userId,
+//	         courseId,
+//	         LocalDate.now(),
+//	         fee,
+//	         discountAmount,
+//	         finalFee
+//	 );
+//
+//	    courseService.decreaseSeat(courseId);
+//
+//	    return enrollmentId;
+//
+////	    return repo.save(
+////	            userId,
+////	            courseId,
+////	            LocalDate.now(),
+////	            fee,
+////	            fee
+//	    
+//	}
+	
+	
 	public String createEnrollment(String userId, String courseId) {
 
-		   // Prevent duplicate enrollment
+	    // =====================================
+	    // 1. Prevent duplicate enrollment
+	    // =====================================
+
 	    EnrollmentBean existing =
 	            repo.findByUserAndCourse(userId, courseId);
 
 	    if (existing != null) {
-	    	  throw new RuntimeException("You are already enrolled in this course.");
+	        throw new RuntimeException(
+	                "You are already enrolled in this course."
+	        );
 	    }
-	    
-	    // Check if the course is already full
+
+
+
+	    // =====================================
+	    // 2. Check course seat availability
+	    // =====================================
+
 	    if (courseService.getSeatsAvailable(courseId) <= 0) {
-	        throw new RuntimeException("Course is full.");
+
+	        throw new RuntimeException(
+	                "Course is full."
+	        );
 	    }
 
-	    CourseBean course = cRepo.findById(courseId);
 
-	    Double fee = course.getFee();
-	    String enrollmentId = repo.save(
-	            userId,
-	            courseId,
-	            LocalDate.now(),
-	            fee,
-	            fee
-	    );
+
+	    // =====================================
+	    // 3. Get course information
+	    // =====================================
+
+	    CourseBean course =
+	            cRepo.findById(courseId);
+
+
+	    Double originalFee =
+	            course.getFee();
+
+
+
+	    // =====================================
+	    // 4. Calculate scholarship discount
+	    // =====================================
+
+	    Double discountAmount =
+	            scholarshipDiscountService.getDiscountAmount(
+	                    userId,
+	                    courseId,
+	                    originalFee
+	            );
+
+
+	    // Prevent negative final fee
+
+	    if (discountAmount == null) {
+
+	        discountAmount = 0.0;
+
+	    }
+
+
+	    Double finalFee =
+	            originalFee - discountAmount;
+
+
+	    if (finalFee < 0) {
+
+	        finalFee = 0.0;
+
+	    }
+
+
+
+	    // =====================================
+	    // 5. Create enrollment
+	    // =====================================
+
+//	    String enrollmentId =
+//	            repo.save(
+//	                    userId,
+//	                    courseId,
+//	                    LocalDate.now(),
+//	                    originalFee,
+//	                    discountAmount,
+//	                    finalFee
+//	            );
+	    
+	    String scholarshipApplicationId =
+	            scholarshipDiscountService
+	            .getApprovedScholarshipApplicationId(
+	                    userId,
+	                    courseId
+	            );
+	    
+	    //test
+	    System.out.println(
+	    	    "Scholarship Application ID: "
+	    	    + scholarshipApplicationId
+	    	);
+
+
+	    String enrollmentId =
+	            repo.save(
+	                    userId,
+	                    courseId,
+	                    LocalDate.now(),
+	                    originalFee,
+	                    discountAmount,
+	                    finalFee,
+	                    scholarshipApplicationId
+	            );
+
+
+
+	    // =====================================
+	    // 6. Reduce available seat
+	    // =====================================
 
 	    courseService.decreaseSeat(courseId);
 
-	    return enrollmentId;
 
-//	    return repo.save(
-//	            userId,
-//	            courseId,
-//	            LocalDate.now(),
-//	            fee,
-//	            fee
+
+	    // =====================================
+	    // 7. Return enrollment ID
+	    // =====================================
 	    
+	    //test
+	    Double discountAmount1 =
+	            scholarshipDiscountService.getDiscountAmount(
+	                    userId,
+	                    courseId,
+	                    originalFee
+	            );
+
+
+	    System.out.println("Original Fee: " + originalFee);
+	    System.out.println("Discount: " + discountAmount1);
+	    System.out.println("Final Fee: " + finalFee);
+
+	    return enrollmentId;
 	}
 
 	public EnrollmentBean getById(String id) {
