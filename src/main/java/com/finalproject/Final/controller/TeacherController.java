@@ -23,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.finalproject.Final.model.TeacherBean;
 import com.finalproject.Final.repository.TeacherRepository;
+import com.finalproject.Final.repository.UsersRepository;
 
 import jakarta.validation.Valid;
 
@@ -34,6 +35,9 @@ public class TeacherController {
 	private TeacherRepository  mRepo;
 	 @Autowired
 	    private PasswordEncoder passwordEncoder;
+	 
+	 @Autowired
+	  private UsersRepository uRepo;
 	
 	@GetMapping("/forms")
 	public ModelAndView showForm() {
@@ -116,6 +120,12 @@ String fileName = file.getOriginalFilename();
         
         String teacherRoleId = mRepo.getRoleIdByName("Teacher");
         obj.setRoleID(teacherRoleId);
+        
+        //sai
+        String userCode =
+                uRepo.generateUserCode(teacherRoleId);
+
+        obj.setUserCode(userCode);
        // obj.setRoleID("00ec67a1-7a6f-11f1-8f4f-183d2d227d02");//Lin Pyae Nyein
        // obj.setRoleID("3c2f3f12-7a84-11f1-bfcb-b4b686e7f920");//Thiri Thwe
         obj.setIsActive(1);
