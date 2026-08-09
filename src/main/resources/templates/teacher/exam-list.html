@@ -95,6 +95,12 @@
                 </div>
             </div>
  <!-- Dynamic Evaluation Table Workspace Interface Shell Block Grid -->
+ <div class="mb-3">
+    <input type="text"
+           id="examSearch"
+           class="form-control"
+           placeholder="Search Exam Name...">
+</div>
             <div class="card custom-card">
                 <div class="card-body p-0">
                     
@@ -121,7 +127,7 @@
                                     <td class="text-secondary small">
                                         <i class="bi bi-calendar3 me-1 text-muted"></i>
                                         <!-- Utilizes explicit temporal processing for Java LocalDateTime objects -->
-                                        <span th:text="${#temporals.format(exam.examDate, 'yyyy-MM-dd HH:mm')}">Date String</span>
+                                        <span th:text="${#temporals.format(exam.examDate, 'dd-MM-yyyy HH:mm')}">Date String</span>
                                     </td>
                                     <td>
                                         <i class="bi bi-clock me-1 text-muted"></i>
@@ -258,6 +264,7 @@
 </div>
 
 <!-- UPDATE INTERACTIVE DATA REFRESH MATRIX MODAL ELEMENT STRUCTURE -->
+ <!-- UPDATE INTERACTIVE DATA REFRESH MATRIX MODAL ELEMENT STRUCTURE -->
 <div class="modal fade" id="editExamModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
@@ -275,36 +282,48 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Exam Name</label>
                             <input type="text" class="form-control" th:field="*{name}" id="edit_name">
+                               <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Exam Type</label>
                             <select class="form-select" th:field="*{examType}" id="edit_examType">
                                 <option th:each="type : ${examTypeList}" th:value="${type}" th:text="${type}"></option>
                             </select>
+                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('examType')}" th:errors="*{examType}"></div>
+                            
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Maximum Score</label>
                             <input type="number" step="0.01" class="form-control" th:field="*{maxScore}" id="edit_maxScore">
+                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('maxScore')}" th:errors="*{maxScore}"></div>
+                            
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Weight Percent</label>
                             <input type="number" step="0.01" class="form-control" th:field="*{weightPercent}" id="edit_weightPercent">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('weightPercent')}" th:errors="*{weightPercent}"></div>
+                            
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Exam Date</label>
                             <input type="datetime-local" class="form-control" th:field="*{examDate}" id="edit_examDate">
+                               <div class="text-danger small mt-1" th:if="${#fields.hasErrors('examDate')}" th:errors="*{examDate}"></div>
+                            
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Duration Minutes</label>
                             <input type="number" class="form-control" th:field="*{durationMinutes}" id="edit_durationMinutes">
+                           <div class="text-danger small mt-1" th:if="${#fields.hasErrors('durationMinutes')}" th:errors="*{durationMinutes}"></div>
+                            
                         </div>
                        
                     </div>
                 </div>
-                <div class="modal-footer bg-light border-0 py-3">
+ <div class="modal-footer bg-light border-0 py-3">
                     <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
                   <button type="submit"
- class="btn btn-primary px-4 fw-semibold text-white"
+        class="btn btn-primary px-4 fw-semibold text-white"
         id="updateExamBtn">
 
     <i class="bi bi-check-circle me-2"></i>
@@ -343,6 +362,11 @@
         new bootstrap.Modal(document.getElementById('createExamModal')).show();
     });
 </script>
+<script th:if="${openEditModal}">
+    window.addEventListener('DOMContentLoaded', () => {
+        new bootstrap.Modal(document.getElementById('editExamModal')).show();
+    });
+</script>
 
 <script autocomplete="off">
     function populateEditModal(btn) {
@@ -353,8 +377,14 @@
         document.getElementById('edit_examType').value = btn.getAttribute('data-type');
         document.getElementById('edit_maxScore').value = btn.getAttribute('data-max');
         document.getElementById('edit_weightPercent').value = btn.getAttribute('data-weight');
-        document.getElementById('edit_examDate').value = btn.getAttribute('data-date');
-        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
+        
+        let examDate = btn.getAttribute('data-date');
+
+        if (examDate) {
+            examDate = examDate.substring(0,16);
+        }
+
+        document.getElementById('edit_examDate').value = examDate;        document.getElementById('edit_durationMinutes').value = btn.getAttribute('data-duration');
         
         
         new bootstrap.Modal(document.getElementById('editExamModal')).show();
@@ -370,6 +400,36 @@
         
         new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
     }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("examSearch");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+
+        const keyword = this.value.toLowerCase();
+
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+
+            // Exam Name က ဒုတိယ Column (index = 1)
+            const examName = row.cells[1].innerText.toLowerCase();
+
+            if (examName.includes(keyword)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
 </script>
 </body>
 </html>

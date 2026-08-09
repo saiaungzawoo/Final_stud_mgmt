@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
@@ -9,79 +8,7 @@
 
     <!-- Global CSS Fragment -->
     <th:block th:replace="~{fragment/css :: css}"></th:block>
-
-<!--     Bootstrap Icons & Google Fonts
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-
-    Custom Admin Layout Styles
-    <style>
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-
-        .main-wrapper {
-            min-height: 100vh;
-        }
-
-        .management-card {
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid #e2e8f0;
-        }
-
-        .management-card:hover {
-            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08) !important;
-        }
-
-        /* Header Title Icon Hover Animation */
-        .title-area:hover .animated-icon {
-            animation: wiggle 0.4s ease-in-out infinite alternate;
-        }
-
-        /* Action Buttons Hover Effect */
-        .hover-btn {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .hover-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        /* Table Content Formatting */
-        .table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f1f5f9 !important;
-        }
-
-        .table-responsive {
-            white-space: nowrap;
-        }
-
-        .label-title {
-            font-size: 0.75rem;
-            letter-spacing: 0.03em;
-        }
-
-        .profile-img-placeholder {
-            width: 45px;
-            height: 45px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #e2e8f0;
-            color: #64748b;
-        }
-
-        @keyframes wiggle {
-            0% { transform: rotate(-8deg); }
-            100% { transform: rotate(8deg); }
-        }
-    </style> -->
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -96,7 +23,7 @@
         <div th:replace="~{fragment/admin-sidebar :: adminSidebar}"></div>
 
         <!-- MAIN CONTENT AREA -->
-        <div class="flex-grow-1 d-flex flex-column main-wrapper overflow-y-auto">
+        <div class="flex-grow-1 d-flex flex-column main-wrapper">
 
             <!-- PAGE CONTENT -->
             <main class="container-fluid p-3 p-sm-4 p-lg-5 flex-grow-1">
@@ -104,7 +31,7 @@
                 <!-- Page Header Control Title Area -->
                 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4 title-area">
                     <div>
-                        <h2 class="fw-bold text-dark mb-1 fs-3 fs-md-2 d-flex align-items-center gap-2">
+                        <h2 class="fw-bold text-dark mb-1 fs-3 d-flex align-items-center gap-2">
                             <i class="bi bi-people-fill text-primary animated-icon d-inline-block"></i>
                             Student Management
                         </h2>
@@ -117,7 +44,7 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-primary text-white">
+                                <thead class="bg-white">
                                     <tr>
                                         <th class="ps-4 py-3 text-center fw-semibold text-uppercase label-title">No</th>
                                         <th class="py-3 text-center fw-semibold text-uppercase label-title">Profile</th>
@@ -146,50 +73,40 @@
                                     <tr th:each="student, stat : ${students}">
                                         <td class="ps-4 text-center fw-medium text-secondary" th:text="${stat.count}">1</td>
 
-                                        <!-- <!-- Profile Image -->
-                                       <!--  <td class="text-center">
-                                            <img th:if="${student.profileImage != null}" 
-                                                 th:src="@{${student.profileImage}}" 
-                                                 width="45" height="45" 
-                                                 class="rounded-circle object-fit-cover border shadow-sm" alt="Student Profile">
- -->
-<!-- Profile Image Column -->
-<td class="text-center">
-    <!-- ပုံရှိပါက ပုံပြမည် (Load မတက်ပါက onerror ဖြင့် hide လုပ်မည်) -->
-    <img th:if="${student.profileImage != null and !#strings.isEmpty(student.profileImage)}" 
-         th:src="@{${student.profileImage}}" 
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
-         width="45" height="45" 
-         class="rounded-circle object-fit-cover border shadow-sm" alt="Profile">
+                                        <!-- Profile Image Column -->
+                                        <td class="text-center">
+                                            <!-- Render image if present; hide on error and show fallback icon -->
+                                            <div th:if="${student.profileImage != null and !#strings.isEmpty(student.profileImage)}">
+                                                <img th:src="@{${student.profileImage}}" 
+                                                     onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');"
+                                                     width="45" height="45" 
+                                                     class="rounded-circle object-fit-cover border shadow-sm" alt="Profile">
+                                                <div class="rounded-circle profile-img-placeholder border shadow-sm mx-auto d-none">
+                                                    <i class="bi bi-person-fill fs-5"></i>
+                                                </div>
+                                            </div>
 
-    <!-- ပုံမရှိပါက သို့မဟုတ် Load မတက်ပါက Icon Placeholder ပြမည် -->
-    <div th:if="${student.profileImage == null or #strings.isEmpty(student.profileImage)}" 
-         class="rounded-circle profile-img-placeholder border shadow-sm mx-auto"
-         th:style="${student.profileImage != null and !#strings.isEmpty(student.profileImage)} ? 'display:none;' : ''">
-        <i class="bi bi-person-fill fs-5"></i>
-    </div>
-</td>
-<!-- 
-                                            <div th:unless="${student.profileImage != null}" 
+                                            <!-- Fallback placeholder if no image URL is provided -->
+                                            <div th:unless="${student.profileImage != null and !#strings.isEmpty(student.profileImage)}" 
                                                  class="rounded-circle profile-img-placeholder border shadow-sm mx-auto">
                                                 <i class="bi bi-person-fill fs-5"></i>
                                             </div>
-                                        </td> -->
+                                        </td>
 
                                         <td class="fw-bold text-dark" th:text="${student.name}">Student Name</td>
                                         <td class="text-secondary small" th:text="${student.email}">student@email.com</td>
                                         <td class="text-secondary small" th:text="${student.phoneNumber}">+959...</td>
 
                                         <td>
-                                            <span class="badge bg-light text-dark border px-2.5 py-1.5 fw-medium small" th:text="${student.gender}">Gender</span>
+                                            <span class="badge bg-light text-dark border px-2 py-1 fw-medium small" th:text="${student.gender}">Gender</span>
                                         </td>
 
                                         <!-- Status Badge -->
                                         <td class="text-center">
-                                            <span th:if="${student.isActive == 1}" class="badge bg-success-subtle text-success px-2.5 py-1.5 border border-success-subtle rounded-pill fw-semibold small">
+                                            <span th:if="${student.isActive == 1}" class="badge bg-success-subtle text-success px-2 py-1 border border-success-subtle rounded-pill fw-semibold small">
                                                 <i class="bi bi-check-circle-fill me-1"></i> Active
                                             </span>
-                                            <span th:if="${student.isActive == 0}" class="badge bg-danger-subtle text-danger px-2.5 py-1.5 border border-danger-subtle rounded-pill fw-semibold small">
+                                            <span th:if="${student.isActive == 0 or student.isActive == null}" class="badge bg-danger-subtle text-danger px-2 py-1 border border-danger-subtle rounded-pill fw-semibold small">
                                                 <i class="bi bi-x-circle-fill me-1"></i> Inactive
                                             </span>
                                         </td>
@@ -203,19 +120,19 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div> <!-- /.table-responsive -->
+                        </div>
                     </div>
-                </div> <!-- /.card -->
+                </div>
 
             </main>
 
-           
         </div>
     </div>
- <!-- FOOTER FRAGMENT -->
-            <footer class="mt-auto">
-                <div th:replace="~{fragment/footer :: footer}"></div>
-            </footer>
+
+    <!-- FOOTER FRAGMENT -->
+    <footer class="mt-auto">
+        <div th:replace="~{fragment/footer :: footer}"></div>
+    </footer>
 
     <!-- Global JS Fragment -->
     <div th:replace="~{fragment/js :: js}"></div>

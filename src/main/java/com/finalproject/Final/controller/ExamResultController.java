@@ -115,8 +115,9 @@ public class ExamResultController {
         // 🟢 examId ပါဝင်သော Fresh URL သို့ Redirect လုပ်ပေးပါ
         return "redirect:/teacher/exam-results?examId=" + examResult.getExamID();
     }
-    @GetMapping("/student/{userID}")
+    @GetMapping("/student/{courseID}/{userID}")
     public String viewStudentExamResult(
+            @PathVariable String courseID,
             @PathVariable String userID,
             Model model,
             HttpSession session
@@ -132,9 +133,8 @@ public class ExamResultController {
         }
 
 
-
         List<ExamResultBean> resultList =
-                examResultRepo.getResultByStudent(userID);
+                examResultRepo.getResultByStudent(courseID, userID);
 
 
 

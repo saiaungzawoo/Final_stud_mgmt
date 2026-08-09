@@ -62,11 +62,7 @@ public class AssignmentController {
             @Valid @ModelAttribute("assignment") AssignmentBean bean,
             BindingResult result,HttpSession session,
             RedirectAttributes redirectAttributes) {
-        System.out.println("SAVE METHOD START");
-          System.out.println("TITLE = " + bean.getTitle());
-          System.out.println("COURSE = " + bean.getCourseID());
-          System.out.println("DUE DATE = " + bean.getDueDate());
-
+      
 
         // validation input error 
         if (result.hasErrors()) {
@@ -89,7 +85,6 @@ public class AssignmentController {
 
         return "redirect:/assignment/list?courseID=" + bean.getCourseID();
     }
-
    
     @PostMapping("/update")
     public String updateAssignment(@ModelAttribute("assignment") AssignmentBean bean,HttpSession session) {

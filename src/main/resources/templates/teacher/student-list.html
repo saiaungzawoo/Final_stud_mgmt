@@ -37,7 +37,11 @@
 
         <main class="col-md-9 col-lg-10 p-4 bg-light min-vh-100">
 
-
+  
+    <input type="text"
+           id="courseSearch"
+           class="form-control"
+           placeholder="Search student...">
             <!-- Header -->
 
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -139,11 +143,11 @@
                                 <td>
 
 
-                                    <a th:href="@{/attendance/student/{id}(id=${student.userID})}"
-                                       class="text-decoration-none fw-semibold"
-                                       th:text="${student.studentName}">
-
-                                    </a>
+                                <a th:href="@{/attendance/student/{courseID}/{id}
+(courseID=${courseID}, id=${student.userID})}"
+class="text-decoration-none fw-semibold"
+th:text="${student.studentName}">
+</a>
 
 
                                 </td>
@@ -155,9 +159,9 @@
                                 <td class="text-center">
 
 
-                                    <a class="btn btn-primary btn-sm"
-                                       th:href="@{/attendance/student/{id}(id=${student.userID})}">
-
+                                  <a class="btn btn-primary btn-sm"
+   th:href="@{/attendance/student/{courseID}/{id}
+(courseID=${courseID},id=${student.userID})}">
 
                                         <i class="bi bi-calendar-check"></i>
 
@@ -165,8 +169,9 @@
 
 
                                     </a>
-  <a class="btn btn-success btn-sm"
-      th:href="@{/teacher/exam-results/student/{id}(id=${student.userID})}">
+ <a class="btn btn-success btn-sm"
+   th:href="@{/teacher/exam-results/student/{courseID}/{id}
+   (courseID=${courseID}, id=${student.userID})}">
 
 
         <i class="bi bi-clipboard-check"></i>
@@ -233,7 +238,38 @@
 <div th:replace="~{fragment/footer :: footer}"></div>
 
 <div th:replace="~{fragment/js :: js}"></div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const searchInput = document.getElementById("courseSearch");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("keyup", function () {
+
+        const keyword = this.value.toLowerCase().trim();
+
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+
+            // "No students found." row ကို မထိစေဖို့
+            if (row.cells.length < 2) return;
+
+            const studentName = row.cells[1].innerText.toLowerCase();
+
+            if (studentName.includes(keyword)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
+</script>
 
 </body>
 

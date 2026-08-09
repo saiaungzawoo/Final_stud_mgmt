@@ -97,8 +97,12 @@
             <!-- Student List -->
 
             <div class="card mb-4"
+            
                  th:if="${studentList != null}">
-
+ <input type="text"
+           id="courseSearch"
+           class="form-control"
+           placeholder="Search student...">
 
                 <div class="card-header">
                     Student List
@@ -189,6 +193,17 @@
         <span th:text="${grade.status}"></span>
     </p>
 
+<div th:if="${grade.finalizedAt != null}"
+     class="alert alert-success d-flex align-items-center mb-3">
+
+    <i class="bi bi-check-circle-fill me-2"></i>
+
+    <div>
+        <strong>Result Finalized</strong><br>
+        This student's final result has already been finalized and cannot be finalized again.
+    </div>
+
+</div>
 
                     <form th:action="@{/teacher/final-grade/finalize}"
                           method="post">
@@ -325,8 +340,9 @@
 </textarea>
                         </div>
 
-<button class="btn btn-success mt-3"
-        th:if="${!isFinalized}">
+<button type="submit"
+        class="btn btn-primary"
+        th:disabled="${grade.finalizedAt != null}">
     Finalize Result
 </button>
 
@@ -361,6 +377,35 @@
 </div>
 
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("courseSearch");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("keyup", function () {
+
+        const keyword = this.value.toLowerCase();
+
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+
+            const studentName = row.cells[1].textContent.toLowerCase();
+
+            if (studentName.includes(keyword)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
+</script>
 
 </body>
 

@@ -91,19 +91,30 @@ public class FinalGradeRepository {
     public Double calculateAssignmentScore(String enrollmentId) {
 
         String sql = """
-                SELECT 
-                    SUM(
-                        (s.score / a.max_score) * a.weight_percent
-                    ) AS total_score
+                SELECT
+                    (
+                        SUM(
+                            (
+                                COALESCE(s.score,0) / a.max_score
+                            )
+                            * a.weight_percent
+                        )
+                        /
+                        NULLIF(SUM(a.weight_percent),0)
+                    ) * 30 AS total_score
+
 
                 FROM enrollment e
+
 
                 JOIN assignment a
                     ON e.courseID = a.courseID
 
-                JOIN submission s
+
+                LEFT JOIN submission s
                     ON a.assignmentID = s.assignmentID
                     AND s.userID = e.userID
+
 
                 WHERE e.enrollmentID = ?
                 AND a.status = 'Closed'
@@ -117,25 +128,36 @@ public class FinalGradeRepository {
         );
 
 
-        return result 
-            != null ? result : 0.0;
+        return result != null ? Math.round(result * 100.0) / 100.0
+        	    : 0.0;
     }
     public Double calculateExamScore(String enrollmentId) {
 
         String sql = """
                 SELECT
-                    SUM(
-                        (er.score / e.max_score) * e.weight_percent
-                    ) AS total_score
+                    (
+                        SUM(
+                            (
+                                COALESCE(er.score,0) / e.max_score
+                            )
+                            * e.weight_percent
+                        )
+                        /
+                        NULLIF(SUM(e.weight_percent),0)
+                    ) * 60 AS total_score
+
 
                 FROM enrollment en
+
 
                 JOIN exam e
                     ON en.courseID = e.courseID
 
-                JOIN exam_result er
+
+                LEFT JOIN exam_result er
                     ON e.examID = er.examID
                     AND er.userID = en.userID
+
 
                 WHERE en.enrollmentID = ?
                 AND e.status = 'Completed'
@@ -149,7 +171,8 @@ public class FinalGradeRepository {
         );
 
 
-        return result != null ? result : 0.0;
+        return result != null  ? Math.round(result * 100.0) / 100.0
+        	    : 0.0;
     }
     public Double calculateAttendanceScore(String enrollmentId) {
 String sql = """
@@ -193,9 +216,10 @@ String sql = """
             Double attendanceScore) {
 
 
-        return assignmentScore 
+        Double total= assignmentScore 
                 + examScore 
                 + attendanceScore;
+        return Math.round(total * 100.0) / 100.0;
     }
     public String generateLetterGrade(Double finalScore) {
 

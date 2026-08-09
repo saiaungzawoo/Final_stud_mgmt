@@ -22,7 +22,7 @@ public class AnnouncementRepository {
     public AnnouncementRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
+   
 
     // Teacher ရဲ့ Course List
     public List<CourseBean> getTeacherCourses(String teacherID) {
@@ -299,88 +299,88 @@ public class AnnouncementRepository {
         );
     }
     public List<AnnouncementBean> getAnnouncementsByCourse(String courseID) {
- String sql = """
-            SELECT 
-                a.announcementID,
-                a.createdByID,
-                a.courseID,
-                c.name AS courseName,
-                a.title,
-                a.content,
-                a.target_type,
-                a.priority,
-                a.is_published,
-                a.publish_date,
-                a.expiry_date,
-                a.created_at,
-                a.updated_at
-            FROM announcement a
-            JOIN course c
-            ON a.courseID = c.courseID
-            WHERE a.courseID = ?
-            ORDER BY a.publish_date DESC
-            """;
+    	 String sql = """
+    	            SELECT 
+    	                a.announcementID,
+    	                a.createdByID,
+    	                a.courseID,
+    	                c.name AS courseName,
+    	                a.title,
+    	                a.content,
+    	                a.target_type,
+    	                a.priority,
+    	                a.is_published,
+    	                a.publish_date,
+    	                a.expiry_date,
+    	                a.created_at,
+    	                a.updated_at
+    	            FROM announcement a
+    	            JOIN course c
+    	            ON a.courseID = c.courseID
+    	            WHERE a.courseID = ?
+    	            ORDER BY a.publish_date DESC
+    	            """;
 
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+    	        return jdbcTemplate.query(sql, (rs, rowNum) -> {
 
-            AnnouncementBean bean = new AnnouncementBean();
+    	            AnnouncementBean bean = new AnnouncementBean();
 
-            bean.setAnnouncementID(rs.getString("announcementID"));
-            bean.setCreatedByID(rs.getString("createdByID"));
-            bean.setCourseID(rs.getString("courseID"));
-            bean.setCourseName(rs.getString("courseName"));
+    	            bean.setAnnouncementID(rs.getString("announcementID"));
+    	            bean.setCreatedByID(rs.getString("createdByID"));
+    	            bean.setCourseID(rs.getString("courseID"));
+    	            bean.setCourseName(rs.getString("courseName"));
 
-            bean.setTitle(rs.getString("title"));
-            bean.setContent(rs.getString("content"));
+    	            bean.setTitle(rs.getString("title"));
+    	            bean.setContent(rs.getString("content"));
 
-            bean.setTargetType(rs.getString("target_type"));
-            bean.setPriority(rs.getString("priority"));
+    	            bean.setTargetType(rs.getString("target_type"));
+    	            bean.setPriority(rs.getString("priority"));
 
-            bean.setPublished(rs.getBoolean("is_published"));
+    	            bean.setPublished(rs.getBoolean("is_published"));
 
-            Timestamp publishDate = rs.getTimestamp("publish_date");
+    	            Timestamp publishDate = rs.getTimestamp("publish_date");
 
-            if(publishDate != null) {
-                bean.setPublishDate(publishDate.toLocalDateTime());
-            }
-
-
-            Timestamp expiryDate = rs.getTimestamp("expiry_date");
-
-            if(expiryDate != null) {
-                bean.setExpiryDate(expiryDate.toLocalDateTime());
-            }
+    	            if(publishDate != null) {
+    	                bean.setPublishDate(publishDate.toLocalDateTime());
+    	            }
 
 
-            Timestamp createdAt = rs.getTimestamp("created_at");
+    	            Timestamp expiryDate = rs.getTimestamp("expiry_date");
 
-            if(createdAt != null) {
-                bean.setCreatedAt(createdAt.toLocalDateTime());
-            }
+    	            if(expiryDate != null) {
+    	                bean.setExpiryDate(expiryDate.toLocalDateTime());
+    	            }
 
 
-            Timestamp updatedAt = rs.getTimestamp("updated_at");
+    	            Timestamp createdAt = rs.getTimestamp("created_at");
 
-            if(updatedAt != null) {
-                bean.setUpdatedAt(updatedAt.toLocalDateTime());
-            }
+    	            if(createdAt != null) {
+    	                bean.setCreatedAt(createdAt.toLocalDateTime());
+    	            }
 
-            bean.setExpiryDate(
-                rs.getTimestamp("expiry_date").toLocalDateTime()
-            );
 
-            bean.setCreatedAt(
-                rs.getTimestamp("created_at").toLocalDateTime()
-            );
+    	            Timestamp updatedAt = rs.getTimestamp("updated_at");
 
-            bean.setUpdatedAt(
-                rs.getTimestamp("updated_at").toLocalDateTime()
-            );
+    	            if(updatedAt != null) {
+    	                bean.setUpdatedAt(updatedAt.toLocalDateTime());
+    	            }
 
-            return bean;
-        }, courseID);
-    }
+    	            bean.setExpiryDate(
+    	                rs.getTimestamp("expiry_date").toLocalDateTime()
+    	            );
+
+    	            bean.setCreatedAt(
+    	                rs.getTimestamp("created_at").toLocalDateTime()
+    	            );
+
+    	            bean.setUpdatedAt(
+    	                rs.getTimestamp("updated_at").toLocalDateTime()
+    	            );
+
+    	            return bean;
+    	        }, courseID);
+    	    }
     public void deleteAnnouncement(String announcementID) {
 
         String sql = """
@@ -391,4 +391,164 @@ public class AnnouncementRepository {
         jdbcTemplate.update(sql, announcementID);
     }
  
+    
+    public void updateExpiredAnnouncements() {
+
+        String sql = """
+                UPDATE announcement
+                SET is_published = 0,
+                    updated_at = NOW()
+                WHERE expiry_date < NOW()
+                AND is_published = 1
+                """;
+
+        jdbcTemplate.update(sql);
+    }
+    
+    //TZM
+    public AnnouncementBean getAnnouncementById(String id) {
+
+        String sql = """
+                SELECT *
+                FROM announcement
+                WHERE announcementID = ?
+                """;
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+
+            AnnouncementBean bean = new AnnouncementBean();
+
+            bean.setAnnouncementID(rs.getString("announcementID"));
+            bean.setCreatedByID(rs.getString("createdByID"));
+            bean.setCourseID(rs.getString("courseID"));
+            bean.setTitle(rs.getString("title"));
+            bean.setContent(rs.getString("content"));
+            bean.setTargetType(rs.getString("target_type"));
+            bean.setPriority(rs.getString("priority"));
+            bean.setPublished(rs.getBoolean("is_published"));
+
+            Timestamp publishDate = rs.getTimestamp("publish_date");
+            if (publishDate != null) {
+                bean.setPublishDate(publishDate.toLocalDateTime());
+            }
+
+            Timestamp expiryDate = rs.getTimestamp("expiry_date");
+            if (expiryDate != null) {
+                bean.setExpiryDate(expiryDate.toLocalDateTime());
+            }
+
+            Timestamp createdAt = rs.getTimestamp("created_at");
+            if (createdAt != null) {
+                bean.setCreatedAt(createdAt.toLocalDateTime());
+            }
+
+            Timestamp updatedAt = rs.getTimestamp("updated_at");
+            if (updatedAt != null) {
+                bean.setUpdatedAt(updatedAt.toLocalDateTime());
+            }
+
+            return bean;
+        }, id);
+    }
+    public List<AnnouncementBean> getAllAnnouncements() {
+
+        String sql = """
+                SELECT *
+                FROM announcement
+                WHERE is_published = 1
+                ORDER BY publish_date DESC
+                """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+            AnnouncementBean bean = new AnnouncementBean();
+
+            bean.setAnnouncementID(rs.getString("announcementID"));
+            bean.setCreatedByID(rs.getString("createdByID"));
+            bean.setCourseID(rs.getString("courseID"));
+            bean.setTitle(rs.getString("title"));
+            bean.setContent(rs.getString("content"));
+            bean.setTargetType(rs.getString("target_type"));
+            bean.setPriority(rs.getString("priority"));
+            bean.setPublished(rs.getBoolean("is_published"));
+
+            Timestamp publishDate = rs.getTimestamp("publish_date");
+            if (publishDate != null) {
+                bean.setPublishDate(publishDate.toLocalDateTime());
+            }
+
+            Timestamp expiryDate = rs.getTimestamp("expiry_date");
+            if (expiryDate != null) {
+                bean.setExpiryDate(expiryDate.toLocalDateTime());
+            }
+
+            Timestamp createdAt = rs.getTimestamp("created_at");
+            if (createdAt != null) {
+                bean.setCreatedAt(createdAt.toLocalDateTime());
+            }
+
+            Timestamp updatedAt = rs.getTimestamp("updated_at");
+            if (updatedAt != null) {
+                bean.setUpdatedAt(updatedAt.toLocalDateTime());
+            }
+
+            return bean;
+        });
+    }
+    
+    
+    public List<AnnouncementBean> getStudentAnnouncements() {
+ String sql = """
+                SELECT *
+                FROM announcement
+                WHERE is_published = 1
+                  AND (
+                        target_type = 'ALL'
+                        OR target_type = 'ALL_STUDENTS'
+                      )
+                  AND (
+                        expiry_date IS NULL
+                        OR expiry_date >= NOW()
+                      )
+                ORDER BY publish_date DESC
+                """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+            AnnouncementBean bean = new AnnouncementBean();
+
+            bean.setAnnouncementID(rs.getString("announcementID"));
+            bean.setCreatedByID(rs.getString("createdByID"));
+            bean.setCourseID(rs.getString("courseID"));
+            bean.setTitle(rs.getString("title"));
+            bean.setContent(rs.getString("content"));
+            bean.setTargetType(rs.getString("target_type"));
+            bean.setPriority(rs.getString("priority"));
+            bean.setPublished(rs.getBoolean("is_published"));
+
+            Timestamp publishDate = rs.getTimestamp("publish_date");
+            if (publishDate != null) {
+                bean.setPublishDate(publishDate.toLocalDateTime());
+            }
+
+            Timestamp expiryDate = rs.getTimestamp("expiry_date");
+            if (expiryDate != null) {
+                bean.setExpiryDate(expiryDate.toLocalDateTime());
+            }
+
+            Timestamp createdAt = rs.getTimestamp("created_at");
+            if (createdAt != null) {
+                bean.setCreatedAt(createdAt.toLocalDateTime());
+            }
+
+            Timestamp updatedAt = rs.getTimestamp("updated_at");
+            if (updatedAt != null) {
+                bean.setUpdatedAt(updatedAt.toLocalDateTime());
+            }
+
+            return bean;
+        });
+    }
+
+    
 }

@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragment/css :: css}">
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
 <title>Course Management</title>
 </head>
 <body>

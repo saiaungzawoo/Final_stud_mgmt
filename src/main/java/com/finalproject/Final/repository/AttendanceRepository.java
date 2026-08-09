@@ -310,7 +310,9 @@ ORDER BY u.name
         return count != null && count > 0;
 
     }
-    public List<AttendanceBean> getStudentAttendanceHistory(String userID){
+    public List<AttendanceBean> getStudentAttendanceHistory(
+            String courseID,
+            String userID){
 
 
         String sql = """
@@ -328,6 +330,7 @@ ORDER BY u.name
             ON a.scheduleID = s.scheduleID
 
             WHERE a.userID = ?
+            AND s.courseID = ?
 
             ORDER BY s.schedule_date ASC
             """;
@@ -339,8 +342,12 @@ ORDER BY u.name
             AttendanceBean obj = new AttendanceBean();
 
 
-            obj.setStudentName(rs.getString("topic"));
- obj.setStatus(
+            obj.setTopic(
+                rs.getString("topic")
+            );
+
+
+            obj.setStatus(
                 AttendanceStatus.valueOf(
                     rs.getString("status")
                 )
@@ -373,7 +380,7 @@ ORDER BY u.name
             return obj;
 
 
-        },userID);
+        }, userID, courseID);
 
     }
     public List<AttendanceBean> getStudentListByCourse(String courseID){

@@ -1,0 +1,381 @@
+/* body.teacher-layout-page {
+    background: #f5f7fb;
+}
+
+.teacher-layout{
+    display:flex;
+    flex:1 0 auto;
+    width:100%;
+}
+
+.teacher-main{
+    flex:1;
+    min-width:0;
+    padding:24px 30px;
+}
+
+.teacher-sidebar{
+    width:260px;
+    flex-shrink:0;
+    position:sticky;
+    top:76px;
+    height:calc(100vh - 76px);
+    overflow-y:auto;
+}
+
+.content-panel{
+    min-height:auto;
+}
+@media (max-width:991px){
+
+    .teacher-layout{
+        display:block !important;
+    }
+
+    .teacher-sidebar{
+        width:280px !important;
+        height:100vh !important;
+        position:fixed !important;
+        top:0;
+        left:0;
+        z-index:1050;
+    }
+
+    .teacher-main{
+        width:100%;
+        padding:16px !important;
+    }
+
+    .content-panel{
+        overflow-x:auto;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+    }
+}
+
+@media (max-width:576px){
+
+    .teacher-main{
+        padding:12px !important;
+    }
+
+    h3{
+        font-size:1.3rem;
+    }
+
+    .btn{
+        font-size:.85rem;
+    }
+}
+.category-card{
+    background:#fff;
+    border-radius:15px;
+    padding:25px;
+    transition:.3s;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.category-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.category-card i{
+    font-size:2rem;
+    margin-bottom:10px;
+}
+
+.content-panel{
+    background:#fff;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+Body layout
+Whole page
+body {
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+}
+
+
+Header fixed height
+header {
+    height:72px;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1050;
+}
+
+
+Middle area
+.teacher-layout {
+
+    display:flex;
+
+    height:calc(100vh - 72px);
+
+    margin-top:72px;
+
+}
+
+
+Sidebar fixed
+.teacher-sidebar {
+
+    width:260px;
+
+    height:100%;
+
+    position:fixed;
+
+    top:72px;
+
+    left:0;
+
+    overflow-y:auto;
+
+}
+
+
+Content only scroll
+.teacher-main {
+
+    margin-left:260px;
+
+    flex:1;
+
+    height:100%;
+
+    overflow-y:auto;
+
+    padding:24px 30px;
+
+}
+
+
+Footer fixed bottom
+footer {
+
+    position:fixed;
+
+    bottom:0;
+
+    left:0;
+
+    width:100%;
+
+    z-index:1040;
+
+}
+
+ဒီမှာ သင့်ရဲ့ HTML layout နဲ့ CSS alignment ပြဿနာတွေကို ရှင်းလင်းအောင် ပြင်ဆင်ပေးထားတဲ့ Code ဖြစ်ပါတယ်။
+
+၁။ admin.css မှာ ထည့်သွင်းပေးရမည့် CSS
+Sidebar နဲ့ Main Content/Footer ထပ်နေတာ (Overlap ဖြစ်နေတာ) ကို ကာကွယ်ဖို့ သင့်ရဲ့ admin.css ဖိုင်ထဲမှာ အောက်ပါ CSS Style တွေကို ထည့်ပေးပါ။
+
+CSS
+Layout Base Setup
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+Sidebar Specific Styles
+.admin-sidebar {
+    width: 260px;
+    position: fixed;
+    top: 70px; Header ရဲ့ height ပေါ်မူတည်ပြီး လိုအပ်သလို ညှိပါ
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-right: 1px solid #dee2e6;
+}
+
+Main Content Wrapper Setup
+.main-wrapper {
+    margin-left: 260px; Sidebar ရဲ့ width နဲ့ တူအောင် ထားပေးရပါမည်
+    width: calc(100% - 260px);
+    min-height: calc(100vh - 70px);
+}
+
+Footer Adjustments
+footer {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+}
+
+Custom Text Truncate for Table Cells
+.text-truncate-custom {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+Responsive Setup for Mobile & Tablet Screen
+@media (max-width: 991.98px) {
+    .admin-sidebar {
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    .main-wrapper,
+    footer {
+        margin-left: 0;
+        width: 100%;
+    }
+} */
+
+/* 1. Page overall layout */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Page တစ်ခုလုံး scroll ဆွဲလို့မရအောင် ပိတ်ပါမည် */
+}
+
+/* 2. Header အငြိမ်ထားခြင်း */
+header, div[th\:replace*="admin-header"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* Header ရဲ့ height */
+    z-index: 1050;
+    background: #fff;
+}
+
+/* 3. Footer အငြိမ်ထားခြင်း */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Footer ရဲ့ height */
+    z-index: 1040;
+    background: #fff;
+}
+/* Layout wrapper */
+.admin-layout {
+    display: flex;
+    min-height: calc(100vh - 70px);
+    margin-top: 70px;
+    width: 100%;
+    overflow-x: auto; /* Page အပြင်ထွက်မသွားအောင် တားပေးမည် */
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+    z-index: 1000;
+}
+
+/* Main Content Area */
+.admin-main {
+    flex: 1;
+    margin-left: 260px; /* Sidebar Width နဲ့ တူရမည် */
+    width: calc(100% - 260px); /* Main Area Width ကို အတိအကျ သတ်မှတ်ခြင်း */
+    min-width: 0; /* Flexbox မပြိုအောင် အရေးကြီးသည် */
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* Table Responsive Adjustments */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Table ရှည်ရင် Table အထဲမှာပဲ Scroll ဆွဲရအောင် ပြုလုပ်ခြင်း */
+    -webkit-overflow-scrolling: touch;
+}
+
+.table {
+    width: 100% !important;
+    margin-bottom: 0;
+}
+
+/* Comment column မကျယ်ထွက်သွားအောင် ထိန်းခြင်း */
+.table td.comment-col {
+    max-width: 250px;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+/* 4. Sidebar (Header နဲ့ Footer ကြား အငြိမ်ထားခြင်း) */
+.admin-sidebar, .teacher-sidebar {
+    position: fixed;
+    top: 70px; /* Header Height နေရာဖယ် */
+    bottom: 50px; /* Footer Height နေရာဖယ် */
+    left: 0;
+    width: 260px;
+    overflow-y: auto; /* Sidebar စာရှည်ရင် Sidebar အထဲမှာတင် scroll ဆွဲနိုင်အောင် */
+    z-index: 1000;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+}
+
+/* 5. Main Content Area (အလယ်က Content ကိုပဲ Scroll ဆွဲရအောင် ပြုလုပ်ခြင်း) */
+.main-wrapper, .teacher-main {
+    position: fixed;
+    top: 70px; /* Header အောက်မှစမည် */
+    bottom: 50px; /* Footer အပေါ်မှာ ဆုံးမည် */
+    left: 260px; /* Sidebar ရဲ့ ဘေးမှစမည် */
+    right: 0;
+    overflow-y: auto; /* အလယ် Content တစ်ခုထဲကိုပဲ Scroll ဆွဲလို့ရပါမည် */
+    padding: 24px 30px;
+    box-sizing: border-box;
+    background: #f5f7fb;
+}
+
+/* 6. Responsive Setup (Mobile & Tablet) */
+@media (max-width: 991.98px) {
+    html, body {
+        overflow: auto;/*  Mobile မှာ ပုံမှန်အတိုင်း Scroll ပြန်ဆွဲလို့ရအောင် */
+    }
+
+    header, footer, .admin-sidebar, .teacher-sidebar, .main-wrapper, .teacher-main {
+        position: static;
+        width: 100%;
+        height: auto;
+        margin-left: 0;
+    } 
+    
+    /* Profile Image Size Fix */
+.profile-img-preview {
+    width: 140px !important;
+    height: 140px !important;
+    object-fit: cover; /* ပုံမပြားဘဲ ဝိုင်းသွားစေရန် */
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+}
+
+/* Click / Select/ Input focus ပြန်ပွင့်စေရန် */
+.admin-main {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto !important;
+}
+
+/* Form input များကို overlay မဖြစ်စေရန် */
+.scholarship-card {
+    position: relative;
+    z-index: 10;
+}

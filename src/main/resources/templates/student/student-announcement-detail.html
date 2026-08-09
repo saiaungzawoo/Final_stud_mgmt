@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcement Detail</title>
+
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+
+    <!-- Bootstrap 5 & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light min-vh-100 d-flex flex-column">
+
+    <!-- Header -->
+    <div th:replace="~{fragment/student-header :: studentHeader}"></div>
+
+    <!-- Main Wrapper (Sidebar + Detail Content) -->
+    <div class="d-flex flex-grow-1">
+
+        <!-- SIDEBAR -->
+        <div th:replace="~{fragment/student-sidebar :: studentSidebar}"></div>
+
+        <!-- Main Content -->
+        <main class="flex-grow-1 p-4">
+            <div class="container-fluid">
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                            <h2 class="fw-bold mb-0 text-dark" th:text="${announcement.title}">
+                                Announcement Title
+                            </h2>
+
+                            <span class="badge rounded-pill text-uppercase px-3 py-2"
+                                  th:classappend="${#strings.containsIgnoreCase(announcement.priority, 'HIGH') or #strings.containsIgnoreCase(announcement.priority, 'URGENT') ? 'bg-danger-subtle text-danger border border-danger-subtle' : (#strings.containsIgnoreCase(announcement.priority, 'MEDIUM') ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' : 'bg-info-subtle text-info-emphasis border border-info-subtle')}"
+                                  th:text="${announcement.priority}">
+                                PRIORITY
+                            </span>
+                        </div>
+
+                        <p class="text-muted small mb-4 d-flex align-items-center gap-1">
+                            <i class="bi bi-clock"></i> Published Date: 
+                            <span th:text="${#temporals.format(announcement.publishDate, 'dd-MM-yyyy HH:mm')}">
+                                01-01-2026 10:00
+                            </span>
+                        </p>
+
+                        <hr class="my-4">
+
+                        <p class="fs-5 text-secondary"
+                           style="white-space: pre-line;"
+                           th:text="${announcement.content}">
+                            Announcement Content
+                        </p>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-start">
+                            <a th:href="@{/announcement/student}"
+                               class="btn btn-primary rounded-2">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Announcements
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <th:block th:replace="~{fragment/footer :: footer}"></th:block>
+
+    <!-- JavaScript Fragment -->
+    <div th:replace="~{fragment/js :: js}"></div>
+
+</body>
+
+</html>

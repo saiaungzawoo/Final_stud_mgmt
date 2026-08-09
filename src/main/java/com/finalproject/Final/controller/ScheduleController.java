@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,8 @@ import com.finalproject.Final.repository.AttendanceRepository;
 import com.finalproject.Final.repository.ScheduleRepository;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import lombok.val;
 
 @Controller
 @RequestMapping("/schedule")
@@ -81,8 +84,15 @@ public class ScheduleController {
 
     // 3. Generate Schedule
     @PostMapping("/generate")
-    public String generateSchedule(@ModelAttribute("schedule") ScheduleBean obj) {
+    public String generateSchedule(@Valid @ModelAttribute("schedule") ScheduleBean obj,BindingResult result,Model model) {
+    	  if (result.hasErrors()) {
 
+    	        model.addAttribute("isUpdate", false);
+    	        model.addAttribute("hasSchedule", scheduleRepo.scheduleExists(obj.getCourseId()));
+    	        model.addAttribute("scheduleList", scheduleRepo.findScheduleByCourse(obj.getCourseId()));
+
+    	        return "teacher/schedule-generate";
+    	    }
         generateScheduleData(obj);
 
         return "redirect:/schedule/generate/" + obj.getCourseId();
@@ -92,8 +102,18 @@ public class ScheduleController {
  // 4. Update Schedule
     @PostMapping("/update")
     public String updateSchedule(
-            @ModelAttribute("schedule") ScheduleBean bean,
-            RedirectAttributes redirectAttributes) {
+    		@Valid
+            @ModelAttribute("schedule") ScheduleBean bean,BindingResult result,
+            RedirectAttributes redirectAttributes,Model model) {
+    	
+    	if (result.hasErrors()) {
+
+            model.addAttribute("isUpdate", true);
+            model.addAttribute("hasSchedule", true);
+            model.addAttribute("scheduleList", scheduleRepo.findScheduleByCourse(bean.getCourseId()));
+
+            return "teacher/schedule-generate";
+        }
 
         // ၁။ Start Date ရောက်ပြီး/လွန်သွားပြီဆိုရင် Update လုပ်ခွင့် မပေးပါ
         if (bean.getStartDate() != null && !bean.getStartDate().isAfter(LocalDate.now())) {
