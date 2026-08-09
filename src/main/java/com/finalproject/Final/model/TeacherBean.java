@@ -20,6 +20,9 @@ public class TeacherBean {
     private String userID;
 
     private String roleID;
+    
+    //sai
+    private String userCode;
 
 
     @NotBlank(message = "Please enter your name.")
