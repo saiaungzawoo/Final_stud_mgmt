@@ -325,6 +325,8 @@ String sql = """
                     ON c.teacherID = u.userID
 
                 WHERE c.teacherID = ?
+                AND c.is_active = 1 
+                AND c.status IN ('Open', 'In Progress')
 
                 ORDER BY c.name
                 """;
