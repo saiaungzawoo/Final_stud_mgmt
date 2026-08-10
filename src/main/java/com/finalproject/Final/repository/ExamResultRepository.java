@@ -104,6 +104,7 @@ public class ExamResultRepository {
 
                 WHERE e.examID = ?
                 AND en.status = 'Active'
+               AND u.is_active = 1
 
                 AND NOT EXISTS (
                     SELECT 1
@@ -177,6 +178,7 @@ public class ExamResultRepository {
                 ON er.userID = u.userID
 
                 WHERE er.examID = ?
+                AND u.is_active = 1
 
                 ORDER BY u.name
                 """;

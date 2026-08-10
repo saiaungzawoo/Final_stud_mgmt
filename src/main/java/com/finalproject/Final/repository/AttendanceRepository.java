@@ -32,6 +32,7 @@ LEFT JOIN attendance a
     AND a.scheduleID = ?
 WHERE e.courseID = ?
 AND e.status = 'Active'
+AND u.is_active = 1
 ORDER BY u.name
                 """;
 
@@ -400,6 +401,7 @@ ORDER BY u.name
 
             WHERE e.courseID=?
             AND e.status='Active'
+            AND u.is_active = 1
 
             ORDER BY u.name
             """;
