@@ -231,6 +231,8 @@ public class TeacherRepository {
                 SELECT COUNT(*)
                 FROM course
                 WHERE teacherID = ?
+                AND is_active = 1
+AND status IN ('Open', 'In Progress')
                 """;
 
 
@@ -332,6 +334,8 @@ public class TeacherRepository {
         ON s.courseID=c.courseID
 
         WHERE c.teacherID=?
+        AND c.is_active = 1
+AND c.status IN ('Open', 'In Progress')
 
         AND s.schedule_date = CURDATE()
 
@@ -377,6 +381,8 @@ public class TeacherRepository {
         ON s.courseID=c.courseID
 
         WHERE c.teacherID=?
+        AND c.is_active = 1
+AND c.status IN ('Open', 'In Progress')
 
         AND s.schedule_date = CURDATE()
 
