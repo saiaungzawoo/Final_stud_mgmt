@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.finalproject.Final.model.CourseBean;
+import com.finalproject.Final.model.EnrollmentBean;
 import com.finalproject.Final.model.PaymentBean;
 import com.finalproject.Final.service.CourseService;
+import com.finalproject.Final.service.EnrollmentService;
 import com.finalproject.Final.service.PaymentService;
 import com.finalproject.Final.util.PdfReceiptGenerator;
 
@@ -24,6 +26,9 @@ public class ReceiptController {
 
     @Autowired
     private CourseService courseService;
+    
+    @Autowired
+    private EnrollmentService enrollService;
 
     @GetMapping("/download/{paymentId}")
     public ResponseEntity<InputStreamResource> download(
@@ -43,7 +48,12 @@ public class ReceiptController {
 
         CourseBean course = courseService.getById(payment.getCourseId());
         
-        ByteArrayInputStream pdf = PdfReceiptGenerator.generate(payment, course);
+        // Get enrollment for scholarship information
+        EnrollmentBean enrollment = enrollService.getById(payment.getEnrollmentId());
+                
+                
+        
+        ByteArrayInputStream pdf = PdfReceiptGenerator.generate(payment, course, enrollment);
         
 //        paymentService.markReceiptDownloaded(paymentId);
 

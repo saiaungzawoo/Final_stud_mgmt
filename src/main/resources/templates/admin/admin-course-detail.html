@@ -209,7 +209,7 @@ th:text="${'MMK ' + #numbers.formatDecimal(course.fee,1,'COMMA',2,'POINT')}">
 
         <div class="row gy-4">
 
-            <div class="col-md-6">
+            <div class="col-md-4">
 
                 <label class="form-label text-muted">
                     Installment Payment
@@ -223,23 +223,196 @@ th:text="${course.allowedInstallment == 1 ? 'Enabled' : 'Disabled'}">
 
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
 
                 <label class="form-label text-muted">
                     Scholarship
                 </label>
-
+                
+  
                 <p class="fw-semibold text-success mb-0">
                     <span
 th:text="${course.allowedScholarship == 1 ? 'Enabled' : 'Disabled'}">
 </span>
                 </p>
+                
+                
 
+            </div>
+            
+            <div class="col-md-4">
+            		<label class="form-label text-muted">
+    Scholarship Status
+</label>
+
+<p class="fw-semibold mb-0"
+   th:classappend="${course.scholarshipStatus == 1 ? 'text-success' : 'text-danger'}">
+
+    <span th:text="${course.scholarshipStatus == 1 ? 'Active' : 'Inactive'}">
+    </span>
+
+</p>
             </div>
 
         </div>
 
     </div>
+    
+    <!-- Installment Information -->
+
+<div class="content-panel bg-white rounded-3 shadow-sm border p-4 mb-4">
+
+    <div class="d-flex align-items-center gap-2 mb-4">
+
+        <i class="bi bi-calendar-check text-primary"></i>
+
+        <h5 class="fw-bold mb-0">
+            Installment Information
+        </h5>
+
+    </div>
+
+
+    <!-- Installment Enabled / Disabled -->
+
+    <div class="row gy-4 mb-4">
+
+        <div class="col-md-4">
+
+            <label class="form-label text-muted">
+                Installment
+            </label>
+
+            <p class="fw-semibold mb-0"
+               th:classappend="${course.allowedInstallment == 1 ? 'text-success' : 'text-danger'}">
+
+                <span th:text="${course.allowedInstallment == 1
+                    ? 'Enabled'
+                    : 'Disabled'}">
+                </span>
+
+            </p>
+
+        </div>
+
+
+        <!-- Number of Installments -->
+
+        <div class="col-md-4"
+             th:if="${installmentRule != null}">
+
+            <label class="form-label text-muted">
+                Number of Installments
+            </label>
+
+            <p class="fw-semibold mb-0">
+
+                <span th:text="${installmentRule.installmentCount}">
+                </span>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Installment Table -->
+
+    <div th:if="${installmentRule != null
+                and !#lists.isEmpty(installmentItems)}">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>
+                            Installment
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                        <th>
+                            Due Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr th:each="item : ${installmentItems}">
+
+                        <td>
+
+                            <span
+                                class="fw-semibold"
+                                th:text="${item.installmentNumber}">
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="fw-semibold"
+                                th:text="${'MMK ' + #numbers.formatDecimal(
+                                    item.amount,
+                                    1,
+                                    'COMMA',
+                                    2,
+                                    'POINT'
+                                )}">
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                th:text="${#temporals.format(
+                                    item.dueDate,
+                                    'dd/MM/yyyy'
+                                )}">
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- No installment rule -->
+
+    <div th:if="${installmentRule == null}">
+
+        <p class="text-muted mb-0">
+            No installment plan has been configured for this course.
+        </p>
+
+    </div>
+
+</div>
+    
+    
+    
 
 
 
@@ -290,7 +463,7 @@ th:text="${course.allowedScholarship == 1 ? 'Enabled' : 'Disabled'}">
                 </label>
 
                 <p class="fw-semibold mb-0">
-                    24 Jul 2026
+                    <span th:text="${course.updatedAt}"></span>
                 </p>
 
             </div>

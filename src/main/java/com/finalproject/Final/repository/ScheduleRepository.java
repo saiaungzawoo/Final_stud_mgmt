@@ -145,11 +145,15 @@ public class ScheduleRepository {
               LIMIT 1
               """;
 
-      return jdbc.queryForObject(
+
+      List<ScheduleBean> list = jdbc.query(
               sql,
               new ScheduleRowMapper(),
               courseId
       );
+
+      return list.isEmpty() ? null : list.get(0);
+      
   }
   public List<String> getRepeatDays(String courseID){
 

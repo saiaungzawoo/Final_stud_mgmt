@@ -132,4 +132,28 @@ public class CourseService {
         return courseRepository.searchStudentCourses(keyword);
 
     }
+    
+    public int getScholarshipStatus(String courseId) {
+
+        return courseRepository.getScholarshipStatus(courseId);
+
+    }
+    
+
+
 }
+    
+    
+    //test
+//    public CourseBean getById(String id) {
+//
+//        CourseBean course = courseRepository.findById(id);
+//
+//        System.out.println("===== COURSE SERVICE =====");
+//        System.out.println("Course ID = " + course.getCourseId());
+//        System.out.println("Scholarship = " + course.getAllowedScholarship());
+//        System.out.println("==========================");
+//
+//        return course;
+//    }
+//}

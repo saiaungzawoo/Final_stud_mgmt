@@ -66,20 +66,13 @@ public class CourseController {
 
         CourseBean course = courseService.getById(id);
         
-        
-//        List<ScheduleBean> schedules = scheduleService.getByCourseId(id);
+    
 //        
         
         ScheduleBean schedule =
                 scheduleService.getCourseScheduleSummary(id);
         
-        //sort schedules
-//        if (schedules != null) {
-//            schedules = schedules.stream()
-//                .sorted(Comparator.comparing(ScheduleBean::getScheduleDate)
-//                          .thenComparing(ScheduleBean::getStartTime))
-//                .collect(Collectors.toList());
-//        }
+       
         
         
         if (course.getSeatsAvailable() == 0) {
@@ -105,4 +98,38 @@ public class CourseController {
 
         return "student/courses";
     }
+    
+    //test
+//    @GetMapping("/{id}")
+//    public String showCourseDetail(
+//            @PathVariable String id,
+//            Model model) {
+//
+//        System.out.println("===== COURSE DETAIL =====");
+//        System.out.println("Course ID received = " + id);
+//
+//        CourseBean course = courseService.getById(id);
+//
+//        System.out.println("Course found = " + course.getName());
+//
+//        // rest of your code... CourseBean course = courseService.getById(id);
+////      
+////  
+//////      
+////      
+//      ScheduleBean schedule =
+//              scheduleService.getCourseScheduleSummary(id);
+//      
+//     
+//      
+//      
+//      if (course.getSeatsAvailable() == 0) {
+//          course.setStatus("FULL");
+//      }
+//
+//      model.addAttribute("course", course);
+//      model.addAttribute("schedule", schedule);
+//
+//        return "student/course-detail";
+//    }
 }

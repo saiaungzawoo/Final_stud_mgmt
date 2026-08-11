@@ -47,11 +47,51 @@
 										<th>Course</th>
 										<td th:text="${course.name}"></td>
 									</tr>
+									
+									<tr>
+										<th>Course Fee</th>
+										<td th:text="${#numbers.formatDecimal(enrollment.originalFee,0,'COMMA',0,'POINT')}"></td>
+										
+									</tr>
 
 									<tr>
 										<th>Payment Type</th>
 										<td th:text="${payment.paymentTypeName}"></td>
 									</tr>
+									
+									<!-- Scholarship Information -->
+<tr th:if="${enrollment.discountedAmount != null and enrollment.discountedAmount > 0}">
+    <th>Scholarship Applied</th>
+    <td>
+        <div>
+            Type:
+            <span th:text="${enrollment.scholarshipType}">
+                Fixed Amount
+            </span>
+        </div>
+
+        <strong class="d-block text-success mt-1"
+                th:text="${enrollment.scholarshipName}">
+            For Brilliant Students
+        </strong>
+
+        <div class="text-success fw-semibold mt-1">
+            Discount
+            <span class="d-block">
+                - MMK
+                <span th:text="${#numbers.formatDecimal(
+                    enrollment.discountedAmount,
+                    0,
+                    'COMMA',
+                    0,
+                    'POINT'
+                )}">
+                    100,000
+                </span>
+            </span>
+        </div>
+    </td>
+</tr>
 
 									<!-- <tr>
                                     <th>Amount</th>
