@@ -143,6 +143,13 @@ public class UsersController {
      // Get Student Role ID from role table
         String studentRoleId = uRepo.getRoleIdByName("Student");
         obj.setRoleID(studentRoleId);
+        
+      //sai  
+     // Generate user code automatically
+        String userCode =
+                uRepo.generateUserCode(studentRoleId);
+
+        obj.setUserCode(userCode);
 
         // Student Role UUID (Replace with your actual Student role UUID)
        // obj.setRoleID("3c2f4396-7a84-11f1-bfcb-b4b686e7f920");
@@ -533,4 +540,23 @@ if (uRepo.existsByEmailAndNotUserId(
       return "redirect:/student/admin/profile";
   }
  
+  
+//Admin - Deactivate Student Account
+@PostMapping("/admin/student/deactivate/{id}")
+public String deactivateStudent(@PathVariable String id) {
+
+   uRepo.updateStudentStatus(id, 0);
+
+   return "redirect:/student/admin/student/detail/" + id;
+}
+
+//Admin - Activate Student Account
+@PostMapping("/admin/student/activate/{id}")
+public String activateStudent(@PathVariable String id) {
+
+ uRepo.updateStudentStatus(id, 1);
+
+ return "redirect:/student/admin/student/detail/" + id;
+}
+
 }
