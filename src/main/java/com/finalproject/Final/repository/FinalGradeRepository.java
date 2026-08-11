@@ -43,6 +43,7 @@ public class FinalGradeRepository {
 
                 WHERE e.courseID = ?
                 AND e.status = 'Active'
+                AND u.is_active = 1
 
                 ORDER BY u.name
                 """;
