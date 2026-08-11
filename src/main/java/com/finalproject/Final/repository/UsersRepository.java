@@ -380,6 +380,99 @@ i= jdbc.update(
         }
     }
     
+    
+    //sai
+    //pls dont fcking touch or delete this
+    //i didnt touch any of your codes
+    //this is fcking necessary
+    //I did this once, it got deleted by someone and i had to do it again
+    //dont never ever touch or modify this shit
+    //thanks
+    
+    public String generateUserCode(String roleID) {
+
+        String prefix = "";
+
+        String roleSql = """
+                SELECT name
+                FROM role
+                WHERE roleID = ?
+                """;
+
+
+        String roleName = jdbc.queryForObject(
+                roleSql,
+                String.class,
+                roleID
+        );
+
+
+        switch(roleName) {
+
+            case "Student":
+                prefix = "ST";
+                break;
+
+            case "Teacher":
+                prefix = "T";
+                break;
+
+            case "Admin":
+                prefix = "AD";
+                break;
+
+            default:
+                throw new RuntimeException("Invalid role");
+        }
+
+
+
+        String sql = """
+                SELECT userCode
+                FROM user
+                WHERE roleID = ?
+                AND userCode LIKE ?
+                ORDER BY userCode DESC
+                LIMIT 1
+                """;
+
+
+        List<String> codes = jdbc.query(
+                sql,
+                (rs,rowNum) -> rs.getString("userCode"),
+                roleID,
+                prefix + "%"
+        );
+
+
+
+        int nextNumber = 1;
+
+
+        if(!codes.isEmpty()) {
+
+            String latestCode = codes.get(0);
+
+
+            String number =
+                    latestCode.substring(prefix.length());
+
+
+            nextNumber =
+                    Integer.parseInt(number) + 1;
+        }
+
+
+
+        return String.format(
+                "%s%04d",
+                prefix,
+                nextNumber
+        );
+    }
+    
+    
+   
     //active or inactive status
     public void updateStudentStatus(String userID, int status) {
 

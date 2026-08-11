@@ -312,7 +312,9 @@ public class ExamResultRepository {
                 examResultID       
             );
     }
-    public List<ExamResultBean> getResultByStudent(String userID) {
+    public List<ExamResultBean> getResultByStudent(
+            String courseID,
+            String userID) {
 
 
         String sql = """
@@ -343,6 +345,7 @@ public class ExamResultRepository {
 
 
                 WHERE er.userID = ?
+                AND e.courseID = ?
 
 
                 ORDER BY e.exam_date DESC
@@ -371,7 +374,9 @@ public class ExamResultRepository {
                     bean.setUserID(
                             rs.getString("userID")
                     );
- bean.setScore(
+
+
+                    bean.setScore(
                             rs.getBigDecimal("score")
                     );
 
@@ -396,7 +401,6 @@ public class ExamResultRepository {
                     }
 
 
-                    // extra display data
                     bean.setExamName(
                             rs.getString("examName")
                     );
@@ -420,7 +424,8 @@ public class ExamResultRepository {
                     return bean;
 
                 },
-                userID
+                userID,
+                courseID
         );
     }
     public ExamResultBean getExamResultById(String gradedByID) {

@@ -20,13 +20,16 @@ public class TeacherRepository {
 
 
     // Insert Teacher
+    //sai
+    //I added user code, dont delete this
+    //nothing is broken
     public int insertTeacher(TeacherBean obj) {
 
         String sql = """
                 INSERT INTO user
-                (userID, roleID, name, email, password, phone_no, 
+                (userID, roleID, userCode, name, email, password, phone_no, 
                  address, dob, gender, created_at, is_active, profile_image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)
+                VALUES (?, ?, ?, ?,	 ?, ?, ?, ?, ?, ?, NOW(), ?, ?)
                 """;
 
 
@@ -34,6 +37,7 @@ public class TeacherRepository {
                 sql,
                 obj.getUserID(),
                 obj.getRoleID(),
+                obj.getUserCode(),
                 obj.getName(),
                 obj.getEmail(),
                 obj.getPassword(),
@@ -107,6 +111,8 @@ public class TeacherRepository {
                         rs.getString("userID"),
 
                         rs.getString("roleID"),
+                        
+                        rs.getString("userCode"),
 
                         rs.getString("name"),
 
@@ -155,6 +161,8 @@ public class TeacherRepository {
                         rs.getString("userID"),
 
                         rs.getString("roleID"),
+                        
+                        rs.getString("userCode"),
 
                         rs.getString("name"),
 
@@ -231,6 +239,8 @@ public class TeacherRepository {
                 SELECT COUNT(*)
                 FROM course
                 WHERE teacherID = ?
+                AND is_active = 1
+AND status IN ('Open', 'In Progress')
                 """;
 
 
@@ -332,6 +342,8 @@ public class TeacherRepository {
         ON s.courseID=c.courseID
 
         WHERE c.teacherID=?
+        AND c.is_active = 1
+AND c.status IN ('Open', 'In Progress')
 
         AND s.schedule_date = CURDATE()
 
@@ -377,6 +389,8 @@ public class TeacherRepository {
         ON s.courseID=c.courseID
 
         WHERE c.teacherID=?
+        AND c.is_active = 1
+AND c.status IN ('Open', 'In Progress')
 
         AND s.schedule_date = CURDATE()
 

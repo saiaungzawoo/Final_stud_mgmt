@@ -25,6 +25,9 @@ public class AssignmentRepository {
                     description
                 FROM course
                 WHERE teacherID=?
+                AND is_active = 1 
+                AND status IN ('Open', 'In Progress')
+               
                 ORDER BY name
                 """;
 

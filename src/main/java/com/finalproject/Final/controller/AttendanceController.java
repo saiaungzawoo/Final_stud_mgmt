@@ -134,8 +134,9 @@ public class AttendanceController {
         return "teacher/attendance-calendar";
     }
     
-    @GetMapping("/student/{userID}")
+    @GetMapping("/student/{courseID}/{userID}")
     public String studentAttendance(
+            @PathVariable String courseID,
             @PathVariable String userID,
             Model model){
 
@@ -143,12 +144,11 @@ public class AttendanceController {
         model.addAttribute(
             "attendanceList",
             attendanceRepository
-            .getStudentAttendanceHistory(userID)
+            .getStudentAttendanceHistory(courseID,userID)
         );
 
 
         return "teacher/student-attendance-history";
-
     }
     @GetMapping("/students/{courseID}")
     public String studentList(

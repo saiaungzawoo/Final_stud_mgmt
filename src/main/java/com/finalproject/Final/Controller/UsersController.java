@@ -143,6 +143,13 @@ public class UsersController {
      // Get Student Role ID from role table
         String studentRoleId = uRepo.getRoleIdByName("Student");
         obj.setRoleID(studentRoleId);
+        
+      //sai  
+     // Generate user code automatically
+        String userCode =
+                uRepo.generateUserCode(studentRoleId);
+
+        obj.setUserCode(userCode);
 
         // Student Role UUID (Replace with your actual Student role UUID)
        // obj.setRoleID("3c2f4396-7a84-11f1-bfcb-b4b686e7f920");
