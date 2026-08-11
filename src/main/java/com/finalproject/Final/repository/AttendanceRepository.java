@@ -32,6 +32,7 @@ LEFT JOIN attendance a
     AND a.scheduleID = ?
 WHERE e.courseID = ?
 AND e.status = 'Active'
+AND u.is_active = 1
 ORDER BY u.name
                 """;
 
@@ -102,6 +103,8 @@ ORDER BY u.name
                     description
                 FROM course
                 WHERE teacherID = ?
+                AND is_active = 1 
+                AND status IN ('Open', 'In Progress')
                 ORDER BY name
                 """;
 
@@ -398,6 +401,7 @@ ORDER BY u.name
 
             WHERE e.courseID=?
             AND e.status='Active'
+            AND u.is_active = 1
 
             ORDER BY u.name
             """;

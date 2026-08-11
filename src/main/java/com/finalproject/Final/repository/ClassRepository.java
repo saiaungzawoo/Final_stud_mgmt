@@ -57,6 +57,8 @@ public class ClassRepository {
 
 
     			WHERE c.teacherID = ?
+    			AND c.is_active = 1
+                AND c.status IN ('Open', 'In Progress')
 
 
     			GROUP BY

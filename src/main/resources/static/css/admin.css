@@ -379,3 +379,40 @@ footer {
     position: relative;
     z-index: 10;
 }
+.card{
+    border-radius:15px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+.comment-col{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    max-width: 250px; /* လိုသလိုပြောင်းနိုင်ပါတယ် */
+}
+
+.text-truncate-custom{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    max-width: 250px;   /* လိုသလိုပြောင်းပါ */
+}
+
+.text-truncate-custom{
+    display: inline-block;
+    max-width: 70px;   /* 50px, 60px, 70px စမ်းကြည့်ပါ */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}

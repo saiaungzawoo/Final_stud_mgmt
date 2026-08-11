@@ -43,6 +43,7 @@ public class FinalGradeRepository {
 
                 WHERE e.courseID = ?
                 AND e.status = 'Active'
+                AND u.is_active = 1
 
                 ORDER BY u.name
                 """;
@@ -325,6 +326,8 @@ String sql = """
                     ON c.teacherID = u.userID
 
                 WHERE c.teacherID = ?
+                AND c.is_active = 1 
+                AND c.status IN ('Open', 'In Progress')
 
                 ORDER BY c.name
                 """;
