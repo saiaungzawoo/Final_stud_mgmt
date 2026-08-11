@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import com.finalproject.Final.model.CourseBean;
+import com.finalproject.Final.model.EnrollmentBean;
 import com.finalproject.Final.model.PaymentBean;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
@@ -16,7 +17,8 @@ public class PdfReceiptGenerator {
 
     public static ByteArrayInputStream generate(
             PaymentBean payment,
-            CourseBean course) throws Exception {
+            CourseBean course,
+            EnrollmentBean enrollment) throws Exception {
 
         Document document = new Document(PageSize.A4, 40, 40, 40, 40);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -107,6 +109,70 @@ public class PdfReceiptGenerator {
 
         addRow(table, "Transaction ID", payment.getTransactionReference(), labelFont, valueFont, border);
         addRow(table, "Course", course.getName(), labelFont, valueFont, border);
+       
+        addRow(
+        	    table,
+        	    "Course Fee",
+        	    enrollment.getOriginalFee() + " MMK",
+        	    labelFont,
+        	    valueFont,
+        	    border
+        	);
+     // =========================
+        // SCHOLARSHIP INFORMATION
+        // =========================
+        if (
+            enrollment != null
+            && enrollment.getDiscountedAmount() != null
+            && enrollment.getDiscountedAmount() > 0
+        ) {
+
+            String scholarshipType =
+                    enrollment.getScholarshipType();
+
+            String scholarshipName =
+                    enrollment.getScholarshipName();
+
+            String discountAmount =
+                    "- MMK "
+                    + enrollment.getDiscountedAmount();
+
+            // Scholarship Type
+            addRow(
+                    table,
+                    "Scholarship Applied",
+                    "Type: " + scholarshipType,
+                    labelFont,
+                    valueFont,
+                    border
+            );
+
+            // Scholarship Name
+            addRow(
+                    table,
+                    "",
+                    scholarshipName,
+                    labelFont,
+                    valueFont,
+                    border
+            );
+
+            // Discount
+            addRow(
+                    table,
+                    "Discount",
+                    discountAmount,
+                    labelFont,
+                    new Font(
+                            Font.HELVETICA,
+                            11,
+                            Font.BOLD,
+                            success
+                    ),
+                    border
+            );
+        }
+        
         if(payment.getPaymentTypeName().equals("FULL_PAYMENT")) {
 
             addRow(

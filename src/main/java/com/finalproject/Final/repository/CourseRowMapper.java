@@ -38,7 +38,32 @@ public class CourseRowMapper implements RowMapper<CourseBean> {
 	    c.setThumbnailPath(rs.getString("thumbnail_path"));
 
 	    c.setAllowedInstallment(rs.getInt("allow_installment"));
+	    
+	    
+	    
+	    
 	    c.setAllowedScholarship(rs.getInt("allow_scholarship"));
+	    
+	    
+	    //test
+//	    int scholarship = rs.getInt("allow_scholarship");
+//
+//	    System.out.println(
+//	        "===== COURSE ROW MAPPER ====="
+//	    );
+//	    System.out.println(
+//	        "DB allow_scholarship = " + scholarship
+//	    );
+//	    System.out.println(
+//	        "Course ID = " + rs.getString("courseID")
+//	    );
+//	    System.out.println(
+//	        "=============================="
+//	    );
+//
+//	    c.setAllowedScholarship(scholarship);
+	    
+	    
 	    c.setIsActive(rs.getInt("is_active"));
 	    
    

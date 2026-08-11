@@ -53,4 +53,6 @@ public class CourseBean {
     
     private Integer isActive;
     
+    private Integer scholarshipStatus;
+    
 }

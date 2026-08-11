@@ -51,12 +51,12 @@ public class AdminCourseController {
     @Autowired
     private EnrollmentService enrollmentService;
     
-//    @Autowired
-//    private InstallmentRuleService installmentRuleService;
-//
-//
-//    @Autowired
-//    private InstallmentRuleItemService installmentRuleItemService;
+    @Autowired
+    private InstallmentRuleService installmentRuleService;
+
+
+    @Autowired
+    private InstallmentRuleItemService installmentRuleItemService;
     
     
     @Autowired
@@ -386,8 +386,39 @@ public class AdminCourseController {
             Model model) {
 
         CourseBean course = courseService.getById(id);
+        
+        int scholarshipStatus =
+                courseService.getScholarshipStatus(id);
+
+        course.setScholarshipStatus(scholarshipStatus);
+        
+     // Installment information
+        InstallmentRuleBean installmentRule =
+                installmentRuleService.getByCourseId(id);
+
+        List<InstallmentRuleItemBean> installmentItems =
+                List.of();
+
+        if (installmentRule != null) {
+
+            installmentItems =
+                    installmentRuleItemService.getByRuleId(
+                            installmentRule.getInstallmentRuleId()
+                    );
+        }
 
         model.addAttribute("course", course);
+        
+        model.addAttribute(
+                "installmentRule",
+                installmentRule
+        );
+
+        model.addAttribute(
+                "installmentItems",
+                installmentItems
+        );
+
 
         return "admin/admin-course-detail";
     }
@@ -404,9 +435,9 @@ public class AdminCourseController {
         CourseBean course = courseService.getById(id);
         
         //test
-        System.out.println("===== EDIT PAGE =====");
-    	System.out.println(course.getCreatedBy());
-    	System.out.println(course.getSeatsAvailable());
+//        System.out.println("===== EDIT PAGE =====");
+//    	System.out.println(course.getCreatedBy());
+//    	System.out.println(course.getSeatsAvailable());
 
         model.addAttribute("course", course);
 
@@ -421,6 +452,31 @@ public class AdminCourseController {
         model.addAttribute(
                 "teachers",
                 teacherService.getAllTeachers());
+        
+     // ==========================================
+        // INSTALLMENT INFORMATION
+        // ==========================================
+
+        InstallmentRuleBean installmentRule =
+                installmentRuleService.getByCourseId(id);
+
+        model.addAttribute(
+                "installmentRule",
+                installmentRule
+        );
+
+        if (installmentRule != null) {
+
+            List<InstallmentRuleItemBean> installmentItems =
+                    installmentRuleItemService.getByRuleId(
+                            installmentRule.getInstallmentRuleId()
+                    );
+
+            model.addAttribute(
+                    "installmentItems",
+                    installmentItems
+            );
+        }
 
         return "admin/admin-course-edit";
     }
@@ -447,14 +503,14 @@ public class AdminCourseController {
             @ModelAttribute("course") CourseBean course) {
     	
     	
-    	System.out.println("===== FORM VALUES =====");
-    	System.out.println("Course ID        = " + course.getCourseId());
-    	System.out.println("Created By       = " + course.getCreatedBy());
-    	System.out.println("Total Seats      = " + course.getSeatsTotal());
-    	System.out.println("Available Seats  = " + course.getSeatsAvailable());
-    	System.out.println("Installment      = " + course.getAllowedInstallment());
-    	System.out.println("Scholarship      = " + course.getAllowedScholarship());
-    	System.out.println("=======================");
+//    	System.out.println("===== FORM VALUES =====");
+//    	System.out.println("Course ID        = " + course.getCourseId());
+//    	System.out.println("Created By       = " + course.getCreatedBy());
+//    	System.out.println("Total Seats      = " + course.getSeatsTotal());
+//    	System.out.println("Available Seats  = " + course.getSeatsAvailable());
+//    	System.out.println("Installment      = " + course.getAllowedInstallment());
+//    	System.out.println("Scholarship      = " + course.getAllowedScholarship());
+//    	System.out.println("=======================");
 
         // Load existing course from database
         CourseBean existingCourse =
@@ -475,7 +531,7 @@ public class AdminCourseController {
 
         existingCourse.setDurationWeeks(course.getDurationWeeks());
 
-        existingCourse.setFee(course.getFee());
+//        existingCourse.setFee(course.getFee());
 
         existingCourse.setLevel(course.getLevel());
 
@@ -484,17 +540,17 @@ public class AdminCourseController {
         // -----------------------------
         // Checkbox handling
         // -----------------------------
-        if (course.getAllowedInstallment() == null) {
-            existingCourse.setAllowedInstallment(0);
-        } else {
-            existingCourse.setAllowedInstallment(1);
-        }
+//        if (course.getAllowedInstallment() == null) {
+//            existingCourse.setAllowedInstallment(0);
+//        } else {
+//            existingCourse.setAllowedInstallment(1);
+//        }
 
-        if (course.getAllowedScholarship() == null) {
-            existingCourse.setAllowedScholarship(0);
-        } else {
-            existingCourse.setAllowedScholarship(1);
-        }
+//        if (course.getAllowedScholarship() == null) {
+//            existingCourse.setAllowedScholarship(0);
+//        } else {
+//            existingCourse.setAllowedScholarship(1);
+//        }
 
         // -----------------------------
         // Seat handling

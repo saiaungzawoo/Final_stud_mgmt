@@ -238,8 +238,15 @@
 								<div class="col-md-3">
 
 
-									<label class="form-label"> Fee </label> <input type="number"
-										class="form-control" th:field="*{fee}">
+									<label class="form-label"> Fee </label> 
+									
+									<!-- <input type="number"
+										class="form-control" th:field="*{fee}"> -->
+										 <input
+        type="text"
+        class="form-control"
+        th:value="${course.fee}"
+        readonly>
 
 
 								</div>
@@ -317,7 +324,7 @@
 
 
 
-							<div class="row g-4">
+							<!-- <div class="row g-4"> -->
 
 
 
@@ -329,12 +336,104 @@
 
 
 								</div>
+								
+								<div class="card mt-4">
+
+    <div class="card-header">
+        <h5 class="mb-0">Installment Information</h5>
+    </div>
+
+    <div class="card-body">
+
+        <!-- Installment Enabled -->
+        <div class="mb-3">
+            <label class="form-label">
+                Installment
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                th:value="${course.allowedInstallment == 1 ? 'Enabled' : 'Disabled'}"
+                readonly>
+        </div>
+
+
+        <!-- Only show details when installment is enabled -->
+        <div th:if="${course.allowedInstallment == 1}">
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Number of Installments
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    th:value="${installmentRule.installmentCount}"
+                    readonly>
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+
+                    <thead>
+                        <tr>
+                            <th>Installment</th>
+                            <th>Amount</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="item : ${installmentItems}">
+
+                            <td
+                                th:text="${item.installmentNumber}">
+                            </td>
+
+                            <td>
+                                MMK
+                                <span th:text="${#numbers.formatDecimal(item.amount, 0, 'COMMA', 2, 'POINT')}"></span>
+                                
+                            </td>
+
+                            <td th:text="${#temporals.format(item.dueDate, 'dd/MM/yyyy')}"></td>
+                            
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Disabled message -->
+        <div
+            th:if="${course.allowedInstallment != 1}"
+            class="text-muted">
+
+            Installment payment is not enabled for this course.
+
+        </div>
+
+    </div>
+
+</div>
+								
+								
 
 
 
 
 
-								<div class="col-md-4">
+								<!-- <div class="col-md-4">
 
 
 									<div class="category-card">
@@ -355,13 +454,13 @@
 									</div>
 
 
-								</div>
+								</div> -->
 
 
 
 
 
-								<div class="col-md-4">
+								<!-- <div class="col-md-4">
 
 
 									<div class="category-card">
@@ -382,11 +481,11 @@
 									</div>
 
 
-								</div>
+								</div> -->
 
 
 
-							</div>
+							<!-- </div> -->
 
 
 						</div>
@@ -574,7 +673,7 @@
 						<!-- THUMBNAIL -->
 
 
-						<div class="mb-4">
+						<!-- <div class="mb-4">
 
 
 							<h5 class="fw-bold mb-3">
@@ -588,7 +687,7 @@
 							<input type="file" class="form-control">
 
 
-						</div>
+						</div> -->
 
 
 
