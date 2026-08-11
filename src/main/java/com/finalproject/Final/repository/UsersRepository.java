@@ -380,7 +380,18 @@ i= jdbc.update(
         }
     }
     
-    
+    //active or inactive status
+    public void updateStudentStatus(String userID, int status) {
+
+        String sql = """
+            UPDATE user
+            SET is_active = ?,
+                updated_at = NOW()
+            WHERE userID = ?
+            """;
+
+        jdbc.update(sql, status, userID);
+    }
     
 }
 	

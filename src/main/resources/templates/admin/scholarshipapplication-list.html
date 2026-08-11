@@ -94,8 +94,12 @@
                                         <td class="text-muted small" th:text="${a.applicationDate != null ? #temporals.format(a.applicationDate, 'dd-MMM-yyyy') : '-'}">Date</td>
                                         
                                         <!-- Truncated text for reason column -->
-                                        <td class="text-truncate-custom text-secondary small" th:text="${a.reason}" th:title="${a.reason}">Reason</td>
-                                        
+                                        <td>
+    <span class="text-truncate-custom text-secondary small"
+          th:text="${a.reason}"
+          th:title="${a.reason}">
+    </span>
+</td>
                                         <td class="text-center">
                                             <a th:if="${a.supportingDocuments != null}" th:href="@{${a.supportingDocuments}}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 hover-btn fw-medium">
                                                 <i class="bi bi-file-earmark-pdf me-1"></i> View
@@ -115,10 +119,22 @@
                                             </span>
                                         </td>
 
-                                        <td class="small">
+                                        <!-- <td class="small">
                                             <span th:if="${a.reviewNotes != null}" class="text-secondary text-truncate-custom d-inline-block" th:text="${a.reviewNotes}" th:title="${a.reviewNotes}">Notes</span>
                                             <span th:if="${a.reviewNotes == null}" class="text-muted fst-italic">No Review</span>
-                                        </td>
+                                        </td> -->
+                                        <td class="small">
+    <span th:if="${a.reviewNotes != null}"
+          class="text-secondary text-truncate-custom"
+          th:text="${a.reviewNotes}"
+          th:title="${a.reviewNotes}">
+    </span>
+
+    <span th:if="${a.reviewNotes == null}"
+          class="text-muted fst-italic">
+        No Review
+    </span>
+</td>
 
                                         <td class="pe-4 text-center">
                                             <a th:href="@{/admin/application/detail/{id}(id=${a.scholarshipApplicationID})}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm hover-btn fw-medium">
@@ -135,14 +151,14 @@
 
             </main>
 
-           
+
+        </div> <!-- /main-wrapper -->
+    </div>
+            
 <!-- FOOTER -->
             <footer class="mt-auto">
                 <div th:replace="~{fragment/footer :: footer}"></div>
             </footer>
-        </div> <!-- /main-wrapper -->
-    </div>
- 
     <!-- Global JS Fragment -->
     <div th:replace="~{fragment/js :: js}"></div>
 

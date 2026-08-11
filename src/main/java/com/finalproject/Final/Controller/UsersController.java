@@ -533,4 +533,23 @@ if (uRepo.existsByEmailAndNotUserId(
       return "redirect:/student/admin/profile";
   }
  
+  
+//Admin - Deactivate Student Account
+@PostMapping("/admin/student/deactivate/{id}")
+public String deactivateStudent(@PathVariable String id) {
+
+   uRepo.updateStudentStatus(id, 0);
+
+   return "redirect:/student/admin/student/detail/" + id;
+}
+
+//Admin - Activate Student Account
+@PostMapping("/admin/student/activate/{id}")
+public String activateStudent(@PathVariable String id) {
+
+ uRepo.updateStudentStatus(id, 1);
+
+ return "redirect:/student/admin/student/detail/" + id;
+}
+
 }
