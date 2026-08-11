@@ -93,9 +93,12 @@
                                             </span>
                                         </td>
 
-                                        <td class="comment-col"
-                                            th:text="${feedback.comment}">
-                                        </td>
+                                       <td>
+    <span class="comment-col"
+          th:text="${feedback.comment}"
+          th:title="${feedback.comment}">
+    </span>
+</td>
 
                                         <td class="text-center">
                                             <span
