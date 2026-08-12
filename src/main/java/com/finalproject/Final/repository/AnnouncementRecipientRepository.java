@@ -196,17 +196,198 @@ public class AnnouncementRecipientRepository {
         }, announcementID);
     }
     
-    public int markAsRead(String announcementID, String userID) {
+  
+//   //  Read
+//    public int markAsRead(String announcementID, String userID) {
+//
+//    String sql = """
+//    UPDATE announcement_recipient
+//    SET is_read = 1,
+//    read_at = NOW()
+//    WHERE announcementID = ?
+//    AND userID = ?
+//    """;
+//
+//    return jdbcTemplate.update(sql, announcementID, userID);
+//    }
 
-        String sql = """
-                UPDATE announcement_recipient
-                SET is_read = 1,
-                    read_at = NOW()
-                WHERE announcementID = ?
-                AND userID = ?
-                """;
+//    // Check Read
+//    public boolean isRead(String announcementID, String userID) {
+//
+//    String sql = """
+//    SELECT is_read
+//    FROM announcement_recipient
+//    WHERE announcementID = ?
+//    AND userID = ?
+//    """;
+//
+//    return jdbcTemplate.queryForObject(
+//    sql,
+//    Boolean.class,
+//    announcementID,
+//    userID
+//    );
+//    }
+//
+//    // Acknowledge
+//    public int acknowledge(String announcementID, String userID) {
+//
+//    String sql = """
+//    UPDATE announcement_recipient
+//    SET acknowledged = 1,
+//    acknowledged_at = NOW()
+//    WHERE announcementID = ?
+//    AND userID = ?
+//    AND is_read = 1
+//    """;
+//
+//    return jdbcTemplate.update(
+//    sql,
+//    announcementID,
+//    userID
+//    );
+//    }
+//
+//    // Check Acknowledge
+//    public boolean isAcknowledged(String announcementID, String userID) {
+//
+//        String sql = """
+//            SELECT is_acknowledged
+//            FROM announcement_recipient
+//            WHERE announcementID = ?
+//            AND userID = ?
+//            """;
+//
+//        return jdbcTemplate.queryForObject(
+//            sql,
+//            Boolean.class,
+//            announcementID,
+//            userID
+//        );
+//    }
+    public void createRecipientIfNotExists(
+    		String announcementID,
+    		String userID) {
 
-        return jdbcTemplate.update(sql, announcementID, userID);
-    }
-        
+    		String checkSql = """
+    		SELECT COUNT(*)
+    		FROM announcement_recipient
+    		WHERE announcementID = ?
+    		AND userID = ?
+    		""";
+
+    		Integer count = jdbcTemplate.queryForObject(
+    		checkSql,
+    		Integer.class,
+    		announcementID,
+    		userID
+    		);
+
+    		if (count == null || count == 0) {
+
+    		String sql = """
+    		INSERT INTO announcement_recipient
+    		(
+    		announcementRecipientID,
+    		announcementID,
+    		userID,
+    		is_read,
+    		is_acknowledged,
+    		created_at
+    		)
+    		VALUES (?, ?, ?, 0, 0, NOW())
+    		""";
+
+    		jdbcTemplate.update(
+    		sql,
+    		UUID.randomUUID().toString(),
+    		announcementID,
+    		userID
+    		);
+    		}
+    		}
+
+    		public int markAsRead(
+    		String announcementID,
+    		String userID) {
+
+    		createRecipientIfNotExists(
+    		announcementID,
+    		userID
+    		);
+
+    		String sql = """
+    		UPDATE announcement_recipient
+    		SET is_read = 1,
+    		read_at = NOW()
+    		WHERE announcementID = ?
+    		AND userID = ?
+    		""";
+
+    		return jdbcTemplate.update(
+    		sql,
+    		announcementID,
+    		userID
+    		);
+    		}
+
+    		public boolean isRead(
+    		String announcementID,
+    		String userID) {
+
+    		String sql = """
+    		SELECT is_read
+    		FROM announcement_recipient
+    		WHERE announcementID = ?
+    		AND userID = ?
+    		""";
+
+    		return jdbcTemplate.queryForObject(
+    		sql,
+    		(ResultSet rs, int rowNum) ->
+    		rs.getBoolean("is_read"),
+    		announcementID,
+    		userID
+    		);
+    		}
+
+    		public int acknowledge(
+    		String announcementID,
+    		String userID) {
+
+    		String sql = """
+    		UPDATE announcement_recipient
+    		SET is_acknowledged = 1,
+    		acknowledged_at = NOW()
+    		WHERE announcementID = ?
+    		AND userID = ?
+    		AND is_read = 1
+    		""";
+
+    		return jdbcTemplate.update(
+    		sql,
+    		announcementID,
+    		userID
+    		);
+    		}
+
+    		public boolean isAcknowledged(
+    		String announcementID,
+    		String userID) {
+
+    		String sql = """
+    		SELECT is_acknowledged
+    		FROM announcement_recipient
+    		WHERE announcementID = ?
+    		AND userID = ?
+    		""";
+
+    		return jdbcTemplate.queryForObject(
+    		sql,
+    		(ResultSet rs, int rowNum) ->
+    		rs.getBoolean("is_acknowledged"),
+    		announcementID,
+    		userID
+    		);
+    		}
 }
