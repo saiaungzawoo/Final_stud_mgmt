@@ -290,38 +290,134 @@ public class AnnouncementController {
 
         return new ObjectMapper().writeValueAsString(result);
     }
-    
+
     
     //TZM
-    @GetMapping("/student")
-    public String studentAnnouncement(Model model) {
-
-        model.addAttribute("announcements",
-        		announcementRepo.getStudentAnnouncements());
-
-        return "student/student-announcement";
-    }
-    @GetMapping("/student/{id}")
-    public String studentAnnouncementDetail(@PathVariable String id,
-                                            Model model,
-                                            HttpSession session) {
-
-        UserBean loginUser = (UserBean) session.getAttribute("loginUser");
-      /*System.out.println("Announcement ID = " + id);
-        System.out.println("User ID = " + loginUser.getUserID());*/
-        if (loginUser != null) {
-        	recipientRepo.markAsRead(
-                    id,
-                    loginUser.getUserID()
-            );
-        }
-
-        AnnouncementBean announcement =
-        		announcementRepo.getAnnouncementById(id);
-
-        model.addAttribute("announcement", announcement);
-
-        return "student/student-announcement-detail";
-    }
     
+    // ==========================================
+    // Student Announcement List
+    // URL: /announcement/student
+    // ==========================================
+    @GetMapping("/student")
+    public String studentAnnouncement(
+    Model model,
+    HttpSession session) {
+
+    UserBean loginUser =
+    (UserBean) session.getAttribute("loginUser");
+
+    if (loginUser == null) {
+    return "redirect:/login";
+    }
+
+    model.addAttribute(
+    "announcements",
+    announcementRepo.getStudentAnnouncements()
+    );
+
+    return "student/student-announcement";
+    }
+
+    // ==========================================
+    // Student Announcement Detail
+    // URL: /announcement/student/{id}
+    // ==========================================
+
+    @GetMapping("/student/{id}")
+    public String studentAnnouncementDetail(
+    @PathVariable String id,
+    Model model,
+    HttpSession session) {
+  UserBean loginUser =
+    (UserBean) session.getAttribute("loginUser");
+
+    if (loginUser == null) {
+    return "redirect:/login";
+    }
+
+    String userID = loginUser.getUserID();
+
+    // --------------------------------------
+    // Mark as READ
+    // --------------------------------------
+
+    recipientRepo.markAsRead(
+    id,
+    userID
+    );
+
+    // --------------------------------------
+    // Check READ
+    // --------------------------------------
+
+    boolean isRead =
+    recipientRepo.isRead(
+    id,
+    userID
+    );
+
+    // --------------------------------------
+    // Check ACKNOWLEDGE
+    // --------------------------------------
+
+    boolean isAcknowledged =
+    recipientRepo.isAcknowledged(
+    id,
+    userID
+    );
+
+    // --------------------------------------
+    // Get Announcement
+    // --------------------------------------
+
+    AnnouncementBean announcement =
+    announcementRepo.getAnnouncementById(id);
+
+    model.addAttribute(
+    "announcement",
+    announcement
+    );
+
+    model.addAttribute(
+    "isRead",
+    isRead
+    );
+
+    model.addAttribute(
+    "isAcknowledged",
+    isAcknowledged
+    );
+
+    return "student/student-announcement-detail";
+    }
+
+    // ==========================================
+    // Student Acknowledge
+    // URL:
+    // POST /announcement/student/{id}/acknowledge
+    // ==========================================
+
+    @PostMapping("/student/{id}/acknowledge")
+    public String acknowledgeAnnouncement(
+    @PathVariable String id,
+    HttpSession session) {
+
+    UserBean loginUser =
+    (UserBean) session.getAttribute("loginUser");
+
+    if (loginUser == null) {
+    return "redirect:/login";
+    }
+
+    String userID = loginUser.getUserID();
+
+    recipientRepo.acknowledge(
+    id,
+    userID
+    );
+
+    return "redirect:/announcement/student/" + id;
+    }
+
+  
 }
