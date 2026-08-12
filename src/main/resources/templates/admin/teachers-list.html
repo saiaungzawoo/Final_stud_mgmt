@@ -58,6 +58,7 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="bg-primary text-white">
                                     <tr>
+                                     <th class="ps-4 py-3 text-center fw-semibold text-uppercase label-title">No.</th>
                                         <th class="ps-4 py-3 text-center fw-semibold text-uppercase label-title">Photo</th>
                                         <th class="py-3 fw-semibold text-uppercase label-title">Name</th>
                                         <th class="py-3 fw-semibold text-uppercase label-title">Email</th>
@@ -85,6 +86,10 @@
 
                                     <!-- Dynamic Rows -->
                                     <tr th:each="teacher : ${teacherList}">
+                                    <td class="ps-4 text-center fw-semibold text-secondary"
+    th:text="${teacherList.indexOf(teacher) + 1}">
+    1
+</td>
                                         <!-- Photo Column (With Placeholder Fallback) -->
                                         <td class="ps-4 text-center">
                                             <img th:if="${teacher.profileImage != null and !#strings.isEmpty(teacher.profileImage)}"
