@@ -81,7 +81,7 @@ public class CertificatePdfService {
             }
 
             // 1. Academy Name
-            Paragraph academy = new Paragraph("ACE ACADEMY", academyFont);
+            Paragraph academy = new Paragraph("Ace Inspiration", academyFont);
             academy.setAlignment(Element.ALIGN_CENTER);
             document.add(academy);
 
