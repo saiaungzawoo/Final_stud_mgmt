@@ -304,8 +304,15 @@ Payment Type
 
 
 
+<!-- <div class="col-sm-6"
+     th:each="type,stat : ${paymentTypes}"> -->
+    <!--  only show students without schlarship -->
 <div class="col-sm-6"
-     th:each="type,stat : ${paymentTypes}">
+     th:each="type,stat : ${paymentTypes}"
+     th:if="${type.name != 'INSTALLMENT' 
+             or enrollment.discountedAmount == null 
+             or enrollment.discountedAmount <= 0}">
+     
 
 
 
